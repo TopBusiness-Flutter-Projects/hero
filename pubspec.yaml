@@ -1,0 +1,134 @@
+name: hero
+description: A new Flutter project.
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.6 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  siri_wave: ^2.0.0+1
+  flutter_bloc: ^8.1.2
+  get_it: ^7.2.0
+  dartz: ^0.10.1
+  cached_video_player: ^2.0.4
+  audio_waveforms: ^1.0.4
+  just_waveform: ^0.0.5
+  http_client: ^1.5.2
+  flutter_cache_manager: ^3.3.1
+  flutter_calendar_carousel: ^2.4.1
+  flutter_share: ^2.0.0
+  package_info_plus: ^3.0.2
+  dio: ^4.0.6
+  flutter_svg: ^2.0.4
+  page_transition: "^2.0.9"
+  equatable: ^2.0.5
+  neon_circular_timer: ^0.0.7
+  shared_preferences: ^2.1.0
+  cached_network_image: ^3.2.3
+  calendar_date_picker2: ^0.5.2
+  flutter_audio_waveforms: ^1.2.1+8
+  flutter_sound: ^9.1.9
+  firebase_messaging: ^14.4.0
+  flutter_launcher_icons: ^0.12.0
+  firebase_auth: ^4.4.0
+  firebase_core: ^2.9.0
+  flutter_animation_progress_bar: ^2.3.1
+  syncfusion_flutter_calendar: ^21.1.38
+  flutter_local_notifications: ^13.0.0
+  internet_connection_checker: ^1.0.0+1
+  flutter_countdown_timer: ^4.1.0
+  flutter_localizations:
+    sdk: flutter
+  fluttertoast: ^8.2.1
+  easy_localization: ^3.0.1
+  curved_navigation_bar: ^1.0.3
+  url_launcher: ^6.1.10
+  calendar_view: ^1.0.3
+  flutter_colorpicker: ^1.0.3
+  http: ^0.13.5
+  path_provider: any
+  permission_handler: ^10.2.0
+  any_link_preview: ^3.0.0
+  video_player: ^2.5.1
+  image_picker: ^0.8.7
+  record: ^4.4.4
+  open_filex: ^4.3.2
+  audioplayers: ^3.0.1
+  image_cropper: ^3.0.2
+  syncfusion_flutter_pdfviewer: ^21.1.38
+  carousel_slider: ^4.2.1
+  google_fonts: ^4.0.3
+  lottie: ^2.3.2
+  screen_capture_event: ^1.1.1
+  connectivity_plus: ^3.0.6
+  syncfusion_flutter_charts: ^21.2.3
+  flutter_credit_card: ^3.0.6
+  #  screenshot_callback: ^2.0.3
+  pdf: ^3.10.1
+  flutter_windowmanager: ^0.2.0
+  like_button: ^2.0.5
+  introduction_screen: ^3.1.7
+  intro_slider: ^4.2.0
+  quick_actions: ^1.0.2
+  chewie: ^1.4.0
+  flutter_zoom_drawer: ^3.0.4+1
+  wave: ^0.2.2
+  stroke_text: ^0.0.2
+  get: ^4.6.5
+  flutter_native_splash: ^2.2.19
+  popover: ^0.2.8+2
+  flutter_chat_bubble: ^2.0.2
+  webview_flutter: ^4.2.0
+  dropdown_search: ^5.0.6
+  smooth_page_indicator: any
+  table_calendar: ^3.0.9
+  percent_indicator: ^4.2.3
+  d_chart: ^2.6.2
+  pin_code_fields: ^8.0.1
+  intl:
+  wave_linear_progress_indicator: ^0.1.0
+  font_awesome_flutter: ^10.5.0
+  numberpicker: ^2.1.2
+  dropdown_button2: ^2.3.8
+  awesome_circular_chart: ^1.0.0
+  flutter_file_downloader: ^1.1.3
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter_native_splash:
+  color: "#ffffff"
+  android: false
+  ios: false
+  android_gravity: center
+  android_fullscreen: true
+
+flutter_icons:
+  android: true
+  ios: true
+  remove_alpha_ios: true
+  image_path: "assets/images/app.png"
+  adaptive_icon_foreground: "assets/images/app.png"
+
+
+
+  flutter_lints: ^2.0.0
+
+flutter:
+
+  uses-material-design: true
+
+
+  assets:
+    - assets/lang/
+    - assets/images/
+#    - assets/icons/
+#    - assets/lottie/
+#    - assets/fonts/
+
+
