@@ -4,6 +4,7 @@ import 'package:hero/features/splash/screens/splash_screen.dart';
 
 import '../../core/utils/app_strings.dart';
 import '../../features/requestlocation/screens/requestlocation.dart';
+import '../../features/signup/screens/signup.dart';
 import '../../features/usertype/screens/usertype.dart';
 import '../../features/verfication/verification.dart';
 
@@ -52,6 +53,10 @@ class AppRoutes {
         case Routes.requestlocationScreenRoute:
         return MaterialPageRoute(
           builder: (context) => const RequestLocation(),
+        );
+  case Routes.registerScreenRoute:
+        return MaterialPageRoute(
+          builder: (context) => const SignUp(),
         );
 
 

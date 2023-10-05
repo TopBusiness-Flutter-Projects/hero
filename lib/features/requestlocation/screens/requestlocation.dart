@@ -6,6 +6,7 @@ import 'package:hero/core/utils/getsize.dart';
 import 'package:hero/core/widgets/custom_button.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
+import '../../../config/routes/app_routes.dart';
 import '../../../core/utils/app_colors.dart';
 import '../../../core/widgets/custom_textfield.dart';
 
@@ -95,7 +96,9 @@ class _RequestLocationState extends State<RequestLocation> {
                 text: "continuation".tr(),
                 borderRadius: getSize(context) / 24,
                 color: AppColors.primary,
-                onClick: () {},
+                onClick: () {
+                  Navigator.of(context).pushNamedAndRemoveUntil(Routes.registerScreenRoute, (route) => false);
+                },
               ),
 
             ],
