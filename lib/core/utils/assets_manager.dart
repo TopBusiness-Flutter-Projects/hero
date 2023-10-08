@@ -11,6 +11,7 @@ class ImageAssets {
   static const String userTypeImage = '$imagePath/usertype.png';
   static const String requestlocationImage = '$imagePath/requestlocation.png';
   static const String backImage = '$imagePath/back.png';
+  static const String greyToktok = '$imagePath/greytoktok.png';
 
   // icons
   static const String phoneIcon = '$iconsPath/phone.svg';
@@ -24,6 +25,8 @@ class ImageAssets {
   static const String call2Icon = '$iconsPath/call2.svg';
   static const String favouriteIcon = '$iconsPath/favourite.svg';
   static const String shareIcon = '$iconsPath/share.svg';
+  static const String fromToIcon = '$iconsPath/fromto.svg';
+  static const String toIcon = '$iconsPath/to.svg';
 
   //Lottie
   static const String noItems = '$lottiePath/no_item.json';

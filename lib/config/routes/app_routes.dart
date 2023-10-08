@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hero/features/home/screen/home.dart';
 import 'package:hero/features/login/screens/login.dart';
 import 'package:hero/features/splash/screens/splash_screen.dart';
 
@@ -57,6 +58,10 @@ class AppRoutes {
   case Routes.registerScreenRoute:
         return MaterialPageRoute(
           builder: (context) => const SignUp(),
+        );
+        case Routes.homeRoute:
+        return MaterialPageRoute(
+          builder: (context) =>  Home(),
         );
 
 

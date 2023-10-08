@@ -9,10 +9,15 @@
   "plaase_enter_code": "Please enter the code to verify the phone",
   "enter_code": "Enter the confirmation code",
   "register_driver": "Register as Driver",
+  "welcome": "Welcome",
+  "new_orders": "New Orders",
+  "all": "All",
   "register_user": "Register as User",
   "book_toktok_app": "The most trusted tuktuk booking application",
   "to_join": "To enjoy your trip, please let us \nknow your location to book the right tuktuk for you",
   "continuation": "continuation",
-
-  "agreeto": "I agree to "
+  "agreeto": "I agree to ",
+  "cancel": "Cancel",
+  "from": "From",
+  "to": "To"
 }

@@ -5,6 +5,9 @@ import 'package:hero/app.dart';
 import 'package:hero/app_bloc_observer.dart';
 import 'package:hero/core/utils/restart_app_class.dart';
 import 'package:hero/injector.dart' as injector;
+import 'package:flutter/services.dart';
+
+import 'core/utils/app_colors.dart';
 
 void main() async{
 
@@ -25,6 +28,10 @@ void main() async{
       child: HotRestartController(child: const HeroApp()),
     ),
   );
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: AppColors.primary, // Set the desired status bar color
+    statusBarIconBrightness: Brightness.dark, // Set dark icons for light status bar color
+  ));
 
 
 }
