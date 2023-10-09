@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hero/core/utils/app_colors.dart';
 import 'package:hero/core/utils/getsize.dart';
+import 'package:flutter_dash/flutter_dash.dart';
 
 import '../../../core/utils/assets_manager.dart';
+import '../../../core/widgets/custom_button.dart';
 
 class Home extends StatefulWidget {
   int page = 0;
@@ -170,14 +172,16 @@ class _HomeState extends State<Home> {
             ],
           ),
           SizedBox(
-            height: getSize(context)*1.6,
+            height: getSize(context)*1.2,
               child: Container(
 
                 child: ListView.builder(
+                  itemCount: 5,
                   itemBuilder: (context, index) {
                   return Container(
-                    margin: EdgeInsets.symmetric(horizontal: 10,vertical: 20),
-                    width: getSize(context)*0.4,
+                    padding: EdgeInsets.symmetric(horizontal: 3),
+                    margin: EdgeInsets.symmetric(horizontal: 15,vertical: 20),
+                   // width: getSize(context)*0.4,
                    // height: getSize(context)/4,
                    decoration: BoxDecoration(
 
@@ -204,11 +208,12 @@ class _HomeState extends State<Home> {
                             color: AppColors.red
                           ),),
                           ),
-                          SizedBox(width: 10,)
+                         // SizedBox(width:3,)
 
                         ],
                       ),
                       SizedBox(height: 5,),
+                      //from
                       Row(children: [
                       SvgPicture.asset(ImageAssets.fromToIcon),
                         SizedBox(width: 10,),
@@ -217,34 +222,56 @@ class _HomeState extends State<Home> {
                       ],),
                       SizedBox(width: 5,),
                       Row(children: [
-                        SizedBox(width: 5,),
-                       Text("|" ,style: TextStyle(color: AppColors.black1,
+                        SizedBox(width: getSize(context)*0.03,),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Dash(
+                              direction: Axis.vertical,
+                              length: 40,
+                              dashLength: 4,
+                              dashColor: Colors.black),
+                        ),
+                        SizedBox(width: 3,),
+                        Text(" برج الهيلتون الدور الخامس بجوار حتحوت " ,style: TextStyle(color: AppColors.gray,
                             fontSize: getSize(context)*0.04,fontWeight: FontWeight.w400),),
-                      ],),
-
+                                      ]),
                       Row(children: [
-                        SizedBox(width: 5,),
-                        Text("|" ,style: TextStyle(color: AppColors.black1,
-                            fontSize: getSize(context)*0.04,fontWeight: FontWeight.w400),),
-                      ],),
-
-                      Row(children: [
-                        SizedBox(width: 5,),
-                        Text("|" ,style: TextStyle(color: AppColors.black1,
-                            fontSize: getSize(context)*0.04,fontWeight: FontWeight.w400),),
-                      ],),
-                      Row(children: [
-                        SvgPicture.asset(ImageAssets.toIcon,color: AppColors.primary,),
+                        SvgPicture.asset(ImageAssets.toIcon),
                         SizedBox(width: 10,),
                         Text("to".tr(),style: TextStyle(color: AppColors.black1,
                             fontSize: getSize(context)*0.04,fontWeight: FontWeight.w400),),
                       ],),
+                      SizedBox(height: 3,),
+                      Row(
+                        children: [
+                          SizedBox(width: getSize(context)*0.03,),
+                          Text("معهد الكبد القومى " ,style: TextStyle(color: AppColors.gray,
+                              fontSize: getSize(context)*0.04,fontWeight: FontWeight.w400),),
+                        ],
+                      ),
                     ],
                   ));
                 },),
-              ))
+              )),
+        // Container(height: getSize(context)/5,
+         //  color: Colors.red,
+        // )
         ],
       ),
-    ));
+    ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+      floatingActionButton: Padding(
+        padding:  EdgeInsets.only(bottom: getSize(context)/10),
+        child: CustomButton(
+          width: getSize(context)/4,
+          text: 'ask_trip'.tr(),
+          color: AppColors.primary,
+          onClick: () {
+
+        },
+
+        ),
+      ),
+    );
   }
 }
