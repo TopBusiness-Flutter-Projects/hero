@@ -20,5 +20,20 @@
   "cancel": "Cancel",
   "from": "From",
   "to": "To",
-  "ask_trip": "Request your trip"
+  "ask_trip": "Request your trip",
+  "trip_insurance_service": "Trip insurance service",
+  "my_rewards": "My Rewards",
+  "notifications": "Notifications",
+  "favourite_titles": "Favourite Titles",
+  "about_hero": "About Hero",
+  "contact_support": "Contact technical support",
+  "safety_rules": "Safety rules",
+  "hero_trip_policy": "Hero's trip policy",
+  "app_evaluation": "App evaluation",
+  "edit_account": "Edit account",
+  "delete_account": "Delete Account",
+  "sign_out": "SignOut",
+  "request_trip": "Request a trip",
+  "ride_without_destination": "Riding without a destination",
+  "choose_trip": "Choose your Trip"
 }

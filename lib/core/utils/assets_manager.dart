@@ -12,6 +12,8 @@ class ImageAssets {
   static const String requestlocationImage = '$imagePath/requestlocation.png';
   static const String backImage = '$imagePath/back.png';
   static const String greyToktok = '$imagePath/greytoktok.png';
+  static const String person = '$imagePath/person.png';
+
 
   // icons
   static const String phoneIcon = '$iconsPath/phone.svg';
@@ -27,6 +29,19 @@ class ImageAssets {
   static const String shareIcon = '$iconsPath/share.svg';
   static const String fromToIcon = '$iconsPath/fromto.svg';
   static const String toIcon = '$iconsPath/to.svg';
+  static const String trips = '$iconsPath/trips.svg';
+  static const String rewards = '$iconsPath/rewards.svg';
+  static const String notifications = '$iconsPath/notifications.svg';
+  static const String favouriteTitles = '$iconsPath/favourite_titles.svg';
+  static const String aboutHero = '$iconsPath/about_hero.svg';
+  static const String technicalSupport = '$iconsPath/technical_support.svg';
+  static const String safety = '$iconsPath/safety.svg';
+  static const String policy = '$iconsPath/policy.svg';
+  static const String evaluation = '$iconsPath/evaluation.svg';
+  static const String edit = '$iconsPath/edit.svg';
+  static const String delete = '$iconsPath/delete.svg';
+  static const String signOut = '$iconsPath/signout.svg';
+  static const String close = '$iconsPath/close.svg';
 
   //Lottie
   static const String noItems = '$lottiePath/no_item.json';

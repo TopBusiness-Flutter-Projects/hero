@@ -20,5 +20,20 @@
   "to_join": "للاستمتاع برحلتك الرجاء السماح لنا بمعرفة \n موقعك لحجز التوكتوك المناسب لك",
   "continuation": "إستمرار",
   "agreeto": "أوافق على ",
-  "ask_trip": "اطلب رحلتك"
+  "ask_trip": "اطلب رحلتك",
+  "trip_insurance_service": "خدمة تأمين الرحلات",
+  "my_rewards": "مكافأتى",
+  "notifications": "الاشعارات",
+  "favourite_titles": "العناوين المفضلة",
+  "about_hero": "عن هيرو",
+  "contact_support": "الاتصال بالدعم الفنى",
+  "safety_rules": "قواعد السلامة",
+  "hero_trip_policy": "سياسة هيرو أثناء الرحلة",
+  "app_evaluation": "تقييم التطبيق",
+  "edit_account": "تعديل الحساب",
+  "delete_account": "حذف الحساب",
+  "sign_out": "تسجيل خروج",
+  "request_trip": "طلب رحلة",
+  "ride_without_destination": "ركوب بدون وجهة",
+  "choose_trip": "اختار رحلتك !"
 }
