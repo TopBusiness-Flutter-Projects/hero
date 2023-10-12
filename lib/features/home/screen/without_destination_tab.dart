@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hero/features/home/cubit/home_cubit.dart';
 
 import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/assets_manager.dart';
@@ -16,34 +18,50 @@ class TripWithoutDestination extends StatelessWidget {
       key: scaffoldKey,
       body: ListView(
         children: [
-          Row(
-            children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 12),
+            child: Row(
+              children: [
+                InkWell(
+                  onTap:(){
+                    context.read<HomeCubit>().controller.animateTo(0);
+                  },
 
-              Spacer(),
-              InkWell(
-                onTap: () {
-                  //todo
-                  scaffoldKey.currentState?.openDrawer();
-                },
-                child: Container(
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                              color:
-                              AppColors.black.withOpacity(0.25),
-                              blurRadius: 1,
-                              spreadRadius: 1)
-                        ],
-                        borderRadius: BorderRadius.all(
-                            Radius.circular(getSize(context) / 80)),
-                        color: AppColors.white),
-                    child: Icon(
-                      Icons.menu,
-                      size: 20,
-                    )),
-              )
-            ],
+                  child: Image.asset(
+                    ImageAssets.backImage,
+                    height: getSize(context) / 13,
+                    width: getSize(context) /13,
+
+                    // height: getSize(context) / 1.2,
+                    // width: getSize(context) / 1.2,
+                  ),
+                ),
+                Spacer(),
+                InkWell(
+                  onTap: () {
+                    //todo
+                    scaffoldKey.currentState?.openDrawer();
+                  },
+                  child: Container(
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                                color:
+                                AppColors.black.withOpacity(0.25),
+                                blurRadius: 1,
+                                spreadRadius: 1)
+                          ],
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(getSize(context) / 80)),
+                          color: AppColors.white),
+                      child: Icon(
+                        Icons.menu,
+                        size: 20,
+                      )),
+                )
+              ],
+            ),
           ),
         ],
       ),

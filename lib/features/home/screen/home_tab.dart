@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dash/flutter_dash.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -10,6 +11,7 @@ import '../../../core/utils/assets_manager.dart';
 import '../../../core/utils/getsize.dart';
 import '../../../core/widgets/custom_button.dart';
 import '../components/drawer_list_item.dart';
+import '../cubit/home_cubit.dart';
 
 class HomeTab extends StatefulWidget {
    HomeTab({super.key});
@@ -390,23 +392,33 @@ class _HomeTabState extends State<HomeTab> {
                           CustomButton(
                             text: "request_trip".tr(),
                             color: AppColors.primary,
-                            onClick: () {},
+                            onClick: () {
+                              context.read<HomeCubit>().controller.animateTo(1);
+                              Navigator.pop(context);
+                            },
                           ),
                           SizedBox(
                             height: getSize(context) * 0.1,
                           ),
-                          Container(
-                            padding: EdgeInsets.symmetric(horizontal: getSize(context)*0.15,vertical: 2),
-                            decoration: BoxDecoration(
-                                border: Border.all(width: 2,color: AppColors.primary),
-                                borderRadius: BorderRadius.circular(10)
-                            ),
-                            child: Text("ride_without_destination".tr(), style: TextStyle(
-                                fontFamily: 'Cairo',
-                                color: AppColors.primary,
-                                fontSize: getSize(context) / 20,
-                                fontWeight: FontWeight.w400),
-                            ),),
+                          InkWell(
+                            onTap: () {
+
+                              context.read<HomeCubit>().controller.animateTo(2);
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: getSize(context)*0.15,vertical: 2),
+                              decoration: BoxDecoration(
+                                  border: Border.all(width: 2,color: AppColors.primary),
+                                  borderRadius: BorderRadius.circular(10)
+                              ),
+                              child: Text("ride_without_destination".tr(), style: TextStyle(
+                                  fontFamily: 'Cairo',
+                                  color: AppColors.primary,
+                                  fontSize: getSize(context) / 20,
+                                  fontWeight: FontWeight.w400),
+                              ),),
+                          ),
 
                           // CustomButton(
                           //   text: "ride_without_destination".tr(),

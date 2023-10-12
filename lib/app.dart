@@ -9,6 +9,8 @@ import 'config/themes/app_theme.dart';
 import 'core/utils/app_strings.dart';
 import 'package:hero/injector.dart' as injector;
 
+import 'features/home/cubit/home_cubit.dart';
+
 class HeroApp extends StatefulWidget {
   const HeroApp({Key? key}) : super(key: key);
 
@@ -31,17 +33,17 @@ class _HeroAppState extends State<HeroApp> {
   Widget build(BuildContext context) {
     // print(text);
 
-    // return MultiBlocProvider(
-    //   providers: [
+    return MultiBlocProvider(
+      providers: [
     //     // BlocProvider(
     //     //   create: (_) => injector.serviceLocator<SplashCubit>(),
     //     // ),
     //     // BlocProvider(
     //     //   create: (_) => injector.serviceLocator<LoginCubit>(),
     //     // ),
-    //     // BlocProvider(
-    //     //   create: (_) => injector.serviceLocator<HomeCubit>(),
-    //     // ),
+        BlocProvider(
+          create: (_) => injector.serviceLocator<HomeCubit>(),
+        ),
     //     // BlocProvider(
     //     //   create: (_) => injector.serviceLocator<PostsCubit>(),
     //     // ),
@@ -63,8 +65,8 @@ class _HeroAppState extends State<HeroApp> {
     //
     //
     //
-    //   ],
-return GetMaterialApp(
+      ],
+      child: GetMaterialApp(
         supportedLocales: context.supportedLocales,
         locale: context.locale,
         theme: appTheme(),
@@ -76,6 +78,6 @@ return GetMaterialApp(
         title: AppStrings.appName,
         onGenerateRoute: AppRoutes.onGenerateRoute,
 
-    );
+    ));
   }
 }
