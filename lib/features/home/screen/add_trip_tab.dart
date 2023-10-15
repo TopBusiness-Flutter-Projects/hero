@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hero/core/widgets/custom_textfield.dart';
+import 'package:location/location.dart';
 import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/assets_manager.dart';
 import '../../../core/utils/getsize.dart';
@@ -10,6 +12,7 @@ import '../components/drawer_list_item.dart';
 import '../cubit/home_cubit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+
 class AddTripTab extends StatefulWidget {
   AddTripTab({super.key});
 
@@ -20,8 +23,16 @@ class AddTripTab extends StatefulWidget {
 class _AddTripTabState extends State<AddTripTab> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final Completer<GoogleMapController> _controller = Completer();
-  static const LatLng sourceLocation = LatLng(37.33500926, -122.03272188);
-  static const LatLng destination = LatLng(37.33429383, -122.06600055);
+  static LatLng sourceLocation = LatLng(31.2693, 30.7873);
+  static const LatLng destination = LatLng(30.4301, 31.0364);
+
+  @override
+  void initState() {
+    getCurrentLocation();
+    getPolyPoints();
+    setCustomMarkerIcon();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,31 +40,73 @@ class _AddTripTabState extends State<AddTripTab> {
       key: scaffoldKey,
       body: Stack(
         children: [
-          GoogleMap(
-            initialCameraPosition: CameraPosition(
-              target: sourceLocation,
-              zoom: 13.5,
-            ),
-            markers: {
-              const Marker(
-                markerId: MarkerId("source"),
-                position: sourceLocation,
-              ),
-              const Marker(
-                markerId: MarkerId("destination"),
-                position: destination,
-              ),
-            },
-            onMapCreated: (mapController) {
-              _controller.complete(mapController);
-            },
-          ),
+          currentLocation == null
+              ? const Center(child: Text("Loading"))
+              : GoogleMap(
+                  initialCameraPosition: CameraPosition(
+                    target: LatLng(currentLocation!.latitude!,
+                        currentLocation!.longitude!),
+                    zoom: 13.5,
+                  ),
+                  markers: {
+                    Marker(
+                      markerId: const MarkerId("currentLocation"),
+                      icon: currentLocationIcon,
+                      position: LatLng(currentLocation!.latitude!,
+                          currentLocation!.longitude!),
+                    ),
+                    Marker(
+                      markerId: const MarkerId("source"),
+                      icon: sourceIcon,
+                      position: sourceLocation,
+                    ),
+                    Marker(
+                      markerId: MarkerId("destination"),
+                      icon: destinationIcon,
+                      position: destination,
+                    ),
+                  },
+                  onMapCreated: (mapController) {
+                    _controller.complete(mapController);
+                  },
+                  polylines: {
+                    Polyline(
+                      polylineId: const PolylineId("route"),
+                      points: polylineCoordinates,
+                      color: const Color(0xFF7B61FF),
+                      width: 6,
+                    ),
+                  },
+                ),
           Positioned(
-            top: getSize(context)*0.1,
+              top: getSize(context)*1.5,
+              right: 0,
+              left: 0,
+              child: Container(
+                height: getSize(context),
+                  decoration: BoxDecoration(
+                      color: Colors.amber,
+                      borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(20),
+                          topLeft: Radius.circular(20))),
+                  child: Column(
+                    children: [
+                      SizedBox(height: getSize(context)*0.1,),
+                      CustomTextField(
+                        minLine: 2,
+
+                          title: "enter",
+                          textInputType: TextInputType.text,
+                          backgroundColor: AppColors.white)
+                    ],
+                  ))),
+          Positioned(
+            top: getSize(context) * 0.1,
             right: 0,
             left: 0,
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 12),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 10.0, horizontal: 12),
               child: Row(
                 children: [
                   InkWell(
@@ -96,11 +149,8 @@ class _AddTripTabState extends State<AddTripTab> {
               ),
             ),
           ),
-
         ],
       ),
-
-
 
       //Drawer
       drawer: Drawer(
@@ -164,6 +214,7 @@ class _AddTripTabState extends State<AddTripTab> {
   }
 
   List<LatLng> polylineCoordinates = [];
+
   void getPolyPoints() async {
     PolylinePoints polylinePoints = PolylinePoints();
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
@@ -173,11 +224,73 @@ class _AddTripTabState extends State<AddTripTab> {
     );
     if (result.points.isNotEmpty) {
       result.points.forEach(
-            (PointLatLng point) => polylineCoordinates.add(
+        (PointLatLng point) => polylineCoordinates.add(
           LatLng(point.latitude, point.longitude),
         ),
       );
       setState(() {});
     }
+  }
+
+  LocationData? currentLocation;
+
+  void getCurrentLocation() async {
+    Location location = Location();
+    location.getLocation().then(
+      (location) {
+        currentLocation = location;
+        setState(() {
+          // //  sourceLocation = LatLng(location.latitude!, location.longitude!);
+        });
+      },
+    );
+    GoogleMapController googleMapController = await _controller.future;
+    location.onLocationChanged.listen(
+      (newLoc) {
+        currentLocation = newLoc;
+        //sourceLocation = LatLng(newLoc.latitude!, newLoc.longitude!);
+        googleMapController.animateCamera(
+          CameraUpdate.newCameraPosition(
+            CameraPosition(
+              zoom: 13.5,
+              target: LatLng(
+                newLoc.latitude!,
+                newLoc.longitude!,
+              ),
+            ),
+          ),
+        );
+        setState(() {});
+      },
+    );
+  }
+
+  BitmapDescriptor sourceIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor destinationIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor currentLocationIcon = BitmapDescriptor.defaultMarker;
+
+  void setCustomMarkerIcon() {
+    BitmapDescriptor.fromAssetImage(
+      ImageConfiguration.empty,
+      "assets/images/pin_source1.png",
+    ).then(
+      (icon) {
+        sourceIcon = icon;
+      },
+    );
+    BitmapDescriptor.fromAssetImage(
+            ImageConfiguration.empty, "assets/images/pin_destination1.png")
+        .then(
+      (icon) {
+        destinationIcon = icon;
+      },
+    );
+    BitmapDescriptor.fromAssetImage(
+            ImageConfiguration.empty, "assets/images/badge1.png")
+        .then(
+      (icon) {
+        currentLocationIcon = icon;
+      },
+    );
   }
 }
