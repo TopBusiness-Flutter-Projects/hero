@@ -1,9 +1,8 @@
 import 'dart:async';
-
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:hero/core/widgets/custom_textfield.dart';
 import 'package:location/location.dart';
 import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/assets_manager.dart';
@@ -25,6 +24,9 @@ class _AddTripTabState extends State<AddTripTab> {
   final Completer<GoogleMapController> _controller = Completer();
   static LatLng sourceLocation = LatLng(31.2693, 30.7873);
   static const LatLng destination = LatLng(30.4301, 31.0364);
+  String? payment;
+  String? gender;
+  bool radioEnabled = true;
 
   @override
   void initState() {
@@ -37,6 +39,7 @@ class _AddTripTabState extends State<AddTripTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       key: scaffoldKey,
       body: Stack(
         children: [
@@ -57,11 +60,13 @@ class _AddTripTabState extends State<AddTripTab> {
                     ),
                     Marker(
                       markerId: const MarkerId("source"),
+                      infoWindow: InfoWindow(title: "from",),
                       icon: sourceIcon,
                       position: sourceLocation,
                     ),
                     Marker(
                       markerId: MarkerId("destination"),
+                      infoWindow: InfoWindow(title: "to",),
                       icon: destinationIcon,
                       position: destination,
                     ),
@@ -78,28 +83,81 @@ class _AddTripTabState extends State<AddTripTab> {
                     ),
                   },
                 ),
-          Positioned(
-              top: getSize(context)*1.5,
-              right: 0,
-              left: 0,
-              child: Container(
-                height: getSize(context),
+          Align(
+            alignment: Alignment.bottomCenter,
+              // top: getSize(context)*1.5,
+              // right: 0,
+              // left: 0,
+              child:
+              Container(
+                height: getSize(context)*0.6,
                   decoration: BoxDecoration(
-                      color: Colors.amber,
+                      color: Colors.white,
                       borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(20),
-                          topLeft: Radius.circular(20))),
+                          topRight: Radius.circular(30),
+                          topLeft: Radius.circular(30))),
                   child: Column(
                     children: [
                       SizedBox(height: getSize(context)*0.1,),
-                      CustomTextField(
-                        minLine: 2,
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: 20),
+                       padding: EdgeInsets.symmetric(horizontal: 10),
+                       // height: 100,
+                       // width: getSize(context),
+                        decoration: BoxDecoration(
 
-                          title: "enter",
-                          textInputType: TextInputType.text,
-                          backgroundColor: AppColors.white)
+                          boxShadow: [
+                            BoxShadow(color: AppColors.black.withOpacity(0.25),blurRadius: 10,
+                                spreadRadius: 0,offset:Offset(0,4) )
+                          ],
+                          color: AppColors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(Icons.location_on_outlined),
+                          Expanded(child:   TextField(
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: "select_destination".tr()
+                            ),
+                          ),),
+                            Icon(Icons.favorite_border)
+                          ],
+                        ),
+                      ),
+                     SizedBox(height: 5,),
+                     Row(
+                       children: [
+                         SizedBox(width: 20,),
+                         Text("payment_method").tr(),
+                       ],
+                     ),
+
+                      RadioListTile(
+                        title: Text("cash").tr(),
+                        value: "cash",
+                        groupValue: gender,
+                        onChanged: (value){
+                          setState(() {
+                            gender = value.toString();
+                          });
+                        },
+                      ),
+                      //
+                      // RadioListTile(
+                      //   title: Text("Female"),
+                      //   value: "female",
+                      //   groupValue: gender,
+                      //   onChanged: (value){
+                      //     setState(() {
+                      //       gender = value.toString();
+                      //     });
+                      //   },
+                      // ),
                     ],
-                  ))),
+                  )),
+          ),
           Positioned(
             top: getSize(context) * 0.1,
             right: 0,

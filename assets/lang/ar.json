@@ -35,5 +35,7 @@
   "sign_out": "تسجيل خروج",
   "request_trip": "طلب رحلة",
   "ride_without_destination": "ركوب بدون وجهة",
-  "choose_trip": "اختار رحلتك !"
+  "choose_trip": "اختار رحلتك !",
+  "select_destination": "حدد وجهتك من الخريطة",
+  "payment_method": "طريقة الدفع"
 }

@@ -35,5 +35,7 @@
   "sign_out": "SignOut",
   "request_trip": "Request a trip",
   "ride_without_destination": "Riding without a destination",
-  "choose_trip": "Choose your Trip"
+  "choose_trip": "Choose your Trip",
+  "select_destination": "Select your destination from the map",
+  "payment_method": "Payment Method"
 }
