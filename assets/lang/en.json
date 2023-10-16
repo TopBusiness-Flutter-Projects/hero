@@ -37,5 +37,8 @@
   "ride_without_destination": "Riding without a destination",
   "choose_trip": "Choose your Trip",
   "select_destination": "Select your destination from the map",
-  "payment_method": "Payment Method"
+  "payment_method": "Payment Method",
+  "cash": "Cash",
+  "ride_now": "Ride Now",
+  "ride_later": "Ride later"
 }

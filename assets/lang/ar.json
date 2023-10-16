@@ -37,5 +37,8 @@
   "ride_without_destination": "ركوب بدون وجهة",
   "choose_trip": "اختار رحلتك !",
   "select_destination": "حدد وجهتك من الخريطة",
-  "payment_method": "طريقة الدفع"
+  "payment_method": "طريقة الدفع",
+  "cash": "كاش",
+  "ride_now": "اركب الان",
+  "ride_later": "ركوب فى وقت لاحق"
 }

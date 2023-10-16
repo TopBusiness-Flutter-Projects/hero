@@ -102,6 +102,11 @@ dependencies:
   google_maps_flutter: ^2.5.0
   flutter_polyline_points: ^1.0.0
   location:
+  custom_info_window: ^1.0.1
+  clippy_flutter: ^2.0.0-nullsafety.1
+  flutter_google_places_hoc081098: ^1.0.0-nullsafety.5
+  google_api_headers: ^1.1.1
+  google_maps_webservice: ^0.0.20-nullsafety.5
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -133,8 +138,7 @@ flutter:
     - assets/lang/
     - assets/images/
     - assets/icons/
-#    - assets/icons/
-#    - assets/lottie/
+    - assets/lottie/
 #    - assets/fonts/
 
 
