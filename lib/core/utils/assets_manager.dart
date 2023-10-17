@@ -13,6 +13,7 @@ class ImageAssets {
   static const String backImage = '$imagePath/back.png';
   static const String greyToktok = '$imagePath/greytoktok.png';
   static const String person = '$imagePath/person.png';
+  static const String dateConfirm = '$imagePath/date_confirm.png';
 
 
   // icons

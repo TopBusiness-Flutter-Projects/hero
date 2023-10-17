@@ -32,7 +32,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
   void initState() {
     // TODO: implement initState
     super.initState();
-   context.read<HomeCubit>().controller =  TabController(length: 3, vsync: this);
+   context.read<HomeCubit>().tabsController =  TabController(length: 3, vsync: this);
   }
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
       // key: _scaffoldKey,
       body: TabBarView(
         physics: NeverScrollableScrollPhysics(),
-        controller: context.read<HomeCubit>().controller,
+        controller: context.read<HomeCubit>().tabsController,
         children: [
           HomeTab(),
           AddTripTab(),

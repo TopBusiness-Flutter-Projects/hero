@@ -4,12 +4,14 @@ import 'package:dropdown_search/dropdown_search.dart'as drop;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gif/flutter_gif.dart';
 import 'package:flutter_google_places_hoc081098/flutter_google_places_hoc081098.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_api_headers/google_api_headers.dart';
 import 'package:google_maps_webservice/geocoding.dart'as geocoding;
 import 'package:google_maps_webservice/places.dart';
 import 'package:hero/core/widgets/custom_button.dart';
+import 'package:hero/features/home/screen/home.dart';
 import 'package:location/location.dart'as loc;
 import 'package:lottie/lottie.dart'as lottie;
 import '../../../core/utils/app_colors.dart';
@@ -27,40 +29,46 @@ class AddTripTab extends StatefulWidget {
   State<AddTripTab> createState() => _AddTripTabState();
 }
 
-class _AddTripTabState extends State<AddTripTab> with SingleTickerProviderStateMixin{
+class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin{
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final Completer<GoogleMapController> _controller = Completer();
-  GoogleMapController? mapController;
-  static LatLng sourceLocation = LatLng(31.2693, 30.7873);
-  static  LatLng destination = LatLng(30.4301, 31.0364);
+  // final Completer<GoogleMapController> controller = Completer();
+  // GoogleMapController? mapController;
+  // static LatLng sourceLocation = LatLng(31.2693, 30.7873);
+  // static  LatLng destination = LatLng(30.4301, 31.0364);
   CustomInfoWindowController _customInfoWindowController =
   CustomInfoWindowController();
-  late AnimationController lottieController;
-  String? payment = "cash";
+ // late AnimationController lottieController;
+  // String? payment = "cash";
   Set<Marker> markers = {};
-  String location = "Search Location";
+  // String location = "Search Location";
+ late FlutterGifController gifController;
+
+
 
   @override
   void dispose() {
     _customInfoWindowController.dispose();
-    lottieController.dispose();
+
     super.dispose();
   }
   @override
   void initState() {
-    getCurrentLocation();
+    context.read<HomeCubit>().getCurrentLocation();
     //getPolyPoints();
-    setCustomMarkerIcon();
-    lottieController = AnimationController(
-      vsync: this,
-    );
+    context.read<HomeCubit>().setCustomMarkerIcon();
+    gifController= FlutterGifController(vsync: this);
+   // controller1 = FlutterGifController(vsync: this);
 
-    lottieController.addStatusListener((status) async {
-      if (status == AnimationStatus.completed) {
-        Navigator.pop(context);
-        lottieController.reset();
-      }
-    });
+    // lottieController = AnimationController(
+    //   vsync: this,
+    // );
+    //
+    // lottieController.addStatusListener((status) async {
+    //   if (status == AnimationStatus.completed) {
+    //     Navigator.pop(context);
+    //     lottieController.reset();
+    //   }
+    // });
     super.initState();
   }
 
@@ -146,217 +154,246 @@ class _AddTripTabState extends State<AddTripTab> with SingleTickerProviderStateM
     return Scaffold(
       resizeToAvoidBottomInset: false,
       key: scaffoldKey,
-      body: Stack(
+      body: BlocConsumer<HomeCubit, HomeState>(
+  listener: (context, state) {
+    // TODO: implement listener
+  },
+  builder: (context, state) {
+    HomeCubit cubit = context.read<HomeCubit>();
+    return Stack(
         children: [
-          currentLocation == null
+          cubit.currentLocation == null
               ? const Center(child: Text("Loading"))
               : GoogleMap(
                   initialCameraPosition: CameraPosition(
-                    target: LatLng(currentLocation!.latitude!,
-                        currentLocation!.longitude!),
+                    target: LatLng(cubit.currentLocation!.latitude!,
+                        cubit.currentLocation!.longitude!),
                     zoom: 13.5,
                   ),
                   markers:
                   {
                     Marker(
                       markerId: const MarkerId("currentLocation"),
-                      icon: currentLocationIcon,
-                      position: LatLng(currentLocation!.latitude!,
-                          currentLocation!.longitude!),
+                      icon: cubit.currentLocationIcon,
+                      position: LatLng(cubit.currentLocation!.latitude!,
+                          cubit.currentLocation!.longitude!),
                     ),
                     Marker(
                       markerId: const MarkerId("source"),
                       infoWindow: InfoWindow(title: "from",),
-                      icon: sourceIcon,
-                      position: sourceLocation,
+                      icon: cubit.sourceIcon,
+                      position: cubit.sourceLocation,
                     ),
                     Marker(
                       markerId: MarkerId("destination"),
                       infoWindow: InfoWindow(title: "to",),
-                      icon: destinationIcon,
-                      position: destination,
+                      icon: cubit.destinationIcon,
+                      position: cubit.destination,
                     ),
                   },
-                  onMapCreated: (mapController) {
-                    _controller.complete(mapController);
-                    _customInfoWindowController.googleMapController = mapController;
-                    this.mapController = mapController;
-                    setState(() {
-
-                    });
+                  onMapCreated: (GoogleMapController mapController) {
+                    //  cubit.controller.complete(mapController);
+                    // _customInfoWindowController.googleMapController = mapController;
+                    // this.mapController = mapController;
+                    // setState(() {
+                    //
+                    // });
                   },
             onTap: (argument) {
-              _customInfoWindowController.hideInfoWindow!();
+            //  _customInfoWindowController.hideInfoWindow!();
             },
             onCameraMove: (position) {
-              _customInfoWindowController.hideInfoWindow!();
+            //  _customInfoWindowController.hideInfoWindow!();
             },
                   polylines: {
                     Polyline(
                       polylineId: const PolylineId("route"),
-                      points: polylineCoordinates,
+                      points: cubit.polylineCoordinates,
                       color: const Color(0xFF7B61FF),
                       width: 6,
                     ),
                   },
                 ),
-          CustomInfoWindow(
-            controller: _customInfoWindowController,
-            height: 75,
-            width: 150,
-            offset: 50,
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-              child:
-              Container(
-                height: getSize(context)*0.8,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(30),
-                          topLeft: Radius.circular(30))),
-                  child: Column(
-                    children: [
-                      SizedBox(height: getSize(context)*0.1,),
-                      InkWell(
-                        onTap: () async {
-                          var place = await PlacesAutocomplete.show(
-                              context: context,
-                              apiKey: "AIzaSyCZjDPvxg9h3IUSfVPzIwnKli5Y17p-v9g",
-                              mode: Mode.overlay,
-                              types: [],
-                              strictbounds: false,
-                              components: [
-                                geocoding.Component(geocoding.Component.country, 'eg')],
-                              //google_map_webservice package
-                              onError: (err){
-                                print(err);
-                              }
-                          );
-
-                          if(place!=null){
-                            setState(() {
-                              location = place.description.toString();
-                            });
-
-                            //form google_maps_webservice package
-                            final plist = GoogleMapsPlaces(apiKey:"AIzaSyCZjDPvxg9h3IUSfVPzIwnKli5Y17p-v9g",
-                              apiHeaders: await GoogleApiHeaders().getHeaders(),
-                              //from google_api_headers package
-                            );
-
-                            String placeid = place.placeId ?? "0";
-                            final detail = await plist.getDetailsByPlaceId(placeid);
-                            final geometry = detail.result.geometry!;
-                            final lat = geometry.location.lat;
-                            final lang = geometry.location.lng;
-                            var newlatlang = LatLng(lat, lang);
-
-                            //move map camera to selected place with animation
-
-                            mapController!.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: newlatlang, zoom: 14)));
-
-                            destination = newlatlang;
-                            getPolyPoints();
-                          }
-
-                        },
-                          child:Padding(
-                            padding: EdgeInsets.all(15),
-                            child: Card(
-                              child: Container(
-                                  padding: EdgeInsets.all(0),
-                                  width: MediaQuery.of(context).size.width - 40,
-                                  child: ListTile(
-                                    title:Text(location, style: TextStyle(fontSize: 18),),
-                                    trailing: Icon(Icons.search),
-                                    dense: true,
-                                  )
+          // CustomInfoWindow(
+          //   controller: _customInfoWindowController,
+          //   height: 75,
+          //   width: 150,
+          //   offset: 50,
+          // ),
+          Visibility(
+            visible:cubit.bottomContainerInitialState ,
+            child: Align(
+              alignment: Alignment.bottomCenter,
+                child:
+                Container(
+                  height: getSize(context)*0.8,
+                    decoration: BoxDecoration(
+                        color: Colors.amber,
+                        borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(30),
+                            topLeft: Radius.circular(30))),
+                    child: Column(
+                      children: [
+                        SizedBox(height: getSize(context)*0.1,),
+                        InkWell(
+                          onTap: () async {
+                            // var place = await PlacesAutocomplete.show(
+                            //     context: context,
+                            //     apiKey: "AIzaSyCZjDPvxg9h3IUSfVPzIwnKli5Y17p-v9g",
+                            //     mode: Mode.overlay,
+                            //     types: [],
+                            //     strictbounds: false,
+                            //     components: [
+                            //       geocoding.Component(geocoding.Component.country, 'eg')],
+                            //     //google_map_webservice package
+                            //     onError: (err){
+                            //       print(err);
+                            //     }
+                            // );
+                            //
+                            // if(place!=null){
+                            //   setState(() {
+                            //     location = place.description.toString();
+                            //   });
+                            //
+                            //   //form google_maps_webservice package
+                            //   final plist = GoogleMapsPlaces(apiKey:"AIzaSyCZjDPvxg9h3IUSfVPzIwnKli5Y17p-v9g",
+                            //     apiHeaders: await GoogleApiHeaders().getHeaders(),
+                            //     //from google_api_headers package
+                            //   );
+                            //
+                            //   String placeid = place.placeId ?? "0";
+                            //   final detail = await plist.getDetailsByPlaceId(placeid);
+                            //   final geometry = detail.result.geometry!;
+                            //   final lat = geometry.location.lat;
+                            //   final lang = geometry.location.lng;
+                            //   var newlatlang = LatLng(lat, lang);
+                            //
+                            //   //move map camera to selected place with animation
+                            //
+                            //   cubit.mapController!.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: newlatlang, zoom: 14)));
+                            //
+                            //   cubit.destination = newlatlang;
+                            //   cubit.getPolyPoints();
+                            // }
+                      await   cubit.searchOnMap(context);
+                          },
+                            child:Padding(
+                              padding: EdgeInsets.all(15),
+                              child: Card(
+                                child: Container(
+                                    padding: EdgeInsets.all(0),
+                                    width: MediaQuery.of(context).size.width - 40,
+                                    child: ListTile(
+                                      title:Text(cubit.location, style: TextStyle(fontSize: 18),),
+                                      trailing: Icon(Icons.search),
+                                      dense: true,
+                                    )
+                                ),
                               ),
-                            ),
-                          )
-                        // child: Container(
-                        //   margin: EdgeInsets.symmetric(horizontal: 20),
-                        //  padding: EdgeInsets.symmetric(horizontal: 10),
-                        //   decoration: BoxDecoration(
-                        //     boxShadow: [
-                        //       BoxShadow(color: AppColors.black.withOpacity(0.25),blurRadius: 10,
-                        //           spreadRadius: 0,offset:Offset(0,4) )
-                        //     ],
-                        //     color: AppColors.white,
-                        //     borderRadius: BorderRadius.circular(10),
-                        //   ),
+                            )
+                          // child: Container(
+                          //   margin: EdgeInsets.symmetric(horizontal: 20),
+                          //  padding: EdgeInsets.symmetric(horizontal: 10),
+                          //   decoration: BoxDecoration(
+                          //     boxShadow: [
+                          //       BoxShadow(color: AppColors.black.withOpacity(0.25),blurRadius: 10,
+                          //           spreadRadius: 0,offset:Offset(0,4) )
+                          //     ],
+                          //     color: AppColors.white,
+                          //     borderRadius: BorderRadius.circular(10),
+                          //   ),
 
-                          // child: Row(
-                          //   children: [
-                          //     Icon(Icons.location_on_outlined),
-                          //   Expanded(child:   TextField(
-                          //     decoration: InputDecoration(
-                          //       border: InputBorder.none,
-                          //       hintText:location,
-                          //       //"select_destination".tr()
-                          //     ),
-                          //   ),),
-                          //     Icon(Icons.favorite_border)
-                          //   ],
-                          // ),
-                      //  ),
-                      ),
-                     SizedBox(height: 15,),
-                     Row(
-                       children: [
-                         SizedBox(width: 20,),
-                         Text("payment_method").tr(),
-                       ],
-                     ),
-                      RadioListTile(
-                        title: Text("cash").tr(),
-                        value: payment,
-                      contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                      tileColor: AppColors.black1,
-                        activeColor: AppColors.primary,
-                        selected: true,
-                        groupValue: payment,
-                        onChanged: (value){
-                          setState(() {
-                            payment = value.toString();
-                          }
-                         );
-                       },
-                      ),
-                      //SizedBox(height: 5,),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                        CustomButton(
-                          text: "ride_later".tr(),
-                          color: AppColors.primary,
-                          borderRadius: 16,
-                          onClick: ()async {
-                         await   _selectDateAndTime(context);
-                        },
-                        width: getSize(context)/2,),
-                        Container(
-                       //   padding: EdgeInsets.symmetric(horizontal: 1),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(width: 3,color: AppColors.primary)
-                          ),
-                          child: CustomButton(
+                            // child: Row(
+                            //   children: [
+                            //     Icon(Icons.location_on_outlined),
+                            //   Expanded(child:   TextField(
+                            //     decoration: InputDecoration(
+                            //       border: InputBorder.none,
+                            //       hintText:location,
+                            //       //"select_destination".tr()
+                            //     ),
+                            //   ),),
+                            //     Icon(Icons.favorite_border)
+                            //   ],
+                            // ),
+                        //  ),
+                        ),
+                       SizedBox(height: 15,),
+                       //payment_method
+                       Row(
+                         children: [
+                           SizedBox(width: 20,),
+                           Text("payment_method").tr(),
+                         ],
+                       ),
+                        //cash
+                        RadioListTile(
+                          title: Text("cash").tr(),
+                          value: cubit.payment,
+                        contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                        tileColor: AppColors.black1,
+                          activeColor: AppColors.primary,
+                          selected: true,
+                          groupValue: cubit.payment,
+                          onChanged: (value){
+                            cubit.changeRadioButton(value);
+                           //  setState(() {
+                           //    payment = value.toString();
+                           //  }
+                           // );
+                         },
+                        ),
+                        //SizedBox(height: 5,),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            //ride_later
+                          CustomButton(
+                            text: "ride_later".tr(),
+                            color: AppColors.primary,
                             borderRadius: 16,
-                            text: "ride_now".tr(),
-                            color: AppColors.white,
-                            textcolor: AppColors.primary,
-                            onClick: () {
-                              showPopUp(context);
-                            },
-                            width: getSize(context)/3,),
-                        )
-                      ],)
-                    ],
-                  )),
+                            onClick: ()async {
+                           await   cubit.selectDateAndTime(context);
+                          },
+                          width: getSize(context)/2,),
+                          //  ride_now"
+                          Container(
+                         //   padding: EdgeInsets.symmetric(horizontal: 1),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(width: 3,color: AppColors.primary)
+                            ),
+                            child: CustomButton(
+                              borderRadius: 16,
+                              text: "ride_now".tr(),
+                              color: AppColors.white,
+                              textcolor: AppColors.primary,
+                              onClick: () {
+                                showPopUp(context);
+                              },
+                              width: getSize(context)/3,),
+                          )
+                        ],)
+                      ],
+                    )),
+            ),
           ),
+          //todo => other visible states
+
+
+
+
+
+
+
+
+
+
+
+
+          //back button
           Positioned(
             top: getSize(context) * 0.1,
             right: 0,
@@ -368,7 +405,7 @@ class _AddTripTabState extends State<AddTripTab> with SingleTickerProviderStateM
                 children: [
                   InkWell(
                     onTap: () {
-                      context.read<HomeCubit>().controller.animateTo(0);
+                      context.read<HomeCubit>().tabsController.animateTo(0);
                     },
                     child: Image.asset(
                       ImageAssets.backImage,
@@ -407,7 +444,9 @@ class _AddTripTabState extends State<AddTripTab> with SingleTickerProviderStateM
             ),
           ),
         ],
-      ),
+      );
+  },
+),
 
       //Drawer
       drawer: Drawer(
@@ -470,127 +509,127 @@ class _AddTripTabState extends State<AddTripTab> with SingleTickerProviderStateM
     );
   }
 
-  List<LatLng> polylineCoordinates = [];
-
-  void getPolyPoints() async {
-    PolylinePoints polylinePoints = PolylinePoints();
-    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      "AIzaSyCZjDPvxg9h3IUSfVPzIwnKli5Y17p-v9g", // Your Google Map Key
-      PointLatLng(sourceLocation.latitude, sourceLocation.longitude),
-      PointLatLng(destination.latitude, destination.longitude),
-    );
-    if (result.points.isNotEmpty) {
-      result.points.forEach(
-        (PointLatLng point) => polylineCoordinates.add(
-          LatLng(point.latitude, point.longitude),
-        ),
-      );
-      setState(() {});
-    }
-  }
-
-  loc.LocationData? currentLocation;
-
-  void getCurrentLocation() async {
-    loc.Location location = loc.Location();
-    location.getLocation().then(
-      (location) {
-        currentLocation = location;
-        sourceLocation = LatLng(location.latitude!, location.longitude!);
-        setState(() {
-          // //  sourceLocation = LatLng(location.latitude!, location.longitude!);
-        });
-      },
-    );
-    GoogleMapController googleMapController = await _controller.future;
-    location.onLocationChanged.listen(
-      (newLoc) {
-        currentLocation = newLoc;
-        //sourceLocation = LatLng(newLoc.latitude!, newLoc.longitude!);
-        googleMapController.animateCamera(
-          CameraUpdate.newCameraPosition(
-            CameraPosition(
-              zoom: 13.5,
-              target: LatLng(
-                newLoc.latitude!,
-                newLoc.longitude!,
-              ),
-            ),
-          ),
-        );
-        setState(() {});
-      },
-    );
-  }
-
-  BitmapDescriptor sourceIcon = BitmapDescriptor.defaultMarker;
-  BitmapDescriptor destinationIcon = BitmapDescriptor.defaultMarker;
-  BitmapDescriptor currentLocationIcon = BitmapDescriptor.defaultMarker;
-
-  void setCustomMarkerIcon() {
-    BitmapDescriptor.fromAssetImage(
-      ImageConfiguration.empty,
-      "assets/images/pin_source1.png",
-    ).then(
-      (icon) {
-        sourceIcon = icon;
-      },
-    );
-    BitmapDescriptor.fromAssetImage(
-            ImageConfiguration.empty, "assets/images/pin_destination1.png")
-        .then(
-      (icon) {
-        destinationIcon = icon;
-      },
-    );
-    BitmapDescriptor.fromAssetImage(
-            ImageConfiguration.empty, "assets/images/badge1.png")
-        .then(
-      (icon) {
-        currentLocationIcon = icon;
-      },
-    );
-  }
-
-  DateTime _date = new DateTime.now();
-  TimeOfDay _time = new TimeOfDay.now();
-
-  Future<Null> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _date,
-      firstDate: new DateTime(2023),
-      lastDate: new DateTime(2025),
-    );
-
-    if(picked != null && picked != _date) {
-      print('Date selected: ${_date.toString()}');
-      setState((){
-        _date = picked;
-      });
-    }
-  }
-
-  Future<Null> _selectTime(BuildContext context) async {
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: _time,
-    );
-
-    if(picked != null && picked != _time) {
-      print('Time selected: ${_time.toString()}');
-      setState((){
-        _time = picked;
-      });
-    }
-  }
-
-
-  Future<Null> _selectDateAndTime(BuildContext context) async {
-    await _selectDate(context);
-    await _selectTime(context);
-  }
-
+  // List<LatLng> polylineCoordinates = [];
+  //
+  // void getPolyPoints() async {
+  //   PolylinePoints polylinePoints = PolylinePoints();
+  //   PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+  //     "AIzaSyCZjDPvxg9h3IUSfVPzIwnKli5Y17p-v9g", // Your Google Map Key
+  //     PointLatLng(sourceLocation.latitude, sourceLocation.longitude),
+  //     PointLatLng(destination.latitude, destination.longitude),
+  //   );
+  //   if (result.points.isNotEmpty) {
+  //     result.points.forEach(
+  //       (PointLatLng point) => polylineCoordinates.add(
+  //         LatLng(point.latitude, point.longitude),
+  //       ),
+  //     );
+  //     setState(() {});
+  //   }
+  // }
+  //
+  // loc.LocationData? currentLocation;
+  //
+  // void getCurrentLocation() async {
+  //   loc.Location location = loc.Location();
+  //   location.getLocation().then(
+  //     (location) {
+  //       currentLocation = location;
+  //       sourceLocation = LatLng(location.latitude!, location.longitude!);
+  //       setState(() {
+  //         // //  sourceLocation = LatLng(location.latitude!, location.longitude!);
+  //       });
+  //     },
+  //   );
+  //   GoogleMapController googleMapController = await _controller.future;
+  //   location.onLocationChanged.listen(
+  //     (newLoc) {
+  //       currentLocation = newLoc;
+  //       //sourceLocation = LatLng(newLoc.latitude!, newLoc.longitude!);
+  //       googleMapController.animateCamera(
+  //         CameraUpdate.newCameraPosition(
+  //           CameraPosition(
+  //             zoom: 13.5,
+  //             target: LatLng(
+  //               newLoc.latitude!,
+  //               newLoc.longitude!,
+  //             ),
+  //           ),
+  //         ),
+  //       );
+  //       setState(() {});
+  //     },
+  //   );
+  // }
+  //
+  // BitmapDescriptor sourceIcon = BitmapDescriptor.defaultMarker;
+  // BitmapDescriptor destinationIcon = BitmapDescriptor.defaultMarker;
+  // BitmapDescriptor currentLocationIcon = BitmapDescriptor.defaultMarker;
+  //
+  // void setCustomMarkerIcon() {
+  //   BitmapDescriptor.fromAssetImage(
+  //     ImageConfiguration.empty,
+  //     "assets/images/pin_source1.png",
+  //   ).then(
+  //     (icon) {
+  //       sourceIcon = icon;
+  //     },
+  //   );
+  //   BitmapDescriptor.fromAssetImage(
+  //           ImageConfiguration.empty, "assets/images/pin_destination1.png")
+  //       .then(
+  //     (icon) {
+  //       destinationIcon = icon;
+  //     },
+  //   );
+  //   BitmapDescriptor.fromAssetImage(
+  //           ImageConfiguration.empty, "assets/images/badge1.png")
+  //       .then(
+  //     (icon) {
+  //       currentLocationIcon = icon;
+  //     },
+  //   );
+  // }
+  //
+  // DateTime _date = new DateTime.now();
+  // TimeOfDay _time = new TimeOfDay.now();
+  //
+  // Future<Null> _selectDate(BuildContext context) async {
+  //   final DateTime? picked = await showDatePicker(
+  //     context: context,
+  //     initialDate: _date,
+  //     firstDate: new DateTime(2023),
+  //     lastDate: new DateTime(2025),
+  //   );
+  //
+  //   if(picked != null && picked != _date) {
+  //     print('Date selected: ${_date.toString()}');
+  //     setState((){
+  //       _date = picked;
+  //     });
+  //   }
+  // }
+  //
+  // Future<Null> _selectTime(BuildContext context) async {
+  //   final TimeOfDay? picked = await showTimePicker(
+  //     context: context,
+  //     initialTime: _time,
+  //   );
+  //
+  //   if(picked != null && picked != _time) {
+  //     print('Time selected: ${_time.toString()}');
+  //     setState((){
+  //       _time = picked;
+  //     });
+  //   }
+  // }
+  //
+  //
+  // Future<Null> _selectDateAndTime(BuildContext context) async {
+  //   await _selectDate(context);
+  //   await _selectTime(context);
+  // }
+//ride now
   showPopUp(BuildContext context){
     showDialog(
       context: context,
@@ -604,11 +643,19 @@ class _AddTripTabState extends State<AddTripTab> with SingleTickerProviderStateM
                   topRight: Radius.circular(30),
               )
             ),
-            child: Image.asset(
-              "assets/images/animation.gif",
-              height: 125.0,
-              width: 125.0,
-            ),
+           // child:
+            // GifImage(
+            //   controller: controller1,
+            //   width: 200,
+            //   height: 200,
+            //   image: AssetImage("assets/gif/animation.gif",),
+            // )
+            //*********************************************
+            // Image.asset(
+            //   "assets/gif/animation.gif",
+            //   height: 125.0,
+            //   width: 125.0,
+            // ),
 
             // lottie.Lottie.asset("assets/lottie/search.json",
             //     repeat: false,

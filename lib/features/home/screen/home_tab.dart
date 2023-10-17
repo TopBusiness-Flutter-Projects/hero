@@ -393,7 +393,7 @@ class _HomeTabState extends State<HomeTab> {
                             text: "request_trip".tr(),
                             color: AppColors.primary,
                             onClick: () {
-                              context.read<HomeCubit>().controller.animateTo(1);
+                              context.read<HomeCubit>().tabsController.animateTo(1);
                               Navigator.pop(context);
                             },
                           ),
@@ -403,7 +403,7 @@ class _HomeTabState extends State<HomeTab> {
                           InkWell(
                             onTap: () {
 
-                              context.read<HomeCubit>().controller.animateTo(2);
+                              context.read<HomeCubit>().tabsController.animateTo(2);
                               Navigator.pop(context);
                             },
                             child: Container(

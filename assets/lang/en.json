@@ -40,5 +40,7 @@
   "payment_method": "Payment Method",
   "cash": "Cash",
   "ride_now": "Ride Now",
-  "ride_later": "Ride later"
+  "ride_later": "Ride later",
+  "confirm": "Confirm",
+  "sure_about_date": "Are you sure to board at this time?"
 }

@@ -278,7 +278,7 @@ class _TripWithoutDestinationState extends State<TripWithoutDestination> {
                 children: [
                   InkWell(
                     onTap: () {
-                      context.read<HomeCubit>().controller.animateTo(0);
+                      context.read<HomeCubit>().tabsController.animateTo(0);
                     },
                     child: Image.asset(
                       ImageAssets.backImage,
