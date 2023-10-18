@@ -15,6 +15,8 @@ class AppColors {
   static Color avatarColor = HexColor('#96B2B5');
   static Color black1 = HexColor('#110101');
   static Color black2 = HexColor('#605F5F');
+  static Color black3 = HexColor('#373737');
+  static Color grey1 = HexColor('#D9D9D9');
 
   static Color hint = Colors.grey;
   static Color blackLite = Colors.black54;

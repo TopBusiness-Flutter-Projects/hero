@@ -25,10 +25,10 @@ class HomeCubit extends Cubit<HomeState> {
   List<LatLng> polylineCoordinates = [];
    LatLng sourceLocation = LatLng(31.2693, 30.7873);
     LatLng destination = LatLng(30.4301, 31.0364);
-    bool bottomContainerInitialState = true;
-    bool bottomContainerLoadingState = true;
+    bool bottomContainerInitialState = false;
+    bool bottomContainerLoadingState = false;
     bool bottomContainerFailureState = true;
-    bool bottomContainerSuccessState = true;
+    bool bottomContainerSuccessState = false;
    DateTime? datePicked;
    TimeOfDay? timePicked;
  // DateTime date = new DateTime.now();
@@ -66,6 +66,11 @@ class HomeCubit extends Cubit<HomeState> {
       emit(UpdatePlyLinesState());
      // setState(() {});
     }
+  }
+  changeToRideNowState(){
+    bottomContainerInitialState = false;
+    bottomContainerLoadingState = true;
+    emit(ChangeToRideNowState());
   }
 
   loc.LocationData? currentLocation;

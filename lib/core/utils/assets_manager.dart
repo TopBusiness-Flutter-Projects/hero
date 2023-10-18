@@ -15,6 +15,10 @@ class ImageAssets {
   static const String greyToktok = '$imagePath/greytoktok.png';
   static const String person = '$imagePath/person.png';
   static const String dateConfirm = '$imagePath/date_confirm.png';
+  static const String search = '$imagePath/search_image.png';
+  static const String success = '$imagePath/success.png';
+  static const String failure = '$imagePath/failure.png';
+  static const String marker = '$imagePath/marker.png';
 
 
   // icons

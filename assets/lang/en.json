@@ -43,5 +43,10 @@
   "ride_now": "Ride Now",
   "ride_later": "Ride later",
   "confirm": "Confirm",
-  "sure_about_date": "Are you sure to board at this time?"
+  "sure_about_date": "Are you sure to board at this time?",
+  "search_for_drivers": "We are looking for drivers nearby to accept your ride. Once your ride is accepted you can ride with us!",
+  "appreciate_your_patience": "We appreciate your patience!",
+  "confirm_driver": "Confirmed from a nearby driver and will arrive soon! When the driver arrives, click Start your trip?",
+  "try_again": "Try again",
+  "no_drivers": "There are no drivers near you, try later!"
 }

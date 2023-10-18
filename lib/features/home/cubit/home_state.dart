@@ -12,3 +12,4 @@ class UpdateCameraPosition extends HomeState {}
 class OnMapCreatedState extends HomeState {}
 class SearchState extends HomeState {}
 class ChangeRadiState extends HomeState {}
+class ChangeToRideNowState extends HomeState {}

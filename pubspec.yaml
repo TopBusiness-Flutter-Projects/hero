@@ -91,6 +91,7 @@ dependencies:
   d_chart: ^2.6.2
   pin_code_fields: ^8.0.1
   intl:
+  flutter_image_compress:
   wave_linear_progress_indicator: ^0.1.0
   font_awesome_flutter: ^10.5.0
   numberpicker: ^2.1.2
