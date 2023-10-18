@@ -94,6 +94,7 @@ class _SignUpState extends State<SignUp> {
                     backgroundColor: AppColors.white,
                     prefixWidget: const Icon(CupertinoIcons.person),
                     validatorMessage: 'name_msg'.tr(),
+                    horizontalPadding: 2,
                     // controller: controller.phoneNumberController,
                   ),
                 ),
@@ -124,6 +125,8 @@ class _SignUpState extends State<SignUp> {
                     backgroundColor: AppColors.white,
                     prefixWidget: const Icon(CupertinoIcons.mail),
                     validatorMessage: 'email_msg'.tr(),
+                    horizontalPadding: 2,
+
                     // controller: controller.phoneNumberController,
                   ),
                 ),
@@ -171,6 +174,8 @@ class _SignUpState extends State<SignUp> {
                         backgroundColor: AppColors.white,
 
                         validatorMessage: 'phone_msg'.tr(),
+                        horizontalPadding: 2,
+
                         // controller: controller.phoneNumberController,
                       ),
                     ),

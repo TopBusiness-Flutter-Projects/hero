@@ -64,7 +64,7 @@ class CustomTextField extends StatelessWidget {
         ),
         autofocus: true,
         decoration: InputDecoration(
-          contentPadding: const EdgeInsets.all(0),
+          contentPadding: const EdgeInsets.all(1),
           hintStyle: TextStyle(
             color: AppColors.gray6,
             fontWeight: FontWeight.w400,
@@ -88,7 +88,7 @@ class CustomTextField extends StatelessWidget {
             borderSide: BorderSide(
                 color: isAdd ? AppColors.white : AppColors.white),
           ):InputBorder.none,
-          prefixIcon: prefixWidget,
+          prefixIcon: textInputType!=TextInputType.phone?prefixWidget:null,
           suffixIcon: suffixIcon,
           suffixIconColor: AppColors.buttonColor,
           prefixIconColor: AppColors.buttonColor,

@@ -21,10 +21,9 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(getSize(context) / 16),
+          padding: EdgeInsets.all(getSize(context) / 24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
@@ -47,7 +46,7 @@ class _LoginState extends State<Login> {
                 height: getSize(context) / 8,
               ),
               SizedBox(
-               /// height: getSize(context) / 24,
+                /// height: getSize(context) / 24,
                 ///width: getSize(context),
                 child: Text("phone".tr(),
                     style: TextStyle(
@@ -59,8 +58,9 @@ class _LoginState extends State<Login> {
                 height: getSize(context) / 20,
               ),
               Container(
-                height: getSize(context)/10,
-                padding: EdgeInsets.symmetric(horizontal: getSize(context)/16),
+                height: getSize(context) / 10,
+                padding:
+                    EdgeInsets.symmetric(horizontal: getSize(context) / 16),
                 decoration: BoxDecoration(
                     border: Border.all(color: AppColors.gray6),
                     borderRadius: BorderRadius.all(
@@ -73,22 +73,21 @@ class _LoginState extends State<Login> {
                           fontSize: getSize(context) / 24,
                         )),
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 1.0),
+                      padding: EdgeInsets.symmetric(vertical: 1),
                       child: VerticalDivider(
                         color: AppColors.primary,
-                       // height: getSize(context)/10-2,
+                        // height: getSize(context)/10-2,
                         thickness: 1,
-
-
                       ),
                     ),
-                    Expanded(
+                    Flexible(
+                      fit: FlexFit.tight,
                       child: CustomTextField(
                         title: 'phone'.tr(),
                         textInputType: TextInputType.phone,
                         backgroundColor: AppColors.white,
-                        prefixWidget: const Icon(CupertinoIcons.phone),
                         validatorMessage: 'phone_msg'.tr(),
+                        horizontalPadding: 0,
                         // controller: controller.phoneNumberController,
                       ),
                     ),
@@ -100,20 +99,33 @@ class _LoginState extends State<Login> {
               ),
               Row(
                 children: [
-                  Checkbox(value: true, onChanged: (value) {
+                  Checkbox(
 
-                  },
-                     checkColor: AppColors.white,
-                  //  hoverColor: AppColors.primary,
+                    value: true, onChanged: (value) {},
+                    checkColor: AppColors.white,
+                    //  hoverColor: AppColors.primary,
                     activeColor: AppColors.primary,
-                  ),
-                 Text("agreeto".tr(),
-                 style: TextStyle(color: AppColors.black,fontSize: getSize(context)/24),),
-                  Text("terms".tr(),
-                 style: TextStyle(color: AppColors.primary,fontSize: getSize(context)/24),),
-                  Text("company".tr(),
-                 style: TextStyle(color: AppColors.black,fontSize: getSize(context)/24),),
 
+
+                  ),
+                  Text(
+                    "agreeto".tr(),
+                    style: TextStyle(
+                        color: AppColors.black,
+                        fontSize: getSize(context) / 26),
+                  ),
+                  Text(
+                    "terms".tr(),
+                    style: TextStyle(
+                        color: AppColors.primary,
+                        fontSize: getSize(context) / 26),
+                  ),
+                  Text(
+                    "company".tr(),
+                    style: TextStyle(
+                        color: AppColors.black,
+                        fontSize: getSize(context) / 26),
+                  ),
                 ],
               ),
               SizedBox(
@@ -121,10 +133,13 @@ class _LoginState extends State<Login> {
               ),
               CustomButton(
                 width: getSize(context),
-                text: "follow".tr(), color: AppColors.primary, onClick: () {
-                  Navigator.pushNamedAndRemoveUntil(context, Routes.verificationScreenRoute, (route) => false);
-                
-              },)
+                text: "follow".tr(),
+                color: AppColors.primary,
+                onClick: () {
+                  Navigator.pushNamedAndRemoveUntil(context,
+                      Routes.verificationScreenRoute, (route) => false);
+                },
+              )
             ],
           ),
         ),
