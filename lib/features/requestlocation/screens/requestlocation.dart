@@ -9,7 +9,8 @@ import '../../../core/utils/app_colors.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:location/location.dart'as loc;
 class RequestLocation extends StatefulWidget {
-  const RequestLocation({super.key});
+  const RequestLocation({super.key, required this.type});
+  final String type;
 
   @override
   State<RequestLocation> createState() => _RequestLocationState();
@@ -45,7 +46,7 @@ class _RequestLocationState extends State<RequestLocation> {
               Center(
                 child: SizedBox(
                   child: Image.asset(
-                    ImageAssets.requestlocationImage,
+                   widget.type=="client"? ImageAssets.requestlocationImage:ImageAssets.toktokmobileImage,
                     height: getSize(context) / 1.3,
                     width: getSize(context) / 1.1,
                     fit: BoxFit.fill,
@@ -77,7 +78,8 @@ class _RequestLocationState extends State<RequestLocation> {
                   /// height: getSize(context) / 24,
                   ///width: getSize(context),
                   child: Center(
-                    child: Text("to_join".tr(),
+                    child: Text(
+                        widget.type=="client"?"to_join".tr():"please_enable".tr(),
                         textAlign:TextAlign.center,
                         style: TextStyle(
 
@@ -96,7 +98,7 @@ class _RequestLocationState extends State<RequestLocation> {
                 borderRadius: getSize(context) / 24,
                 color: AppColors.primary,
                 onClick: () {
-                  Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeRoute, (route) => false);
+                  Navigator.of(context).pushNamedAndRemoveUntil(Routes.registerScreenRoute, (route) => false);
                 },
               ),
 

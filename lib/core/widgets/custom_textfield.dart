@@ -68,6 +68,7 @@ class CustomTextField extends StatelessWidget {
           hintStyle: TextStyle(
             color: AppColors.gray6,
             fontWeight: FontWeight.w400,
+
           ),
           hintText: title,
           isDense: true,
@@ -75,23 +76,24 @@ class CustomTextField extends StatelessWidget {
           OutlineInputBorder(
             borderRadius: BorderRadius.circular(getSize(context) / 22),
             borderSide: BorderSide(
-                color: isAdd ? AppColors.white : AppColors.buttonColor),
+                color: isAdd ? AppColors.white : AppColors.white),
           ):InputBorder.none,
           enabledBorder: textInputType!=TextInputType.phone? OutlineInputBorder(
             borderRadius: BorderRadius.circular(getSize(context) / 22),
             borderSide: BorderSide(
-                color: isAdd ? AppColors.white : AppColors.buttonColor),
+                color: isAdd ? AppColors.white : AppColors.white),
           ):InputBorder.none,
           focusedBorder:textInputType!=TextInputType.phone?  OutlineInputBorder(
             borderRadius: BorderRadius.circular(getSize(context) / 22),
             borderSide: BorderSide(
-                color: isAdd ? AppColors.white : AppColors.buttonColor),
+                color: isAdd ? AppColors.white : AppColors.white),
           ):InputBorder.none,
-          //prefixIcon: prefixWidget,
+          prefixIcon: prefixWidget,
           suffixIcon: suffixIcon,
           suffixIconColor: AppColors.buttonColor,
           prefixIconColor: AppColors.buttonColor,
           fillColor: backgroundColor,
+
 
           filled: true,
         ),

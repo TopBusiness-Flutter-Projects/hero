@@ -108,7 +108,7 @@ class _ChooseTypeState extends State<ChooseType> {
                 borderRadius: getSize(context) / 24,
                 color: AppColors.primary,
                 onClick: () {
-                  Navigator.pushNamedAndRemoveUntil(context, Routes.requestlocationScreenRoute, (route) => false);
+                  Navigator.pushNamedAndRemoveUntil(context, Routes.requestlocationScreenRoute, (route) => false,arguments: "client");
                 },
               ),
               SizedBox(
@@ -135,7 +135,10 @@ class _ChooseTypeState extends State<ChooseType> {
                   color: AppColors.white,
                   textcolor: AppColors.primary,
                   borderRadius: getSize(context) / 24,
-                  onClick: () {},
+                  onClick: () {
+                    Navigator.pushNamedAndRemoveUntil(context, Routes.requestlocationScreenRoute, (route) => false,arguments: "driver");
+
+                  },
                 ),
               )
             ],

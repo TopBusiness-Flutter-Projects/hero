@@ -10,6 +10,7 @@ class ImageAssets {
   static const String verifyImage = '$imagePath/lock_verfy.png';
   static const String userTypeImage = '$imagePath/usertype.png';
   static const String requestlocationImage = '$imagePath/requestlocation.png';
+  static const String toktokmobileImage = '$imagePath/toktokmobile.png';
   static const String backImage = '$imagePath/back.png';
   static const String greyToktok = '$imagePath/greytoktok.png';
   static const String person = '$imagePath/person.png';
@@ -43,6 +44,7 @@ class ImageAssets {
   static const String delete = '$iconsPath/delete.svg';
   static const String signOut = '$iconsPath/signout.svg';
   static const String close = '$iconsPath/close.svg';
+  static const String calender = '$iconsPath/calender.svg';
 
   //Lottie
   static const String noItems = '$lottiePath/no_item.json';

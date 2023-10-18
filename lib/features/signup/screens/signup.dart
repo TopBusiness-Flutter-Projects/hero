@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:hero/core/utils/assets_manager.dart';
 import 'package:hero/core/utils/getsize.dart';
 import 'package:hero/core/widgets/custom_button.dart';
+import 'package:hero/core/widgets/my_svg_widget.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
+import '../../../config/routes/app_routes.dart';
 import '../../../core/utils/app_colors.dart';
 import '../../../core/widgets/custom_textfield.dart';
 
@@ -80,18 +82,20 @@ class _SignUpState extends State<SignUp> {
               ),
               Container(
                 height: getSize(context)/10,
-                padding: EdgeInsets.symmetric(horizontal: getSize(context)/16),
+                //padding: EdgeInsets.symmetric(horizontal: getSize(context)/32),
                 decoration: BoxDecoration(
                     border: Border.all(color: AppColors.gray6),
                     borderRadius: BorderRadius.all(
                         Radius.circular(getSize(context) / 22))),
-                child: CustomTextField(
-                  title: 'name'.tr(),
-                  textInputType: TextInputType.text,
-                  backgroundColor: AppColors.white,
-                  prefixWidget: const Icon(CupertinoIcons.person),
-                  validatorMessage: 'name_msg'.tr(),
-                  // controller: controller.phoneNumberController,
+                child: Center(
+                  child: CustomTextField(
+                    title: 'name'.tr(),
+                    textInputType: TextInputType.text,
+                    backgroundColor: AppColors.white,
+                    prefixWidget: const Icon(CupertinoIcons.person),
+                    validatorMessage: 'name_msg'.tr(),
+                    // controller: controller.phoneNumberController,
+                  ),
                 ),
               ),
               SizedBox(
@@ -108,18 +112,20 @@ class _SignUpState extends State<SignUp> {
               ),
               Container(
                 height: getSize(context)/10,
-                padding: EdgeInsets.symmetric(horizontal: getSize(context)/16),
+              //  padding: EdgeInsets.symmetric(horizontal: getSize(context)/32),
                 decoration: BoxDecoration(
                     border: Border.all(color: AppColors.gray6),
                     borderRadius: BorderRadius.all(
                         Radius.circular(getSize(context) / 22))),
-                child: CustomTextField(
-                  title: 'email'.tr(),
-                  textInputType: TextInputType.phone,
-                  backgroundColor: AppColors.white,
-                  prefixWidget: const Icon(CupertinoIcons.mail),
-                  validatorMessage: 'email_msg'.tr(),
-                  // controller: controller.phoneNumberController,
+                child: Center(
+                  child: CustomTextField(
+                    title: 'email'.tr(),
+                    textInputType: TextInputType.emailAddress,
+                    backgroundColor: AppColors.white,
+                    prefixWidget: const Icon(CupertinoIcons.mail),
+                    validatorMessage: 'email_msg'.tr(),
+                    // controller: controller.phoneNumberController,
+                  ),
                 ),
               ),
               SizedBox(
@@ -163,8 +169,32 @@ class _SignUpState extends State<SignUp> {
                         title: 'phone'.tr(),
                         textInputType: TextInputType.phone,
                         backgroundColor: AppColors.white,
-                        prefixWidget: const Icon(CupertinoIcons.phone),
+
                         validatorMessage: 'phone_msg'.tr(),
+                        // controller: controller.phoneNumberController,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: getSize(context) / 20,
+              ),
+              Container(
+                height: getSize(context)/10,
+                padding: EdgeInsets.symmetric(horizontal: getSize(context)/16),
+                decoration: BoxDecoration(
+                    border: Border.all(color: AppColors.gray6),
+                    borderRadius: BorderRadius.all(
+                        Radius.circular(getSize(context) / 22))),
+                child: Row(
+                  children: [
+                 MySvgWidget(path: ImageAssets.calender, imageColor: AppColors.buttonColor, size: 20),
+
+                    Expanded(
+                      child: Text(
+                      "1/1/2008",
+                        style: TextStyle(color: AppColors.gray5,fontSize: getSize(context)/24),
                         // controller: controller.phoneNumberController,
                       ),
                     ),
@@ -179,7 +209,10 @@ class _SignUpState extends State<SignUp> {
                 text: "register".tr(),
                 borderRadius: getSize(context) / 24,
                 color: AppColors.primary,
-                onClick: () {},
+                onClick: () {
+                  Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeRoute, (route) => false);
+
+                },
               ),
 
             ],

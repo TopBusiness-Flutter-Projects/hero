@@ -52,8 +52,9 @@ class AppRoutes {
           builder: (context) => const ChooseType(),
         );
         case Routes.requestlocationScreenRoute:
+          String type=settings.arguments as String;
         return MaterialPageRoute(
-          builder: (context) => const RequestLocation(),
+          builder: (context) =>  RequestLocation(type: type,),
         );
   case Routes.registerScreenRoute:
         return MaterialPageRoute(
