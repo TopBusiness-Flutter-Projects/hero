@@ -55,4 +55,7 @@
   "toktok_color": "TokTok Color",
 
   "no_drivers": "There are no drivers near you, try later!"
+  "name": "Name",
+  "email": "Email",
+  "birth_date": "Birth Date"
 }

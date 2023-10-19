@@ -18,6 +18,8 @@ import 'package:location/location.dart'as loc;
 part 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
+  int? flag;
+
   HomeCubit() : super(HomeInitial());
   String? payment = "cash";
   late TabController tabsController ;
@@ -25,10 +27,15 @@ class HomeCubit extends Cubit<HomeState> {
   List<LatLng> polylineCoordinates = [];
    LatLng sourceLocation = LatLng(31.2693, 30.7873);
     LatLng destination = LatLng(30.4301, 31.0364);
-    bool bottomContainerInitialState = false;
+    bool bottomContainerInitialState = true;
     bool bottomContainerLoadingState = false;
-    bool bottomContainerFailureState = true;
+    bool bottomContainerFailureState = false;
     bool bottomContainerSuccessState = false;
+    //ride now variables
+  bool bottomContainerInitialState1 = true;
+  bool bottomContainerLoadingState1 = false;
+  bool bottomContainerFailureState1 = false;
+  bool bottomContainerSuccessState1 = false;
    DateTime? datePicked;
    TimeOfDay? timePicked;
  // DateTime date = new DateTime.now();
@@ -40,7 +47,10 @@ class HomeCubit extends Cubit<HomeState> {
   final Completer<GoogleMapController> controller = Completer();
   GoogleMapController? mapController;
   String location = "Search Location";
-
+void setflag(int flag){
+  this.flag=flag;
+  emit(HomeInitial());
+}
   onMapCreated(GoogleMapController mapController){
     controller.complete(mapController);
    // _customInfoWindowController.googleMapController = mapController;
@@ -151,9 +161,7 @@ class HomeCubit extends Cubit<HomeState> {
     getPolyPoints();
   }
   }
-searchOnMap1(){
 
-}
 
 changeRadioButton(value){
   //setState(() {

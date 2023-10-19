@@ -50,6 +50,8 @@ class ImageAssets {
   static const String signOut = '$iconsPath/signout.svg';
   static const String close = '$iconsPath/close.svg';
   static const String calender = '$iconsPath/calender.svg';
+  static const String notification = '$iconsPath/notification.svg';
+  static const String location = '$iconsPath/location.svg';
 
   //Lottie
   static const String noItems = '$lottiePath/no_item.json';
