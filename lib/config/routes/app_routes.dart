@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hero/features/home/screen/home.dart';
 import 'package:hero/features/login/screens/login.dart';
+import 'package:hero/features/notification/screens/notification_screen.dart';
 import 'package:hero/features/splash/screens/splash_screen.dart';
 
 import '../../core/utils/app_strings.dart';
@@ -13,7 +14,7 @@ class Routes {
   static const String initialRoute = '/';
   static const String loginRoute = '/login';
   static const String homeRoute = '/home';
-  static const String notificationDetailsRoute = '/notificationDetails';
+  //static const String notificationDetailsRoute = '/notificationDetails';
   static const String registerScreenRoute = '/registerScreen';
   static const String verificationScreenRoute = '/verificationScreen';
   static const String usertypeScreenRoute = '/userTypeScreen';
@@ -28,6 +29,7 @@ class Routes {
   static const String detailsRoute = '/details';
   static const String contactUsRoute = '/contact_us';
   static const String googleMapDetailsRoute = '/google_map_details_screen';
+  static const String notificationRoute = '/notification_screen';
 }
 
 class AppRoutes {
@@ -63,6 +65,10 @@ class AppRoutes {
         case Routes.homeRoute:
         return MaterialPageRoute(
           builder: (context) =>  Home(),
+        );
+        case Routes.notificationRoute:
+        return MaterialPageRoute(
+          builder: (context) =>  NotificationScreen(),
         );
 
 

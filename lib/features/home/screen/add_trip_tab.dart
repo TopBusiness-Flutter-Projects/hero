@@ -13,6 +13,7 @@ import 'package:hero/core/widgets/custom_button.dart';
 import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/assets_manager.dart';
 import '../../../core/utils/getsize.dart';
+import '../../../core/widgets/back_button.dart';
 import '../components/drawer_list_item.dart';
 import '../cubit/home_cubit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -26,7 +27,7 @@ class AddTripTab extends StatefulWidget {
 }
 
 class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+ // final scaffoldKey = GlobalKey<ScaffoldState>();
   CustomInfoWindowController _customInfoWindowController =
   CustomInfoWindowController();
 
@@ -108,7 +109,7 @@ Set markers = {};
     // );
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      key: scaffoldKey,
+    //  key: scaffoldKey,
       body: BlocConsumer<HomeCubit, HomeState>(
         listener: (context, state) {
           // TODO: implement listener
@@ -176,13 +177,7 @@ Set markers = {};
                         ),
                       },
                     ),
-              // CustomInfoWindow(
-              //   controller: _customInfoWindowController,
-              //   height: 75,
-              //   width: 150,
-              //   offset: 50,
-              // ),
-              // // default container bottomContainerInitialState = true
+
               Visibility(
                 visible: cubit.bottomContainerInitialState,
                 child: Align(
@@ -203,56 +198,35 @@ Set markers = {};
                           SizedBox(
                             height: getSize(context) * 0.1,
                           ),
-                          InkWell(
-                              onTap: () async {
+                          Visibility(
+                            visible:  context.read<HomeCubit>().flag==1
+                            ,
+                            child: InkWell(
+                                onTap: () async {
 
-                                await cubit.searchOnMap(context);
-                              },
-                              child: Padding(
-                                padding: EdgeInsets.all(15),
-                                child: Card(
-                                  child: Container(
+                                  await cubit.searchOnMap(context);
+                                },
+                                child: Padding(
+                                  padding: EdgeInsets.all(15),
+                                  child: Card(
+                                    child: Container(
 
-                                      padding: EdgeInsets.all(0),
-                                      width: MediaQuery.of(context).size.width -
-                                          40,
-                                      child: ListTile(
-                                        title: Text(
-                                          cubit.location,
-                                          style: TextStyle(fontSize: 18),
-                                        ),
-                                        trailing: Icon(Icons.search),
-                                        dense: true,
-                                      )),
+                                        padding: EdgeInsets.all(0),
+                                        width: MediaQuery.of(context).size.width -
+                                            40,
+                                        child: ListTile(
+                                          title: Text(
+                                            cubit.location,
+                                            style: TextStyle(fontSize: 18),
+                                          ),
+                                          trailing: Icon(Icons.search),
+                                          dense: true,
+                                        )),
+                                  ),
+                                )
+
                                 ),
-                              )
-                              // child: Container(
-                              //   margin: EdgeInsets.symmetric(horizontal: 20),
-                              //  padding: EdgeInsets.symmetric(horizontal: 10),
-                              //   decoration: BoxDecoration(
-                              //     boxShadow: [
-                              //       BoxShadow(color: AppColors.black.withOpacity(0.25),blurRadius: 10,
-                              //           spreadRadius: 0,offset:Offset(0,4) )
-                              //     ],
-                              //     color: AppColors.white,
-                              //     borderRadius: BorderRadius.circular(10),
-                              //   ),
-
-                              // child: Row(
-                              //   children: [
-                              //     Icon(Icons.location_on_outlined),
-                              //   Expanded(child:   TextField(
-                              //     decoration: InputDecoration(
-                              //       border: InputBorder.none,
-                              //       hintText:location,
-                              //       //"select_destination".tr()
-                              //     ),
-                              //   ),),
-                              //     Icon(Icons.favorite_border)
-                              //   ],
-                              // ),
-                              //  ),
-                              ),
+                          ),
                           SizedBox(
                             height: 15,
                           ),
@@ -277,10 +251,7 @@ Set markers = {};
                             groupValue: cubit.payment,
                             onChanged: (value) {
                               cubit.changeRadioButton(value);
-                              //  setState(() {
-                              //    payment = value.toString();
-                              //  }
-                              // );
+
                             },
                           ),
                           //SizedBox(height: 5,),
@@ -486,22 +457,9 @@ Set markers = {};
                     )),
               ),
 
-
-
-
-
-
-
-
-
-
-
-
-
-
               //back button
               Positioned(
-                top: getSize(context) * 0.1,
+                top: getSize(context) * 0.01,
                 right: 0,
                 left: 0,
                 child: Padding(
@@ -509,42 +467,9 @@ Set markers = {};
                       vertical: 10.0, horizontal: 12),
                   child: Row(
                     children: [
-                      InkWell(
-                        onTap: () {
-                          context.read<HomeCubit>().tabsController.animateTo(0);
-                        },
-                        child: Image.asset(
-                          ImageAssets.backImage,
-                          height: getSize(context) / 13,
-                          width: getSize(context) / 13,
-
-                          // height: getSize(context) / 1.2,
-                          // width: getSize(context) / 1.2,
-                        ),
-                      ),
+                      CustomBackButton(),
                       Spacer(),
-                      InkWell(
-                        onTap: () {
-                          //todo
-                          scaffoldKey.currentState?.openDrawer();
-                        },
-                        child: Container(
-                            padding: EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: AppColors.black.withOpacity(0.25),
-                                      blurRadius: 1,
-                                      spreadRadius: 1)
-                                ],
-                                borderRadius: BorderRadius.all(
-                                    Radius.circular(getSize(context) / 80)),
-                                color: AppColors.white),
-                            child: Icon(
-                              Icons.menu,
-                              size: 20,
-                            )),
-                      )
+
                     ],
                   ),
                 ),
@@ -554,64 +479,7 @@ Set markers = {};
         },
       ),
 
-      //Drawer
-      drawer: Drawer(
-        child: Column(
-          // padding: EdgeInsets.zero,
-          children: <Widget>[
-            SizedBox(
-              height: getSize(context) * 0.1,
-            ),
-            ListTile(
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "محمد",
-                    style: TextStyle(
-                        fontSize: getSize(context) * 0.03,
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.black2),
-                  ),
-                  InkWell(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: SvgPicture.asset(
-                        ImageAssets.close,
-                        width: getSize(context) * 0.04,
-                      ))
-                ],
-              ),
-              leading: CircleAvatar(
-                radius: getSize(context) * 0.1,
-                backgroundImage: AssetImage(ImageAssets.person),
-              ),
-              subtitle: Text(
-                "info@examble.com",
-                style: TextStyle(
-                    fontSize: getSize(context) * 0.03,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.black2),
-              ),
-            ),
-            Expanded(
-                child: ListView.separated(
-                    itemBuilder: (context, index) {
-                      return DrawerListItem(
-                        drawerItemModel: drawerItems[index],
-                        textColor: index != drawerItems.length - 1
-                            ? AppColors.black1
-                            : AppColors.red,
-                      );
-                    },
-                    separatorBuilder: (context, index) {
-                      return Divider();
-                    },
-                    itemCount: drawerItems.length)),
-          ],
-        ),
-      ),
+
     );
   }
 

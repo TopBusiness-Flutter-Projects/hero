@@ -48,5 +48,8 @@
   "appreciate_your_patience": "We appreciate your patience!",
   "confirm_driver": "Confirmed from a nearby driver and will arrive soon! When the driver arrives, click Start your trip?",
   "try_again": "Try again",
-  "no_drivers": "There are no drivers near you, try later!"
+  "no_drivers": "There are no drivers near you, try later!",
+  "name": "Name",
+  "email": "Email",
+  "birth_date": "Birth Date"
 }
