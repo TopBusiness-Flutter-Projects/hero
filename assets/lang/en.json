@@ -48,5 +48,11 @@
   "appreciate_your_patience": "We appreciate your patience!",
   "confirm_driver": "Confirmed from a nearby driver and will arrive soon! When the driver arrives, click Start your trip?",
   "try_again": "Try again",
+  "current_governate": "Current Governate",
+  "current_state": "Current State",
+  "toktok_type": "TokTok Type",
+  "toktok_model": "TokTok Model",
+  "toktok_color": "TokTok Color",
+
   "no_drivers": "There are no drivers near you, try later!"
 }

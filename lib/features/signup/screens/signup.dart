@@ -36,7 +36,7 @@ class _SignUpState extends State<SignUp> {
               Image.asset(
                 ImageAssets.backImage,
                 height: getSize(context) / 13,
-                width: getSize(context) /13,
+                width: getSize(context) / 13,
 
                 // height: getSize(context) / 1.2,
                 // width: getSize(context) / 1.2,
@@ -58,9 +58,14 @@ class _SignUpState extends State<SignUp> {
                             color: AppColors.gray,
                           )),
                       Positioned(
-                          top: getSize(context)*0.06,
+                          top: getSize(context) * 0.06,
                           right: -5,
-                          child: IconButton(onPressed: (){}, icon: Icon(Icons.camera_alt_rounded,color: AppColors.primary,)))
+                          child: IconButton(
+                              onPressed: () {},
+                              icon: Icon(
+                                Icons.camera_alt_rounded,
+                                color: AppColors.primary,
+                              )))
                     ],
                   ),
                 ),
@@ -81,7 +86,7 @@ class _SignUpState extends State<SignUp> {
                 height: getSize(context) / 20,
               ),
               Container(
-                height: getSize(context)/10,
+                height: getSize(context) / 10,
                 //padding: EdgeInsets.symmetric(horizontal: getSize(context)/32),
                 decoration: BoxDecoration(
                     border: Border.all(color: AppColors.gray6),
@@ -112,8 +117,8 @@ class _SignUpState extends State<SignUp> {
                 height: getSize(context) / 20,
               ),
               Container(
-                height: getSize(context)/10,
-              //  padding: EdgeInsets.symmetric(horizontal: getSize(context)/32),
+                height: getSize(context) / 10,
+                //  padding: EdgeInsets.symmetric(horizontal: getSize(context)/32),
                 decoration: BoxDecoration(
                     border: Border.all(color: AppColors.gray6),
                     borderRadius: BorderRadius.all(
@@ -144,8 +149,9 @@ class _SignUpState extends State<SignUp> {
                 height: getSize(context) / 20,
               ),
               Container(
-                height: getSize(context)/10,
-                padding: EdgeInsets.symmetric(horizontal: getSize(context)/16),
+                height: getSize(context) / 10,
+                padding:
+                    EdgeInsets.symmetric(horizontal: getSize(context) / 16),
                 decoration: BoxDecoration(
                     border: Border.all(color: AppColors.gray6),
                     borderRadius: BorderRadius.all(
@@ -163,8 +169,6 @@ class _SignUpState extends State<SignUp> {
                         color: AppColors.primary,
                         // height: getSize(context)/10-2,
                         thickness: 1,
-
-
                       ),
                     ),
                     Expanded(
@@ -186,20 +190,28 @@ class _SignUpState extends State<SignUp> {
                 height: getSize(context) / 20,
               ),
               Container(
-                height: getSize(context)/10,
-                padding: EdgeInsets.symmetric(horizontal: getSize(context)/16),
+                height: getSize(context) / 10,
+                padding:
+                    EdgeInsets.symmetric(horizontal: getSize(context) / 16),
                 decoration: BoxDecoration(
                     border: Border.all(color: AppColors.gray6),
                     borderRadius: BorderRadius.all(
                         Radius.circular(getSize(context) / 22))),
                 child: Row(
                   children: [
-                 MySvgWidget(path: ImageAssets.calender, imageColor: AppColors.buttonColor, size: 20),
-
+                    MySvgWidget(
+                        path: ImageAssets.calender,
+                        imageColor: AppColors.buttonColor,
+                        size: 20),
+                    SizedBox(
+                      width: getSize(context) / 26,
+                    ),
                     Expanded(
                       child: Text(
-                      "1/1/2008",
-                        style: TextStyle(color: AppColors.gray5,fontSize: getSize(context)/24),
+                        "1/1/2008",
+                        style: TextStyle(
+                            color: AppColors.gray5,
+                            fontSize: getSize(context) / 24),
                         // controller: controller.phoneNumberController,
                       ),
                     ),
@@ -215,11 +227,10 @@ class _SignUpState extends State<SignUp> {
                 borderRadius: getSize(context) / 24,
                 color: AppColors.primary,
                 onClick: () {
-                  Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeRoute, (route) => false);
-
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                      Routes.driversignupRoute, (route) => false);
                 },
               ),
-
             ],
           ),
         ),

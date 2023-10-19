@@ -4,6 +4,7 @@ import 'package:hero/features/login/screens/login.dart';
 import 'package:hero/features/splash/screens/splash_screen.dart';
 
 import '../../core/utils/app_strings.dart';
+import '../../features/driver_signup/screens/driversignup.dart';
 import '../../features/requestlocation/screens/requestlocation.dart';
 import '../../features/signup/screens/signup.dart';
 import '../../features/usertype/screens/usertype.dart';
@@ -28,6 +29,7 @@ class Routes {
   static const String detailsRoute = '/details';
   static const String contactUsRoute = '/contact_us';
   static const String googleMapDetailsRoute = '/google_map_details_screen';
+  static const String driversignupRoute = '/driversignup';
 }
 
 class AppRoutes {
@@ -63,6 +65,10 @@ class AppRoutes {
         case Routes.homeRoute:
         return MaterialPageRoute(
           builder: (context) =>  Home(),
+        );
+      case Routes.driversignupRoute:
+        return MaterialPageRoute(
+          builder: (context) =>  DriverSignUp(),
         );
 
 
