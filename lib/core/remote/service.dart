@@ -1,8 +1,14 @@
-
 // import 'package:http/http.dart' as http;
 
 import '../api/base_api_consumer.dart';
+import '../api/end_points.dart';
+import '../error/exceptions.dart';
+import '../error/failures.dart';
+import 'package:dartz/dartz.dart';
 
+import '../models/place_details.dart';
+import '../models/place_geocode.dart';
+import '../utils/app_strings.dart';
 
 class ServiceApi {
   final BaseApiConsumer dio;
@@ -289,20 +295,40 @@ class ServiceApi {
 //     }
 //   }
 //
-//   Future<Either<Failure,CitiesModel>> getCities()async{
-//     LoginModel loginModel = await Preferences.instance.getUserModel();
-//     try{
-//       final response = await dio.get(
-//           EndPoints.citiesUrl,
-//         options: Options(
-//           headers: {'Authorization': loginModel.data!.accessToken!},
-//         ),
-//       );
-//       return Right(CitiesModel.fromJson(response));
-//     } on ServerException{
-//       return Left(ServerFailure());
-//     }
-//   }
+  Future<Either<Failure, PlaceDatailsModel>> searchOnMap(
+    String inputtype,
+    String input,
+    String fields,
+  ) async {
+    try {
+      final response = await dio.get(EndPoints.citiesUrl, queryParameters: {
+        "inputtype": inputtype,
+        "input": input,
+        "fields": fields,
+        "language": "ar",
+        "key": AppStrings.mapKey
+      });
+      return Right(PlaceDatailsModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+  Future<Either<Failure, GeoCodeModel>> getGeoData(
+    String latlng,
+
+  ) async {
+    try {
+      final response = await dio.get(EndPoints.citiesUrl, queryParameters: {
+        "latlng": latlng,
+
+        "language": "ar",
+        "key": AppStrings.mapKey
+      });
+      return Right(GeoCodeModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
 //
 //   Future<Either<Failure, FavoriteModel>>getFavoriteSearchData(searchKey) async {
 //
@@ -430,27 +456,19 @@ class ServiceApi {
 // }
 //   }
 
-  // Future<Either<Failure, SearchModel>> search(searchKey) async {
-  //   LoginModel loginModel = await Preferences.instance.getUserModel();
-  //
-  //   try {
-  //     final response = await dio.get(
-  //       EndPoints.searchUrl+searchKey,
-  //       options: Options(
-  //         headers: {'Authorization': loginModel.data!.accessToken!},
-  //       ),
-  //     );
-  //     return Right(SearchModel.fromJson(response));
-  //   } on ServerException {
-  //     return Left(ServerFailure());
-  //   }
-  // }
-
+// Future<Either<Failure, SearchModel>> search(searchKey) async {
+//   LoginModel loginModel = await Preferences.instance.getUserModel();
+//
+//   try {
+//     final response = await dio.get(
+//       EndPoints.searchUrl+searchKey,
+//       options: Options(
+//         headers: {'Authorization': loginModel.data!.accessToken!},
+//       ),
+//     );
+//     return Right(SearchModel.fromJson(response));
+//   } on ServerException {
+//     return Left(ServerFailure());
+//   }
+// }
 }
-
-
-
-
-
-
-

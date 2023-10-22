@@ -11,8 +11,10 @@ class ImageAssets {
   static const String userTypeImage = '$imagePath/usertype.png';
   static const String requestlocationImage = '$imagePath/requestlocation.png';
   static const String toktokmobileImage = '$imagePath/toktokmobile.png';
+  static const String searchImage = '$imagePath/search.png';
   static const String backImage = '$imagePath/back.png';
   static const String driversignupImage = '$imagePath/driversignup.png';
+  static const String uploadImage = '$imagePath/upload_image.png';
   static const String greyToktok = '$imagePath/greytoktok.png';
   static const String person = '$imagePath/person.png';
   static const String dateConfirm = '$imagePath/date_confirm.png';

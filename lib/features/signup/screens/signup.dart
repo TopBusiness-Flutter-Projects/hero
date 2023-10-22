@@ -83,7 +83,7 @@ class _SignUpState extends State<SignUp> {
                     )),
               ),
               SizedBox(
-                height: getSize(context) / 20,
+                height: getSize(context) / 60,
               ),
               Container(
                 height: getSize(context) / 10,
@@ -105,6 +105,9 @@ class _SignUpState extends State<SignUp> {
                 ),
               ),
               SizedBox(
+                height: getSize(context) / 32,
+              ),
+              SizedBox(
                 /// height: getSize(context) / 24,
                 ///width: getSize(context),
                 child: Text("email".tr(),
@@ -114,7 +117,7 @@ class _SignUpState extends State<SignUp> {
                     )),
               ),
               SizedBox(
-                height: getSize(context) / 20,
+                height: getSize(context) / 60,
               ),
               Container(
                 height: getSize(context) / 10,
@@ -137,6 +140,9 @@ class _SignUpState extends State<SignUp> {
                 ),
               ),
               SizedBox(
+                height: getSize(context) / 32,
+              ),
+              SizedBox(
                 /// height: getSize(context) / 24,
                 ///width: getSize(context),
                 child: Text("phone".tr(),
@@ -146,7 +152,7 @@ class _SignUpState extends State<SignUp> {
                     )),
               ),
               SizedBox(
-                height: getSize(context) / 20,
+                height: getSize(context) / 60,
               ),
               Container(
                 height: getSize(context) / 10,
@@ -187,7 +193,7 @@ class _SignUpState extends State<SignUp> {
                 ),
               ),
               SizedBox(
-                height: getSize(context) / 20,
+                height: getSize(context) / 16,
               ),
               Container(
                 height: getSize(context) / 10,

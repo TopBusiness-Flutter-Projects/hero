@@ -12,6 +12,7 @@ import '../../../core/utils/app_colors.dart';
 import '../../../core/widgets/custom_textfield.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
+
 class DriverSignUp extends StatefulWidget {
   const DriverSignUp({super.key});
 
@@ -54,7 +55,7 @@ class _DriverSignUpState extends State<DriverSignUp> {
                 // height: getSize(context) / 1.2,
                 // width: getSize(context) / 1.2,
               ),
-            SizedBox(
+              SizedBox(
                 height: getSize(context) / 16,
               ),
               SizedBox(
@@ -67,7 +68,7 @@ class _DriverSignUpState extends State<DriverSignUp> {
                     )),
               ),
               SizedBox(
-                height: getSize(context) / 20,
+                height: getSize(context) / 60,
               ),
               Container(
                 height: getSize(context) / 10,
@@ -80,10 +81,10 @@ class _DriverSignUpState extends State<DriverSignUp> {
                   child:DropdownButtonFormField2<String>(
                     isExpanded: true,
                     decoration: InputDecoration(
-                                            fillColor: AppColors.white
-,
+                      fillColor: AppColors.white
+                      ,
                       filled: true,
-                    //  contentPadding: const EdgeInsets.symmetric(vertical: 16),
+                      //  contentPadding: const EdgeInsets.symmetric(vertical: 16),
                       border: OutlineInputBorder(
                         borderSide: BorderSide.none,
                         borderRadius: BorderRadius.circular(15),
@@ -138,6 +139,9 @@ class _DriverSignUpState extends State<DriverSignUp> {
                 ),
               ),
               SizedBox(
+                height: getSize(context) / 32,
+              ),
+              SizedBox(
                 /// height: getSize(context) / 24,
                 ///width: getSize(context),
                 child: Text("current_state".tr(),
@@ -147,7 +151,7 @@ class _DriverSignUpState extends State<DriverSignUp> {
                     )),
               ),
               SizedBox(
-                height: getSize(context) / 20,
+                height: getSize(context) / 60,
               ),
               Container(
                 height: getSize(context) / 10,
@@ -217,6 +221,9 @@ class _DriverSignUpState extends State<DriverSignUp> {
                 ),
               ),
               SizedBox(
+                height: getSize(context) / 32,
+              ),
+              SizedBox(
                 /// height: getSize(context) / 24,
                 ///width: getSize(context),
                 child: Text("toktok_type".tr(),
@@ -226,7 +233,7 @@ class _DriverSignUpState extends State<DriverSignUp> {
                     )),
               ),
               SizedBox(
-                height: getSize(context) / 20,
+                height: getSize(context) / 60,
               ),
               Container(
                 height: getSize(context) / 10,
@@ -239,8 +246,8 @@ class _DriverSignUpState extends State<DriverSignUp> {
                   child:DropdownButtonFormField2<String>(
                     isExpanded: true,
                     decoration: InputDecoration(
-                                            fillColor: AppColors.white
-,
+                      fillColor: AppColors.white
+                      ,
                       filled: true,
                       //  contentPadding: const EdgeInsets.symmetric(vertical: 16),
                       border: OutlineInputBorder(
@@ -296,7 +303,9 @@ class _DriverSignUpState extends State<DriverSignUp> {
                   ),
                 ),
               ),
-
+              SizedBox(
+                height: getSize(context) / 32,
+              ),
               SizedBox(
                 /// height: getSize(context) / 24,
                 ///width: getSize(context),
@@ -307,7 +316,7 @@ class _DriverSignUpState extends State<DriverSignUp> {
                     )),
               ),
               SizedBox(
-                height: getSize(context) / 20,
+                height: getSize(context) / 60,
               ),
               Container(
                 height: getSize(context) / 10,
@@ -320,8 +329,8 @@ class _DriverSignUpState extends State<DriverSignUp> {
                   child:DropdownButtonFormField2<String>(
                     isExpanded: true,
                     decoration: InputDecoration(
-                                            fillColor: AppColors.white
-,
+                      fillColor: AppColors.white
+                      ,
                       filled: true,
                       //  contentPadding: const EdgeInsets.symmetric(vertical: 16),
                       border: OutlineInputBorder(
@@ -376,6 +385,9 @@ class _DriverSignUpState extends State<DriverSignUp> {
                     ),
                   ),
                 ),
+              ),
+              SizedBox(
+                height: getSize(context) / 32,
               ),
               SizedBox(
                 /// height: getSize(context) / 24,
@@ -387,7 +399,7 @@ class _DriverSignUpState extends State<DriverSignUp> {
                     )),
               ),
               SizedBox(
-                height: getSize(context) / 20,
+                height: getSize(context) / 60,
               ),
               Container(
                 height: getSize(context) / 10,
@@ -400,8 +412,8 @@ class _DriverSignUpState extends State<DriverSignUp> {
                   child:DropdownButtonFormField2<String>(
                     isExpanded: true,
                     decoration: InputDecoration(
-                                            fillColor: AppColors.white
-,
+                      fillColor: AppColors.white
+                      ,
                       filled: true,
                       //  contentPadding: const EdgeInsets.symmetric(vertical: 16),
                       border: OutlineInputBorder(
@@ -468,7 +480,7 @@ class _DriverSignUpState extends State<DriverSignUp> {
                 color: AppColors.primary,
                 onClick: () {
                   Navigator.of(context).pushNamedAndRemoveUntil(
-                      Routes.driversignupRoute, (route) => false);
+                      Routes.uploadDocumentsScreenRoute, (route) => false);
                 },
               ),
             ],

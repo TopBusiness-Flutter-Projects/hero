@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hero/features/documents/screens/upload_documents.dart';
 import 'package:hero/features/home/screen/home.dart';
 import 'package:hero/features/login/screens/login.dart';
 import 'package:hero/features/notification/screens/notification_screen.dart';
@@ -6,6 +7,8 @@ import 'package:hero/features/splash/screens/splash_screen.dart';
 
 import '../../core/utils/app_strings.dart';
 import '../../features/driver_signup/screens/driversignup.dart';
+import '../../features/driver_waiting/screens/driver_waiting.dart';
+import '../../features/homedriver/screen/home_driver.dart';
 import '../../features/requestlocation/screens/requestlocation.dart';
 import '../../features/signup/screens/signup.dart';
 import '../../features/usertype/screens/usertype.dart';
@@ -15,11 +18,14 @@ class Routes {
   static const String initialRoute = '/';
   static const String loginRoute = '/login';
   static const String homeRoute = '/home';
+  static const String homedriverRoute = '/homedriver';
   //static const String notificationDetailsRoute = '/notificationDetails';
   static const String registerScreenRoute = '/registerScreen';
   static const String verificationScreenRoute = '/verificationScreen';
   static const String usertypeScreenRoute = '/userTypeScreen';
   static const String requestlocationScreenRoute = '/requestlocationScreen';
+  static const String uploadDocumentsScreenRoute = '/uploadDocumentsScree';
+  static const String driverwaitScreenRoute = '/driverwaitScreen';
   static const String googleMapScreenRoute = '/googleMapScreen';
   static const String favoriteRoute = '/favorite';
   static const String fullScreenImageRoute = '/fullScreenImageRoute';
@@ -68,6 +74,10 @@ class AppRoutes {
         return MaterialPageRoute(
           builder: (context) =>  Home(),
         );
+        case Routes.homedriverRoute:
+        return MaterialPageRoute(
+          builder: (context) =>  HomeDriver(),
+        );
       case Routes.driversignupRoute:
         return MaterialPageRoute(
           builder: (context) =>  DriverSignUp(),
@@ -75,6 +85,14 @@ class AppRoutes {
         case Routes.notificationRoute:
         return MaterialPageRoute(
           builder: (context) =>  NotificationScreen(),
+        );
+ case Routes.uploadDocumentsScreenRoute:
+        return MaterialPageRoute(
+          builder: (context) =>  UploadDocuments(),
+        );
+        case Routes.driverwaitScreenRoute:
+        return MaterialPageRoute(
+          builder: (context) =>  DriverWaiting(),
         );
 
 

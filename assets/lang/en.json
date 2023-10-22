@@ -57,5 +57,14 @@
   "no_drivers": "There are no drivers near you, try later!",
   "name": "Name",
   "email": "Email",
+  "agency_number": "Agency number for the tuktuk",
+  "annual_tuktuk": "Annual tuktuk",
+  "id_card": "ID card",
+  "residence_card": "residence card",
+  "tuktuk_photo": "Tuktuk's photo",
+  "request_pending": "Your request is now pending",
+  "request_still_pending": "Your request is still pending. Once everything is verified",
+  "can_use": "You can use the application!",
+  "appreciate": "We appreciate your waiting!",
   "birth_date": "Birth Date"
 }
