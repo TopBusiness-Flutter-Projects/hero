@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:hero/features/homedriver/screen/pages/home_map_driver/home_map_driver.dart';
 
 import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/assets_manager.dart';
 import '../../../core/utils/getsize.dart';
 import '../../../core/widgets/close_widget.dart';
 import '../../home/components/drawer_list_item.dart';
+import '../components/drawer_list_item.dart';
 
 class HomeDriver extends StatefulWidget {
   const HomeDriver({super.key});
@@ -23,10 +25,12 @@ class _HomeDriverState extends State<HomeDriver> with SingleTickerProviderStateM
       body: SafeArea(
         child: Stack(
           children: [
-            // TabBarView(children: [
-            //
-            //
-            // ]),
+            TabBarView(
+                controller: TabController(length: 1, vsync:this ),
+                children: [
+              HomeMapDriver()
+
+            ]),
             Positioned(
               top: 10,
               left: 10,
@@ -63,13 +67,18 @@ class _HomeDriverState extends State<HomeDriver> with SingleTickerProviderStateM
         ),
       ),
       drawer: Drawer(
-        child: Column(
+        child:
+
+        ListView(
+          shrinkWrap: true,
+          physics:  ClampingScrollPhysics(),
           // padding: EdgeInsets.zero,
           children: <Widget>[
             SizedBox(
               height: getSize(context) * 0.1,
             ),
             ListTile(
+
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -97,26 +106,28 @@ class _HomeDriverState extends State<HomeDriver> with SingleTickerProviderStateM
                     color: AppColors.black2),
               ),
             ),
-            Expanded(
-                child: ListView.separated(
-                    itemBuilder: (context, index) {
-                      return InkWell(
-                        onTap: () {
-                          //notification screen
+            ListView.separated(
+              shrinkWrap: true,
+                physics:  ClampingScrollPhysics(),
 
-                        },
-                        child: DrawerListItem(
-                          drawerItemModel: drawerItems[index],
-                          textColor: index != drawerItems.length - 1
-                              ? AppColors.black1
-                              : AppColors.red,
-                        ),
-                      );
+                itemBuilder: (context, index) {
+                  return InkWell(
+                    onTap: () {
+                      //notification screen
+
                     },
-                    separatorBuilder: (context, index) {
-                      return Divider();
-                    },
-                    itemCount: drawerItems.length)),
+                    child: DriverDrawerListItem(
+                      drawerItemModel: driverDrawerItems[index],
+                      textColor: index != driverDrawerItems.length - 1
+                          ? AppColors.black1
+                          : AppColors.red,
+                    ),
+                  );
+                },
+                separatorBuilder: (context, index) {
+                  return Divider();
+                },
+                itemCount: driverDrawerItems.length),
           ],
         ),
       ),

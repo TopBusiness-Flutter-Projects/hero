@@ -23,7 +23,6 @@ class ImageAssets {
   static const String failure = '$imagePath/failure.png';
   static const String marker = '$imagePath/marker.png';
 
-
   // icons
   static const String phoneIcon = '$iconsPath/phone.svg';
   static const String aboutsIcon = '$iconsPath/abouts.svg';
@@ -54,6 +53,11 @@ class ImageAssets {
   static const String calender = '$iconsPath/calender.svg';
   static const String notification = '$iconsPath/notification.svg';
   static const String location = '$iconsPath/location.svg';
+  static const String order = '$iconsPath/order.svg';
+  static const String benfit = '$iconsPath/money.svg';
+  static const String wallet = '$iconsPath/wallet.svg';
+ static const String upload = '$iconsPath/upload.svg';
+  static const String update = '$iconsPath/update.svg';
 
   //Lottie
   static const String noItems = '$lottiePath/no_item.json';

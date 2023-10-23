@@ -66,5 +66,10 @@
   "request_still_pending": "Your request is still pending. Once everything is verified",
   "can_use": "You can use the application!",
   "appreciate": "We appreciate your waiting!",
+  "update_tiktok_data": "Update Tiktok data ",
+  "update_documents": "Update documents ",
+  "wallet": "Wallet",
+  "orders": "Orders",
+  "profit": "Profits",
   "birth_date": "Birth Date"
 }

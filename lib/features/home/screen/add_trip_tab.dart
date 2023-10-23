@@ -120,7 +120,8 @@ Set markers = {};
             children: [
               cubit.currentLocation == null
                   ? const Center(child: Text("Loading"))
-                  : GoogleMap(
+                  :
+              GoogleMap(
                       initialCameraPosition: CameraPosition(
                         target: LatLng(cubit.currentLocation!.latitude!,
                             cubit.currentLocation!.longitude!),
