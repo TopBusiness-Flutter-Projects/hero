@@ -75,7 +75,8 @@ class _HomeMapDriverState extends State<HomeMapDriver> {
           ),
           Positioned(
             top: 20,
-
+right: 0,
+              left: 0,
               child: Material(
             borderRadius: BorderRadius.all(Radius.circular(20)),
             color: AppColors.white,
