@@ -8,6 +8,7 @@ import 'core/api/app_interceptors.dart';
 import 'core/api/base_api_consumer.dart';
 import 'core/api/dio_consumer.dart';
 import 'features/home/cubit/home_cubit.dart';
+import 'features/homedriver/screen/pages/home_map_driver/cubit/home_driver_cubit.dart';
 
 // import 'features/downloads_videos/cubit/downloads_videos_cubit.dart';
 
@@ -20,6 +21,11 @@ Future<void> setup() async {
   //
   serviceLocator.registerFactory(
     () => SplashCubit(
+        // serviceLocator(),
+        ),
+  );
+  serviceLocator.registerFactory(
+    () => HomeDriverCubit(
         // serviceLocator(),
         ),
   );

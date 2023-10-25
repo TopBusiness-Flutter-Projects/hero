@@ -71,5 +71,10 @@
   "wallet": "محفظتى",
   "orders": "طلباتى",
   "profit": "الارباح",
-  "birth_date": "تاريخ الميلاد"
+  "birth_date": "تاريخ الميلاد",
+  "out_service": "خارج الخدمه",
+  "in_service": "فى الخدمه",
+  "you_conect": "انت متصل الان",
+  "immediate_trip": "رحله فوريه",
+  "you_not_conect": "انت غير متصل"
 }

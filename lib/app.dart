@@ -10,6 +10,7 @@ import 'core/utils/app_strings.dart';
 import 'package:hero/injector.dart' as injector;
 
 import 'features/home/cubit/home_cubit.dart';
+import 'features/homedriver/screen/pages/home_map_driver/cubit/home_driver_cubit.dart';
 
 class HeroApp extends StatefulWidget {
   const HeroApp({Key? key}) : super(key: key);
@@ -43,6 +44,8 @@ class _HeroAppState extends State<HeroApp> {
     //     // ),
         BlocProvider(
           create: (_) => injector.serviceLocator<HomeCubit>(),
+        ), BlocProvider(
+          create: (_) => injector.serviceLocator<HomeDriverCubit>(),
         ),
     //     // BlocProvider(
     //     //   create: (_) => injector.serviceLocator<PostsCubit>(),

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hero/features/homedriver/screen/pages/home_map_driver/home_map_driver.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hero/features/homedriver/screen/pages/home_map_driver/cubit/home_driver_cubit.dart';
+import 'package:hero/features/homedriver/screen/pages/home_map_driver/screens/home_map_driver.dart';
+import 'package:hero/features/homedriver/screen/pages/home_map_driver/screens/immediate_trip_driver.dart';
 
 import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/assets_manager.dart';
@@ -15,8 +18,14 @@ class HomeDriver extends StatefulWidget {
   State<HomeDriver> createState() => _HomeDriverState();
 }
 
-class _HomeDriverState extends State<HomeDriver> with SingleTickerProviderStateMixin{
+class _HomeDriverState extends State<HomeDriver> with TickerProviderStateMixin{
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    context.read<HomeDriverCubit>().tabsController =
+        TabController(length: 2, vsync: this);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,9 +35,10 @@ class _HomeDriverState extends State<HomeDriver> with SingleTickerProviderStateM
         child: Stack(
           children: [
             TabBarView(
-                controller: TabController(length: 1, vsync:this ),
+                controller: context.read<HomeDriverCubit>().tabsController,
                 children: [
-              HomeMapDriver()
+              HomeMapDriver(),
+                  ImmediateTripDriver()
 
             ]),
             Positioned(

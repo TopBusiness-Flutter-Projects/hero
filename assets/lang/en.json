@@ -71,5 +71,11 @@
   "wallet": "Wallet",
   "orders": "Orders",
   "profit": "Profits",
-  "birth_date": "Birth Date"
+  "birth_date": "Birth Date",
+  "out_service": "Out Service",
+  "in_service": "In Service",
+  "you_conect": "You Connect Now",
+  "immediate_trip": "Immediate trip",
+  "you_not_conect": "You Not Connect"
+
 }
