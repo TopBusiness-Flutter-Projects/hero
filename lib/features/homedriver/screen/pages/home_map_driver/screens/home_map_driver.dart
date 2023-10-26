@@ -18,7 +18,6 @@ class HomeMapDriver extends StatefulWidget {
 }
 
 class _HomeMapDriverState extends State<HomeMapDriver> {
-  GoogleMapController? mapController;
   HomeDriverCubit? cubit;
 
   @override
@@ -27,9 +26,7 @@ class _HomeMapDriverState extends State<HomeMapDriver> {
 
     return BlocBuilder<HomeDriverCubit, HomeDriverState>(
       builder: (context, state) {
-        if(state is UpdateCurrentLocationState){
-          updateCameraPosition();
-        }
+
         return Scaffold(
           body: Stack(
             alignment: Alignment.center,
@@ -62,7 +59,7 @@ class _HomeMapDriverState extends State<HomeMapDriver> {
                       // Rest of the markers...
                     },
                     onMapCreated: (GoogleMapController controller) {
-                      mapController =
+                      cubit!.mapController =
                           controller; // Store the GoogleMapController
                     },
                     onTap: (argument) {
@@ -165,18 +162,5 @@ class _HomeMapDriverState extends State<HomeMapDriver> {
     );
   }
 
-  void updateCameraPosition() {
-    if (mapController != null && cubit!.currentLocation != null) {
-      mapController!.animateCamera(
 
-        CameraUpdate.newLatLng(
-
-          LatLng(
-            cubit!.currentLocation!.latitude!,
-            cubit!.currentLocation!.longitude!,
-          ),
-        ),
-      );
-    }
-  }
 }

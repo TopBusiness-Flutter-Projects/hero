@@ -20,7 +20,6 @@ class ImmediateTripDriver extends StatefulWidget {
 }
 
 class _ImmediateTripDriverState extends State<ImmediateTripDriver> {
-  GoogleMapController? mapController;
   HomeDriverCubit? cubit;
 
   @override
@@ -29,9 +28,7 @@ class _ImmediateTripDriverState extends State<ImmediateTripDriver> {
 
     return BlocBuilder<HomeDriverCubit, HomeDriverState>(
       builder: (context, state) {
-        if (state is UpdateCurrentLocationState) {
-          updateCameraPosition();
-        }
+
         return Scaffold(
           body: Stack(
             alignment: Alignment.center,
@@ -67,16 +64,17 @@ class _ImmediateTripDriverState extends State<ImmediateTripDriver> {
                       ),
                       Marker(
                         markerId: const MarkerId("destinationLocation"),
-                        icon: cubit!.markerIcon != null
-                            ? BitmapDescriptor.fromBytes(cubit!.markerIcon!)
+                        icon: cubit!.icon != null
+                            ? BitmapDescriptor.fromBytes(cubit!.icon!)
                             : cubit!.currentLocationIcon,
                         position: LatLng(cubit!.destinaion.latitude,
                             cubit!.destinaion.longitude),
+
                       ),
                       // Rest of the markers...
                     },
                     onMapCreated: (GoogleMapController controller) {
-                      mapController =
+                      cubit!.mapController =
                           controller; // Store the GoogleMapController
                     },
                     onTap: (argument) {
@@ -89,8 +87,8 @@ class _ImmediateTripDriverState extends State<ImmediateTripDriver> {
                     polylines: {
                       Polyline(
                         polylineId: const PolylineId("route"),
-                        // points: cubit.polylineCoordinates,
-                        color: const Color(0xFF7B61FF),
+                        points: cubit!.latLngList!,
+                        color: AppColors.primary,
                         width: 6,
                       ),
                     },
@@ -99,7 +97,7 @@ class _ImmediateTripDriverState extends State<ImmediateTripDriver> {
               ),
               Positioned(
                   top: 10,
-                  right: 60,
+                  right: 10,
                   left: 60,
                   child: Material(
                     borderRadius: BorderRadius.all(
@@ -108,10 +106,14 @@ class _ImmediateTripDriverState extends State<ImmediateTripDriver> {
                     child: CustomTextField(
                       title: 'search_location'.tr(),
                       backgroundColor: AppColors.white,
-                      prefixWidget: MySvgWidget(
-                        path: ImageAssets.mapIcon,
-                        imageColor: AppColors.black,
-                        size: 10,
+                      prefixWidget: Padding(
+                        padding:  EdgeInsets.all(getSize(context)/32),
+                        child: MySvgWidget(
+                          path: ImageAssets.mapIcon,
+                          imageColor: AppColors.black,
+                          size: 10,
+
+                        ),
                       ),
                       validatorMessage: 'loaction_msg'.tr(),
                       horizontalPadding: 2,
@@ -129,16 +131,5 @@ class _ImmediateTripDriverState extends State<ImmediateTripDriver> {
     );
   }
 
-  void updateCameraPosition() {
-    if (mapController != null && cubit!.currentLocation != null) {
-      mapController!.animateCamera(
-        CameraUpdate.newLatLng(
-          LatLng(
-            cubit!.currentLocation!.latitude!,
-            cubit!.currentLocation!.longitude!,
-          ),
-        ),
-      );
-    }
-  }
+
 }

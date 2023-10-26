@@ -111,7 +111,8 @@ dependencies:
   flutter_gif: ^0.0.4
   lite_rolling_switch: ^1.0.1
   custom_map_markers: ^0.0.1
-
+  google_maps_utils: ^2.0.0+1
+  maps_toolkit: ^3.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -12,8 +12,8 @@ import '../../../core/utils/app_colors.dart';
 import '../../../core/widgets/custom_textfield.dart';
 
 class SignUp extends StatefulWidget {
-  const SignUp({super.key});
-
+  const SignUp({super.key, required this.type});
+final String type;
   @override
   State<SignUp> createState() => _SignUpState();
 }
@@ -233,9 +233,15 @@ class _SignUpState extends State<SignUp> {
                 borderRadius: getSize(context) / 24,
                 color: AppColors.primary,
                 onClick: () {
+                  if(widget.type=="client"){
                   Navigator.of(context).pushNamedAndRemoveUntil(
                       Routes.homeRoute, (route) => false);
-                },
+                }
+               else{
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        Routes.driversignupRoute, (route) => false);
+                  }
+                  },
               ),
             ],
           ),

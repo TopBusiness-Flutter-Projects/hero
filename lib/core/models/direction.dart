@@ -34,9 +34,9 @@ class GeocodedWaypoint {
   });
 
   factory GeocodedWaypoint.fromJson(Map<String, dynamic> json) => GeocodedWaypoint(
-    geocoderStatus: json["geocoder_status"],
-    placeId: json["place_id"],
-    types: List<String>.from(json["types"].map((x) => x)),
+    geocoderStatus: json["geocoder_status"]??"",
+    placeId: json["place_id"]??"",
+    types: json["types"]!=null?List<String>.from(json["types"].map((x) => x)):[],
   );
 
   Map<String, dynamic> toJson() => {
@@ -223,7 +223,7 @@ class Step {
     polyline: Polyline.fromJson(json["polyline"]),
     startLocation: Northeast.fromJson(json["start_location"]),
     travelMode: json["travel_mode"],
-    maneuver: json["maneuver"],
+    maneuver: json["maneuver"]??"",
   );
 
   Map<String, dynamic> toJson() => {

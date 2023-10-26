@@ -98,7 +98,7 @@ class _RequestLocationState extends State<RequestLocation> {
                 borderRadius: getSize(context) / 24,
                 color: AppColors.primary,
                 onClick: () {
-                  Navigator.of(context).pushNamedAndRemoveUntil(Routes.registerScreenRoute, (route) => false);
+                  Navigator.of(context).pushNamedAndRemoveUntil(Routes.registerScreenRoute, (route) => false,arguments: widget.type);
                 },
               ),
 
