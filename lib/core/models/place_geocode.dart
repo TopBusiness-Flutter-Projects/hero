@@ -23,12 +23,12 @@ class GeoCodeModel {
 }
 
 class PlusCode {
-  String compoundCode;
-  String globalCode;
+  String? compoundCode;
+  String? globalCode;
 
   PlusCode({
-    required this.compoundCode,
-    required this.globalCode,
+     this.compoundCode,
+     this.globalCode,
   });
 
   factory PlusCode.fromJson(Map<String, dynamic> json) => PlusCode(
@@ -64,7 +64,7 @@ class Result {
     formattedAddress: json["formatted_address"],
     geometry: Geometry.fromJson(json["geometry"]),
     placeId: json["place_id"],
-    plusCode: PlusCode.fromJson(json["plus_code"]),
+    plusCode: json["plus_code"]!=null?PlusCode.fromJson(json["plus_code"]):PlusCode(),
     types: List<String>.from(json["types"].map((x) => x)),
   );
 
@@ -116,7 +116,7 @@ class Geometry {
   });
 
   factory Geometry.fromJson(Map<String, dynamic> json) => Geometry(
-    bounds: Bounds.fromJson(json["bounds"]),
+    bounds:json["bounds"]!=null? Bounds.fromJson(json["bounds"]):Bounds(),
     location: Location.fromJson(json["location"]),
     locationType: json["location_type"],
     viewport: Bounds.fromJson(json["viewport"]),
@@ -131,12 +131,12 @@ class Geometry {
 }
 
 class Bounds {
-  Location northeast;
-  Location southwest;
+  Location? northeast;
+  Location? southwest;
 
   Bounds({
-    required this.northeast,
-    required this.southwest,
+     this.northeast,
+     this.southwest,
   });
 
   factory Bounds.fromJson(Map<String, dynamic> json) => Bounds(
@@ -145,8 +145,8 @@ class Bounds {
   );
 
   Map<String, dynamic> toJson() => {
-    "northeast": northeast.toJson(),
-    "southwest": southwest.toJson(),
+    "northeast": northeast!.toJson(),
+    "southwest": southwest!.toJson(),
   };
 }
 

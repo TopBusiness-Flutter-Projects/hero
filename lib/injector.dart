@@ -26,7 +26,7 @@ Future<void> setup() async {
   );
   serviceLocator.registerFactory(
     () => HomeDriverCubit(
-        // serviceLocator(),
+         serviceLocator(),
         ),
   );
   // serviceLocator.registerFactory(

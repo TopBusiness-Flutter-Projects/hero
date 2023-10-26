@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hero/core/utils/app_colors.dart';
+import 'package:hero/core/utils/assets_manager.dart';
 import 'package:hero/core/utils/getsize.dart';
+import 'package:hero/core/widgets/my_svg_widget.dart';
 import 'package:lite_rolling_switch/lite_rolling_switch.dart';
 
+import '../../../../../../core/widgets/custom_textfield.dart';
 import '../cubit/home_driver_cubit.dart';
-
 
 class ImmediateTripDriver extends StatefulWidget {
   const ImmediateTripDriver({super.key});
@@ -27,7 +29,7 @@ class _ImmediateTripDriverState extends State<ImmediateTripDriver> {
 
     return BlocBuilder<HomeDriverCubit, HomeDriverState>(
       builder: (context, state) {
-        if(state is UpdateCurrentLocationState){
+        if (state is UpdateCurrentLocationState) {
           updateCameraPosition();
         }
         return Scaffold(
@@ -39,10 +41,12 @@ class _ImmediateTripDriverState extends State<ImmediateTripDriver> {
                   return GoogleMap(
                     initialCameraPosition: CameraPosition(
                       target: LatLng(
-                        cubit!.currentLocation != null ? cubit!.currentLocation!
-                            .latitude! : 0,
-                        cubit!.currentLocation != null ? cubit!.currentLocation!
-                            .longitude! : 0,
+                        cubit!.currentLocation != null
+                            ? cubit!.currentLocation!.latitude!
+                            : 0,
+                        cubit!.currentLocation != null
+                            ? cubit!.currentLocation!.longitude!
+                            : 0,
                       ),
                       zoom: 13.5,
                     ),
@@ -53,11 +57,21 @@ class _ImmediateTripDriverState extends State<ImmediateTripDriver> {
                             ? BitmapDescriptor.fromBytes(cubit!.markerIcon!)
                             : cubit!.currentLocationIcon,
                         position: LatLng(
-                          cubit!.currentLocation != null ? cubit!
-                              .currentLocation!.latitude! : 0,
-                          cubit!.currentLocation != null ? cubit!
-                              .currentLocation!.longitude! : 0,
+                          cubit!.currentLocation != null
+                              ? cubit!.currentLocation!.latitude!
+                              : 0,
+                          cubit!.currentLocation != null
+                              ? cubit!.currentLocation!.longitude!
+                              : 0,
                         ),
+                      ),
+                      Marker(
+                        markerId: const MarkerId("destinationLocation"),
+                        icon: cubit!.markerIcon != null
+                            ? BitmapDescriptor.fromBytes(cubit!.markerIcon!)
+                            : cubit!.currentLocationIcon,
+                        position: LatLng(cubit!.destinaion.latitude,
+                            cubit!.destinaion.longitude),
                       ),
                       // Rest of the markers...
                     },
@@ -66,6 +80,7 @@ class _ImmediateTripDriverState extends State<ImmediateTripDriver> {
                           controller; // Store the GoogleMapController
                     },
                     onTap: (argument) {
+                      cubit!.getLocation(argument);
                       // _customInfoWindowController.hideInfoWindow!();
                     },
                     onCameraMove: (position) {
@@ -79,13 +94,34 @@ class _ImmediateTripDriverState extends State<ImmediateTripDriver> {
                         width: 6,
                       ),
                     },
-
                   );
                 },
-
-
               ),
-
+              Positioned(
+                  top: 10,
+                  right: 60,
+                  left: 60,
+                  child: Material(
+                    borderRadius: BorderRadius.all(
+                        Radius.circular(getSize(context) / 40)),
+                    color: AppColors.white,
+                    child: CustomTextField(
+                      title: 'search_location'.tr(),
+                      backgroundColor: AppColors.white,
+                      prefixWidget: MySvgWidget(
+                        path: ImageAssets.mapIcon,
+                        imageColor: AppColors.black,
+                        size: 10,
+                      ),
+                      validatorMessage: 'loaction_msg'.tr(),
+                      horizontalPadding: 2,
+                      textInputType: TextInputType.text,
+                      onchange: (p0) {
+                        cubit!.search(p0);
+                      },
+                      controller: cubit!.location_control,
+                    ),
+                  ))
             ],
           ),
         );
@@ -96,9 +132,7 @@ class _ImmediateTripDriverState extends State<ImmediateTripDriver> {
   void updateCameraPosition() {
     if (mapController != null && cubit!.currentLocation != null) {
       mapController!.animateCamera(
-
         CameraUpdate.newLatLng(
-
           LatLng(
             cubit!.currentLocation!.latitude!,
             cubit!.currentLocation!.longitude!,

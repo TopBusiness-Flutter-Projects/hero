@@ -58,6 +58,7 @@ class ImageAssets {
   static const String wallet = '$iconsPath/wallet.svg';
  static const String upload = '$iconsPath/upload.svg';
   static const String update = '$iconsPath/update.svg';
+  static const String mapIcon = '$iconsPath/map.svg';
 
   //Lottie
   static const String noItems = '$lottiePath/no_item.json';

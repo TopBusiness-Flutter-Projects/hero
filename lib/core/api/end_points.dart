@@ -22,9 +22,9 @@ class EndPoints {
   //************************ Google  ****************************************************
   static const String googleBaseUrl = 'https://maps.googleapis.com/maps/api/';
   //when select any point of map give lat and lng and get the place name
-  static const String geocodeUrl = 'geocode/json';
+  static const String geocodeUrl =  googleBaseUrl+'geocode/json';
   // give it name and get the place
-  static const String searchUrl = 'place/findplacefromtext/json';
+  static const String searchUrl = googleBaseUrl+'place/findplacefromtext/json';
 
 
 

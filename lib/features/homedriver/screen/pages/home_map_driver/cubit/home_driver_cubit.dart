@@ -12,17 +12,24 @@ import 'package:meta/meta.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:location/location.dart' as loc;
 
+import '../../../../../../core/remote/service.dart';
+
 part 'home_driver_state.dart';
 
 class HomeDriverCubit extends Cubit<HomeDriverState> {
   bool inService = true;
-  LatLng sourceLocation = LatLng(31.2693, 30.7873);
+  LatLng destinaion = LatLng(0, 0);
   loc.LocationData? currentLocation;
   Uint8List? markerIcon;
+  final ServiceApi api;
+  String fields = "id,place_id,name,geometry,formatted_address";
+
   final Completer<GoogleMapController> controller = Completer();
   BitmapDescriptor currentLocationIcon = BitmapDescriptor.defaultMarker;
   TabController? tabsController ;
-  HomeDriverCubit() : super(HomeDriverInitial()){
+  TextEditingController location_control = TextEditingController();
+
+  HomeDriverCubit(this.api) : super(HomeDriverInitial()){
 
     getmarker();
     checkAndRequestLocationPermission();
@@ -102,7 +109,6 @@ class HomeDriverCubit extends Cubit<HomeDriverState> {
     location.getLocation().then(
       (location) {
         currentLocation = location;
-        sourceLocation = LatLng(location.latitude!, location.longitude!);
         emit(UpdateCurrentLocationState());
         // setState(() {
         // //  sourceLocation = LatLng(location.latitude!, location.longitude!);
@@ -116,21 +122,52 @@ class HomeDriverCubit extends Cubit<HomeDriverState> {
         print("dkkdkdk");
         currentLocation = newLoc;
         //sourceLocation = LatLng(newLoc.latitude!, newLoc.longitude!);
-        googleMapController.animateCamera(
-          CameraUpdate.newCameraPosition(
-            CameraPosition(
-              zoom: 13.5,
-              target: LatLng(
-                newLoc.latitude!,
-                newLoc.longitude!,
-              ),
-            ),
-          ),
-        );
+        // googleMapController.animateCamera(
+        //   CameraUpdate.newCameraPosition(
+        //     CameraPosition(
+        //       zoom: 13.5,
+        //       target: LatLng(
+        //         newLoc.latitude!,
+        //         newLoc.longitude!,
+        //       ),
+        //     ),
+        //   ),
+        // );
         // setState(() {});
         emit(UpdateCameraPosition());
       },
     );
   }
+  search(String search) async {
+
+    final response = await api.searchOnMap(
+        "textquery",search,fields
+    );
+    response.fold(
+          (l) => emit(ErrorLocationSearch()),
+          (r) {
+            destinaion = LatLng(r.candidates.elementAt(0).geometry.location.lat, r.candidates.elementAt(0).geometry.location.lng);
+
+        emit(UpdateDesitnationLocationState());
+      },
+    );
+  }
+
+   getLocation(LatLng argument) async {
+
+     final response = await api.getGeoData(
+         argument.latitude.toString() + "," +  argument.longitude.toString()
+     );
+     response.fold(
+           (l) => emit(ErrorLocationSearch()),
+           (r) {
+             destinaion=argument;
+             location_control.text=r.results.elementAt(0).formattedAddress.replaceAll("Unnamed Road,", "");
+        // destinaion = LatLng(r.candidates.elementAt(0).geometry.location.lat, r.candidates.elementAt(0).geometry.location.lng);
+
+         emit(UpdateDesitnationLocationState());
+       },
+     );
+   }
 
 }
