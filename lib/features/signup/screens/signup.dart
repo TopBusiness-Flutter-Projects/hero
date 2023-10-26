@@ -234,7 +234,7 @@ class _SignUpState extends State<SignUp> {
                 color: AppColors.primary,
                 onClick: () {
                   Navigator.of(context).pushNamedAndRemoveUntil(
-                      Routes.driversignupRoute, (route) => false);
+                      Routes.homeRoute, (route) => false);
                 },
               ),
             ],

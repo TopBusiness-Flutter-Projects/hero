@@ -14,6 +14,8 @@ import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/assets_manager.dart';
 import '../../../core/utils/getsize.dart';
 import '../../../core/widgets/back_button.dart';
+import '../../../core/widgets/custom_textfield.dart';
+import '../../../core/widgets/my_svg_widget.dart';
 import '../components/drawer_list_item.dart';
 import '../cubit/home_cubit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -200,33 +202,55 @@ Set markers = {};
                             height: getSize(context) * 0.1,
                           ),
                           Visibility(
-                            visible:  context.read<HomeCubit>().flag==1
-                            ,
-                            child: InkWell(
-                                onTap: () async {
-
-                                  await cubit.searchOnMap(context);
-                                },
-                                child: Padding(
-                                  padding: EdgeInsets.all(15),
-                                  child: Card(
-                                    child: Container(
-
-                                        padding: EdgeInsets.all(0),
-                                        width: MediaQuery.of(context).size.width -
-                                            40,
-                                        child: ListTile(
-                                          title: Text(
-                                            cubit.location,
-                                            style: TextStyle(fontSize: 18),
-                                          ),
-                                          trailing: Icon(Icons.search),
-                                          dense: true,
-                                        )),
-                                  ),
-                                )
-
+                            visible:  context.read<HomeCubit>().flag==1,
+                            child:
+                            SizedBox(
+                              width: double.infinity,
+                              height: 50,
+                              child: CustomTextField(
+                                title: 'search_location'.tr(),
+                                backgroundColor: AppColors.white,
+                                prefixWidget: MySvgWidget(
+                                  path: ImageAssets.mapIcon,
+                                  imageColor: AppColors.black,
+                                  size: 10,
                                 ),
+                                validatorMessage: 'loaction_msg'.tr(),
+                                horizontalPadding: 2,
+                                textInputType: TextInputType.text,
+                                onchange: (p0) {
+                                  cubit.searchOnMapH(p0);
+                                },
+                                controller: cubit.locationControl,
+                              ),
+                            )
+                            // InkWell(
+                            //
+                            //     onTap: () async {
+                            //
+                            //      // await cubit.searchOnMapH();
+                            //     },
+                            //     child: Padding(
+                            //       padding: EdgeInsets.all(15),
+                            //       child: Card(
+                            //         child: Container(
+                            //
+                            //             padding: EdgeInsets.all(0),
+                            //             width: MediaQuery.of(context).size.width -
+                            //                 40,
+                            //             child: ListTile(
+                            //               title: Text(
+                            //                 cubit.location,
+                            //                 style: TextStyle(fontSize: 18),
+                            //               ),
+                            //               trailing: Icon(Icons.search),
+                            //               dense: true,
+                            //              // leading: TextField(),
+                            //             )),
+                            //       ),
+                            //     )
+                            //
+                            //     ),
                           ),
                           SizedBox(
                             height: 15,

@@ -51,7 +51,7 @@ Future<void> setup() async {
   // );
   serviceLocator.registerFactory(
     () => HomeCubit(
-     // serviceLocator(),
+      serviceLocator(),
     ),
 
   // serviceLocator.registerFactory(

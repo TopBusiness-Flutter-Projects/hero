@@ -13,3 +13,6 @@ class OnMapCreatedState extends HomeState {}
 class SearchState extends HomeState {}
 class ChangeRadiState extends HomeState {}
 class ChangeToRideNowState extends HomeState {}
+class LoadingSearchState extends HomeState {}
+class FailureSearchState extends HomeState {}
+class SuccessSearchState extends HomeState {}

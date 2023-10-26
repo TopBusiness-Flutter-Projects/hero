@@ -1,11 +1,12 @@
 // import 'package:http/http.dart' as http;
 
+import 'package:hero/core/api/end_points.dart';
+
 import '../api/base_api_consumer.dart';
 import '../api/end_points.dart';
 import '../error/exceptions.dart';
 import '../error/failures.dart';
 import 'package:dartz/dartz.dart';
-
 import '../models/direction.dart';
 import '../models/place_details.dart';
 import '../models/place_geocode.dart';
@@ -15,6 +16,25 @@ class ServiceApi {
   final BaseApiConsumer dio;
 
   ServiceApi(this.dio);
+
+  Future<Either<Failure, PlaceDatailsModel>> searchOnMapH(String inputType,String input,String fields)async{
+
+    try{
+      final response = await dio.get(
+          EndPoints.googleBaseUrl,
+          queryParameters: {
+            "inputtype":inputType,
+            "input":input,
+            "fields":fields,
+            "language":"ar",
+            "key":AppStrings.mapKey,
+          }
+      );
+      return Right(PlaceDatailsModel.fromJson(response));
+    }on ServerException{
+      return Left(ServerFailure());
+    }
+  }
 
 //
 //   Future<Either<Failure, LoginModel>> postRegister(

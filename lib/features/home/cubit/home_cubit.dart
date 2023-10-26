@@ -9,6 +9,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_api_headers/google_api_headers.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
+import 'package:hero/core/remote/service.dart';
 import 'package:hero/core/utils/assets_manager.dart';
 import 'package:meta/meta.dart';
 import 'package:flutter/material.dart';
@@ -20,13 +21,15 @@ part 'home_state.dart';
 class HomeCubit extends Cubit<HomeState> {
   int? flag;
 
-  HomeCubit() : super(HomeInitial());
+  HomeCubit(this.api) : super(HomeInitial());
+  ServiceApi api;
   String? payment = "cash";
   late TabController tabsController ;
  // GoogleMapController? mapController;
   List<LatLng> polylineCoordinates = [];
    LatLng sourceLocation = LatLng(31.2693, 30.7873);
     LatLng destination = LatLng(30.4301, 31.0364);
+  TextEditingController locationControl = TextEditingController();
     bool bottomContainerInitialState = true;
     bool bottomContainerLoadingState = false;
     bool bottomContainerFailureState = false;
@@ -119,47 +122,58 @@ void setflag(int flag){
     );
   }
 
-  searchOnMap(BuildContext context) async {
-    var place = await PlacesAutocomplete.show(
-        context: context,
-        apiKey: "AIzaSyCZjDPvxg9h3IUSfVPzIwnKli5Y17p-v9g",
-        mode: Mode.overlay,
-        types: [],
-        strictbounds: false,
-        components: [
-          geocoding.Component(geocoding.Component.country, 'eg')],
-        //google_map_webservice package
-        onError: (err){
-          print(err);
-        }
-    );
-
-    if(place!=null){
-     // setState(() {
-        location = place.description.toString();
-     // });
-        emit(SearchState());
-
-      //form google_maps_webservice package
-      final plist = GoogleMapsPlaces(apiKey:"AIzaSyCZjDPvxg9h3IUSfVPzIwnKli5Y17p-v9g",
-          apiHeaders: await GoogleApiHeaders().getHeaders(),
-    //from google_api_headers package
-    );
-
-    String placeid = place.placeId ?? "0";
-    final detail = await plist.getDetailsByPlaceId(placeid);
-    final geometry = detail.result.geometry!;
-    final lat = geometry.location.lat;
-    final lang = geometry.location.lng;
-    var newlatlang = LatLng(lat, lang);
-
-    //move map camera to selected place with animation
-
-    mapController!.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: newlatlang, zoom: 14)));
-
-    destination = newlatlang;
-    getPolyPoints();
-  }
+  // searchOnMap(BuildContext context) async {
+  //   var place = await PlacesAutocomplete.show(
+  //       context: context,
+  //       apiKey: "AIzaSyCZjDPvxg9h3IUSfVPzIwnKli5Y17p-v9g",
+  //       mode: Mode.overlay,
+  //       types: [],
+  //       strictbounds: false,
+  //       components: [
+  //         geocoding.Component(geocoding.Component.country, 'eg')],
+  //       //google_map_webservice package
+  //       onError: (err){
+  //         print(err);
+  //       }
+  //   );
+  //
+  //   if(place!=null){
+  //    // setState(() {
+  //       location = place.description.toString();
+  //    // });
+  //       emit(SearchState());
+  //
+  //     //form google_maps_webservice package
+  //     final plist = GoogleMapsPlaces(apiKey:"AIzaSyCZjDPvxg9h3IUSfVPzIwnKli5Y17p-v9g",
+  //         apiHeaders: await GoogleApiHeaders().getHeaders(),
+  //   //from google_api_headers package
+  //   );
+  //
+  //   String placeid = place.placeId ?? "0";
+  //   final detail = await plist.getDetailsByPlaceId(placeid);
+  //   final geometry = detail.result.geometry!;
+  //   final lat = geometry.location.lat;
+  //   final lang = geometry.location.lng;
+  //   var newlatlang = LatLng(lat, lang);
+  //
+  //   //move map camera to selected place with animation
+  //
+  //   mapController!.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: newlatlang, zoom: 14)));
+  //
+  //   destination = newlatlang;
+  //   getPolyPoints();
+  // }
+  // }
+  String fields = "id,place_id,name,geometry,formatted_address";
+  LatLng destinationH = LatLng(0, 0);
+  searchOnMapH(String searchKey) async {
+    emit(LoadingSearchState());
+   final response = await api.searchOnMap("textquery", searchKey, fields);
+   response.fold((l) => emit(FailureSearchState()),
+           (r) {
+             destinationH = LatLng( r.candidates.elementAt(0).geometry.location.lat,r.candidates.elementAt(0).geometry.location.lng );
+        emit(SuccessSearchState());
+   });
   }
 
 

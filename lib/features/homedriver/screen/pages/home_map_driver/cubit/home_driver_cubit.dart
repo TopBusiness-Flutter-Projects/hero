@@ -140,9 +140,7 @@ class HomeDriverCubit extends Cubit<HomeDriverState> {
   }
   search(String search) async {
 
-    final response = await api.searchOnMap(
-        "textquery",search,fields
-    );
+    final response = await api.searchOnMap("textquery",search,fields);
     response.fold(
           (l) => emit(ErrorLocationSearch()),
           (r) {
