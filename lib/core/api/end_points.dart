@@ -25,6 +25,7 @@ class EndPoints {
   static const String geocodeUrl =  googleBaseUrl+'geocode/json';
   // give it name and get the place
   static const String searchUrl = googleBaseUrl+'place/findplacefromtext/json';
+  static const String directionUrl = googleBaseUrl+'directions/json';
 
 
 
