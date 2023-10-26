@@ -11,8 +11,10 @@ import 'package:hero/core/utils/assets_manager.dart';
 import 'package:meta/meta.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:location/location.dart' as loc;
+import 'package:maps_toolkit/maps_toolkit.dart' as mp;
 
 import '../../../../../../core/remote/service.dart';
+import '../../../../../../core/utils/custom_marker.dart';
 
 part 'home_driver_state.dart';
 
@@ -22,15 +24,22 @@ class HomeDriverCubit extends Cubit<HomeDriverState> {
   loc.LocationData? currentLocation;
   Uint8List? markerIcon;
   final ServiceApi api;
+  List<mp.LatLng> point=[];
+  GoogleMapController? mapController;
+
   String fields = "id,place_id,name,geometry,formatted_address";
+  List<LatLng> latLngList = [];
 
   final Completer<GoogleMapController> controller = Completer();
   BitmapDescriptor currentLocationIcon = BitmapDescriptor.defaultMarker;
-  TabController? tabsController ;
+  TabController? tabsController;
+
   TextEditingController location_control = TextEditingController();
 
-  HomeDriverCubit(this.api) : super(HomeDriverInitial()){
+   Uint8List? icon;
 
+  HomeDriverCubit(this.api) : super(HomeDriverInitial()) {
+    latLngList = [];
     getmarker();
     checkAndRequestLocationPermission();
   }
@@ -47,13 +56,11 @@ class HomeDriverCubit extends Cubit<HomeDriverState> {
     if (!serviceEnabled) {
       serviceEnabled = await location.requestService();
       if (!serviceEnabled) {
-
         // Location services are still not enabled, handle accordingly (show a message, disable functionality, etc.)
         // ...
         return;
       }
     }
-
 
     PermissionStatus permissionStatus = await Permission.location.status;
     if (permissionStatus.isGranted) {
@@ -91,6 +98,7 @@ class HomeDriverCubit extends Cubit<HomeDriverState> {
       // ...
     }
   }
+
   getmarker() async {
     markerIcon = await getBytesFromAsset(ImageAssets.marker, 100);
   }
@@ -104,11 +112,13 @@ class HomeDriverCubit extends Cubit<HomeDriverState> {
         .buffer
         .asUint8List();
   }
+
   void getCurrentLocation() async {
     loc.Location location = loc.Location();
     location.getLocation().then(
       (location) {
         currentLocation = location;
+        updateLocation();
         emit(UpdateCurrentLocationState());
         // setState(() {
         // //  sourceLocation = LatLng(location.latitude!, location.longitude!);
@@ -116,7 +126,6 @@ class HomeDriverCubit extends Cubit<HomeDriverState> {
       },
     );
 
-    GoogleMapController googleMapController = await controller.future;
     location.onLocationChanged.listen(
       (newLoc) {
         print("dkkdkdk");
@@ -134,38 +143,96 @@ class HomeDriverCubit extends Cubit<HomeDriverState> {
         //   ),
         // );
         // setState(() {});
+      updateLocation();
         emit(UpdateCameraPosition());
       },
     );
   }
+
   search(String search) async {
 
     final response = await api.searchOnMap("textquery",search,fields);
     response.fold(
-          (l) => emit(ErrorLocationSearch()),
-          (r) {
-            destinaion = LatLng(r.candidates.elementAt(0).geometry.location.lat, r.candidates.elementAt(0).geometry.location.lng);
+      (l) => emit(ErrorLocationSearch()),
+      (r) {
+        destinaion = LatLng(r.candidates.elementAt(0).geometry.location.lat,
+            r.candidates.elementAt(0).geometry.location.lng);
+        getDirection(
+            LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
+            destinaion);
+        emit(UpdateDesitnationLocationState());
+      },
+    );
+  }
+
+  getLocation(LatLng argument) async {
+    final response = await api.getGeoData(
+        argument.latitude.toString() + "," + argument.longitude.toString());
+    response.fold(
+      (l) => emit(ErrorLocationSearch()),
+      (r) {
+        destinaion = argument;
+        location_control.text = r.results
+            .elementAt(0)
+            .formattedAddress
+            .replaceAll("Unnamed Road,", "");
+        // destinaion = LatLng(r.candidates.elementAt(0).geometry.location.lat, r.candidates.elementAt(0).geometry.location.lng);
+        getDirection(
+            LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
+            destinaion);
 
         emit(UpdateDesitnationLocationState());
       },
     );
   }
 
-   getLocation(LatLng argument) async {
+  getDirection(LatLng startPosition, LatLng endPosition) async {
+    String origin = "", dest = "";
+    origin = startPosition.latitude.toString() +
+        "," +
+        startPosition.longitude.toString();
+    dest = endPosition.latitude.toString() +
+        "," +
+        endPosition.longitude.toString();
+    final response = await api.getDirection(origin, dest, "rail");
+    response.fold(
+      (l) => emit(ErrorLocationSearch()),
+      (r) {
+        latLngList.clear();
 
-     final response = await api.getGeoData(
-         argument.latitude.toString() + "," +  argument.longitude.toString()
-     );
-     response.fold(
-           (l) => emit(ErrorLocationSearch()),
-           (r) {
-             destinaion=argument;
-             location_control.text=r.results.elementAt(0).formattedAddress.replaceAll("Unnamed Road,", "");
+
+        if(r.routes.length>0){
+         point = mp.PolygonUtil.decode(
+              r.routes.elementAt(0).overviewPolyline.points);
+        latLngList =
+            point.map((e) => LatLng(e.latitude, e.longitude)).toList();}
+        else{
+          latLngList=[];
+        }
         // destinaion = LatLng(r.candidates.elementAt(0).geometry.location.lat, r.candidates.elementAt(0).geometry.location.lng);
 
-         emit(UpdateDesitnationLocationState());
-       },
-     );
-   }
+        emit(UpdateDesitnationLocationState());
+      },
+    );
+  }
 
+  Future<void> updateLocation() async {
+    if (mapController != null && currentLocation != null) {
+      icon = await MarkersWithLabel.getBytesFromCanvasDynamic(
+          iconPath:ImageAssets.marker,
+          plateReg:location_control.text,
+          fontSize: 10.0,
+          iconSize: Size(10, 10)
+      );
+      mapController!.animateCamera(
+        CameraUpdate.newLatLng(
+          LatLng(
+            currentLocation!.latitude!,
+            currentLocation!.longitude!,
+
+          ),
+        ),
+      );
+    }
+  }
 }
