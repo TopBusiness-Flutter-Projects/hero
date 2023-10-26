@@ -6,6 +6,7 @@ import '../error/exceptions.dart';
 import '../error/failures.dart';
 import 'package:dartz/dartz.dart';
 
+import '../models/direction.dart';
 import '../models/place_details.dart';
 import '../models/place_geocode.dart';
 import '../utils/app_strings.dart';
@@ -301,7 +302,7 @@ class ServiceApi {
     String fields,
   ) async {
     try {
-      final response = await dio.get(EndPoints.citiesUrl, queryParameters: {
+      final response = await dio.get(EndPoints.searchUrl, queryParameters: {
         "inputtype": inputtype,
         "input": input,
         "fields": fields,
@@ -313,18 +314,35 @@ class ServiceApi {
       return Left(ServerFailure());
     }
   }
+
   Future<Either<Failure, GeoCodeModel>> getGeoData(
     String latlng,
-
   ) async {
     try {
-      final response = await dio.get(EndPoints.citiesUrl, queryParameters: {
+      final response = await dio.get(EndPoints.geocodeUrl, queryParameters: {
         "latlng": latlng,
-
         "language": "ar",
         "key": AppStrings.mapKey
       });
       return Right(GeoCodeModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
+  Future<Either<Failure, DirectionModel>> getDirection(
+    String origin,
+    String destination,
+    String transit_mode,
+  ) async {
+    try {
+      final response = await dio.get(EndPoints.directionUrl, queryParameters: {
+        "origin": origin,
+        "destination": destination,
+        "transit_mode": transit_mode,
+        "key": AppStrings.mapKey
+      });
+      return Right(DirectionModel.fromJson(response));
     } on ServerException {
       return Left(ServerFailure());
     }
