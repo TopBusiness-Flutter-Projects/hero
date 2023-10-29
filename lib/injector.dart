@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hero/core/remote/service.dart';
+import 'package:hero/features/notification/cubit/cubit/orders_cubit.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -29,11 +30,11 @@ Future<void> setup() async {
          serviceLocator(),
         ),
   );
-  // serviceLocator.registerFactory(
-  //   () => LoginCubit(
-  //     serviceLocator(),
-  //   ),
-  // );
+  serviceLocator.registerFactory(
+    () => OrdersCubit(
+     // serviceLocator(),
+    ),
+  );
   // serviceLocator.registerFactory(
   //       () => GoogleMapsCubit(
   //    // serviceLocator(),

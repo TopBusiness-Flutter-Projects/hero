@@ -15,6 +15,7 @@ import '../../favourite_locations/screens/favourite_locations_screen.dart';
 import '../../hero_trip_policy/screens/hero_trip_policy_screen.dart';
 import '../../my_rewards/screens/my_rewards_screen.dart';
 import '../../notification/screens/notification_screen.dart';
+import '../../orders/creens/orders_screen.dart';
 import '../../safety_rules/screens/safety_rules_screen.dart';
 import '../../trip_service/screens/trip_insurance_service_screen.dart';
 import '../components/drawer_list_item.dart';
@@ -54,7 +55,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
               children: [
                 HomeTab(),
                 AddTripTab(),
-               // TripWithoutDestination(),
                 NotificationScreen(),
                 FavouriteLocationsScreen(),
                 EditProfileScreen(),
@@ -63,6 +63,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 AboutHeroScreen(),
                 SafetyRulesScreen(),
                 HeroTripPolicyScreen(),
+                OrdersScreen(),
               ],
             ),
             Positioned(

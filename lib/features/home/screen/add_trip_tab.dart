@@ -10,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gif/flutter_gif.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hero/core/widgets/custom_button.dart';
+import 'package:hero/features/home/screen/home.dart';
 import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/assets_manager.dart';
 import '../../../core/utils/getsize.dart';
@@ -47,7 +48,50 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
     //getPolyPoints();
     context.read<HomeCubit>().setCustomMarkerIcon();
     gifController = FlutterGifController(vsync: this);
+    context.read<HomeCubit>().setMarkers(
+      Marker(
+        markerId: const MarkerId("currentLocation"),
+        icon: context.read<HomeCubit>().currentLocationIcon,
+
+        position: LatLng(context.read<HomeCubit>().currentLocation?.latitude??0,
+            context.read<HomeCubit>().currentLocation?.longitude??0),
+      ),
+        Marker(
+      markerId: MarkerId("destination"),
+      infoWindow: InfoWindow(
+        title: "to",
+      ),
+      icon: context.read<HomeCubit>().destinationIcon,
+      position: context.read<HomeCubit>().destinationH,
+    ), );
     // customMarkerIcon =  createCustomMarkerIcon();
+    // context.read<HomeCubit>().markers =  {
+    //   Marker(
+    //     markerId: const MarkerId("currentLocation"),
+    //     icon: context.read<HomeCubit>().currentLocationIcon,
+    //
+    //     position: LatLng(context.read<HomeCubit>().currentLocation?.latitude??30,
+    //         context.read<HomeCubit>().currentLocation?.longitude??31),
+    //   ),
+    //   // Marker(
+    //   //   markerId: const MarkerId("source"),
+    //   //   infoWindow: InfoWindow(
+    //   //     title: "from",
+    //   //   ),
+    //   //  // icon: customMarkerIcon,
+    //   //   icon: cubit.sourceIcon,
+    //   //   position: cubit.sourceLocation,
+    //   // ),
+    //   Marker(
+    //     markerId: MarkerId("destination"),
+    //     infoWindow: InfoWindow(
+    //       title: "to",
+    //     ),
+    //     icon: context.read<HomeCubit>().destinationIcon,
+    //     position: context.read<HomeCubit>().destinationH,
+    //   ),
+    //   //  markers.first
+    // };
     super.initState();
   }
 Set markers = {};
@@ -109,402 +153,417 @@ Set markers = {};
     //     },
     //   ),
     // );
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-    //  key: scaffoldKey,
-      body: BlocConsumer<HomeCubit, HomeState>(
-        listener: (context, state) {
-          // TODO: implement listener
-        },
-        builder: (context, state) {
-          HomeCubit cubit = context.read<HomeCubit>();
-          return Stack(
-            children: [
-              cubit.currentLocation == null
-                  ? const Center(child: Text("Loading"))
-                  :
-              GoogleMap(
-                      initialCameraPosition: CameraPosition(
-                        target: LatLng(cubit.currentLocation!.latitude!,
-                            cubit.currentLocation!.longitude!),
-                        zoom: 13.5,
-                      ),
-                      markers: {
-                        Marker(
-                          markerId: const MarkerId("currentLocation"),
-                          icon: cubit.currentLocationIcon,
-
-                          position: LatLng(cubit.currentLocation!.latitude!,
+    return WillPopScope(
+      onWillPop: () async{
+        context.read<HomeCubit>().latLngList = [];
+        return true;
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+      //  key: scaffoldKey,
+        body: BlocConsumer<HomeCubit, HomeState>(
+          listener: (context, state) {
+            // TODO: implement listener
+          },
+          builder: (context, state) {
+            HomeCubit cubit = context.read<HomeCubit>();
+            return Stack(
+              children: [
+                cubit.currentLocation == null
+                    ? const Center(child: Text("Loading"))
+                    :
+                GoogleMap(
+                        initialCameraPosition: CameraPosition(
+                          target: LatLng(cubit.currentLocation!.latitude!,
                               cubit.currentLocation!.longitude!),
+                          zoom: 13.5,
                         ),
-                        Marker(
-                          markerId: const MarkerId("source"),
-                          infoWindow: InfoWindow(
-                            title: "from",
-                          ),
-                         // icon: customMarkerIcon,
-                          icon: cubit.sourceIcon,
-                          position: cubit.sourceLocation,
-                        ),
-                        Marker(
-                          markerId: MarkerId("destination"),
-                          infoWindow: InfoWindow(
-                            title: "to",
-                          ),
-                          icon: cubit.destinationIcon,
-                          position: cubit.destination,
-                        ),
-                      //  markers.first
-                      },
-                      onMapCreated: (GoogleMapController mapController) {
-                        //  cubit.controller.complete(mapController);
-                        // _customInfoWindowController.googleMapController = mapController;
-                        // this.mapController = mapController;
-                        // setState(() {
-                        //
-                        // });
-                      },
-                      onTap: (argument) {
-                        //  _customInfoWindowController.hideInfoWindow!();
-                      },
-                      onCameraMove: (position) {
-                        //  _customInfoWindowController.hideInfoWindow!();
-                      },
-                      polylines: {
+                        markers:
+                        cubit.markers,
+                  //       {
+                  //         Marker(
+                  //           markerId: const MarkerId("currentLocation"),
+                  //           icon: cubit.currentLocationIcon,
+                  //
+                  //           position: LatLng(cubit.currentLocation!.latitude!,
+                  //               cubit.currentLocation!.longitude!),
+                  //         ),
+                  //         // Marker(
+                  //         //   markerId: const MarkerId("source"),
+                  //         //   infoWindow: InfoWindow(
+                  //         //     title: "from",
+                  //         //   ),
+                  //         //  // icon: customMarkerIcon,
+                  //         //   icon: cubit.sourceIcon,
+                  //         //   position: cubit.sourceLocation,
+                  //         // ),
+                  //         Marker(
+                  //           markerId: MarkerId("destination"),
+                  //           infoWindow: InfoWindow(
+                  //             title: "to",
+                  //           ),
+                  //           icon: cubit.destinationIcon,
+                  //           position: cubit.destinationH,
+                  //         ),
+                  //       //  markers.first
+                  //       },
+                        onMapCreated: (GoogleMapController mapController) {
+                          //  cubit.controller.complete(mapController);
+                          // _customInfoWindowController.googleMapController = mapController;
+                          // this.mapController = mapController;
+                          // setState(() {
+                          //
+                          // });
+                        },
+                        onTap: (argument) {
+                         if( context.read<HomeCubit>().flag==1){
+                           cubit.getLocation(argument);
+                         }
+                         else{
 
-                        Polyline(
-                          polylineId: const PolylineId("route"),
-                          points: cubit.polylineCoordinates,
-                          color: const Color(0xFF7B61FF),
-                          width: 6,
-                        ),
-                      },
-                    ),
+                         }
 
-              Visibility(
-                visible: cubit.bottomContainerInitialState,
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                      height: getSize(context) * 0.8,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(color: AppColors.black.withOpacity(0.25),blurRadius: 10,
-                                  spreadRadius: 10,offset:Offset(4,4) )
-                            ],
-                          borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(30),
-                              topLeft: Radius.circular(30))),
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: getSize(context) * 0.1,
+                          //  _customInfoWindowController.hideInfoWindow!();
+                        },
+                        onCameraMove: (position) {
+                          //  _customInfoWindowController.hideInfoWindow!();
+                        },
+                        polylines: {
+                          Polyline(
+                            polylineId: const PolylineId("route"),
+                            points: cubit.latLngList,
+                            color: const Color(0xFF7B61FF),
+                            width: 6,
                           ),
-                          Visibility(
-                            visible:  context.read<HomeCubit>().flag==1,
-                            child:
+                        },
+                      ),
+
+                Visibility(
+                  visible: cubit.bottomContainerInitialState,
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                        height: getSize(context) * 0.8,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(color: AppColors.black.withOpacity(0.25),blurRadius: 10,
+                                    spreadRadius: 10,offset:Offset(4,4) )
+                              ],
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(30),
+                                topLeft: Radius.circular(30))),
+                        child: Column(
+                          children: [
                             SizedBox(
-                              width: double.infinity,
-                              height: 50,
-                              child: CustomTextField(
-                                title: 'search_location'.tr(),
-                                backgroundColor: AppColors.white,
-                                prefixWidget: MySvgWidget(
-                                  path: ImageAssets.mapIcon,
-                                  imageColor: AppColors.black,
-                                  size: 10,
-                                ),
-                                validatorMessage: 'loaction_msg'.tr(),
-                                horizontalPadding: 2,
-                                textInputType: TextInputType.text,
-                                onchange: (p0) {
-                                  cubit.searchOnMapH(p0);
-                                },
-                                controller: cubit.locationControl,
-                              ),
-                            )
-                            // InkWell(
-                            //
-                            //     onTap: () async {
-                            //
-                            //      // await cubit.searchOnMapH();
-                            //     },
-                            //     child: Padding(
-                            //       padding: EdgeInsets.all(15),
-                            //       child: Card(
-                            //         child: Container(
-                            //
-                            //             padding: EdgeInsets.all(0),
-                            //             width: MediaQuery.of(context).size.width -
-                            //                 40,
-                            //             child: ListTile(
-                            //               title: Text(
-                            //                 cubit.location,
-                            //                 style: TextStyle(fontSize: 18),
-                            //               ),
-                            //               trailing: Icon(Icons.search),
-                            //               dense: true,
-                            //              // leading: TextField(),
-                            //             )),
-                            //       ),
-                            //     )
-                            //
-                            //     ),
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          //payment_method
-                          Row(
-                            children: [
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Text("payment_method").tr(),
-                            ],
-                          ),
-                          //cash
-                          RadioListTile(
-                            title: Text("cash").tr(),
-                            value: cubit.payment,
-                            contentPadding:
-                                EdgeInsets.symmetric(horizontal: 10),
-                            tileColor: AppColors.black1,
-                            activeColor: AppColors.primary,
-                            selected: true,
-                            groupValue: cubit.payment,
-                            onChanged: (value) {
-                              cubit.changeRadioButton(value);
-
-                            },
-                          ),
-                          //SizedBox(height: 5,),
-
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              //ride_later
-                              CustomButton(
-                                text: "ride_later".tr(),
-                                color: AppColors.primary,
-                                borderRadius: 16,
-                                onClick: () async {
-                                  await cubit.selectDateAndTime(context);
-                                },
-                                width: getSize(context) / 2,
-                              ),
-                              //  ride_now"
-                              Container(
-                                //   padding: EdgeInsets.symmetric(horizontal: 1),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(16),
-                                    border: Border.all(
-                                        width: 3, color: AppColors.primary)),
-                                child: CustomButton(
-                                  borderRadius: 16,
-                                  text: "ride_now".tr(),
-                                  color: AppColors.white,
-                                  textcolor: AppColors.primary,
-                                  onClick: () {
-                                    cubit.changeToRideNowState();
-                                  },
-                                  width: getSize(context) / 3,
-                                ),
-                              )
-                            ],
-                          )
-                        ],
-                      )),
-                ),
-              ),
-              // loading state
-              Visibility(
-                visible: cubit.bottomContainerLoadingState,
-                //visible: false,
-                child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      height: getSize(context) * 0.8,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(30),
-                          topLeft: Radius.circular(30),
-                        ),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Image.asset(
-                            ImageAssets.search,
-                            width: getSize(context) / 4,
-                          ),
-                          //progress indicator
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 10.0),
-                            child: LinearProgressIndicator(
-                              borderRadius: BorderRadius.circular(20),
-                              value: 0.7,
-                              color: AppColors.primary, //<-- SEE HERE
-                              backgroundColor: AppColors.grey1, //<-- SEE HERE
+                              height: getSize(context) * 0.1,
                             ),
-                          ),
-                          //rich text
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 12.0),
-                            child: RichText(
-                                textDirection: TextDirection.rtl,
-                                text: TextSpan(
-                                    text: "search_for_drivers".tr(),
-                                    style: TextStyle(
-                                      color: AppColors.black2,
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: getSize(context) * 0.04,
-                                    ),
-                                    children: [
-                                      TextSpan(
-                                        text: "appreciate_your_patience".tr(),
-                                        style: TextStyle(
-                                          color: AppColors.primary,
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: getSize(context) * 0.04,
-                                        ),
-                                      )
-                                    ])),
-                          ),
-                          //button
-                          CustomButton(
-                            text: "cancel".tr(),
-                            color: AppColors.red,
-                            onClick: () {
-                              cubit.tabsController.animateTo(0);
-                              cubit.bottomContainerLoadingState = false;
-                              cubit.bottomContainerInitialState = true;
-                            },
-                            width: getSize(context)*0.9,
-                            borderRadius: 16,
-                          )
-                        ],
-                      ),
-                    )),
-              ),
-            //success state
-              Visibility(
-                visible: cubit.bottomContainerSuccessState,
-                //visible: false,
-                child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      height: getSize(context) * 0.6,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(30),
-                          topLeft: Radius.circular(30),
-                        ),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Image.asset(
-                            ImageAssets.success,
-                            width: getSize(context) / 4,
-                          ),
+                            //search field
+                            Visibility(
+                              visible:  context.read<HomeCubit>().flag==1,
+                              child:
+                              SizedBox(
+                                width: double.infinity,
+                                height: 50,
+                                child: CustomTextField(
+                                  title: 'search_location'.tr(),
+                                  backgroundColor: AppColors.white,
+                                  prefixWidget: MySvgWidget(
+                                    path: ImageAssets.mapIcon,
+                                    imageColor: AppColors.black,
+                                    size: 10,
+                                  ),
+                                  validatorMessage: 'loaction_msg'.tr(),
+                                  horizontalPadding: 2,
+                                  textInputType: TextInputType.text,
+                                  onchange: (p0) {
+                                    cubit.search(p0);
+                                  },
+                                  controller: cubit.locationControl,
+                                ),
+                              ),
+                              // InkWell(
+                              //
+                              //     onTap: () async {
+                              //
+                              //      // await cubit.searchOnMapH();
+                              //     },
+                              //     child: Padding(
+                              //       padding: EdgeInsets.all(15),
+                              //       child: Card(
+                              //         child: Container(
+                              //
+                              //             padding: EdgeInsets.all(0),
+                              //             width: MediaQuery.of(context).size.width -
+                              //                 40,
+                              //             child: ListTile(
+                              //               title: Text(
+                              //                 cubit.location,
+                              //                 style: TextStyle(fontSize: 18),
+                              //               ),
+                              //               trailing: Icon(Icons.search),
+                              //               dense: true,
+                              //              // leading: TextField(),
+                              //             )),
+                              //       ),
+                              //     )
+                              //
+                              //     ),
+                            ),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            //payment_method
+                            Row(
+                              children: [
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Text("payment_method").tr(),
+                              ],
+                            ),
+                            //cash
+                            RadioListTile(
+                              title: Text("cash").tr(),
+                              value: cubit.payment,
+                              contentPadding:
+                                  EdgeInsets.symmetric(horizontal: 10),
+                              tileColor: AppColors.black1,
+                              activeColor: AppColors.primary,
+                              selected: true,
+                              groupValue: cubit.payment,
+                              onChanged: (value) {
+                                cubit.changeRadioButton(value);
 
-                          //rich text
-                          Padding(
-                            padding:
-                            const EdgeInsets.symmetric(horizontal: 12.0),
-                            child:Text("confirm_driver".tr())
-                          ),
-                       Row(mainAxisAlignment: MainAxisAlignment.start,
-                       children: [
-                         SizedBox(width: 10,),
-                         Icon(Icons.person,color: Colors.grey,),
-                         SizedBox(width: 10,),
-                         Text("محمد محمود",style: TextStyle(
-                           color: AppColors.black3
-                         ),)
-                       ],)
-                        ],
-                      ),
-                    )),
-              ),
-              //failure state
-              Visibility(
-                visible: cubit.bottomContainerFailureState,
-                //visible: false,
-                child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      height: getSize(context) * 0.55,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(30),
-                          topLeft: Radius.circular(30),
-                        ),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Image.asset(
-                            ImageAssets.failure,
-                            width: getSize(context) / 4,
-                          ),
+                              },
+                            ),
+                            //SizedBox(height: 5,),
 
-                          //rich text
-                          Padding(
-                            padding:
-                            const EdgeInsets.symmetric(horizontal: 12.0),
-                            child:Text("no_drivers".tr())
-                          ),
-                          //button
-                          CustomButton(
-                            text: "try_again".tr(),
-                            color: AppColors.red,
-                            onClick: () {
-                              cubit.tabsController.animateTo(0);
-                              cubit.bottomContainerLoadingState = false;
-                              cubit.bottomContainerFailureState = false;
-                              cubit.bottomContainerSuccessState = false;
-                              cubit.bottomContainerInitialState = true;
-                            },
-                            width: getSize(context)*0.9,
-                            borderRadius: 16,
-                          )
-                        ],
-                      ),
-                    )),
-              ),
-
-              //back button
-              Positioned(
-                top: getSize(context) * 0.01,
-                right: 0,
-                left: 0,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 10.0, horizontal: 12),
-                  child: Row(
-                    children: [
-                      CustomBackButton(),
-                      Spacer(),
-
-                    ],
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                //ride_later
+                                CustomButton(
+                                  text: "ride_later".tr(),
+                                  color: AppColors.primary,
+                                  borderRadius: 16,
+                                  onClick: () async {
+                                    await cubit.selectDateAndTime(context);
+                                  },
+                                  width: getSize(context) / 2,
+                                ),
+                                //  ride_now"
+                                Container(
+                                  //   padding: EdgeInsets.symmetric(horizontal: 1),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(16),
+                                      border: Border.all(
+                                          width: 3, color: AppColors.primary)),
+                                  child: CustomButton(
+                                    borderRadius: 16,
+                                    text: "ride_now".tr(),
+                                    color: AppColors.white,
+                                    textcolor: AppColors.primary,
+                                    onClick: () {
+                                      cubit.changeToRideNowState();
+                                    },
+                                    width: getSize(context) / 3,
+                                  ),
+                                )
+                              ],
+                            )
+                          ],
+                        )),
                   ),
                 ),
-              ),
-            ],
-          );
-        },
+                // loading state
+                Visibility(
+                  visible: cubit.bottomContainerLoadingState,
+                  //visible: false,
+                  child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        height: getSize(context) * 0.8,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(30),
+                            topLeft: Radius.circular(30),
+                          ),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Image.asset(
+                              ImageAssets.search,
+                              width: getSize(context) / 4,
+                            ),
+                            //progress indicator
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10.0),
+                              child: LinearProgressIndicator(
+                                borderRadius: BorderRadius.circular(20),
+                                value: 0.7,
+                                color: AppColors.primary, //<-- SEE HERE
+                                backgroundColor: AppColors.grey1, //<-- SEE HERE
+                              ),
+                            ),
+                            //rich text
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 12.0),
+                              child: RichText(
+                                  textDirection: TextDirection.rtl,
+                                  text: TextSpan(
+                                      text: "search_for_drivers".tr(),
+                                      style: TextStyle(
+                                        color: AppColors.black2,
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: getSize(context) * 0.04,
+                                      ),
+                                      children: [
+                                        TextSpan(
+                                          text: "appreciate_your_patience".tr(),
+                                          style: TextStyle(
+                                            color: AppColors.primary,
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: getSize(context) * 0.04,
+                                          ),
+                                        )
+                                      ])),
+                            ),
+                            //button
+                            CustomButton(
+                              text: "cancel".tr(),
+                              color: AppColors.red,
+                              onClick: () {
+                                cubit.tabsController.animateTo(0);
+                                cubit.bottomContainerLoadingState = false;
+                                cubit.bottomContainerInitialState = true;
+                              },
+                              width: getSize(context)*0.9,
+                              borderRadius: 16,
+                            )
+                          ],
+                        ),
+                      )),
+                ),
+              //success state
+                Visibility(
+                  visible: cubit.bottomContainerSuccessState,
+                  //visible: false,
+                  child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        height: getSize(context) * 0.6,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(30),
+                            topLeft: Radius.circular(30),
+                          ),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Image.asset(
+                              ImageAssets.success,
+                              width: getSize(context) / 4,
+                            ),
+
+                            //rich text
+                            Padding(
+                              padding:
+                              const EdgeInsets.symmetric(horizontal: 12.0),
+                              child:Text("confirm_driver".tr())
+                            ),
+                         Row(mainAxisAlignment: MainAxisAlignment.start,
+                         children: [
+                           SizedBox(width: 10,),
+                           Icon(Icons.person,color: Colors.grey,),
+                           SizedBox(width: 10,),
+                           Text("محمد محمود",style: TextStyle(
+                             color: AppColors.black3
+                           ),)
+                         ],)
+                          ],
+                        ),
+                      )),
+                ),
+                //failure state
+                Visibility(
+                  visible: cubit.bottomContainerFailureState,
+                  //visible: false,
+                  child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        height: getSize(context) * 0.55,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(30),
+                            topLeft: Radius.circular(30),
+                          ),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Image.asset(
+                              ImageAssets.failure,
+                              width: getSize(context) / 4,
+                            ),
+
+                            //rich text
+                            Padding(
+                              padding:
+                              const EdgeInsets.symmetric(horizontal: 12.0),
+                              child:Text("no_drivers".tr())
+                            ),
+                            //button
+                            CustomButton(
+                              text: "try_again".tr(),
+                              color: AppColors.red,
+                              onClick: () {
+                                cubit.tabsController.animateTo(0);
+                                cubit.bottomContainerLoadingState = false;
+                                cubit.bottomContainerFailureState = false;
+                                cubit.bottomContainerSuccessState = false;
+                                cubit.bottomContainerInitialState = true;
+                              },
+                              width: getSize(context)*0.9,
+                              borderRadius: 16,
+                            )
+                          ],
+                        ),
+                      )),
+                ),
+
+                //back button
+                Positioned(
+                  top: getSize(context) * 0.01,
+                  right: 0,
+                  left: 0,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10.0, horizontal: 12),
+                    child: Row(
+                      children: [
+                        CustomBackButton(),
+                        Spacer(),
+
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+
+
       ),
-
-
     );
   }
 

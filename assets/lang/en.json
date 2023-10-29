@@ -76,6 +76,9 @@
   "in_service": "In Service",
   "you_conect": "You Connect Now",
   "immediate_trip": "Immediate trip",
-  "you_not_conect": "You Not Connect"
+  "you_not_conect": "You Not Connect",
+  "recent_orders": "Recent Orders",
+  "completed_orders": "Completed Orders",
+  "cancelled_orders": "Cancelled Orders"
 
 }

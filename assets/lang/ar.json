@@ -76,5 +76,8 @@
   "in_service": "فى الخدمه",
   "you_conect": "انت متصل الان",
   "immediate_trip": "رحله فوريه",
-  "you_not_conect": "انت غير متصل"
+  "you_not_conect": "انت غير متصل",
+  "recent_orders": "الطلبات الحديثة",
+  "completed_orders": "الطلبات المكتملة",
+  "cancelled_orders": "الطلبات الملغية"
 }
