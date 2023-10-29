@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:bloc/bloc.dart';
-import 'package:easy_localization/easy_localization.dart';
+import 'package:easy_localization/easy_localization.dart' as easy;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -259,7 +259,7 @@ class HomeDriverCubit extends Cubit<HomeDriverState> {
         text: widgetMarker.title,
         style: TextStyle(color: Colors.black),
       ),
-     // textDirection: TextDirection.ltr,
+      textDirection: TextDirection.ltr, // Set the text direction here
     );
     textPainter.layout();
 
