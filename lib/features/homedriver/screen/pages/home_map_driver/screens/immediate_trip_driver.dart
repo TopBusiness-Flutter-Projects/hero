@@ -64,8 +64,8 @@ class _ImmediateTripDriverState extends State<ImmediateTripDriver> {
                       ),
                       Marker(
                         markerId: const MarkerId("destinationLocation"),
-                        icon: cubit!.icon != null
-                            ? BitmapDescriptor.fromBytes(cubit!.icon!)
+                        icon: cubit!.bitmapDescriptor != null
+                            ? cubit!.bitmapDescriptor!
                             : cubit!.currentLocationIcon,
                         position: LatLng(cubit!.destinaion.latitude,
                             cubit!.destinaion.longitude),
@@ -87,7 +87,7 @@ class _ImmediateTripDriverState extends State<ImmediateTripDriver> {
                     polylines: {
                       Polyline(
                         polylineId: const PolylineId("route"),
-                        points: cubit!.latLngList!,
+                        points: cubit!.latLngList,
                         color: AppColors.primary,
                         width: 6,
                       ),

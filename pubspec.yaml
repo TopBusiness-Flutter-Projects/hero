@@ -113,6 +113,7 @@ dependencies:
   custom_map_markers: ^0.0.1
   google_maps_utils: ^2.0.0+1
   maps_toolkit: ^3.0.0
+  widget_to_marker: ^1.0.4
 dev_dependencies:
   flutter_test:
     sdk: flutter

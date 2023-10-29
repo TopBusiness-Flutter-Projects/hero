@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:bloc/bloc.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -12,6 +13,7 @@ import 'package:meta/meta.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:location/location.dart' as loc;
 import 'package:maps_toolkit/maps_toolkit.dart' as mp;
+import 'package:widget_to_marker/widget_to_marker.dart';
 
 import '../../../../../../core/remote/service.dart';
 import '../../../../../../core/utils/custom_marker.dart';
@@ -26,7 +28,7 @@ class HomeDriverCubit extends Cubit<HomeDriverState> {
   final ServiceApi api;
   List<mp.LatLng> point=[];
   GoogleMapController? mapController;
-
+  BitmapDescriptor? bitmapDescriptor;
   String fields = "id,place_id,name,geometry,formatted_address";
   List<LatLng> latLngList = [];
 
@@ -36,7 +38,6 @@ class HomeDriverCubit extends Cubit<HomeDriverState> {
 
   TextEditingController location_control = TextEditingController();
 
-   Uint8List? icon;
 
   HomeDriverCubit(this.api) : super(HomeDriverInitial()) {
     latLngList = [];
@@ -118,6 +119,7 @@ class HomeDriverCubit extends Cubit<HomeDriverState> {
     location.getLocation().then(
       (location) {
         currentLocation = location;
+
         updateLocation();
         emit(UpdateCurrentLocationState());
         // setState(() {
@@ -154,13 +156,19 @@ class HomeDriverCubit extends Cubit<HomeDriverState> {
     final response = await api.searchOnMap("textquery",search,fields);
     response.fold(
       (l) => emit(ErrorLocationSearch()),
-      (r) {
+      (r) async {
+      // bitmapDescriptor  =  await  CustomeMarker(title: "to".tr(), location: location_control.text,).toBitmapDescriptor(
+      //     logicalSize: const Size(400, 400), imageSize: const Size(400, 400));
+        customMarkerIcon().then((value) => {
+          bitmapDescriptor=value,
         destinaion = LatLng(r.candidates.elementAt(0).geometry.location.lat,
-            r.candidates.elementAt(0).geometry.location.lng);
-        getDirection(
+        r.candidates.elementAt(0).geometry.location.lng),
+            getDirection(
             LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
-            destinaion);
-        emit(UpdateDesitnationLocationState());
+        destinaion),
+        emit(UpdateDesitnationLocationState())
+        });
+
       },
     );
   }
@@ -170,23 +178,30 @@ class HomeDriverCubit extends Cubit<HomeDriverState> {
         argument.latitude.toString() + "," + argument.longitude.toString());
     response.fold(
       (l) => emit(ErrorLocationSearch()),
-      (r) {
+      (r) async {
         destinaion = argument;
         location_control.text = r.results
             .elementAt(0)
             .formattedAddress
             .replaceAll("Unnamed Road,", "");
-        // destinaion = LatLng(r.candidates.elementAt(0).geometry.location.lat, r.candidates.elementAt(0).geometry.location.lng);
+        customMarkerIcon().then((value) => {
+          bitmapDescriptor=value,
         getDirection(
-            LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
-            destinaion);
+        LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
+        destinaion),
+        emit(UpdateDesitnationLocationState())
 
-        emit(UpdateDesitnationLocationState());
+        });
+        // bitmapDescriptor  = BitmapDescriptor.fromWidget;
+        // destinaion = LatLng(r.candidates.elementAt(0).geometry.location.lat, r.candidates.elementAt(0).geometry.location.lng);
+
+
       },
     );
   }
 
   getDirection(LatLng startPosition, LatLng endPosition) async {
+
     String origin = "", dest = "";
     origin = startPosition.latitude.toString() +
         "," +
@@ -218,12 +233,7 @@ class HomeDriverCubit extends Cubit<HomeDriverState> {
 
   Future<void> updateLocation() async {
     if (mapController != null && currentLocation != null) {
-      icon = await MarkersWithLabel.getBytesFromCanvasDynamic(
-          iconPath:ImageAssets.marker,
-          plateReg:location_control.text,
-          fontSize: 10.0,
-          iconSize: Size(10, 10)
-      );
+
       mapController!.animateCamera(
         CameraUpdate.newLatLng(
           LatLng(
@@ -234,5 +244,59 @@ class HomeDriverCubit extends Cubit<HomeDriverState> {
         ),
       );
     }
+  }
+  Future<BitmapDescriptor> customMarkerIcon() async {
+    final CustomeMarker widgetMarker = CustomeMarker(
+      title: 'Marker Title',
+      location: 'Marker Description',
+    );
+
+    final ui.PictureRecorder pictureRecorder = ui.PictureRecorder();
+    final Canvas canvas = Canvas(pictureRecorder);
+
+    final TextPainter textPainter = TextPainter(
+      text: TextSpan(
+        text: widgetMarker.title,
+        style: TextStyle(color: Colors.black),
+      ),
+     // textDirection: TextDirection.ltr,
+    );
+    textPainter.layout();
+
+    final double textWidth = textPainter.width;
+    final double textHeight = textPainter.height;
+
+    final double markerWidth = textWidth + 40.0;
+    final double markerHeight = textHeight + 40.0;
+
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        Rect.fromLTWH(0.0, 0.0, markerWidth, markerHeight),
+        Radius.circular(8.0),
+      ),
+      Paint()..color = Colors.blue.withOpacity(0.8),
+    );
+
+    canvas.drawCircle(
+      Offset(markerWidth / 2, 30.0),
+      20.0,
+      Paint()..color = Colors.white,
+    );
+
+    textPainter.paint(
+      canvas,
+      Offset((markerWidth - textWidth) / 2, (markerHeight - textHeight) / 2),
+    );
+
+    final ui.Picture picture = pictureRecorder.endRecording();
+    final ui.Image image = await picture.toImage(
+      markerWidth.toInt(),
+      markerHeight.toInt(),
+    );
+
+    final ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+    final Uint8List byteList = byteData!.buffer.asUint8List();
+
+    return BitmapDescriptor.fromBytes(byteList);
   }
 }
