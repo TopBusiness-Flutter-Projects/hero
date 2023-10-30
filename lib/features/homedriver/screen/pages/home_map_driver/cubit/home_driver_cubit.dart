@@ -24,6 +24,7 @@ part 'home_driver_state.dart';
 class HomeDriverCubit extends Cubit<HomeDriverState> {
   bool inService = true;
   LatLng destinaion = LatLng(0, 0);
+  LatLng strartlocation = LatLng(0, 0);
   loc.LocationData? currentLocation;
   Uint8List? markerIcon;
   final ServiceApi api;
@@ -31,6 +32,7 @@ class HomeDriverCubit extends Cubit<HomeDriverState> {
   GoogleMapController? mapController;
   BitmapDescriptor? bitmapDescriptorto;
   BitmapDescriptor? bitmapDescriptorfrom;
+  CameraPosition prevpostion=CameraPosition(target: LatLng(0,0));
   String fields = "id,place_id,name,geometry,formatted_address";
   List<LatLng> latLngList = [];
 
@@ -119,11 +121,16 @@ class HomeDriverCubit extends Cubit<HomeDriverState> {
     loc.Location location = loc.Location();
     location.getLocation().then(
       (location) {
+        if(currentLocation==null||strartlocation!=LatLng(currentLocation!.latitude!,currentLocation!.longitude!)){
         currentLocation = location;
+        strartlocation=  LatLng(
+          currentLocation!.latitude!,
+          currentLocation!.longitude!,
+        );
 getLocation(LatLng(currentLocation!.latitude!, currentLocation!.longitude!), "from");
         updateLocation();
 
-        emit(UpdateCurrentLocationState());
+        emit(UpdateCurrentLocationState());}
         // setState(() {
         // //  sourceLocation = LatLng(location.latitude!, location.longitude!);
         //  });
@@ -132,25 +139,19 @@ getLocation(LatLng(currentLocation!.latitude!, currentLocation!.longitude!), "fr
 
     location.onLocationChanged.listen(
       (newLoc) {
-        print("dkkdkdk");
-        currentLocation = newLoc;
+
+        if(currentLocation==null||strartlocation!=LatLng(currentLocation!.latitude!,currentLocation!.longitude!)){
+
+          currentLocation = newLoc;
+          strartlocation=  LatLng(
+            currentLocation!.latitude!,
+            currentLocation!.longitude!,
+          );
         getLocation(LatLng(currentLocation!.latitude!, currentLocation!.longitude!), "from");
 
-        //sourceLocation = LatLng(newLoc.latitude!, newLoc.longitude!);
-        // googleMapController.animateCamera(
-        //   CameraUpdate.newCameraPosition(
-        //     CameraPosition(
-        //       zoom: 13.5,
-        //       target: LatLng(
-        //         newLoc.latitude!,
-        //         newLoc.longitude!,
-        //       ),
-        //     ),
-        //   ),
-        // );
-        // setState(() {});
+
         updateLocation();
-        emit(UpdateCameraPosition());
+        emit(UpdateCameraPosition());}
       },
     );
   }
@@ -247,6 +248,10 @@ else{
   }
 
   Future<void> updateLocation() async {
+    strartlocation=  LatLng(
+      currentLocation!.latitude!,
+      currentLocation!.longitude!,
+    );
     if (mapController != null && currentLocation != null) {
       mapController!.animateCamera(
         CameraUpdate.newLatLng(

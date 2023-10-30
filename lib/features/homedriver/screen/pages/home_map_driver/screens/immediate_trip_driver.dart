@@ -28,7 +28,6 @@ class _ImmediateTripDriverState extends State<ImmediateTripDriver> {
 
     return BlocBuilder<HomeDriverCubit, HomeDriverState>(
       builder: (context, state) {
-
         return Scaffold(
           body: Stack(
             alignment: Alignment.center,
@@ -70,30 +69,35 @@ class _ImmediateTripDriverState extends State<ImmediateTripDriver> {
                             : cubit!.currentLocationIcon,
                         position: LatLng(cubit!.destinaion.latitude,
                             cubit!.destinaion.longitude),
-
                       ),
                       // Rest of the markers...
                     },
                     onMapCreated: (GoogleMapController controller) {
                       cubit!.mapController =
-                          controller; // Store the GoogleMapController
+                          controller;
+                      // Store the GoogleMapController
                     },
                     onTap: (argument) {
-                      cubit!.getLocation(argument,"to");
+                      cubit!.getLocation(argument, "to");
                       // _customInfoWindowController.hideInfoWindow!();
                     },
                     onCameraMove: (position) {
+                      print("lllll");
+
+                      print(position.target);
+                      if (cubit!.strartlocation!=position.target){
+                        print(cubit!.strartlocation);
+                        cubit!.strartlocation=position.target;
+                        cubit!.getCurrentLocation();}
                       // _customInfoWindowController.hideInfoWindow!();
                     },
                     polylines: {
                       Polyline(
-                        polylineId: const PolylineId("route"),
-                        points: cubit!.latLngList,
-                        color: AppColors.black,
-                        width: 5,
-
-                        visible: true
-                      ),
+                          polylineId: const PolylineId("route"),
+                          points: cubit!.latLngList,
+                          color: AppColors.black,
+                          width: 5,
+                          visible: true),
                     },
                   );
                 },
@@ -110,12 +114,11 @@ class _ImmediateTripDriverState extends State<ImmediateTripDriver> {
                       title: 'search_location'.tr(),
                       backgroundColor: AppColors.white,
                       prefixWidget: Padding(
-                        padding:  EdgeInsets.all(getSize(context)/32),
+                        padding: EdgeInsets.all(getSize(context) / 32),
                         child: MySvgWidget(
                           path: ImageAssets.mapIcon,
                           imageColor: AppColors.black,
                           size: 10,
-
                         ),
                       ),
                       validatorMessage: 'loaction_msg'.tr(),
@@ -133,6 +136,4 @@ class _ImmediateTripDriverState extends State<ImmediateTripDriver> {
       },
     );
   }
-
-
 }
