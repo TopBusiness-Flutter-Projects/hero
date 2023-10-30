@@ -20,6 +20,8 @@ class AppColors {
   static Color grey1 = HexColor('#D9D9D9');
   static Color grey2 = HexColor('#939393');
   static Color grey3 = HexColor('#605F5F');
+  static Color green1 = HexColor('#3AAF3C');
+  static Color greenLight = HexColor('#A9FEAB');
 
   static Color hint = Colors.grey;
   static Color blackLite = Colors.black54;

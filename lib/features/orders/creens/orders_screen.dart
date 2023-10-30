@@ -3,9 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../config/routes/app_routes.dart';
 import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/getsize.dart';
 import '../../../core/widgets/back_button.dart';
+import '../../home/components/home_list_item.dart';
 import '../../notification/cubit/cubit/orders_cubit.dart';
 
 class OrdersScreen extends StatefulWidget {
@@ -99,6 +101,50 @@ class _OrdersScreenState extends State<OrdersScreen>
                     Text("completed_orders".tr()),
                     Text("cancelled_orders".tr()),
                   ]
+              ),
+              SizedBox(
+                height: getSize(context)*1.9,
+                child: TabBarView(
+                  physics: NeverScrollableScrollPhysics(),
+                  controller: cubit.tabController,
+                    children: [
+                      ListView.builder(
+                        itemBuilder: (context, index) {
+
+                          return  Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: HomeListItem(isHome: false),
+                          );
+                        },
+                        itemCount: 10,
+                      ),
+                      //completed orders
+                      ListView.builder(
+                        itemBuilder: (context, index) {
+                          return  InkWell(
+                            onTap: () {
+                              Navigator.pushNamed(context, Routes.tripDetailsRoute);
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: HomeListItem(isHome: false),
+                            ),
+                          );
+                        },
+                        itemCount: 10,
+                      ),
+                      ListView.builder(
+                        itemBuilder: (context, index) {
+
+                          return  Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: HomeListItem(isHome: false),
+                          );
+                        },
+                        itemCount: 10,
+                      ),
+                    ]
+                ),
               )
             ],
           ),

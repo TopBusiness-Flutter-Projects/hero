@@ -4,7 +4,7 @@ import 'package:hero/features/home/screen/home.dart';
 import 'package:hero/features/login/screens/login.dart';
 import 'package:hero/features/notification/screens/notification_screen.dart';
 import 'package:hero/features/splash/screens/splash_screen.dart';
-
+import 'package:hero/features/trip_details/screens/trip_details_screen.dart';
 import '../../core/utils/app_strings.dart';
 import '../../features/driver_signup/screens/driversignup.dart';
 import '../../features/driver_waiting/screens/driver_waiting.dart';
@@ -38,6 +38,7 @@ class Routes {
   static const String googleMapDetailsRoute = '/google_map_details_screen';
   static const String driversignupRoute = '/driversignup';
   static const String notificationRoute = '/notification_screen';
+  static const String tripDetailsRoute = '/trip_details_screen';
 }
 
 class AppRoutes {
@@ -97,6 +98,10 @@ class AppRoutes {
           builder: (context) =>  DriverWaiting(),
         );
 
+      case Routes.tripDetailsRoute:
+        return MaterialPageRoute(
+          builder: (context) =>  TripDetailsScreen(),
+        );
 
       // case Routes.detailsRoute:
       //   final service = settings.arguments as ServicesModel;
