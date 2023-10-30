@@ -79,6 +79,8 @@
   "you_not_conect": "You Not Connect",
   "recent_orders": "Recent Orders",
   "completed_orders": "Completed Orders",
-  "cancelled_orders": "Cancelled Orders"
+  "cancelled_orders": "Cancelled Orders",
+  "rate_trip": "Rate Trip",
+  "write_comment": "Write Comment"
 
 }

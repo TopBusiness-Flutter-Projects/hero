@@ -156,6 +156,7 @@ Set markers = {};
     return WillPopScope(
       onWillPop: () async{
         context.read<HomeCubit>().latLngList = [];
+        context.read<HomeCubit>().tabsController.animateTo(0);
         return true;
       },
       child: Scaffold(
