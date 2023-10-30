@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:bloc/bloc.dart';
 import 'package:easy_localization/easy_localization.dart' as easy;
@@ -8,14 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hero/core/utils/assets_manager.dart';
-import 'package:meta/meta.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:location/location.dart' as loc;
 import 'package:maps_toolkit/maps_toolkit.dart' as mp;
 import 'package:widget_to_marker/widget_to_marker.dart';
 
 import '../../../../../../core/remote/service.dart';
-import '../../../../../../core/utils/app_colors.dart';
 import '../../../../../../core/utils/custom_marker.dart';
 
 part 'home_driver_state.dart';
