@@ -14,6 +14,7 @@ class CustomBackButton extends StatelessWidget {
     return   InkWell(
       onTap: () {
         context.read<HomeCubit>().tabsController.animateTo(0);
+        context.read<HomeCubit>().latLngList=[];
       },
       child: Image.asset(
         ImageAssets.backImage,

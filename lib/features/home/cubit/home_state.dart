@@ -16,3 +16,9 @@ class ChangeToRideNowState extends HomeState {}
 class LoadingSearchState extends HomeState {}
 class FailureSearchState extends HomeState {}
 class SuccessSearchState extends HomeState {}
+class UpdateDesitnationLocation extends HomeState {}
+class ErrorLocationSearchState extends HomeState {}
+class ErrorLocationSearchStat extends HomeState {}
+class UpdateDesitnationLocationStat extends HomeState {}
+class BackState extends HomeState {}
+class AddMarkersState extends HomeState {}

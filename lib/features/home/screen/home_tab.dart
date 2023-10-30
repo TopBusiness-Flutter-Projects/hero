@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dash/flutter_dash.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/assets_manager.dart';
 import '../../../core/utils/getsize.dart';
@@ -153,12 +154,17 @@ class _HomeTabState extends State<HomeTab> {
                       fontWeight: FontWeight.normal,
                       color: AppColors.black),
                 ),
-                Text(
-                  'all'.tr(),
-                  style: TextStyle(
-                      fontSize: getSize(context) / 24,
-                      fontWeight: FontWeight.normal,
-                      color: AppColors.primary),
+                InkWell(
+                  onTap: () {
+                    context.read<HomeCubit>().tabsController.animateTo(10);
+                  },
+                  child: Text(
+                    'all'.tr(),
+                    style: TextStyle(
+                        fontSize: getSize(context) / 24,
+                        fontWeight: FontWeight.normal,
+                        color: AppColors.primary),
+                  ),
                 ),
               ],
             ),
@@ -374,7 +380,6 @@ class _HomeTabState extends State<HomeTab> {
                             color: AppColors.primary,
                             onClick: () {
                               context.read<HomeCubit>().setflag(1);
-
                               context.read<HomeCubit>().tabsController.animateTo(1);
                               Navigator.pop(context);
                             },
@@ -387,6 +392,13 @@ class _HomeTabState extends State<HomeTab> {
                               context.read<HomeCubit>().setflag(2);
                               context.read<HomeCubit>().tabsController.animateTo(1);
                               Navigator.pop(context);
+                              context.read<HomeCubit>().setMarkers( Marker(
+                                markerId: const MarkerId("currentLocation"),
+                                icon: context.read<HomeCubit>().currentLocationIcon,
+
+                                position: LatLng(context.read<HomeCubit>().currentLocation?.latitude??0,
+                                    context.read<HomeCubit>().currentLocation?.longitude??0),
+                              ), null);
                             },
                             child: Container(
                               padding: EdgeInsets.symmetric(horizontal: getSize(context)*0.15,vertical: 2),
