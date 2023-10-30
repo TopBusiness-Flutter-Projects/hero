@@ -27,11 +27,9 @@ class HomeDriverCubit extends Cubit<HomeDriverState> {
   GoogleMapController? mapController;
   BitmapDescriptor? bitmapDescriptorto;
   BitmapDescriptor? bitmapDescriptorfrom;
-  CameraPosition prevpostion=CameraPosition(target: LatLng(0,0));
   String fields = "id,place_id,name,geometry,formatted_address";
   List<LatLng> latLngList = [];
 
-  final Completer<GoogleMapController> controller = Completer();
   BitmapDescriptor currentLocationIcon = BitmapDescriptor.defaultMarker;
   TabController? tabsController;
 
@@ -116,8 +114,9 @@ class HomeDriverCubit extends Cubit<HomeDriverState> {
     loc.Location location = loc.Location();
     location.getLocation().then(
       (location) {
-        if(currentLocation==null||strartlocation!=LatLng(currentLocation!.latitude!,currentLocation!.longitude!)){
         currentLocation = location;
+
+        if(currentLocation==null||strartlocation!=LatLng(currentLocation!.latitude!,currentLocation!.longitude!)){
         strartlocation=  LatLng(
           currentLocation!.latitude!,
           currentLocation!.longitude!,
@@ -134,10 +133,10 @@ getLocation(LatLng(currentLocation!.latitude!, currentLocation!.longitude!), "fr
 
     location.onLocationChanged.listen(
       (newLoc) {
+        currentLocation = newLoc;
 
         if(currentLocation==null||strartlocation!=LatLng(currentLocation!.latitude!,currentLocation!.longitude!)){
 
-          currentLocation = newLoc;
           strartlocation=  LatLng(
             currentLocation!.latitude!,
             currentLocation!.longitude!,
@@ -180,7 +179,6 @@ getLocation(LatLng(currentLocation!.latitude!, currentLocation!.longitude!), "fr
       (r) async {
         if (title == "to") {
           destinaion = argument;
-
           location_control.text = r.results
               .elementAt(0)
               .formattedAddress
@@ -243,10 +241,7 @@ else{
   }
 
   Future<void> updateLocation() async {
-    strartlocation=  LatLng(
-      currentLocation!.latitude!,
-      currentLocation!.longitude!,
-    );
+
     if (mapController != null && currentLocation != null) {
       mapController!.animateCamera(
         CameraUpdate.newLatLng(

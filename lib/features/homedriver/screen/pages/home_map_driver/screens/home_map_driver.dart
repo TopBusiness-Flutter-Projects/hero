@@ -66,6 +66,10 @@ class _HomeMapDriverState extends State<HomeMapDriver> {
                       // _customInfoWindowController.hideInfoWindow!();
                     },
                     onCameraMove: (position) {
+                      if (cubit!.strartlocation!=position.target){
+                        print(cubit!.strartlocation);
+                        cubit!.strartlocation=position.target;
+                        cubit!.getCurrentLocation();}
                       // _customInfoWindowController.hideInfoWindow!();
                     },
                     polylines: {
