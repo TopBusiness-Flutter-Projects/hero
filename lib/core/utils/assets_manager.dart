@@ -22,6 +22,7 @@ class ImageAssets {
   static const String success = '$imagePath/success.png';
   static const String failure = '$imagePath/failure.png';
   static const String marker = '$imagePath/marker.png';
+  static const String marker2 = '$imagePath/toktomap.png';
 
   // icons
   static const String phoneIcon = '$iconsPath/phone.svg';

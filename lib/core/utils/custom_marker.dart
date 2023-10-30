@@ -3,44 +3,62 @@ import 'package:hero/core/utils/app_colors.dart';
 import 'package:hero/core/utils/assets_manager.dart';
 import 'package:hero/core/utils/getsize.dart';
 
-class CustomeMarker extends StatefulWidget {
-  const CustomeMarker({super.key, required this.title, required this.location});
-final String title;
-final String location;
-  @override
-  State<CustomeMarker> createState() => _CustomeMarkerState();
-}
+class CustomeMarker extends StatelessWidget {
+  CustomeMarker({super.key, required this.title, required this.location});
 
-class _CustomeMarkerState extends State<CustomeMarker> {
+  final String title;
+  final String location;
+
   @override
   Widget build(BuildContext context) {
-    return
-      RepaintBoundary(
+    return Directionality(
+      textDirection: TextDirection.ltr,
       child: Material(
-      color: AppColors.white,
-      borderRadius: BorderRadius.all(Radius.circular(getSize(context)/22)),
-      child: Row(
-        children: [
-          Image.asset(ImageAssets.marker),
-          Expanded(
-            child: Column(
+        borderRadius: BorderRadius.all(Radius.circular(getSize(context)/16)),
+        color: AppColors.white,
+        child: Container(
+   height: 90,
+          width: 300,
+          decoration: BoxDecoration(
+              color: AppColors.white,
+              borderRadius:
+                  BorderRadius.all(Radius.circular(getSize(context) / 16))),
+          child: Center(
+            child: Row(
               children: [
-                Text(widget.title,
-                style: TextStyle(
-                  fontSize: getSize(context)/22,
-                  color: AppColors.black
-                ),),
-                Text(widget.location,
-                style: TextStyle(
-                  fontSize: getSize(context)/22,
-                  color: AppColors.grey2
-                ),),
+                Image.asset(ImageAssets.marker2),
+                Flexible(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: TextStyle(
 
+                           //    fontSize: getSize(context)/100,
+                            color: AppColors.black),
+                      ),
+                      Flexible(
+                        child: Text(
+                          location,
+                          maxLines: 3,
+                          softWrap: true,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+
+                              //  fontSize: getSize(context)/40,
+                              color: AppColors.grey2),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
               ],
             ),
-          )
-        ],
+          ),
+        ),
       ),
-    ));
+    );
   }
 }

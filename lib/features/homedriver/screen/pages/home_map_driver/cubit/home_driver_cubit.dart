@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
-
 import 'package:bloc/bloc.dart';
 import 'package:easy_localization/easy_localization.dart' as easy;
 import 'package:flutter/material.dart';
@@ -16,7 +15,9 @@ import 'package:maps_toolkit/maps_toolkit.dart' as mp;
 import 'package:widget_to_marker/widget_to_marker.dart';
 
 import '../../../../../../core/remote/service.dart';
+import '../../../../../../core/utils/app_colors.dart';
 import '../../../../../../core/utils/custom_marker.dart';
+import '../../../../../../core/utils/getsize.dart';
 
 part 'home_driver_state.dart';
 
@@ -26,9 +27,10 @@ class HomeDriverCubit extends Cubit<HomeDriverState> {
   loc.LocationData? currentLocation;
   Uint8List? markerIcon;
   final ServiceApi api;
-  List<mp.LatLng> point=[];
+  List<mp.LatLng> point = [];
   GoogleMapController? mapController;
-  BitmapDescriptor? bitmapDescriptor;
+  BitmapDescriptor? bitmapDescriptorto;
+  BitmapDescriptor? bitmapDescriptorfrom;
   String fields = "id,place_id,name,geometry,formatted_address";
   List<LatLng> latLngList = [];
 
@@ -37,7 +39,6 @@ class HomeDriverCubit extends Cubit<HomeDriverState> {
   TabController? tabsController;
 
   TextEditingController location_control = TextEditingController();
-
 
   HomeDriverCubit(this.api) : super(HomeDriverInitial()) {
     latLngList = [];
@@ -119,8 +120,9 @@ class HomeDriverCubit extends Cubit<HomeDriverState> {
     location.getLocation().then(
       (location) {
         currentLocation = location;
-
+getLocation(LatLng(currentLocation!.latitude!, currentLocation!.longitude!), "from");
         updateLocation();
+
         emit(UpdateCurrentLocationState());
         // setState(() {
         // //  sourceLocation = LatLng(location.latitude!, location.longitude!);
@@ -132,6 +134,8 @@ class HomeDriverCubit extends Cubit<HomeDriverState> {
       (newLoc) {
         print("dkkdkdk");
         currentLocation = newLoc;
+        getLocation(LatLng(currentLocation!.latitude!, currentLocation!.longitude!), "from");
+
         //sourceLocation = LatLng(newLoc.latitude!, newLoc.longitude!);
         // googleMapController.animateCamera(
         //   CameraUpdate.newCameraPosition(
@@ -145,63 +149,75 @@ class HomeDriverCubit extends Cubit<HomeDriverState> {
         //   ),
         // );
         // setState(() {});
-      updateLocation();
+        updateLocation();
         emit(UpdateCameraPosition());
       },
     );
   }
 
   search(String search) async {
-
-    final response = await api.searchOnMap("textquery",search,fields);
+    final response = await api.searchOnMap("textquery", search, fields);
     response.fold(
       (l) => emit(ErrorLocationSearch()),
       (r) async {
-      // bitmapDescriptor  =  await  CustomeMarker(title: "to".tr(), location: location_control.text,).toBitmapDescriptor(
-      //     logicalSize: const Size(400, 400), imageSize: const Size(400, 400));
-        customMarkerIcon().then((value) => {
-          bitmapDescriptor=value,
-        destinaion = LatLng(r.candidates.elementAt(0).geometry.location.lat,
-        r.candidates.elementAt(0).geometry.location.lng),
-            getDirection(
-            LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
-        destinaion),
-        emit(UpdateDesitnationLocationState())
-        });
 
+        destinaion = LatLng(r.candidates.elementAt(0).geometry.location.lat,
+            r.candidates.elementAt(0).geometry.location.lng);
+        bitmapDescriptorto = await CustomeMarker(
+          title: 'to'.tr(),
+          location: location_control.text,
+        ).toBitmapDescriptor();
+        getDirection(
+            LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
+            destinaion);
+        emit(UpdateDesitnationLocationState());
+        //   });
       },
     );
   }
 
-  getLocation(LatLng argument) async {
+  getLocation(LatLng argument, String title) async {
     final response = await api.getGeoData(
         argument.latitude.toString() + "," + argument.longitude.toString());
     response.fold(
       (l) => emit(ErrorLocationSearch()),
       (r) async {
-        destinaion = argument;
-        location_control.text = r.results
-            .elementAt(0)
-            .formattedAddress
-            .replaceAll("Unnamed Road,", "");
-        customMarkerIcon().then((value) => {
-          bitmapDescriptor=value,
-        getDirection(
-        LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
-        destinaion),
-        emit(UpdateDesitnationLocationState())
+        if (title == "to") {
+          destinaion = argument;
 
-        });
+          location_control.text = r.results
+              .elementAt(0)
+              .formattedAddress
+              .replaceAll("Unnamed Road,", "");
+          bitmapDescriptorto = await CustomeMarker(
+            title: title.tr(),
+            location: r.results
+                .elementAt(0)
+                .formattedAddress
+                .replaceAll("Unnamed Road,", ""),
+          ).toBitmapDescriptor();
+        }
+else{
+          bitmapDescriptorfrom = await CustomeMarker(
+            title: title.tr(),
+            location: r.results
+                .elementAt(0)
+                .formattedAddress
+                .replaceAll("Unnamed Road,", ""),
+          ).toBitmapDescriptor();
+        }
+
+        getDirection(
+            LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
+            destinaion);
+        emit(UpdateDesitnationLocationState());
         // bitmapDescriptor  = BitmapDescriptor.fromWidget;
         // destinaion = LatLng(r.candidates.elementAt(0).geometry.location.lat, r.candidates.elementAt(0).geometry.location.lng);
-
-
       },
     );
   }
 
   getDirection(LatLng startPosition, LatLng endPosition) async {
-
     String origin = "", dest = "";
     origin = startPosition.latitude.toString() +
         "," +
@@ -215,14 +231,13 @@ class HomeDriverCubit extends Cubit<HomeDriverState> {
       (r) {
         latLngList.clear();
 
-
-        if(r.routes.length>0){
-         point = mp.PolygonUtil.decode(
+        if (r.routes.length > 0) {
+          point = mp.PolygonUtil.decode(
               r.routes.elementAt(0).overviewPolyline.points);
-        latLngList =
-            point.map((e) => LatLng(e.latitude, e.longitude)).toList();}
-        else{
-          latLngList=[];
+          latLngList =
+              point.map((e) => LatLng(e.latitude, e.longitude)).toList();
+        } else {
+          latLngList = [];
         }
         // destinaion = LatLng(r.candidates.elementAt(0).geometry.location.lat, r.candidates.elementAt(0).geometry.location.lng);
 
@@ -233,70 +248,14 @@ class HomeDriverCubit extends Cubit<HomeDriverState> {
 
   Future<void> updateLocation() async {
     if (mapController != null && currentLocation != null) {
-
       mapController!.animateCamera(
         CameraUpdate.newLatLng(
           LatLng(
             currentLocation!.latitude!,
             currentLocation!.longitude!,
-
           ),
         ),
       );
     }
-  }
-  Future<BitmapDescriptor> customMarkerIcon() async {
-    final CustomeMarker widgetMarker = CustomeMarker(
-      title: 'Marker Title',
-      location: 'Marker Description',
-    );
-
-    final ui.PictureRecorder pictureRecorder = ui.PictureRecorder();
-    final Canvas canvas = Canvas(pictureRecorder);
-
-    final TextPainter textPainter = TextPainter(
-      text: TextSpan(
-        text: widgetMarker.title,
-        style: TextStyle(color: Colors.black),
-      ),
-      textDirection: TextDirection.ltr, // Set the text direction here
-    );
-    textPainter.layout();
-
-    final double textWidth = textPainter.width;
-    final double textHeight = textPainter.height;
-
-    final double markerWidth = textWidth + 40.0;
-    final double markerHeight = textHeight + 40.0;
-
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(
-        Rect.fromLTWH(0.0, 0.0, markerWidth, markerHeight),
-        Radius.circular(8.0),
-      ),
-      Paint()..color = Colors.blue.withOpacity(0.8),
-    );
-
-    canvas.drawCircle(
-      Offset(markerWidth / 2, 30.0),
-      20.0,
-      Paint()..color = Colors.white,
-    );
-
-    textPainter.paint(
-      canvas,
-      Offset((markerWidth - textWidth) / 2, (markerHeight - textHeight) / 2),
-    );
-
-    final ui.Picture picture = pictureRecorder.endRecording();
-    final ui.Image image = await picture.toImage(
-      markerWidth.toInt(),
-      markerHeight.toInt(),
-    );
-
-    final ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-    final Uint8List byteList = byteData!.buffer.asUint8List();
-
-    return BitmapDescriptor.fromBytes(byteList);
   }
 }

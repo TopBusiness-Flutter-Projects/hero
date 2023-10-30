@@ -50,8 +50,8 @@ class _ImmediateTripDriverState extends State<ImmediateTripDriver> {
                     markers: {
                       Marker(
                         markerId: const MarkerId("currentLocation"),
-                        icon: cubit!.markerIcon != null
-                            ? BitmapDescriptor.fromBytes(cubit!.markerIcon!)
+                        icon: cubit!.bitmapDescriptorfrom != null
+                            ? cubit!.bitmapDescriptorfrom!
                             : cubit!.currentLocationIcon,
                         position: LatLng(
                           cubit!.currentLocation != null
@@ -64,8 +64,8 @@ class _ImmediateTripDriverState extends State<ImmediateTripDriver> {
                       ),
                       Marker(
                         markerId: const MarkerId("destinationLocation"),
-                        icon: cubit!.bitmapDescriptor != null
-                            ? cubit!.bitmapDescriptor!
+                        icon: cubit!.bitmapDescriptorto != null
+                            ? cubit!.bitmapDescriptorto!
                             : cubit!.currentLocationIcon,
                         position: LatLng(cubit!.destinaion.latitude,
                             cubit!.destinaion.longitude),
@@ -78,7 +78,7 @@ class _ImmediateTripDriverState extends State<ImmediateTripDriver> {
                           controller; // Store the GoogleMapController
                     },
                     onTap: (argument) {
-                      cubit!.getLocation(argument);
+                      cubit!.getLocation(argument,"to");
                       // _customInfoWindowController.hideInfoWindow!();
                     },
                     onCameraMove: (position) {

@@ -35,6 +35,7 @@ class _HomeDriverState extends State<HomeDriver> with TickerProviderStateMixin{
         child: Stack(
           children: [
             TabBarView(
+              physics: NeverScrollableScrollPhysics(),
                 controller: context.read<HomeDriverCubit>().tabsController,
                 children: [
               HomeMapDriver(),
