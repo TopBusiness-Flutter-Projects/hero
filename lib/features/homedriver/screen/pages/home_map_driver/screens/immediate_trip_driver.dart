@@ -36,6 +36,7 @@ class _ImmediateTripDriverState extends State<ImmediateTripDriver> {
               Builder(
                 builder: (context) {
                   return GoogleMap(
+                    mapType: MapType.normal,
                     initialCameraPosition: CameraPosition(
                       target: LatLng(
                         cubit!.currentLocation != null
@@ -88,8 +89,10 @@ class _ImmediateTripDriverState extends State<ImmediateTripDriver> {
                       Polyline(
                         polylineId: const PolylineId("route"),
                         points: cubit!.latLngList,
-                        color: AppColors.primary,
-                        width: 6,
+                        color: AppColors.black,
+                        width: 5,
+
+                        visible: true
                       ),
                     },
                   );

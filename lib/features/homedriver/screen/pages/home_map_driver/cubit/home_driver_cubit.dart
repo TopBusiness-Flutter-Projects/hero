@@ -12,6 +12,7 @@ import 'package:meta/meta.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:location/location.dart' as loc;
 import 'package:maps_toolkit/maps_toolkit.dart' as mp;
+import 'package:widget_to_marker/widget_to_marker.dart';
 
 import '../../../../../../core/remote/service.dart';
 import '../../../../../../core/utils/app_colors.dart';
