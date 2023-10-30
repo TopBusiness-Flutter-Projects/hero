@@ -17,7 +17,6 @@ import 'package:widget_to_marker/widget_to_marker.dart';
 import '../../../../../../core/remote/service.dart';
 import '../../../../../../core/utils/app_colors.dart';
 import '../../../../../../core/utils/custom_marker.dart';
-import '../../../../../../core/utils/getsize.dart';
 
 part 'home_driver_state.dart';
 
