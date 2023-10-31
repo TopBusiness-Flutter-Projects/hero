@@ -219,7 +219,7 @@ else{
     dest = endPosition.latitude.toString() +
         "," +
         endPosition.longitude.toString();
-    final response = await api.getDirection(origin, dest, "rail");
+    final response = await api.getDirection(origin, dest, "bus");
     response.fold(
       (l) => emit(ErrorLocationSearch()),
       (r) {

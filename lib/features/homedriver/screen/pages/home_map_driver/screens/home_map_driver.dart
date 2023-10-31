@@ -72,14 +72,7 @@ class _HomeMapDriverState extends State<HomeMapDriver> {
                         cubit!.getCurrentLocation();}
                       // _customInfoWindowController.hideInfoWindow!();
                     },
-                    polylines: {
-                      Polyline(
-                        polylineId: const PolylineId("route"),
-                        // points: cubit.polylineCoordinates,
-                        color: const Color(0xFF7B61FF),
-                        width: 6,
-                      ),
-                    },
+
 
                   );
                 },
