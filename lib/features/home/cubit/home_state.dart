@@ -22,3 +22,4 @@ class ErrorLocationSearchStat extends HomeState {}
 class UpdateDesitnationLocationStat extends HomeState {}
 class BackState extends HomeState {}
 class AddMarkersState extends HomeState {}
+class UpdateCurrentLocation extends HomeState {}

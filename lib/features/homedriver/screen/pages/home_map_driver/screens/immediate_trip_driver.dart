@@ -82,9 +82,7 @@ class _ImmediateTripDriverState extends State<ImmediateTripDriver> {
                       // _customInfoWindowController.hideInfoWindow!();
                     },
                     onCameraMove: (position) {
-                      print("lllll");
 
-                      print(position.target);
                       if (cubit!.strartlocation!=position.target){
                         print(cubit!.strartlocation);
                         cubit!.strartlocation=position.target;

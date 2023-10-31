@@ -252,13 +252,13 @@ class _HomeTabState extends State<HomeTab> {
                               context.read<HomeCubit>().setflag(2);
                               context.read<HomeCubit>().tabsController.animateTo(1);
                               Navigator.pop(context);
-                              context.read<HomeCubit>().setMarkers( Marker(
-                                markerId: const MarkerId("currentLocation"),
-                                icon: context.read<HomeCubit>().currentLocationIcon,
-
-                                position: LatLng(context.read<HomeCubit>().currentLocation?.latitude??0,
-                                    context.read<HomeCubit>().currentLocation?.longitude??0),
-                              ), null);
+                              // context.read<HomeCubit>().setMarkers( Marker(
+                              //   markerId: const MarkerId("currentLocation"),
+                              //   icon: context.read<HomeCubit>().currentLocationIcon,
+                              //
+                              //   position: LatLng(context.read<HomeCubit>().currentLocation?.latitude??0,
+                              //       context.read<HomeCubit>().currentLocation?.longitude??0),
+                              // ), null);
                             },
                             child: Container(
                               padding: EdgeInsets.symmetric(horizontal: getSize(context)*0.15,vertical: 2),

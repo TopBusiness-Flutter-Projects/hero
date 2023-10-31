@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_webservice/geocoding.dart'as geocoding;
 import 'package:location/location.dart'as loc;
 import 'package:permission_handler/permission_handler.dart';
+import 'package:widget_to_marker/widget_to_marker.dart';
 
 import '../../../core/utils/custom_marker.dart';
 
@@ -23,34 +24,32 @@ part 'home_state.dart';
 class HomeCubit extends Cubit<HomeState> {
   int? flag;
   Set<Marker> markers = {};
-  HomeCubit(this.api) : super(HomeInitial()){
-    markers =  {
-      Marker(
-        markerId: const MarkerId("currentLocation"),
-        icon: currentLocationIcon,
+  BitmapDescriptor? bitmapDescriptorto;
+  BitmapDescriptor? bitmapDescriptorfrom;
 
-        position: LatLng(currentLocation?.latitude??0,
-            currentLocation?.longitude??0),
-      ),
-      // Marker(
-      //   markerId: const MarkerId("source"),
-      //   infoWindow: InfoWindow(
-      //     title: "from",
-      //   ),
-      //  // icon: customMarkerIcon,
-      //   icon: cubit.sourceIcon,
-      //   position: cubit.sourceLocation,
-      // ),
-      Marker(
-        markerId: MarkerId("destination"),
-        infoWindow: InfoWindow(
-          title: "to",
-        ),
-        icon: destinationIcon,
-        position: destinationH,
-      ),
-      //  markers.first
-    };
+  HomeCubit(this.api) : super(HomeInitial()){
+
+    // markers =  {
+    //   Marker(
+    //     markerId: const MarkerId("currentLocation"),
+    //     icon: bitmapDescriptorfrom != null
+    //         ? bitmapDescriptorfrom!
+    //         : currentLocationIcon,
+    //     position: LatLng(currentLocation?.latitude??0,
+    //         currentLocation?.longitude??0),
+    //   ),
+    //
+    //   Marker(
+    //     markerId: MarkerId("destination"),
+    //     infoWindow: InfoWindow(
+    //       title: "to",
+    //     ),
+    //     icon:  bitmapDescriptorto != null ?
+    //     bitmapDescriptorto! : currentLocationIcon,
+    //     position: destination,
+    //   ),
+    //   //  markers.first
+    // };
     latLngList = [];
     getmarker();
     checkAndRequestLocationPermission();
@@ -62,7 +61,7 @@ class HomeCubit extends Cubit<HomeState> {
   List<LatLng> polylineCoordinates = [];
    LatLng sourceLocation = LatLng(31.2693, 30.7873);
   //  LatLng destination = LatLng(30.4301, 31.0364);
-  TextEditingController locationControl = TextEditingController();
+ // TextEditingController locationControl = TextEditingController();
     bool bottomContainerInitialState = true;
     bool bottomContainerLoadingState = false;
     bool bottomContainerFailureState = false;
@@ -83,19 +82,22 @@ class HomeCubit extends Cubit<HomeState> {
   final Completer<GoogleMapController> controller = Completer();
   GoogleMapController? mapController;
   String location = "Search Location";
+
+  BitmapDescriptor defaultLocationIcon = BitmapDescriptor.defaultMarker;
+
 void setflag(int flag){
   this.flag=flag;
   emit(HomeInitial());
 }
-  onMapCreated(GoogleMapController mapController){
-    controller.complete(mapController);
-   // _customInfoWindowController.googleMapController = mapController;
-    this.mapController = mapController;
-    // setState(() {
-    //
-    // });
-    emit(OnMapCreatedState());
-  }
+  // onMapCreated(GoogleMapController mapController){
+  //   controller.complete(mapController);
+  //  // _customInfoWindowController.googleMapController = mapController;
+  //   this.mapController = mapController;
+  //   // setState(() {
+  //   //
+  //   // });
+  //   emit(OnMapCreatedState());
+  // }
 
 
   List<LatLng> latLngList = [];
@@ -134,38 +136,81 @@ void setflag(int flag){
 
 
 // handle the on tab user event on map
-  getLocation(LatLng argument) async {
-    locationControl.text = "";
+  getLocation(LatLng argument, String title) async {
+    //location_control.text  = "";
     final response = await api.getGeoData(
         argument.latitude.toString() + "," + argument.longitude.toString());
+
     response.fold(
           (l) => emit(ErrorLocationSearchStat()),
-          (r) {
-        destinationH = argument;
-        location_control.text = r.results
-            .elementAt(0)
-            .formattedAddress
-            .replaceAll("Unnamed Road,", "");
-      setMarkers(
-          Marker(
-            markerId: const MarkerId("currentLocation"),
-            icon: currentLocationIcon,
+          (r) async {
 
-            position: LatLng(currentLocation?.latitude??0,
-               currentLocation?.longitude??0),
-          ),
-          Marker(
-            markerId: MarkerId("destination"),
-            infoWindow: InfoWindow(
-              title: "to",
-            ),
-            icon: destinationIcon,
-            position:destinationH,
-          ), );
-        // destinaion = LatLng(r.candidates.elementAt(0).geometry.location.lat, r.candidates.elementAt(0).geometry.location.lng);
+            if(title=="to"){
+              destination = argument;
+              location_control.text = r.results
+                  .elementAt(0)
+                  .formattedAddress
+                  .replaceAll("Unnamed Road,", "");
+              bitmapDescriptorto = await CustomeMarker(
+                title: title.tr(),
+                location: r.results
+                    .elementAt(0)
+                    .formattedAddress
+                    .replaceAll("Unnamed Road,", ""),
+              ).toBitmapDescriptor().then((value) {
+                bitmapDescriptorto=value;
+                setMarkers(
+                  Marker(
+                    markerId: const MarkerId("currentLocation"),
+                    icon:bitmapDescriptorfrom!,
+
+                    position: LatLng(currentLocation?.latitude??0,
+                        currentLocation?.longitude??0),
+                  ),
+                  Marker(
+                    markerId: MarkerId("destination"),
+
+                    icon:value,
+                    position:destination,
+                  ),
+                );
+              });
+
+
+            }
+
+            else{
+              bitmapDescriptorfrom = await CustomeMarker(
+                title: title.tr(),
+                location: r.results
+                    .elementAt(0)
+                    .formattedAddress
+                    .replaceAll("Unnamed Road,", ""),
+              ).toBitmapDescriptor().then((value) {
+                bitmapDescriptorfrom=value;
+
+                setMarkers(
+                  Marker(
+                    markerId: const MarkerId("currentLocation"),
+                    icon:value,
+
+                    position: LatLng(currentLocation?.latitude??0,
+                        currentLocation?.longitude??0),
+                  ),
+                  Marker(
+                    markerId: MarkerId("destination"),
+
+                    icon:bitmapDescriptorto!=null?bitmapDescriptorto!:currentLocationIcon,
+                    position:destination,
+                  ),
+                );
+              });
+
+            }
+
         getDirection(
             LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
-            destinationH);
+            destination);
 
         emit(UpdateDesitnationLocationStat());
       },
@@ -238,6 +283,33 @@ void setflag(int flag){
     }
   }
 
+  Future<void> enableLocationServices() async {
+    loc.Location location = loc.Location();
+
+    bool serviceEnabled = await location.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await location.requestService();
+      if (!serviceEnabled) {
+        // Location services are still not enabled, handle accordingly (show a message, disable functionality, etc.)
+        // ...
+        return;
+      }
+      else{
+        getCurrentLocation();
+
+      }
+    }
+
+    PermissionStatus permissionStatus = await Permission.location.status;
+    if (permissionStatus.isGranted) {
+      getCurrentLocation();
+      // Location permission is granted, continue with location-related tasks
+      // ...
+    } else {
+      // Location permission is not granted, handle accordingly (show a message, disable functionality, etc.)
+      // ...
+    }
+  }
   Uint8List? markerIcon;
   Future<Uint8List> getBytesFromAsset(String path, int width) async {
     ByteData data = await rootBundle.load(path);
@@ -253,111 +325,82 @@ void setflag(int flag){
     markerIcon = await getBytesFromAsset(ImageAssets.marker, 100);
   }
 
-  Future<void> enableLocationServices() async {
-    loc.Location location = loc.Location();
-
-    bool serviceEnabled = await location.serviceEnabled();
-    if (!serviceEnabled) {
-      serviceEnabled = await location.requestService();
-      if (!serviceEnabled) {
-        // Location services are still not enabled, handle accordingly (show a message, disable functionality, etc.)
-        // ...
-        return;
-      }
-    }
-
-    PermissionStatus permissionStatus = await Permission.location.status;
-    if (permissionStatus.isGranted) {
-      getCurrentLocation();
-      // Location permission is granted, continue with location-related tasks
-      // ...
-    } else {
-      // Location permission is not granted, handle accordingly (show a message, disable functionality, etc.)
-      // ...
-    }
-  }
+  // Future<void> enableLocationServices() async {
+  //   loc.Location location = loc.Location();
+  //
+  //   bool serviceEnabled = await location.serviceEnabled();
+  //   if (!serviceEnabled) {
+  //     serviceEnabled = await location.requestService();
+  //     if (!serviceEnabled) {
+  //       // Location services are still not enabled, handle accordingly (show a message, disable functionality, etc.)
+  //       // ...
+  //       return;
+  //     }
+  //   }
+  //
+  //   PermissionStatus permissionStatus = await Permission.location.status;
+  //   if (permissionStatus.isGranted) {
+  //     getCurrentLocation();
+  //     // Location permission is granted, continue with location-related tasks
+  //     // ...
+  //   } else {
+  //     // Location permission is not granted, handle accordingly (show a message, disable functionality, etc.)
+  //     // ...
+  //   }
+  // }
 
 
   loc.LocationData? currentLocation;
 
-  // void getCurrentLocation() async {
-  //   loc.Location location = loc.Location();
-  //   location.getLocation().then(
-  //         (location) {
-  //       currentLocation = location;
-  //       sourceLocation = LatLng(location.latitude!, location.longitude!);
-  //       emit(UpdateCurrentLocationState());
-  //      // setState(() {
-  //         // //  sourceLocation = LatLng(location.latitude!, location.longitude!);
-  //     //  });
-  //     },
-  //   );
-  //   GoogleMapController googleMapController = await controller.future;
-  //   location.onLocationChanged.listen(
-  //         (newLoc) {
-  //       currentLocation = newLoc;
-  //       //sourceLocation = LatLng(newLoc.latitude!, newLoc.longitude!);
-  //       googleMapController.animateCamera(
-  //         CameraUpdate.newCameraPosition(
-  //           CameraPosition(
-  //             zoom: 13.5,
-  //             target: LatLng(
-  //               newLoc.latitude!,
-  //               newLoc.longitude!,
-  //             ),
-  //           ),
-  //         ),
-  //       );
-  //      // setState(() {});
-  //           emit(UpdateCameraPosition());
-  //     },
-  //   );
-  // }
+
+  LatLng strartlocation = LatLng(0, 0);
 
   void getCurrentLocation() async {
     loc.Location location = loc.Location();
+    // we can remove this future method because we listen on data in the onLocationChanged.listen
     location.getLocation().then(
           (location) {
         currentLocation = location;
-        updateLocation();
-        emit(UpdateCurrentLocationState());
-        // setState(() {
-        // //  sourceLocation = LatLng(location.latitude!, location.longitude!);
-        //  });
+        if(strartlocation!=LatLng(currentLocation!.latitude!,currentLocation!.longitude!)){
+          strartlocation=  LatLng(
+            currentLocation!.latitude!,
+            currentLocation!.longitude!,
+          );
+          //get the address and draw route
+          getLocation(LatLng(currentLocation!.latitude!, currentLocation!.longitude!), "from");
+          // move the camera to the current location
+          updateLocation();
+
+          emit(UpdateCurrentLocationState());
+
+        }
       },
     );
 
     location.onLocationChanged.listen(
           (newLoc) {
-        print("dkkdkdk");
         currentLocation = newLoc;
-        //sourceLocation = LatLng(newLoc.latitude!, newLoc.longitude!);
-        // googleMapController.animateCamera(
-        //   CameraUpdate.newCameraPosition(
-        //     CameraPosition(
-        //       zoom: 13.5,
-        //       target: LatLng(
-        //         newLoc.latitude!,
-        //         newLoc.longitude!,
-        //       ),
-        //     ),
-        //   ),
-        // );
-        // setState(() {});
-        updateLocation();
-        emit(UpdateCameraPosition());
+
+        if(currentLocation==null||strartlocation!=LatLng(currentLocation!.latitude!,currentLocation!.longitude!)){
+
+          strartlocation=  LatLng(
+            currentLocation!.latitude!,
+            currentLocation!.longitude!,
+          );
+          getLocation(LatLng(currentLocation!.latitude!, currentLocation!.longitude!), "from");
+
+          // move the camera to the current location
+          updateLocation();
+          emit(UpdateCameraPosition());}
       },
     );
   }
+
+
   Uint8List? icon;
   Future<void> updateLocation() async {
     if (mapController != null && currentLocation != null) {
-      // icon = await MarkersWithLabel.getBytesFromCanvasDynamic(
-      //     iconPath:ImageAssets.marker,
-      //     plateReg:location_control.text,
-      //     fontSize: 10.0,
-      //     iconSize: Size(10, 10)
-      // );
+
       mapController!.animateCamera(
         CameraUpdate.newLatLng(
           LatLng(
@@ -370,94 +413,54 @@ void setflag(int flag){
     }
   }
 
-  // searchOnMap(BuildContext context) async {
-  //   var place = await PlacesAutocomplete.show(
-  //       context: context,
-  //       apiKey: "AIzaSyCZjDPvxg9h3IUSfVPzIwnKli5Y17p-v9g",
-  //       mode: Mode.overlay,
-  //       types: [],
-  //       strictbounds: false,
-  //       components: [
-  //         geocoding.Component(geocoding.Component.country, 'eg')],
-  //       //google_map_webservice package
-  //       onError: (err){
-  //         print(err);
-  //       }
-  //   );
-  //
-  //   if(place!=null){
-  //    // setState(() {
-  //       location = place.description.toString();
-  //    // });
-  //       emit(SearchState());
-  //
-  //     //form google_maps_webservice package
-  //     final plist = GoogleMapsPlaces(apiKey:"AIzaSyCZjDPvxg9h3IUSfVPzIwnKli5Y17p-v9g",
-  //         apiHeaders: await GoogleApiHeaders().getHeaders(),
-  //   //from google_api_headers package
-  //   );
-  //
-  //   String placeid = place.placeId ?? "0";
-  //   final detail = await plist.getDetailsByPlaceId(placeid);
-  //   final geometry = detail.result.geometry!;
-  //   final lat = geometry.location.lat;
-  //   final lang = geometry.location.lng;
-  //   var newlatlang = LatLng(lat, lang);
-  //
-  //   //move map camera to selected place with animation
-  //
-  //   mapController!.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: newlatlang, zoom: 14)));
-  //
-  //   destination = newlatlang;
-  //   getPolyPoints();
-  // }
-  // }
+
   String fields = "id,place_id,name,geometry,formatted_address";
-  LatLng destinationH = LatLng(0, 0);
+  LatLng destination = LatLng(0, 0);
 
 
-  // searchOnMapH(String searchKey) async {
-  //   emit(LoadingSearchState());
-  //  final response = await api.searchOnMap("textquery", searchKey, fields);
-  //  response.fold((l) => emit(FailureSearchState()),
-  //          (r) {
-  //            destinationH = LatLng( r.candidates.elementAt(0).geometry.location.lat,r.candidates.elementAt(0).geometry.location.lng );
-  //       emit(SuccessSearchState());
-  //  });
-  // }
+
 
   search(String search) async {
     emit(LoadingSearchState());
     final response = await api.searchOnMap("textquery",search,fields);
     response.fold(
           (l) => emit(FailureSearchState()),
-          (r) {
-            destinationH = LatLng(r.candidates.elementAt(0).geometry.location.lat, r.candidates.elementAt(0).geometry.location.lng);
-            setMarkers(
-              Marker(
-                markerId: const MarkerId("currentLocation"),
-                icon: currentLocationIcon,
+          (r) async {
+            destination = LatLng(r.candidates.elementAt(0).geometry.location.lat, r.candidates.elementAt(0).geometry.location.lng);
 
-                position: LatLng(currentLocation?.latitude??0,
-                    currentLocation?.longitude??0),
-              ),
-              Marker(
-                markerId: MarkerId("destination"),
-                infoWindow: InfoWindow(
-                  title: "to",
+            bitmapDescriptorto = await CustomeMarker(
+              title: 'to'.tr(),
+              location: location_control.text,
+            ).toBitmapDescriptor().then((value) {
+              bitmapDescriptorto=value;
+              setMarkers(
+                Marker(
+                  markerId: const MarkerId("currentLocation"),
+                  icon:bitmapDescriptorfrom!,
+
+                  position: LatLng(currentLocation?.latitude??0,
+                      currentLocation?.longitude??0),
                 ),
-                icon: destinationIcon,
-                position:destinationH,
-              ), );
+                Marker(
+                  markerId: MarkerId("destination"),
+
+                  icon:value,
+                  position:destination,
+                ),
+              );
+            });
+
+
+
             getDirection(
-                LatLng(currentLocation!.latitude!, currentLocation!.longitude!), destinationH);
+                LatLng(currentLocation!.latitude!, currentLocation!.longitude!), destination);
         emit(SuccessSearchState());
       },
     );
   }
 
 
-changeRadioButton(value){
+  changeRadioButton(value){
   //setState(() {
     payment = value.toString();
     emit(ChangeRadiState());
@@ -468,31 +471,8 @@ changeRadioButton(value){
   BitmapDescriptor destinationIcon = BitmapDescriptor.defaultMarker;
   BitmapDescriptor currentLocationIcon = BitmapDescriptor.defaultMarker;
 
-  void setCustomMarkerIcon() {
-    BitmapDescriptor.fromAssetImage(
-      ImageConfiguration.empty,
-      "assets/images/pin_source1.png",
-    ).then(
-          (icon) {
-        sourceIcon = icon;
-      },
-    );
-    BitmapDescriptor.fromAssetImage(
-        ImageConfiguration.empty, "assets/images/pin_destination1.png")
-        .then(
-          (icon) {
-        destinationIcon = icon;
-      },
-    );
-    BitmapDescriptor.fromAssetImage(
-        ImageConfiguration.empty, "assets/images/badge1.png")
-        .then(
-          (icon) {
-        currentLocationIcon = icon;
-      },
-    );
-  }
 
+  //*****************************************************************//
 
   Future<Null> _selectDate(BuildContext context) async {
      datePicked = await showDatePicker(
@@ -533,7 +513,8 @@ changeRadioButton(value){
  //   await selectDateAndTime(context);
  //    }
   }
- confirmPopUp(BuildContext context){
+
+  confirmPopUp(BuildContext context){
     showDialog(context: context, builder: (context) {
       return Dialog(
         child: Container(
@@ -581,4 +562,5 @@ changeRadioButton(value){
 
 
   }
+
 }

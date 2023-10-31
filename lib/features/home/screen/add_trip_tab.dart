@@ -1,4 +1,3 @@
-
 import 'dart:ui';
 
 import 'package:custom_info_window/custom_info_window.dart';
@@ -21,7 +20,6 @@ import '../components/drawer_list_item.dart';
 import '../cubit/home_cubit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-
 class AddTripTab extends StatefulWidget {
   AddTripTab({super.key});
 
@@ -30,9 +28,9 @@ class AddTripTab extends StatefulWidget {
 }
 
 class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
- // final scaffoldKey = GlobalKey<ScaffoldState>();
+  // final scaffoldKey = GlobalKey<ScaffoldState>();
   CustomInfoWindowController _customInfoWindowController =
-  CustomInfoWindowController();
+      CustomInfoWindowController();
 
   late FlutterGifController gifController;
 
@@ -42,126 +40,49 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
 
     super.dispose();
   }
+
   @override
   void initState() {
-    context.read<HomeCubit>().getCurrentLocation();
-    //getPolyPoints();
-    context.read<HomeCubit>().setCustomMarkerIcon();
-    gifController = FlutterGifController(vsync: this);
-    context.read<HomeCubit>().setMarkers(
-      Marker(
-        markerId: const MarkerId("currentLocation"),
-        icon: context.read<HomeCubit>().currentLocationIcon,
+    super.initState();
 
-        position: LatLng(context.read<HomeCubit>().currentLocation?.latitude??0,
-            context.read<HomeCubit>().currentLocation?.longitude??0),
-      ),
-        Marker(
-      markerId: MarkerId("destination"),
-      infoWindow: InfoWindow(
-        title: "to",
-      ),
-      icon: context.read<HomeCubit>().destinationIcon,
-      position: context.read<HomeCubit>().destinationH,
-    ), );
-    // customMarkerIcon =  createCustomMarkerIcon();
-    // context.read<HomeCubit>().markers =  {
+    context.read<HomeCubit>().getCurrentLocation();
+    gifController = FlutterGifController(vsync: this);
+    context.read<HomeCubit>().checkAndRequestLocationPermission();
+    // context.read<HomeCubit>().setMarkers(
     //   Marker(
     //     markerId: const MarkerId("currentLocation"),
-    //     icon: context.read<HomeCubit>().currentLocationIcon,
+    //     icon: context.read<HomeCubit>().bitmapDescriptorfrom != null
+    //         ? context.read<HomeCubit>().bitmapDescriptorfrom!
+    //         : context.read<HomeCubit>().currentLocationIcon,
     //
-    //     position: LatLng(context.read<HomeCubit>().currentLocation?.latitude??30,
-    //         context.read<HomeCubit>().currentLocation?.longitude??31),
+    //     position: LatLng(context.read<HomeCubit>().currentLocation?.latitude??0,
+    //         context.read<HomeCubit>().currentLocation?.longitude??0),
     //   ),
-    //   // Marker(
-    //   //   markerId: const MarkerId("source"),
-    //   //   infoWindow: InfoWindow(
-    //   //     title: "from",
-    //   //   ),
-    //   //  // icon: customMarkerIcon,
-    //   //   icon: cubit.sourceIcon,
-    //   //   position: cubit.sourceLocation,
-    //   // ),
-    //   Marker(
-    //     markerId: MarkerId("destination"),
-    //     infoWindow: InfoWindow(
-    //       title: "to",
-    //     ),
-    //     icon: context.read<HomeCubit>().destinationIcon,
-    //     position: context.read<HomeCubit>().destinationH,
+    //     Marker(
+    //   markerId: MarkerId("destination"),
+    //   infoWindow: InfoWindow(
+    //     title: "to",
     //   ),
-    //   //  markers.first
-    // };
-    super.initState();
+    //       icon: context.read<HomeCubit>().bitmapDescriptorto != null
+    //           ? context.read<HomeCubit>().bitmapDescriptorto!
+    //           : context.read<HomeCubit>().currentLocationIcon,
+    //   position: context.read<HomeCubit>().destination,
+    // ), );
   }
-Set markers = {};
+
+  Set markers = {};
+
   @override
   Widget build(BuildContext context) {
-    // markers.add(
-    //   Marker(
-    //     markerId: MarkerId("marker_id"),
-    //     position: context.read<HomeCubit>().sourceLocation,
-    //     onTap: () {
-    //       _customInfoWindowController.addInfoWindow!(
-    //         Column(
-    //           children: [
-    //             Expanded(
-    //               child: Container(
-    //                 decoration: BoxDecoration(
-    //                   color: Colors.blue,
-    //                   borderRadius: BorderRadius.circular(4),
-    //                 ),
-    //                 child: Padding(
-    //                   padding: const EdgeInsets.all(8.0),
-    //                   child: Row(
-    //                     mainAxisAlignment: MainAxisAlignment.center,
-    //                     children: [
-    //                       Icon(
-    //                         Icons.account_circle,
-    //                         color: Colors.white,
-    //                         size: 30,
-    //                       ),
-    //                       SizedBox(
-    //                         width: 8.0,
-    //                       ),
-    //                       Text(
-    //                         "I am here",
-    //                         style:
-    //                         Theme.of(context).textTheme.headline6!.copyWith(
-    //                           color: Colors.white,
-    //                         ),
-    //                       )
-    //                     ],
-    //                   ),
-    //                 ),
-    //                 width: double.infinity,
-    //                 height: double.infinity,
-    //               ),
-    //             ),
-    //             // Triangle.isosceles(
-    //             //   edge: Edge.BOTTOM,
-    //             //   child: Container(
-    //             //     color: Colors.blue,
-    //             //     width: 20.0,
-    //             //     height: 10.0,
-    //             //   ),
-    //             // ),
-    //           ],
-    //         ),
-    //         context.read<HomeCubit>().sourceLocation,
-    //       );
-    //     },
-    //   ),
-    // );
     return WillPopScope(
-      onWillPop: () async{
+      onWillPop: () async {
         context.read<HomeCubit>().latLngList = [];
         context.read<HomeCubit>().tabsController.animateTo(0);
         return true;
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-      //  key: scaffoldKey,
+        //  key: scaffoldKey,
         body: BlocConsumer<HomeCubit, HomeState>(
           listener: (context, state) {
             // TODO: implement listener
@@ -172,61 +93,65 @@ Set markers = {};
               children: [
                 cubit.currentLocation == null
                     ? const Center(child: Text("Loading"))
-                    :
-                GoogleMap(
+                    : GoogleMap(
                         initialCameraPosition: CameraPosition(
-                          target: LatLng(cubit.currentLocation!.latitude!,
-                              cubit.currentLocation!.longitude!),
+                          target: LatLng(
+                            cubit.currentLocation != null
+                                ? cubit.currentLocation!.latitude!
+                                : 0,
+                            cubit.currentLocation != null
+                                ? cubit.currentLocation!.longitude!
+                                : 0,
+                          ),
                           zoom: 13.5,
                         ),
-                        markers:
-                        cubit.markers,
-                  //       {
-                  //         Marker(
-                  //           markerId: const MarkerId("currentLocation"),
-                  //           icon: cubit.currentLocationIcon,
-                  //
-                  //           position: LatLng(cubit.currentLocation!.latitude!,
-                  //               cubit.currentLocation!.longitude!),
-                  //         ),
-                  //         // Marker(
-                  //         //   markerId: const MarkerId("source"),
-                  //         //   infoWindow: InfoWindow(
-                  //         //     title: "from",
-                  //         //   ),
-                  //         //  // icon: customMarkerIcon,
-                  //         //   icon: cubit.sourceIcon,
-                  //         //   position: cubit.sourceLocation,
-                  //         // ),
-                  //         Marker(
-                  //           markerId: MarkerId("destination"),
-                  //           infoWindow: InfoWindow(
-                  //             title: "to",
-                  //           ),
-                  //           icon: cubit.destinationIcon,
-                  //           position: cubit.destinationH,
-                  //         ),
-                  //       //  markers.first
-                  //       },
+                        markers: cubit.markers,
+                        //       {
+                        //         Marker(
+                        //           markerId: const MarkerId("currentLocation"),
+                        //           icon: cubit.currentLocationIcon,
+                        //
+                        //           position: LatLng(cubit.currentLocation!.latitude!,
+                        //               cubit.currentLocation!.longitude!),
+                        //         ),
+                        //         // Marker(
+                        //         //   markerId: const MarkerId("source"),
+                        //         //   infoWindow: InfoWindow(
+                        //         //     title: "from",
+                        //         //   ),
+                        //         //  // icon: customMarkerIcon,
+                        //         //   icon: cubit.sourceIcon,
+                        //         //   position: cubit.sourceLocation,
+                        //         // ),
+                        //         Marker(
+                        //           markerId: MarkerId("destination"),
+                        //           infoWindow: InfoWindow(
+                        //             title: "to",
+                        //           ),
+                        //           icon: cubit.destinationIcon,
+                        //           position: cubit.destinationH,
+                        //         ),
+                        //       //  markers.first
+                        //       },
                         onMapCreated: (GoogleMapController mapController) {
-                          //  cubit.controller.complete(mapController);
-                          // _customInfoWindowController.googleMapController = mapController;
-                          // this.mapController = mapController;
-                          // setState(() {
-                          //
-                          // });
+                          cubit.mapController = mapController;
                         },
                         onTap: (argument) {
-                         if( context.read<HomeCubit>().flag==1){
-                           cubit.getLocation(argument);
-                         }
-                         else{
-
-                         }
+                          if (context.read<HomeCubit>().flag == 1) {
+                            //   cubit.getLocation(argument);
+                            cubit.getLocation(argument, "to");
+                          } else {}
 
                           //  _customInfoWindowController.hideInfoWindow!();
                         },
                         onCameraMove: (position) {
+                          if (cubit.strartlocation != position.target) {
+                            print(cubit.strartlocation);
+                            cubit.strartlocation = position.target;
+                            cubit.getCurrentLocation();
+                          }
+                          // _customInfoWindowController.hideInfoWindow!();
+
                           //  _customInfoWindowController.hideInfoWindow!();
                         },
                         polylines: {
@@ -247,10 +172,13 @@ Set markers = {};
                         height: getSize(context) * 0.8,
                         decoration: BoxDecoration(
                             color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(color: AppColors.black.withOpacity(0.25),blurRadius: 10,
-                                    spreadRadius: 10,offset:Offset(4,4) )
-                              ],
+                            boxShadow: [
+                              BoxShadow(
+                                  color: AppColors.black.withOpacity(0.25),
+                                  blurRadius: 10,
+                                  spreadRadius: 10,
+                                  offset: Offset(4, 4))
+                            ],
                             borderRadius: BorderRadius.only(
                                 topRight: Radius.circular(30),
                                 topLeft: Radius.circular(30))),
@@ -261,9 +189,8 @@ Set markers = {};
                             ),
                             //search field
                             Visibility(
-                              visible:  context.read<HomeCubit>().flag==1,
-                              child:
-                              SizedBox(
+                              visible: context.read<HomeCubit>().flag == 1,
+                              child: SizedBox(
                                 width: double.infinity,
                                 height: 50,
                                 child: CustomTextField(
@@ -280,7 +207,7 @@ Set markers = {};
                                   onchange: (p0) {
                                     cubit.search(p0);
                                   },
-                                  controller: cubit.locationControl,
+                                  controller: cubit.location_control,
                                 ),
                               ),
                               // InkWell(
@@ -335,7 +262,6 @@ Set markers = {};
                               groupValue: cubit.payment,
                               onChanged: (value) {
                                 cubit.changeRadioButton(value);
-
                               },
                             ),
                             //SizedBox(height: 5,),
@@ -443,14 +369,14 @@ Set markers = {};
                                 cubit.bottomContainerLoadingState = false;
                                 cubit.bottomContainerInitialState = true;
                               },
-                              width: getSize(context)*0.9,
+                              width: getSize(context) * 0.9,
                               borderRadius: 16,
                             )
                           ],
                         ),
                       )),
                 ),
-              //success state
+                //success state
                 Visibility(
                   visible: cubit.bottomContainerSuccessState,
                   //visible: false,
@@ -475,19 +401,28 @@ Set markers = {};
 
                             //rich text
                             Padding(
-                              padding:
-                              const EdgeInsets.symmetric(horizontal: 12.0),
-                              child:Text("confirm_driver".tr())
-                            ),
-                         Row(mainAxisAlignment: MainAxisAlignment.start,
-                         children: [
-                           SizedBox(width: 10,),
-                           Icon(Icons.person,color: Colors.grey,),
-                           SizedBox(width: 10,),
-                           Text("محمد محمود",style: TextStyle(
-                             color: AppColors.black3
-                           ),)
-                         ],)
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12.0),
+                                child: Text("confirm_driver".tr())),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Icon(
+                                  Icons.person,
+                                  color: Colors.grey,
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  "محمد محمود",
+                                  style: TextStyle(color: AppColors.black3),
+                                )
+                              ],
+                            )
                           ],
                         ),
                       )),
@@ -518,10 +453,9 @@ Set markers = {};
 
                             //rich text
                             Padding(
-                              padding:
-                              const EdgeInsets.symmetric(horizontal: 12.0),
-                              child:Text("no_drivers".tr())
-                            ),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12.0),
+                                child: Text("no_drivers".tr())),
                             //button
                             CustomButton(
                               text: "try_again".tr(),
@@ -533,7 +467,7 @@ Set markers = {};
                                 cubit.bottomContainerSuccessState = false;
                                 cubit.bottomContainerInitialState = true;
                               },
-                              width: getSize(context)*0.9,
+                              width: getSize(context) * 0.9,
                               borderRadius: 16,
                             )
                           ],
@@ -553,7 +487,6 @@ Set markers = {};
                       children: [
                         CustomBackButton(),
                         Spacer(),
-
                       ],
                     ),
                   ),
@@ -562,38 +495,32 @@ Set markers = {};
             );
           },
         ),
-
-
       ),
     );
   }
 
-  //
-  // Future<BitmapDescriptor> createCustomMarkerIcon() async {
-  //   final Uint8List markerIconBytes = await loadImageData('path_to_your_image.png');
-  //
-  //   final CustomMarkerWidget customMarker = CustomMarkerWidget(
-  //     markerIcon: markerIconBytes,
-  //     text1: 'Text 1',
-  //     text2: 'Text 2',
-  //   );
-  //
-  //   final Uint8List markerBytes = await captureWidgetToBytes(customMarker);
-  //
-  //   // Use the markerBytes as BitmapDescriptor in Google Maps
-  //   final BitmapDescriptor customMarkerIcon = BitmapDescriptor.fromBytes(markerBytes);
-  //
-  //   return customMarkerIcon;
-  // }
-  //
-  // Future<Uint8List> loadImageData(String imagePath) async {
-  //   final ByteData byteData = await rootBundle.load(imagePath);
-  //   return byteData.buffer.asUint8List();
-  // }
-
-
-
-
+//
+// Future<BitmapDescriptor> createCustomMarkerIcon() async {
+//   final Uint8List markerIconBytes = await loadImageData('path_to_your_image.png');
+//
+//   final CustomMarkerWidget customMarker = CustomMarkerWidget(
+//     markerIcon: markerIconBytes,
+//     text1: 'Text 1',
+//     text2: 'Text 2',
+//   );
+//
+//   final Uint8List markerBytes = await captureWidgetToBytes(customMarker);
+//
+//   // Use the markerBytes as BitmapDescriptor in Google Maps
+//   final BitmapDescriptor customMarkerIcon = BitmapDescriptor.fromBytes(markerBytes);
+//
+//   return customMarkerIcon;
+// }
+//
+// Future<Uint8List> loadImageData(String imagePath) async {
+//   final ByteData byteData = await rootBundle.load(imagePath);
+//   return byteData.buffer.asUint8List();
+// }
 
 //
 //   // Future<void> createCustomMarkerIcon() async {
@@ -689,15 +616,13 @@ Set markers = {};
 //     return byteData!.buffer.asUint8List();
 //   }
 
-  //
-  //
-  // Future<Uint8List> loadImageData(String imagePath) async {
-  //   final ByteData byteData = await rootBundle.load(imagePath);
-  //   return byteData.buffer.asUint8List();
-  // }
-
-  }
-
+//
+//
+// Future<Uint8List> loadImageData(String imagePath) async {
+//   final ByteData byteData = await rootBundle.load(imagePath);
+//   return byteData.buffer.asUint8List();
+// }
+}
 
 // class CustomMarkerWidget extends StatelessWidget {
 //   final Uint8List markerIcon;
@@ -725,6 +650,3 @@ Set markers = {};
 //     );
 //   }
 // }
-
-
-

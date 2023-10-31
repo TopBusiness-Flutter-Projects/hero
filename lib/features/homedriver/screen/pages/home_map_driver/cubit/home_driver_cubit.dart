@@ -46,56 +46,7 @@ class HomeDriverCubit extends Cubit<HomeDriverState> {
     emit(HomeDriverInService());
   }
 
-  Future<void> enableLocationServices() async {
-    loc.Location location = loc.Location();
-
-    bool serviceEnabled = await location.serviceEnabled();
-    if (!serviceEnabled) {
-      serviceEnabled = await location.requestService();
-      if (!serviceEnabled) {
-        // Location services are still not enabled, handle accordingly (show a message, disable functionality, etc.)
-        // ...
-        return;
-      }
-    }
-
-    PermissionStatus permissionStatus = await Permission.location.status;
-    if (permissionStatus.isGranted) {
-      getCurrentLocation();
-      // Location permission is granted, continue with location-related tasks
-      // ...
-    } else {
-      // Location permission is not granted, handle accordingly (show a message, disable functionality, etc.)
-      // ...
-    }
-  }
-
-  Future<void> checkAndRequestLocationPermission() async {
-    // Check the current status of the location permission
-    PermissionStatus permissionStatus = await Permission.location.status;
-
-    if (permissionStatus.isDenied) {
-      // If the permission is denied, request it from the user
-      PermissionStatus newPermissionStatus =
-          await Permission.location.request();
-
-      if (newPermissionStatus.isGranted) {
-        await enableLocationServices();
-        // Permission granted, continue with location-related tasks
-        // Call the function to handle the location-related tasks here
-        // ...
-      } else if (newPermissionStatus.isDenied) {
-        // Permission denied again, handle accordingly (show a message, disable functionality, etc.)
-        // ...
-      }
-    } else if (permissionStatus.isGranted) {
-      await enableLocationServices();
-      // Permission already granted, continue with location-related tasks
-      // Call the function to handle the location-related tasks here
-      // ...
-    }
-  }
-
+//********************************************************************************//
   getmarker() async {
     markerIcon = await getBytesFromAsset(ImageAssets.marker, 100);
   }
@@ -110,24 +61,27 @@ class HomeDriverCubit extends Cubit<HomeDriverState> {
         .asUint8List();
   }
 
+  //******************************************************************************//
+
   void getCurrentLocation() async {
     loc.Location location = loc.Location();
+    // we can remove this future method because we listen on data in the onLocationChanged.listen
     location.getLocation().then(
       (location) {
         currentLocation = location;
-
-        if(currentLocation==null||strartlocation!=LatLng(currentLocation!.latitude!,currentLocation!.longitude!)){
+        if(strartlocation!=LatLng(currentLocation!.latitude!,currentLocation!.longitude!)){
         strartlocation=  LatLng(
           currentLocation!.latitude!,
           currentLocation!.longitude!,
         );
-getLocation(LatLng(currentLocation!.latitude!, currentLocation!.longitude!), "from");
+       //get the address and draw route
+        getLocation(LatLng(currentLocation!.latitude!, currentLocation!.longitude!), "from");
+         // move the camera to the current location
         updateLocation();
 
-        emit(UpdateCurrentLocationState());}
-        // setState(() {
-        // //  sourceLocation = LatLng(location.latitude!, location.longitude!);
-        //  });
+        emit(UpdateCurrentLocationState());
+
+        }
       },
     );
 
@@ -143,7 +97,7 @@ getLocation(LatLng(currentLocation!.latitude!, currentLocation!.longitude!), "fr
           );
         getLocation(LatLng(currentLocation!.latitude!, currentLocation!.longitude!), "from");
 
-
+     // move the camera to the current location
         updateLocation();
         emit(UpdateCameraPosition());}
       },
@@ -158,10 +112,12 @@ getLocation(LatLng(currentLocation!.latitude!, currentLocation!.longitude!), "fr
 
         destinaion = LatLng(r.candidates.elementAt(0).geometry.location.lat,
             r.candidates.elementAt(0).geometry.location.lng);
+
         bitmapDescriptorto = await CustomeMarker(
           title: 'to'.tr(),
           location: location_control.text,
         ).toBitmapDescriptor();
+
         getDirection(
             LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
             destinaion);
@@ -171,9 +127,13 @@ getLocation(LatLng(currentLocation!.latitude!, currentLocation!.longitude!), "fr
     );
   }
 
+
+// handle the on tab on map ( set the destination marker and draw the route , get the address)
   getLocation(LatLng argument, String title) async {
+     //get the address
     final response = await api.getGeoData(
         argument.latitude.toString() + "," + argument.longitude.toString());
+
     response.fold(
       (l) => emit(ErrorLocationSearch()),
       (r) async {
@@ -183,6 +143,7 @@ getLocation(LatLng(currentLocation!.latitude!, currentLocation!.longitude!), "fr
               .elementAt(0)
               .formattedAddress
               .replaceAll("Unnamed Road,", "");
+
           bitmapDescriptorto = await CustomeMarker(
             title: title.tr(),
             location: r.results
@@ -190,8 +151,8 @@ getLocation(LatLng(currentLocation!.latitude!, currentLocation!.longitude!), "fr
                 .formattedAddress
                 .replaceAll("Unnamed Road,", ""),
           ).toBitmapDescriptor();
-        }
-else{
+              }
+         else{
           bitmapDescriptorfrom = await CustomeMarker(
             title: title.tr(),
             location: r.results
@@ -200,7 +161,7 @@ else{
                 .replaceAll("Unnamed Road,", ""),
           ).toBitmapDescriptor();
         }
-
+       // draw the route
         getDirection(
             LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
             destinaion);
@@ -211,6 +172,8 @@ else{
     );
   }
 
+
+// draw the route ant it called twice search & get location
   getDirection(LatLng startPosition, LatLng endPosition) async {
     String origin = "", dest = "";
     origin = startPosition.latitude.toString() +
@@ -240,8 +203,8 @@ else{
     );
   }
 
+// move the camera to the current location it called twice in the get current location
   Future<void> updateLocation() async {
-
     if (mapController != null && currentLocation != null) {
       mapController!.animateCamera(
         CameraUpdate.newLatLng(
@@ -251,6 +214,59 @@ else{
           ),
         ),
       );
+    }
+  }
+
+
+//***********************************************************************//
+
+  Future<void> checkAndRequestLocationPermission() async {
+    // Check the current status of the location permission
+    PermissionStatus permissionStatus = await Permission.location.status;
+
+    if (permissionStatus.isDenied) {
+      // If the permission is denied, request it from the user
+      PermissionStatus newPermissionStatus =
+      await Permission.location.request();
+
+      if (newPermissionStatus.isGranted) {
+        await enableLocationServices();
+        // Permission granted, continue with location-related tasks
+        // Call the function to handle the location-related tasks here
+        // ...
+      } else if (newPermissionStatus.isDenied) {
+        // Permission denied again, handle accordingly (show a message, disable functionality, etc.)
+        // ...
+      }
+    } else if (permissionStatus.isGranted) {
+      await enableLocationServices();
+      // Permission already granted, continue with location-related tasks
+      // Call the function to handle the location-related tasks here
+      // ...
+    }
+  }
+
+  Future<void> enableLocationServices() async {
+    loc.Location location = loc.Location();
+
+    bool serviceEnabled = await location.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await location.requestService();
+      if (!serviceEnabled) {
+        // Location services are still not enabled, handle accordingly (show a message, disable functionality, etc.)
+        // ...
+        return;
+      }
+    }
+
+    PermissionStatus permissionStatus = await Permission.location.status;
+    if (permissionStatus.isGranted) {
+      getCurrentLocation();
+      // Location permission is granted, continue with location-related tasks
+      // ...
+    } else {
+      // Location permission is not granted, handle accordingly (show a message, disable functionality, etc.)
+      // ...
     }
   }
 }
