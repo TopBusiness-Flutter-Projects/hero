@@ -12,7 +12,6 @@ import '../../../core/utils/app_colors.dart';
 import '../../../core/widgets/custom_textfield.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
-
 class DriverSignUp extends StatefulWidget {
   const DriverSignUp({super.key});
 
@@ -49,119 +48,26 @@ class _DriverSignUpState extends State<DriverSignUp> {
               Image.asset(
                 ImageAssets.driversignupImage,
                 height: getSize(context) / 3,
-                width: getSize(context) / 1.5
-                ,
-
-                // height: getSize(context) / 1.2,
-                // width: getSize(context) / 1.2,
+                width: getSize(context) / 1.5,
               ),
-              SizedBox(
-                height: getSize(context) / 16,
-              ),
-              SizedBox(
-                /// height: getSize(context) / 24,
-                ///width: getSize(context),
+              Container(
+                padding: EdgeInsets.symmetric(vertical: getSize(context) / 44),
                 child: Text("current_governate".tr(),
                     style: TextStyle(
                       color: AppColors.black,
                       fontSize: getSize(context) / 24,
                     )),
               ),
-              SizedBox(
-                height: getSize(context) / 60,
-              ),
               Container(
                 height: getSize(context) / 10,
-                padding: EdgeInsets.symmetric(horizontal: getSize(context)/32),
+                padding:
+                    EdgeInsets.symmetric(horizontal: getSize(context) / 32),
                 decoration: BoxDecoration(
                     border: Border.all(color: AppColors.gray6),
                     borderRadius: BorderRadius.all(
-                        Radius.circular(getSize(context) / 22))),
+                        Radius.circular(getSize(context) / 66))),
                 child: Center(
-                  child:DropdownButtonFormField2<String>(
-                    isExpanded: true,
-                    decoration: InputDecoration(
-                      fillColor: AppColors.white
-                      ,
-                      filled: true,
-                      //  contentPadding: const EdgeInsets.symmetric(vertical: 16),
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                    ),
-                    value: null,
-                    hint: Text(
-                      "",
-                      maxLines: 1,
-                      style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: getSize(context) / 24,
-                          color: AppColors.primary),
-                    ),
-                    items: []
-                        .map((item) => DropdownMenuItem<String>(
-                      value: item,
-                      child: Text(
-                        item,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: getSize(context) / 24,
-                            color: AppColors.primary),
-                      ),
-                    ))
-                        .toList(),
-                    validator: (value) {
-                      if (value == null) {
-                        return null;
-                      }
-                      return null;
-                    },
-                    onChanged: (value) {
-
-                    },
-                    buttonStyleData: const ButtonStyleData(
-                      padding: EdgeInsets.only(right: 8),
-                    ),
-                    iconStyleData: IconStyleData(
-
-                      iconSize: 0,
-                    ),
-                    dropdownStyleData: DropdownStyleData(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                    ),
-                    menuItemStyleData: const MenuItemStyleData(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: getSize(context) / 32,
-              ),
-              SizedBox(
-                /// height: getSize(context) / 24,
-                ///width: getSize(context),
-                child: Text("current_state".tr(),
-                    style: TextStyle(
-                      color: AppColors.black,
-                      fontSize: getSize(context) / 24,
-                    )),
-              ),
-              SizedBox(
-                height: getSize(context) / 60,
-              ),
-              Container(
-                height: getSize(context) / 10,
-                padding: EdgeInsets.symmetric(horizontal: getSize(context)/32),
-                decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.gray6),
-                    borderRadius: BorderRadius.all(
-                        Radius.circular(getSize(context) / 22))),
-                child: Center(
-                  child:DropdownButtonFormField2<String>(
+                  child: DropdownButtonFormField2<String>(
                     isExpanded: true,
                     decoration: InputDecoration(
                       fillColor: AppColors.white,
@@ -183,15 +89,15 @@ class _DriverSignUpState extends State<DriverSignUp> {
                     ),
                     items: []
                         .map((item) => DropdownMenuItem<String>(
-                      value: item,
-                      child: Text(
-                        item,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: getSize(context) / 24,
-                            color: AppColors.primary),
-                      ),
-                    ))
+                              value: item,
+                              child: Text(
+                                item,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: getSize(context) / 24,
+                                    color: AppColors.primary),
+                              ),
+                            ))
                         .toList(),
                     validator: (value) {
                       if (value == null) {
@@ -199,14 +105,11 @@ class _DriverSignUpState extends State<DriverSignUp> {
                       }
                       return null;
                     },
-                    onChanged: (value) {
-
-                    },
+                    onChanged: (value) {},
                     buttonStyleData: const ButtonStyleData(
                       padding: EdgeInsets.only(right: 8),
                     ),
                     iconStyleData: IconStyleData(
-
                       iconSize: 0,
                     ),
                     dropdownStyleData: DropdownStyleData(
@@ -220,34 +123,100 @@ class _DriverSignUpState extends State<DriverSignUp> {
                   ),
                 ),
               ),
-              SizedBox(
-                height: getSize(context) / 32,
+              Container(
+                padding: EdgeInsets.symmetric(vertical: getSize(context) / 44),
+                child: Text("current_state".tr(),
+                    style: TextStyle(
+                      color: AppColors.black,
+                      fontSize: getSize(context) / 24,
+                    )),
               ),
-              SizedBox(
-                /// height: getSize(context) / 24,
-                ///width: getSize(context),
+              Container(
+                height: getSize(context) / 10,
+                padding:
+                    EdgeInsets.symmetric(horizontal: getSize(context) / 32),
+                decoration: BoxDecoration(
+                    border: Border.all(color: AppColors.gray6),
+                    borderRadius: BorderRadius.all(
+                        Radius.circular(getSize(context) / 66))),
+                child: Center(
+                  child: DropdownButtonFormField2<String>(
+                    isExpanded: true,
+                    decoration: InputDecoration(
+                      fillColor: AppColors.white,
+                      filled: true,
+                      //  contentPadding: const EdgeInsets.symmetric(vertical: 16),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                    value: null,
+                    hint: Text(
+                      "",
+                      maxLines: 1,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: getSize(context) / 24,
+                          color: AppColors.primary),
+                    ),
+                    items: []
+                        .map((item) => DropdownMenuItem<String>(
+                              value: item,
+                              child: Text(
+                                item,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: getSize(context) / 24,
+                                    color: AppColors.primary),
+                              ),
+                            ))
+                        .toList(),
+                    validator: (value) {
+                      if (value == null) {
+                        return null;
+                      }
+                      return null;
+                    },
+                    onChanged: (value) {},
+                    buttonStyleData: const ButtonStyleData(
+                      padding: EdgeInsets.only(right: 8),
+                    ),
+                    iconStyleData: IconStyleData(
+                      iconSize: 0,
+                    ),
+                    dropdownStyleData: DropdownStyleData(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                    menuItemStyleData: const MenuItemStyleData(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(vertical: getSize(context) / 44),
                 child: Text("toktok_type".tr(),
                     style: TextStyle(
                       color: AppColors.black,
                       fontSize: getSize(context) / 24,
                     )),
               ),
-              SizedBox(
-                height: getSize(context) / 60,
-              ),
               Container(
                 height: getSize(context) / 10,
-                padding: EdgeInsets.symmetric(horizontal: getSize(context)/32),
+                padding:
+                    EdgeInsets.symmetric(horizontal: getSize(context) / 32),
                 decoration: BoxDecoration(
                     border: Border.all(color: AppColors.gray6),
                     borderRadius: BorderRadius.all(
-                        Radius.circular(getSize(context) / 22))),
+                        Radius.circular(getSize(context) / 66))),
                 child: Center(
-                  child:DropdownButtonFormField2<String>(
+                  child: DropdownButtonFormField2<String>(
                     isExpanded: true,
                     decoration: InputDecoration(
-                      fillColor: AppColors.white
-                      ,
+                      fillColor: AppColors.white,
                       filled: true,
                       //  contentPadding: const EdgeInsets.symmetric(vertical: 16),
                       border: OutlineInputBorder(
@@ -266,15 +235,15 @@ class _DriverSignUpState extends State<DriverSignUp> {
                     ),
                     items: []
                         .map((item) => DropdownMenuItem<String>(
-                      value: item,
-                      child: Text(
-                        item,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: getSize(context) / 24,
-                            color: AppColors.primary),
-                      ),
-                    ))
+                              value: item,
+                              child: Text(
+                                item,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: getSize(context) / 24,
+                                    color: AppColors.primary),
+                              ),
+                            ))
                         .toList(),
                     validator: (value) {
                       if (value == null) {
@@ -282,14 +251,11 @@ class _DriverSignUpState extends State<DriverSignUp> {
                       }
                       return null;
                     },
-                    onChanged: (value) {
-
-                    },
+                    onChanged: (value) {},
                     buttonStyleData: const ButtonStyleData(
                       padding: EdgeInsets.only(right: 8),
                     ),
                     iconStyleData: IconStyleData(
-
                       iconSize: 0,
                     ),
                     dropdownStyleData: DropdownStyleData(
@@ -303,34 +269,27 @@ class _DriverSignUpState extends State<DriverSignUp> {
                   ),
                 ),
               ),
-              SizedBox(
-                height: getSize(context) / 32,
-              ),
-              SizedBox(
-                /// height: getSize(context) / 24,
-                ///width: getSize(context),
+              Container(
+                padding: EdgeInsets.symmetric(vertical: getSize(context) / 44),
                 child: Text("toktok_model".tr(),
                     style: TextStyle(
                       color: AppColors.black,
                       fontSize: getSize(context) / 24,
                     )),
               ),
-              SizedBox(
-                height: getSize(context) / 60,
-              ),
               Container(
                 height: getSize(context) / 10,
-                padding: EdgeInsets.symmetric(horizontal: getSize(context)/32),
+                padding:
+                    EdgeInsets.symmetric(horizontal: getSize(context) / 32),
                 decoration: BoxDecoration(
                     border: Border.all(color: AppColors.gray6),
                     borderRadius: BorderRadius.all(
-                        Radius.circular(getSize(context) / 22))),
+                        Radius.circular(getSize(context) / 66))),
                 child: Center(
-                  child:DropdownButtonFormField2<String>(
+                  child: DropdownButtonFormField2<String>(
                     isExpanded: true,
                     decoration: InputDecoration(
-                      fillColor: AppColors.white
-                      ,
+                      fillColor: AppColors.white,
                       filled: true,
                       //  contentPadding: const EdgeInsets.symmetric(vertical: 16),
                       border: OutlineInputBorder(
@@ -349,15 +308,15 @@ class _DriverSignUpState extends State<DriverSignUp> {
                     ),
                     items: []
                         .map((item) => DropdownMenuItem<String>(
-                      value: item,
-                      child: Text(
-                        item,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: getSize(context) / 24,
-                            color: AppColors.primary),
-                      ),
-                    ))
+                              value: item,
+                              child: Text(
+                                item,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: getSize(context) / 24,
+                                    color: AppColors.primary),
+                              ),
+                            ))
                         .toList(),
                     validator: (value) {
                       if (value == null) {
@@ -365,14 +324,11 @@ class _DriverSignUpState extends State<DriverSignUp> {
                       }
                       return null;
                     },
-                    onChanged: (value) {
-
-                    },
+                    onChanged: (value) {},
                     buttonStyleData: const ButtonStyleData(
                       padding: EdgeInsets.only(right: 8),
                     ),
                     iconStyleData: IconStyleData(
-
                       iconSize: 0,
                     ),
                     dropdownStyleData: DropdownStyleData(
@@ -386,34 +342,27 @@ class _DriverSignUpState extends State<DriverSignUp> {
                   ),
                 ),
               ),
-              SizedBox(
-                height: getSize(context) / 32,
-              ),
-              SizedBox(
-                /// height: getSize(context) / 24,
-                ///width: getSize(context),
+              Container(
+                padding: EdgeInsets.symmetric(vertical: getSize(context) / 44),
                 child: Text("toktok_color".tr(),
                     style: TextStyle(
                       color: AppColors.black,
                       fontSize: getSize(context) / 24,
                     )),
               ),
-              SizedBox(
-                height: getSize(context) / 60,
-              ),
               Container(
                 height: getSize(context) / 10,
-                padding: EdgeInsets.symmetric(horizontal: getSize(context)/32),
+                padding:
+                    EdgeInsets.symmetric(horizontal: getSize(context) / 32),
                 decoration: BoxDecoration(
                     border: Border.all(color: AppColors.gray6),
                     borderRadius: BorderRadius.all(
-                        Radius.circular(getSize(context) / 22))),
+                        Radius.circular(getSize(context) / 66))),
                 child: Center(
-                  child:DropdownButtonFormField2<String>(
+                  child: DropdownButtonFormField2<String>(
                     isExpanded: true,
                     decoration: InputDecoration(
-                      fillColor: AppColors.white
-                      ,
+                      fillColor: AppColors.white,
                       filled: true,
                       //  contentPadding: const EdgeInsets.symmetric(vertical: 16),
                       border: OutlineInputBorder(
@@ -432,15 +381,15 @@ class _DriverSignUpState extends State<DriverSignUp> {
                     ),
                     items: []
                         .map((item) => DropdownMenuItem<String>(
-                      value: item,
-                      child: Text(
-                        item,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: getSize(context) / 24,
-                            color: AppColors.primary),
-                      ),
-                    ))
+                              value: item,
+                              child: Text(
+                                item,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: getSize(context) / 24,
+                                    color: AppColors.primary),
+                              ),
+                            ))
                         .toList(),
                     validator: (value) {
                       if (value == null) {
@@ -448,14 +397,11 @@ class _DriverSignUpState extends State<DriverSignUp> {
                       }
                       return null;
                     },
-                    onChanged: (value) {
-
-                    },
+                    onChanged: (value) {},
                     buttonStyleData: const ButtonStyleData(
                       padding: EdgeInsets.only(right: 8),
                     ),
                     iconStyleData: IconStyleData(
-
                       iconSize: 0,
                     ),
                     dropdownStyleData: DropdownStyleData(
@@ -469,9 +415,8 @@ class _DriverSignUpState extends State<DriverSignUp> {
                   ),
                 ),
               ),
-
               SizedBox(
-                height: getSize(context) / 8,
+                height: getSize(context) / 22,
               ),
               CustomButton(
                 width: getSize(context),

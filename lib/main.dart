@@ -8,7 +8,7 @@ import 'package:hero/injector.dart' as injector;
 import 'package:flutter/services.dart';
 import 'core/utils/app_colors.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   await injector.setup();
@@ -26,9 +26,7 @@ void main() async{
   );
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: AppColors.primary, // Set the desired status bar color
-    statusBarIconBrightness: Brightness.dark, // Set dark icons for light status bar color
+    statusBarIconBrightness:
+        Brightness.dark, // Set dark icons for light status bar color
   ));
-
-
 }
-

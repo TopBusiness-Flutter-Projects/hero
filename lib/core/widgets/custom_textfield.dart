@@ -68,37 +68,40 @@ class CustomTextField extends StatelessWidget {
           hintStyle: TextStyle(
             color: AppColors.gray6,
             fontWeight: FontWeight.w400,
-
           ),
           hintText: title,
           isDense: true,
-          border:textInputType!=TextInputType.phone?
-          OutlineInputBorder(
-            borderRadius: BorderRadius.circular(getSize(context) / 22),
-            borderSide: BorderSide(
-                color: isAdd ? AppColors.white : AppColors.white),
-          ):InputBorder.none,
-          enabledBorder: textInputType!=TextInputType.phone? OutlineInputBorder(
-            borderRadius: BorderRadius.circular(getSize(context) / 22),
-            borderSide: BorderSide(
-                color: isAdd ? AppColors.white : AppColors.white),
-          ):InputBorder.none,
-          focusedBorder:textInputType!=TextInputType.phone?  OutlineInputBorder(
-            borderRadius: BorderRadius.circular(getSize(context) / 22),
-            borderSide: BorderSide(
-                color: isAdd ? AppColors.white : AppColors.white),
-          ):InputBorder.none,
-          prefixIcon: textInputType!=TextInputType.phone?prefixWidget:null,
+          border: textInputType != TextInputType.phone
+              ? OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(getSize(context) / 44),
+                  borderSide: BorderSide(
+                      color: isAdd ? AppColors.white : AppColors.white),
+                )
+              : InputBorder.none,
+          enabledBorder: textInputType != TextInputType.phone
+              ? OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(getSize(context) / 44),
+                  borderSide: BorderSide(
+                      color: isAdd ? AppColors.white : AppColors.white),
+                )
+              : InputBorder.none,
+          focusedBorder: textInputType != TextInputType.phone
+              ? OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(getSize(context) / 44),
+                  borderSide: BorderSide(
+                      color: isAdd ? AppColors.white : AppColors.white),
+                )
+              : InputBorder.none,
+          prefixIcon:
+              textInputType != TextInputType.phone ? prefixWidget : null,
           suffixIcon: suffixIcon,
           suffixIconColor: AppColors.buttonColor,
           prefixIconColor: AppColors.buttonColor,
           fillColor: backgroundColor,
-
-
           filled: true,
         ),
         onChanged: onchange,
-        maxLines: isPassword ? 1 : 20,
+        maxLines: 1,
         minLines: minLine,
         validator: (value) {
           if (value == null || value.isEmpty) {

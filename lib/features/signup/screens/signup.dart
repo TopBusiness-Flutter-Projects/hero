@@ -13,7 +13,7 @@ import '../../../core/widgets/custom_textfield.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key, required this.type});
-final String type;
+  final String type;
   @override
   State<SignUp> createState() => _SignUpState();
 }
@@ -70,28 +70,25 @@ class _SignUpState extends State<SignUp> {
                   ),
                 ),
               ),
-              SizedBox(
-                height: getSize(context) / 16,
-              ),
-              SizedBox(
-                /// height: getSize(context) / 24,
-                ///width: getSize(context),
-                child: Text("name".tr(),
-                    style: TextStyle(
-                      color: AppColors.black,
-                      fontSize: getSize(context) / 24,
-                    )),
-              ),
-              SizedBox(
-                height: getSize(context) / 60,
+              Container(
+                padding: EdgeInsets.symmetric(vertical: getSize(context) / 22),
+                child: Text(
+                  'name'.tr(),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: getSize(context) / 28),
+                ),
               ),
               Container(
                 height: getSize(context) / 10,
                 //padding: EdgeInsets.symmetric(horizontal: getSize(context)/32),
                 decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.gray6),
+                    border: Border.all(
+                      color: AppColors.gray6,
+                      width: 1,
+                    ),
                     borderRadius: BorderRadius.all(
-                        Radius.circular(getSize(context) / 22))),
+                        Radius.circular(getSize(context) / 66))),
                 child: Center(
                   child: CustomTextField(
                     title: 'name'.tr(),
@@ -104,28 +101,25 @@ class _SignUpState extends State<SignUp> {
                   ),
                 ),
               ),
-              SizedBox(
-                height: getSize(context) / 32,
-              ),
-              SizedBox(
-                /// height: getSize(context) / 24,
-                ///width: getSize(context),
-                child: Text("email".tr(),
-                    style: TextStyle(
-                      color: AppColors.black,
-                      fontSize: getSize(context) / 24,
-                    )),
-              ),
-              SizedBox(
-                height: getSize(context) / 60,
+              Container(
+                padding: EdgeInsets.symmetric(vertical: getSize(context) / 22),
+                child: Text(
+                  'email'.tr(),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: getSize(context) / 28),
+                ),
               ),
               Container(
                 height: getSize(context) / 10,
                 //  padding: EdgeInsets.symmetric(horizontal: getSize(context)/32),
                 decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.gray6),
+                    border: Border.all(
+                      color: AppColors.gray6,
+                      width: 1,
+                    ),
                     borderRadius: BorderRadius.all(
-                        Radius.circular(getSize(context) / 22))),
+                        Radius.circular(getSize(context) / 66))),
                 child: Center(
                   child: CustomTextField(
                     title: 'email'.tr(),
@@ -139,29 +133,26 @@ class _SignUpState extends State<SignUp> {
                   ),
                 ),
               ),
-              SizedBox(
-                height: getSize(context) / 32,
-              ),
-              SizedBox(
-                /// height: getSize(context) / 24,
-                ///width: getSize(context),
-                child: Text("phone".tr(),
-                    style: TextStyle(
-                      color: AppColors.black,
-                      fontSize: getSize(context) / 24,
-                    )),
-              ),
-              SizedBox(
-                height: getSize(context) / 60,
+              Container(
+                padding: EdgeInsets.symmetric(vertical: getSize(context) / 22),
+                child: Text(
+                  'phone'.tr(),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: getSize(context) / 28),
+                ),
               ),
               Container(
                 height: getSize(context) / 10,
                 padding:
                     EdgeInsets.symmetric(horizontal: getSize(context) / 16),
                 decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.gray6),
+                    border: Border.all(
+                      color: AppColors.gray6,
+                      width: 1,
+                    ),
                     borderRadius: BorderRadius.all(
-                        Radius.circular(getSize(context) / 22))),
+                        Radius.circular(getSize(context) / 66))),
                 child: Row(
                   children: [
                     Text("+20",
@@ -170,11 +161,11 @@ class _SignUpState extends State<SignUp> {
                           fontSize: getSize(context) / 24,
                         )),
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 1.0),
+                      padding: const EdgeInsets.symmetric(vertical: 5),
                       child: VerticalDivider(
                         color: AppColors.primary,
                         // height: getSize(context)/10-2,
-                        thickness: 1,
+                        thickness: 2,
                       ),
                     ),
                     Expanded(
@@ -192,17 +183,26 @@ class _SignUpState extends State<SignUp> {
                   ],
                 ),
               ),
-              SizedBox(
-                height: getSize(context) / 16,
+              Container(
+                padding: EdgeInsets.symmetric(vertical: getSize(context) / 22),
+                child: Text(
+                  'تاريخ الميلاد',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: getSize(context) / 28),
+                ),
               ),
               Container(
                 height: getSize(context) / 10,
                 padding:
                     EdgeInsets.symmetric(horizontal: getSize(context) / 16),
                 decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.gray6),
+                    border: Border.all(
+                      color: AppColors.gray6,
+                      width: 1,
+                    ),
                     borderRadius: BorderRadius.all(
-                        Radius.circular(getSize(context) / 22))),
+                        Radius.circular(getSize(context) / 66))),
                 child: Row(
                   children: [
                     MySvgWidget(
@@ -212,7 +212,7 @@ class _SignUpState extends State<SignUp> {
                     SizedBox(
                       width: getSize(context) / 26,
                     ),
-                    Expanded(
+                    Flexible(
                       child: Text(
                         "1/1/2008",
                         style: TextStyle(
@@ -233,15 +233,14 @@ class _SignUpState extends State<SignUp> {
                 borderRadius: getSize(context) / 24,
                 color: AppColors.primary,
                 onClick: () {
-                  if(widget.type=="client"){
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                      Routes.homeRoute, (route) => false);
-                }
-               else{
+                  if (widget.type == "client") {
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        Routes.homeRoute, (route) => false);
+                  } else {
                     Navigator.of(context).pushNamedAndRemoveUntil(
                         Routes.driversignupRoute, (route) => false);
                   }
-                  },
+                },
               ),
             ],
           ),

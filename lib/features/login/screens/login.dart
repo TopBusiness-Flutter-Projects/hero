@@ -62,9 +62,12 @@ class _LoginState extends State<Login> {
                 padding:
                     EdgeInsets.symmetric(horizontal: getSize(context) / 16),
                 decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.gray6),
+                    border: Border.all(
+                      color: AppColors.gray6,
+                      width: 1,
+                    ),
                     borderRadius: BorderRadius.all(
-                        Radius.circular(getSize(context) / 22))),
+                        Radius.circular(getSize(context) / 66))),
                 child: Row(
                   children: [
                     Text("+20",
@@ -73,11 +76,12 @@ class _LoginState extends State<Login> {
                           fontSize: getSize(context) / 24,
                         )),
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 1),
+                      padding:
+                          EdgeInsets.symmetric(vertical: getSize(context) / 66),
                       child: VerticalDivider(
                         color: AppColors.primary,
                         // height: getSize(context)/10-2,
-                        thickness: 1,
+                        thickness: 2,
                       ),
                     ),
                     Flexible(
@@ -109,19 +113,19 @@ class _LoginState extends State<Login> {
                     "agreeto".tr(),
                     style: TextStyle(
                         color: AppColors.black,
-                        fontSize: getSize(context) / 26),
+                        fontSize: getSize(context) / 32),
                   ),
                   Text(
                     "terms".tr(),
                     style: TextStyle(
                         color: AppColors.primary,
-                        fontSize: getSize(context) / 26),
+                        fontSize: getSize(context) / 32),
                   ),
                   Text(
                     "company".tr(),
                     style: TextStyle(
                         color: AppColors.black,
-                        fontSize: getSize(context) / 26),
+                        fontSize: getSize(context) / 32),
                   ),
                 ],
               ),
