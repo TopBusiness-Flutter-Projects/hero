@@ -19,15 +19,13 @@ class OrdersScreen extends StatefulWidget {
 
 class _OrdersScreenState extends State<OrdersScreen>
     with SingleTickerProviderStateMixin {
-
   @override
   void initState() {
-    context
-        .read<OrdersCubit>()
-        .tabController = TabController(
+    context.read<OrdersCubit>().tabController = TabController(
         initialIndex: 0,
         // length: widget.allCategoriesModel!.count! + 1, vsync: this);
-        length: 3, vsync: this);
+        length: 3,
+        vsync: this);
     super.initState();
   }
 
@@ -47,10 +45,11 @@ class _OrdersScreenState extends State<OrdersScreen>
               ),
               //welcome mohammed
               Row(
-
                 children: [
                   CustomBackButton(),
-                  SizedBox(width: 5,),
+                  SizedBox(
+                    width: 5,
+                  ),
                   Icon(
                     CupertinoIcons.person_circle_fill,
                     color: Colors.grey,
@@ -85,7 +84,9 @@ class _OrdersScreenState extends State<OrdersScreen>
                   ),
                 ],
               ),
-              SizedBox(height: 10,),
+              SizedBox(
+                height: 10,
+              ),
               TabBar(
                   indicatorSize: TabBarIndicatorSize.tab,
                   indicatorColor: AppColors.primary,
@@ -100,19 +101,18 @@ class _OrdersScreenState extends State<OrdersScreen>
                     Text("recent_orders".tr()),
                     Text("completed_orders".tr()),
                     Text("cancelled_orders".tr()),
-                  ]
-              ),
+                  ]),
               SizedBox(
-                height: getSize(context)*1.9,
+                height: getSize(context) * 1.9,
                 child: TabBarView(
-                  physics: NeverScrollableScrollPhysics(),
-                  controller: cubit.tabController,
+                    physics: NeverScrollableScrollPhysics(),
+                    controller: cubit.tabController,
                     children: [
                       ListView.builder(
                         itemBuilder: (context, index) {
-
-                          return  Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          return Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
                             child: HomeListItem(isHome: false),
                           );
                         },
@@ -121,12 +121,14 @@ class _OrdersScreenState extends State<OrdersScreen>
                       //completed orders
                       ListView.builder(
                         itemBuilder: (context, index) {
-                          return  InkWell(
+                          return InkWell(
                             onTap: () {
-                              Navigator.pushNamed(context, Routes.tripDetailsRoute);
+                              Navigator.pushNamed(
+                                  context, Routes.tripDetailsRoute);
                             },
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8.0),
                               child: HomeListItem(isHome: false),
                             ),
                           );
@@ -135,16 +137,15 @@ class _OrdersScreenState extends State<OrdersScreen>
                       ),
                       ListView.builder(
                         itemBuilder: (context, index) {
-
-                          return  Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          return Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
                             child: HomeListItem(isHome: false),
                           );
                         },
                         itemCount: 10,
                       ),
-                    ]
-                ),
+                    ]),
               )
             ],
           ),

@@ -6,15 +6,11 @@ import 'package:hero/app_bloc_observer.dart';
 import 'package:hero/core/utils/restart_app_class.dart';
 import 'package:hero/injector.dart' as injector;
 import 'package:flutter/services.dart';
-
 import 'core/utils/app_colors.dart';
 
 void main() async{
-
-
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
-
   await injector.setup();
   Bloc.observer = AppBlocObserver();
 

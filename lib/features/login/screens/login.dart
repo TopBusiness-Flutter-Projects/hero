@@ -100,13 +100,10 @@ class _LoginState extends State<Login> {
               Row(
                 children: [
                   Checkbox(
-
                     value: true, onChanged: (value) {},
                     checkColor: AppColors.white,
                     //  hoverColor: AppColors.primary,
                     activeColor: AppColors.primary,
-
-
                   ),
                   Text(
                     "agreeto".tr(),

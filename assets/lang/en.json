@@ -81,6 +81,7 @@
   "completed_orders": "Completed Orders",
   "cancelled_orders": "Cancelled Orders",
   "rate_trip": "Rate Trip",
-  "write_comment": "Write Comment"
+  "write_comment": "Write Comment",
+  "follow":"follow"
 
 }

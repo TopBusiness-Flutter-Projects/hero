@@ -8,21 +8,19 @@ import '../../../core/utils/assets_manager.dart';
 import '../../../core/utils/getsize.dart';
 
 class HomeListItem extends StatelessWidget {
-  const HomeListItem({super.key,this.isHome = true});
- final  bool isHome ;
+  const HomeListItem({super.key, this.isHome = true});
+  final bool isHome;
 
   @override
   Widget build(BuildContext context) {
-    return   Container(
+    return Container(
       padding: EdgeInsets.symmetric(horizontal: 3),
       margin: EdgeInsets.symmetric(
-          horizontal: getSize(context) * 0.01,
-          vertical: 20),
+          horizontal: getSize(context) * 0.01, vertical: 20),
       // width: getSize(context)*0.4,
       // height: getSize(context)/4,
-      decoration: BoxDecoration(
-          border: Border.all(
-              color: AppColors.primary, width: 2)),
+      decoration:
+          BoxDecoration(border: Border.all(color: AppColors.primary, width: 2)),
       child: Column(
         children: [
           Row(
@@ -65,17 +63,17 @@ class HomeListItem extends StatelessWidget {
                     fontSize: getSize(context) * 0.04,
                     fontWeight: FontWeight.w400),
               ),
-              Spacer(),
-              Visibility(
-                visible:isHome,
-                child: TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    "cancel".tr(),
-                    style: TextStyle(color: AppColors.red),
-                  ),
-                ),
-              ),
+              // Spacer(),
+              // Visibility(
+              //   visible: isHome,
+              //   child: TextButton(
+              //     onPressed: () {},
+              //     child: Text(
+              //       "cancel".tr(),
+              //       style: TextStyle(color: AppColors.red),
+              //     ),
+              //   ),
+              // ),
               // SizedBox(width:3,)
             ],
           ),
@@ -106,8 +104,7 @@ class HomeListItem extends StatelessWidget {
               width: getSize(context) * 0.03,
             ),
             Padding(
-              padding:
-              const EdgeInsets.symmetric(vertical: 8.0),
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Dash(
                   direction: Axis.vertical,
                   length: 40,
