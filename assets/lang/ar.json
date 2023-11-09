@@ -81,6 +81,7 @@
   "completed_orders": "الطلبات المكتملة",
   "cancelled_orders": "الطلبات الملغية",
   "rate_trip": "تقييم الرحلة",
+  "follow":"متابعه",
   "write_comment": "اكتب تعليقك",
-  "follow":"متابعه"
+  "continue": "استمرار"
 }

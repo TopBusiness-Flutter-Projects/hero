@@ -8,6 +8,7 @@ import '../error/exceptions.dart';
 import '../error/failures.dart';
 import 'package:dartz/dartz.dart';
 import '../models/direction.dart';
+import '../models/login_model.dart';
 import '../models/place_details.dart';
 import '../models/place_geocode.dart';
 import '../utils/app_strings.dart';
@@ -183,20 +184,21 @@ class ServiceApi {
 //   }
 //
 //
-//   Future<Either<Failure, LoginModel>> postLogin(
-//       String phone, String phoneCode) async {
-//     try {
-//       final response = await dio.post(
-//         EndPoints.loginUrl,
-//         body: {
-//           'phone': phone,
-//         },
-//       );
-//       return Right(LoginModel.fromJson(response));
-//     } on ServerException {
-//       return Left(ServerFailure());
-//     }
-//   }
+  Future<Either<Failure, LoginModel>> postLogin(
+
+      String phone, String phoneCode) async {
+    try {
+      final response = await dio.post(
+        EndPoints.loginUrl,
+        body: {
+          'phone': phone,
+        },
+      );
+      return Right(LoginModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
 //
 //   Future<Either<Failure, HomeModel>> homeData() async {
 //     LoginModel loginModel = await Preferences.instance.getUserModel();
