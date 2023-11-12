@@ -1,6 +1,8 @@
 // import 'package:http/http.dart' as http;
 
+import 'package:dio/dio.dart';
 import 'package:hero/core/api/end_points.dart';
+import 'package:hero/features/signup/models/register_model.dart';
 
 import '../api/base_api_consumer.dart';
 import '../api/end_points.dart';
@@ -11,6 +13,7 @@ import '../models/direction.dart';
 import '../models/login_model.dart';
 import '../models/place_details.dart';
 import '../models/place_geocode.dart';
+import '../models/signup_response_model.dart';
 import '../utils/app_strings.dart';
 
 class ServiceApi {
@@ -38,27 +41,36 @@ class ServiceApi {
   }
 
 //
-//   Future<Either<Failure, LoginModel>> postRegister(
-//       String phone, String phoneCode,String name) async {
-//     try {
-//       var response = await dio.post(
-//         EndPoints.registerUrl,
-//         body: {
-//           'phone': phone,
-//           'phone_code': phoneCode,
-//           'name': name,
-//           //'role_id': 1,
-//         },
-//       );
-//
-//         return Right(LoginModel.fromJson(response));
-//
-//
-//
-//     } on ServerException {
-//       return Left(ServerFailure());
-//     }
-//   }
+  Future<Either<Failure, SignUpModel>> postRegister(RegisterModel registerModel) async {
+    try {
+      var image =  await MultipartFile.fromFile(registerModel.image.path);
+      var response = await dio.post(
+
+        EndPoints.registerUrl,
+        queryParameters: {
+          "device_type":registerModel.deviceType,
+          "token":registerModel.token,
+        },
+        formDataIsEnabled: true,
+        body: {
+          'name': registerModel.name,
+          'email':registerModel.email,
+          "phone":registerModel.phone,
+          "birth":registerModel.birth,
+          "type":registerModel.type,
+          "img":image
+
+        },
+      );
+
+        return Right(SignUpModel.fromJson(response));
+
+
+
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
 //   //
 //   // Future<Either<Failure, ServiceStoreModel>> postServiceStore(ServiceModel serviceModel) async {
 //   //   LoginModel loginModel = await Preferences.instance.getUserModel();

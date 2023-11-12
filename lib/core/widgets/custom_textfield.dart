@@ -5,6 +5,7 @@ import 'package:hero/core/utils/getsize.dart';
 import '../utils/app_colors.dart';
 
 class CustomTextField extends StatelessWidget {
+
   const CustomTextField({
     Key? key,
     this.prefixWidget,
@@ -23,6 +24,7 @@ class CustomTextField extends StatelessWidget {
     this.isEnable = true,
     this.fontSize,
     this.onchange,
+    this.onTap,
   }) : super(key: key);
   final Widget? prefixWidget;
   final Widget? suffixIcon;
@@ -34,6 +36,7 @@ class CustomTextField extends StatelessWidget {
   final bool isPassword;
   final bool? isEnable;
   final Function(String)? onchange;
+ final void Function()? onTap;
   final TextInputType textInputType;
   final TextEditingController? controller;
   final double horizontalPadding;
@@ -71,29 +74,31 @@ class CustomTextField extends StatelessWidget {
           ),
           hintText: title,
           isDense: true,
-          border: textInputType != TextInputType.phone
-              ? OutlineInputBorder(
+          border:
+          // textInputType != TextInputType.phone
+          //     ?
+          OutlineInputBorder(
                   borderRadius: BorderRadius.circular(getSize(context) / 44),
                   borderSide: BorderSide(
                       color: isAdd ? AppColors.white : AppColors.white),
-                )
-              : InputBorder.none,
-          enabledBorder: textInputType != TextInputType.phone
-              ? OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(getSize(context) / 44),
-                  borderSide: BorderSide(
-                      color: isAdd ? AppColors.white : AppColors.white),
-                )
-              : InputBorder.none,
-          focusedBorder: textInputType != TextInputType.phone
-              ? OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(getSize(context) / 44),
-                  borderSide: BorderSide(
-                      color: isAdd ? AppColors.white : AppColors.white),
-                )
-              : InputBorder.none,
-          prefixIcon:
-              textInputType != TextInputType.phone ? prefixWidget : null,
+                ),
+              // : InputBorder.none,
+          // enabledBorder: textInputType != TextInputType.phone
+          //     ? OutlineInputBorder(
+          //         borderRadius: BorderRadius.circular(getSize(context) / 44),
+          //         borderSide: BorderSide(
+          //             color: isAdd ? AppColors.white : AppColors.white),
+          //       )
+          //     : InputBorder.none,
+          // focusedBorder: textInputType != TextInputType.phone
+          //     ? OutlineInputBorder(
+          //         borderRadius: BorderRadius.circular(getSize(context) / 44),
+          //         borderSide: BorderSide(
+          //             color: isAdd ? AppColors.white : AppColors.white),
+          //       )
+          //     : InputBorder.none,
+          prefixIcon:prefixWidget,
+               // textInputType != TextInputType.phone ? prefixWidget : null,
           suffixIcon: suffixIcon,
           suffixIconColor: AppColors.buttonColor,
           prefixIconColor: AppColors.buttonColor,
@@ -101,6 +106,7 @@ class CustomTextField extends StatelessWidget {
           filled: true,
         ),
         onChanged: onchange,
+        onTap:onTap ,
         maxLines: 1,
         minLines: minLine,
         validator: (value) {

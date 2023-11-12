@@ -29,6 +29,7 @@ class LoginCubit extends Cubit<LoginState> {
             (l) {
               emit(FailureLoginState());
               Navigator.pop(context);
+
             },
             (r) {
               loginModel = r;
@@ -77,7 +78,9 @@ class LoginCubit extends Cubit<LoginState> {
       },
       codeSent: (String verificationId, int? resendToken) {
         //Handle when a code has been sent to the device from Firebase, used to prompt users to enter the code.
-
+        this.resendToken = resendToken;
+        this.verification_Id = verificationId;
+        print("verificationId=>${verificationId}");
       },
       codeAutoRetrievalTimeout: (String verificationId) {
         //Handle a timeout of when automatic SMS code handling fails.
@@ -156,8 +159,16 @@ class LoginCubit extends Cubit<LoginState> {
       //    Get.offAndToNamed(Routes.homeRoute);
       //
       // }
-      Navigator.pushNamedAndRemoveUntil(
-          context, Routes.usertypeScreenRoute, (route) => false);
+
+      if(isNewUser){
+        Navigator.pushNamedAndRemoveUntil(
+            context, Routes.usertypeScreenRoute, (route) => false);
+      }
+      else{
+        Navigator.pushNamedAndRemoveUntil(
+            context, Routes.homeRoute, (route) => false);
+      }
+
 
     }).catchError((error) {
       print('phone auth =>${error.toString()}');

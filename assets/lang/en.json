@@ -82,8 +82,15 @@
   "cancelled_orders": "Cancelled Orders",
   "rate_trip": "Rate Trip",
   "write_comment": "Write Comment",
-  "follow":"follow"
-  "write_comment": "Write Comment",
-  "continue": "Continue"
+  "follow":"follow",
+  "continue": "Continue",
+  "pick_img": "Please Pick up an image",
+  "date_of_birth_msg": "Please Enter your Birthdate",
+  "date_of_birth": "Date of birth",
+  "phone_msg": "Please enter phone number",
+  "email_msg": "Please enter an email",
+  "name_msg": "Please enter your name"
+
+
 
 }

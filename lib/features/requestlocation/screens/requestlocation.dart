@@ -1,9 +1,14 @@
+import 'dart:io';
+
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hero/core/utils/assets_manager.dart';
 import 'package:hero/core/utils/getsize.dart';
 import 'package:hero/core/widgets/custom_button.dart';
+import 'package:hero/features/signup/cubit/signup_cubit.dart';
 import '../../../config/routes/app_routes.dart';
 import '../../../core/utils/app_colors.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -17,6 +22,8 @@ class RequestLocation extends StatefulWidget {
 }
 
 class _RequestLocationState extends State<RequestLocation> {
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -114,6 +121,14 @@ class _RequestLocationState extends State<RequestLocation> {
     // TODO: implement initState
    // fetchLocation();
     checkAndRequestLocationPermission();
+    FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance; // Change here
+    _firebaseMessaging.getToken().then((token){
+      print("token is $token");
+      print("***************************************** token end");
+      context.read<SignupCubit>().token = token ;
+    });
+
+    context.read<SignupCubit>().deviceType = Platform.isAndroid ? 'Android' : 'iOS';
     super.initState();
   }
   Future<void> enableLocationServices() async {

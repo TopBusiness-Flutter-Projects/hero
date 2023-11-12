@@ -1,4 +1,4 @@
-import 'package:easy_localization/easy_localization.dart';
+import 'package:easy_localization/easy_localization.dart'as easy;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -79,45 +79,52 @@ class _VerificationState extends State<Verification> {
                     height: getSize(context) / 16,
                   ),
                   Container(
+
                     padding:
                     EdgeInsets.symmetric(horizontal: getSize(context) / 16),
-                    child: PinCodeTextField(
-                      backgroundColor: AppColors.white,
-                      controller: cubit.codecontrol,
-                      textStyle: TextStyle(color: AppColors.black),
-                      hintStyle: TextStyle(color: AppColors.black),
-                      pastedTextStyle: TextStyle(
-                        color: AppColors.black,
-                        fontWeight: FontWeight.bold,
+                    child: Directionality(
+                      textDirection: TextDirection.ltr,
+                      child: PinCodeTextField(
+                //      mainAxisAlignment: MainAxisAlignment.end,
+
+                        backgroundColor: AppColors.white,
+                        controller: cubit.codecontrol,
+                        textStyle: TextStyle(color: AppColors.black),
+                        hintStyle: TextStyle(color: AppColors.black),
+                        pastedTextStyle: TextStyle(
+                          color: AppColors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+
+                        appContext: context,
+                        length: 6,
+                        animationType: AnimationType.fade,
+                        validator: (v) {
+                          if (v!.length < 5) {
+                            return "";
+                          } else {
+                            return null;
+                          }
+                        },
+                        pinTheme: PinTheme(
+
+                          inactiveColor: AppColors.gray4,
+                          activeColor: AppColors.gray4,
+                          shape: PinCodeFieldShape.underline,
+                          selectedColor: AppColors.gray4,
+
+                        ),
+                        cursorColor: AppColors.black,
+                        animationDuration: const Duration(milliseconds: 300),
+                        //  errorAnimationController: errorController,
+                        keyboardType: TextInputType.number,
+
+                        // onChanged: (value) {
+                        //   // setState(() {
+                        //   //   //  currentText = value;
+                        //   // });
+                        // },
                       ),
-
-                      appContext: context,
-                      length: 6,
-                      animationType: AnimationType.fade,
-                      validator: (v) {
-                        if (v!.length < 5) {
-                          return "";
-                        } else {
-                          return null;
-                        }
-                      },
-                      pinTheme: PinTheme(
-                        inactiveColor: AppColors.gray4,
-                        activeColor: AppColors.gray4,
-                        shape: PinCodeFieldShape.underline,
-                        selectedColor: AppColors.gray4,
-
-                      ),
-                      cursorColor: AppColors.black,
-                      animationDuration: const Duration(milliseconds: 300),
-                      //  errorAnimationController: errorController,
-                      keyboardType: TextInputType.number,
-
-                      // onChanged: (value) {
-                      //   // setState(() {
-                      //   //   //  currentText = value;
-                      //   // });
-                      // },
                     ),
                   ),
 
