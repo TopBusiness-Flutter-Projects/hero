@@ -67,7 +67,12 @@ class CustomTextField extends StatelessWidget {
         ),
         autofocus: true,
         decoration: InputDecoration(
+
           contentPadding: const EdgeInsets.all(1),
+          labelStyle: TextStyle(
+            color: AppColors.black,
+            fontWeight: FontWeight.w400,
+          ),
           hintStyle: TextStyle(
             color: AppColors.gray6,
             fontWeight: FontWeight.w400,
@@ -79,6 +84,7 @@ class CustomTextField extends StatelessWidget {
           //     ?
           OutlineInputBorder(
                   borderRadius: BorderRadius.circular(getSize(context) / 44),
+
                   borderSide: BorderSide(
                       color: isAdd ? AppColors.white : AppColors.white),
                 ),
@@ -108,6 +114,7 @@ class CustomTextField extends StatelessWidget {
         onChanged: onchange,
         onTap:onTap ,
         maxLines: 1,
+
         minLines: minLine,
         validator: (value) {
           if (value == null || value.isEmpty) {

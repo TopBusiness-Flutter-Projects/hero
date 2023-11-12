@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "381872173981",
+    "project_id": "hero-878d8",
+    "storage_bucket": "hero-878d8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:381872173981:android:486322d9cd284f4b927574",
+        "android_client_info": {
+          "package_name": "com.topbusiness.hero"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDoCmLvBGaAdbv_Z_ULO1tpqJplKMvr8C0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

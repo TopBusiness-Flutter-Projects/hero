@@ -67,47 +67,42 @@ class _LoginState extends State<Login> {
                   SizedBox(
                     height: getSize(context) / 20,
                   ),
-                  Container(
-                    height: getSize(context) / 10,
-                    padding:
-                    EdgeInsets.symmetric(horizontal: getSize(context) / 16),
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                          color: AppColors.gray6,
-                          width: 1,
-                        ),
-                        borderRadius: BorderRadius.all(
-                            Radius.circular(getSize(context) / 66))),
-                    child: Row(
-                      children: [
-                        Text("+20",
-                            style: TextStyle(
-                              color: AppColors.black,
-                              fontSize: getSize(context) / 24,
-                            )),
-                        Padding(
-                          padding:
-                          EdgeInsets.symmetric(vertical: getSize(context) / 66),
-                          child: VerticalDivider(
-                            color: AppColors.primary,
-                            // height: getSize(context)/10-2,
-                            thickness: 2,
+                  CustomTextField(
+                    title: 'phone'.tr(),
+                    controller:cubit.phoneController,
+                    textInputType: TextInputType.phone,
+                    backgroundColor: AppColors.white,
+                    validatorMessage: 'phone_msg'.tr(),
+                    horizontalPadding: 0,
+                    prefixWidget: Container(
+                      width: getSize(context)/6,
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal:
+                                8.0),
+                            child: Text("+20",
+                                style: TextStyle(
+                                  color: AppColors.black,
+                                  fontSize: getSize(context) / 24,
+                                )),
                           ),
-                        ),
-                        Flexible(
-                          fit: FlexFit.tight,
-                          child: CustomTextField(
-                            title: 'phone'.tr(),
-                            controller:cubit.phoneController,
-                            textInputType: TextInputType.phone,
-                            backgroundColor: AppColors.white,
-                            validatorMessage: 'phone_msg'.tr(),
-                            horizontalPadding: 0,
-                            // controller: controller.phoneNumberController,
+                          Padding(
+                            padding:
+                            EdgeInsets.symmetric(horizontal: getSize(context) / 66),
+                            child: Container(
+                              color: AppColors.primary,
+                              // height: getSize(context)/10-2,
+                              width: 3,
+                              height: 30,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
+
+                    // controller: controller.phoneNumberController,
                   ),
                   SizedBox(
                     height: getSize(context) / 20,

@@ -212,19 +212,17 @@ class _SignUpState extends State<SignUp> {
                       CustomTextField(
                         prefixWidget:
                         SizedBox(
-                          width: 20,
+                          width: getSize(context)/6,
                           child: Row(
                             children: [
-                               Flexible(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(right: 5.0),
-                                  child: Text("+20",
-                                    style: TextStyle(
-                                      color: AppColors.black,
-                                      fontSize: getSize(context) / 24,
-                                    )),
-                                ),
-                            ), Padding(
+                               Padding(
+                                 padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                                 child: Text("+20",
+                                   style: TextStyle(
+                                     color: AppColors.black,
+                                     fontSize: getSize(context) / 24,
+                                   )),
+                               ), Padding(
                                 padding: const EdgeInsets.all( 5),
                                 child: Container(
                                   color: AppColors.primary,
@@ -244,7 +242,7 @@ class _SignUpState extends State<SignUp> {
                         backgroundColor: AppColors.white,
 
                         validatorMessage: 'phone_msg'.tr(),
-                        horizontalPadding: 2,
+                        horizontalPadding: 0,
 
                         // controller: controller.phoneNumberController,
                       ),
