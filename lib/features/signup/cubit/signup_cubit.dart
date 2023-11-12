@@ -8,6 +8,8 @@ import 'package:hero/core/utils/dialogs.dart';
 import 'package:hero/features/signup/models/register_model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
+
+import '../../../config/routes/app_routes.dart';
 part 'signup_state.dart';
 
 class SignupCubit extends Cubit<SignupState> {
@@ -34,10 +36,13 @@ class SignupCubit extends Cubit<SignupState> {
     response.fold((l) {
       emit(SignUpFailed());
       Navigator.pop(context);
+      errorGetBar("register failed");
     }, (r) {
       emit(SignUpSuccess());
       signUpModel = r ;
       Navigator.pop(context);
+      Navigator.of(context).pushNamedAndRemoveUntil(
+          Routes.homeRoute, (route) => false);
     });
   }
 
