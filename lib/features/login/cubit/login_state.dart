@@ -15,3 +15,6 @@ class CheckCodeSuccessfully extends LoginState {}
 class OnSmsCodeSent extends LoginState {}
 class NewUserAuthinticatedState extends LoginState {}
 class OldUserAuthinticatedState extends LoginState {}
+class SuccessCheckPhoneState extends LoginState {}
+class FailureCheckPhoneState extends LoginState {}
+class LoadingCheckPhoneStatus extends LoginState {}

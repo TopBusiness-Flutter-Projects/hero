@@ -8,11 +8,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hero/core/utils/assets_manager.dart';
 import 'package:hero/core/utils/getsize.dart';
 import 'package:hero/core/widgets/custom_button.dart';
+import 'package:hero/features/requestlocation/cubit/request_location_cubit.dart';
 import 'package:hero/features/signup/cubit/signup_cubit.dart';
 import '../../../config/routes/app_routes.dart';
 import '../../../core/utils/app_colors.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:location/location.dart'as loc;
+
 class RequestLocation extends StatefulWidget {
   const RequestLocation({super.key, required this.type});
   final String type;
@@ -120,7 +120,7 @@ class _RequestLocationState extends State<RequestLocation> {
   void initState() {
     // TODO: implement initState
    // fetchLocation();
-    checkAndRequestLocationPermission();
+    context.read<RequestLocationCubit>().checkAndRequestLocationPermission();
     FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance; // Change here
     _firebaseMessaging.getToken().then((token){
       print("token is $token");
@@ -130,53 +130,6 @@ class _RequestLocationState extends State<RequestLocation> {
 
     context.read<SignupCubit>().deviceType = Platform.isAndroid ? 'Android' : 'iOS';
     super.initState();
-  }
-  Future<void> enableLocationServices() async {
-    loc.Location location = loc.Location();
-
-    bool serviceEnabled = await location.serviceEnabled();
-    if (!serviceEnabled) {
-      serviceEnabled = await location.requestService();
-      if (!serviceEnabled) {
-        // Location services are still not enabled, handle accordingly (show a message, disable functionality, etc.)
-        // ...
-        return;
-      }
-    }
-
-    PermissionStatus permissionStatus = await Permission.location.status;
-    if (permissionStatus.isGranted) {
-
-      // Location permission is granted, continue with location-related tasks
-      // ...
-    } else {
-      // Location permission is not granted, handle accordingly (show a message, disable functionality, etc.)
-      // ...
-    }
-  }
-  Future<void> checkAndRequestLocationPermission() async {
-    // Check the current status of the location permission
-    PermissionStatus permissionStatus = await Permission.location.status;
-
-    if (permissionStatus.isDenied) {
-      // If the permission is denied, request it from the user
-      PermissionStatus newPermissionStatus = await Permission.location.request();
-
-      if (newPermissionStatus.isGranted) {
-       await enableLocationServices();
-        // Permission granted, continue with location-related tasks
-        // Call the function to handle the location-related tasks here
-        // ...
-      } else if (newPermissionStatus.isDenied) {
-        // Permission denied again, handle accordingly (show a message, disable functionality, etc.)
-        // ...
-      }
-    } else if (permissionStatus.isGranted) {
-     await enableLocationServices();
-      // Permission already granted, continue with location-related tasks
-      // Call the function to handle the location-related tasks here
-      // ...
-    }
   }
 
 

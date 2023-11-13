@@ -3,6 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hero/core/models/signup_response_model.dart';
+import 'package:hero/core/preferences/preferences.dart';
 import 'package:hero/core/remote/service.dart';
 import 'package:hero/core/utils/dialogs.dart';
 import 'package:hero/features/signup/models/register_model.dart';
@@ -38,11 +39,27 @@ class SignupCubit extends Cubit<SignupState> {
       Navigator.pop(context);
       errorGetBar("register failed");
     }, (r) {
-      emit(SignUpSuccess());
-      signUpModel = r ;
-      Navigator.pop(context);
-      Navigator.of(context).pushNamedAndRemoveUntil(
-          Routes.homeRoute, (route) => false);
+
+       if (r.code==406){
+         Navigator.pop(context);
+         errorGetBar("${r.message}");
+      }
+       else if (r.code==408){
+         Navigator.pop(context);
+         errorGetBar("${r.message}");
+       }
+       else   if(r.code==200){
+         emit(SignUpSuccess());
+         signUpModel = r ;
+         Preferences.instance.setUser(r);
+         Navigator.pop(context);
+         Navigator.of(context).pushNamedAndRemoveUntil(
+             Routes.homeRoute, (route) => false);
+       }
+       else{
+
+       }
+
     });
   }
 

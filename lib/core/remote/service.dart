@@ -9,11 +9,13 @@ import '../api/end_points.dart';
 import '../error/exceptions.dart';
 import '../error/failures.dart';
 import 'package:dartz/dartz.dart';
+import '../models/delete_user_model.dart';
 import '../models/direction.dart';
 import '../models/login_model.dart';
 import '../models/place_details.dart';
 import '../models/place_geocode.dart';
 import '../models/signup_response_model.dart';
+import '../preferences/preferences.dart';
 import '../utils/app_strings.dart';
 
 class ServiceApi {
@@ -153,26 +155,40 @@ class ServiceApi {
 //     }
 //   }
 //
-//   Future<Either<Failure, RateResponseModel>> postRate({required serviceId,required value,comment}) async {
-//     LoginModel loginModel = await Preferences.instance.getUserModel();
+//   Future<Either<Failure, RateResponseModel>> logout() async {
+//     SignUpModel signUpModel = await Preferences.instance.getUserModel();
 //     try {
 //
 //       final response = await dio.post(
-//         EndPoints.rateUrl,
+//         EndPoints.logoutUrl,
 //         options: Options(
-//           headers: {'Authorization': loginModel.data!.accessToken!},
+//           headers: {'Authorization': signUpModel.data?.token},
 //         ),
-//         body: {
-//           'service_id': serviceId,
-//           "value":value,
-//           "comment":comment
-//         },
+//
 //       );
 //       return Right(RateResponseModel.fromJson(response));
 //     } on ServerException {
 //       return Left(ServerFailure());
 //     }
 //   }
+  Future<Either<Failure, DeleteModel>> delete() async {
+    SignUpModel signUpModel = await Preferences.instance.getUserModel();
+    try {
+      print("1111111111111111111111111111");
+      print("${signUpModel.data?.token}");
+      final response = await dio.post(
+        EndPoints.deleteUrl,
+        options: Options(
+          headers: {'Authorization': signUpModel.data?.token},
+        ),
+      );
+      print("response123 = $response");
+      print("22222222222222222222222222222222222222");
+      return Right(DeleteModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
 //
 //
 //   Future<Either<Failure, LoginModel>> postEditProfile(
@@ -196,17 +212,33 @@ class ServiceApi {
 //   }
 //
 //
-  Future<Either<Failure, LoginModel>> postLogin(
+  Future<Either<Failure, LoginModel>> checkPhone(String phone, String phoneCode) async {
+    try {
+      final response = await dio.post(
+        EndPoints.checkPhoneUrl,
+        body: {
+          'phone': phoneCode+phone,
+        },
+      );
+      return Right(LoginModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
 
-      String phone, String phoneCode) async {
+  Future<Either<Failure, SignUpModel>> login(String phone, String phoneCode,String deviceType,String token) async {
     try {
       final response = await dio.post(
         EndPoints.loginUrl,
         body: {
-          'phone': phone,
+          'phone': phoneCode+phone,
+        },
+        queryParameters: {
+          "device_type":deviceType,
+          "token":token
         },
       );
-      return Right(LoginModel.fromJson(response));
+      return Right(SignUpModel.fromJson(response));
     } on ServerException {
       return Left(ServerFailure());
     }
@@ -349,9 +381,7 @@ class ServiceApi {
     }
   }
 
-  Future<Either<Failure, GeoCodeModel>> getGeoData(
-    String latlng,
-  ) async {
+  Future<Either<Failure, GeoCodeModel>> getGeoData(String latlng,) async {
     try {
       final response = await dio.get(EndPoints.geocodeUrl, queryParameters: {
         "latlng": latlng,

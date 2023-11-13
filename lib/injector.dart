@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:hero/core/remote/service.dart';
 import 'package:hero/features/login/cubit/login_cubit.dart';
 import 'package:hero/features/notification/cubit/cubit/orders_cubit.dart';
+import 'package:hero/features/requestlocation/cubit/request_location_cubit.dart';
 import 'package:hero/features/signup/cubit/signup_cubit.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -47,11 +48,11 @@ Future<void> setup() async {
        serviceLocator(),
     ),
   );
-  // serviceLocator.registerFactory(
-  //   () => FavoriteCubit(
-  //     serviceLocator(),
-  //   ),
-  // );
+  serviceLocator.registerFactory(
+    () => RequestLocationCubit(
+     // serviceLocator(),
+    ),
+  );
   serviceLocator.registerFactory(
     () => HomeCubit(
       serviceLocator(),

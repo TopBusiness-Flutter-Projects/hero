@@ -1,6 +1,7 @@
 class EndPoints {
   static const String baseUrl = 'http://192.168.1.14:8000/api/';
-  static const String loginUrl = '${baseUrl}checkPhone';
+  static const String checkPhoneUrl = '${baseUrl}checkPhone';
+  static const String loginUrl = '${baseUrl}auth/login';
   static const String homeUrl = '${baseUrl}home';
   static const String citiesUrl = '${baseUrl}cities';
   static const String servicesUrl = '${baseUrl}services/';
@@ -11,7 +12,8 @@ class EndPoints {
   static const String settingUrl = '${baseUrl}setting';
   static const String serviceStoreUrl = '${baseUrl}services/store';
   static const String categoriesUrl = '${baseUrl}categories';
-  static const String rateUrl = '${baseUrl}services/add-rate';
+  static const String logoutUrl = '${baseUrl}logout';
+  static const String deleteUrl = '${baseUrl}deleteUser';
   static const String addToFavouriteUrl = '${baseUrl}services/add-to-favourites';
   static const String deepLink = '${baseUrl}details/';
  // static const String searchUrl = '${baseUrl}search';

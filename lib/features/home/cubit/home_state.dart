@@ -23,3 +23,7 @@ class UpdateDesitnationLocationStat extends HomeState {}
 class BackState extends HomeState {}
 class AddMarkersState extends HomeState {}
 class UpdateCurrentLocation extends HomeState {}
+class GettingUserData extends HomeState {}
+class GettingAddressState extends HomeState {}
+class FailedDeleteUser extends HomeState {}
+class SuccessDeleteUser extends HomeState {}

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 
+import 'package:hero/core/models/signup_response_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/login_model.dart';
@@ -24,24 +25,25 @@ class Preferences {
   //   return jsonData;
   // }
 
-  Future<void> setUser(LoginModel loginModel) async {
+  Future<void> setUser(SignUpModel signUpModel) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setString(
-        'user', jsonEncode(LoginModel.fromJson(loginModel.toJson())));
+        'user', jsonEncode(SignUpModel.fromJson(signUpModel.toJson())));
     print(await getUserModel());
   }
  Future<void> clearShared()async{
    SharedPreferences preferences = await SharedPreferences.getInstance();
    preferences.clear();
  }
-  Future<LoginModel> getUserModel() async {
+
+  Future<SignUpModel> getUserModel() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? jsonData = preferences.getString('user');
-    LoginModel userModel;
+    SignUpModel userModel;
     if (jsonData != null) {
-      userModel = LoginModel.fromJson(jsonDecode(jsonData));
+      userModel = SignUpModel.fromJson(jsonDecode(jsonData));
     } else {
-      userModel = LoginModel();
+      userModel = SignUpModel();
     }
     return userModel;
   }

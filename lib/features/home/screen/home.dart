@@ -113,7 +113,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "محمد",
+                    "${context.read<HomeCubit>().signUpModel?.data?.name}",
                     style: TextStyle(
                         fontSize: getSize(context) * 0.03,
                         fontWeight: FontWeight.w400,
@@ -129,9 +129,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 backgroundImage: AssetImage(ImageAssets.person),
               ),
               subtitle: Text(
-                "info@examble.com",
+                "${context.read<HomeCubit>().signUpModel?.data?.email}",
                 style: TextStyle(
-                    fontSize: getSize(context) * 0.03,
+                    fontSize: getSize(context) * 0.0295,
                     fontWeight: FontWeight.w400,
                     color: AppColors.black2),
               ),
@@ -175,6 +175,13 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                           else if(index == 7){
                             context.read<HomeCubit>().tabsController.animateTo(9);
                             Navigator.pop(context);
+                          }
+                          else if(index == 11){
+                           //todo=>logout
+                          }
+                          else if(index == 10){
+                            //todo=>delete
+                            context.read<HomeCubit>().deleteUser(context);
                           }
                         },
                         child: DrawerListItem(

@@ -2,9 +2,12 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:bloc/bloc.dart';
+import 'package:dartz/dartz.dart';
 import 'package:easy_localization/easy_localization.dart' as oo;
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hero/core/preferences/preferences.dart';
+import 'package:hero/core/utils/dialogs.dart';
 import 'package:maps_toolkit/maps_toolkit.dart' as mp;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -16,9 +19,9 @@ import 'package:google_maps_webservice/geocoding.dart'as geocoding;
 import 'package:location/location.dart'as loc;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:widget_to_marker/widget_to_marker.dart';
-
+import '../../../config/routes/app_routes.dart';
+import '../../../core/models/signup_response_model.dart';
 import '../../../core/utils/custom_marker.dart';
-
 part 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
@@ -26,9 +29,9 @@ class HomeCubit extends Cubit<HomeState> {
   Set<Marker> markers = {};
   BitmapDescriptor? bitmapDescriptorto;
   BitmapDescriptor? bitmapDescriptorfrom;
-
+  SignUpModel? signUpModel ;
   HomeCubit(this.api) : super(HomeInitial()){
-
+   getUserData();
     // markers =  {
     //   Marker(
     //     markerId: const MarkerId("currentLocation"),
@@ -53,6 +56,12 @@ class HomeCubit extends Cubit<HomeState> {
     latLngList = [];
     getmarker();
     checkAndRequestLocationPermission();
+    //todo get user name
+
+  }
+  getUserData() async {
+    signUpModel = await Preferences.instance.getUserModel();
+    emit(GettingUserData());
   }
   ServiceApi api;
   String? payment = "cash";
@@ -144,6 +153,10 @@ void setflag(int flag){
     response.fold(
           (l) => emit(ErrorLocationSearchStat()),
           (r) async {
+          address =  r.results
+              .elementAt(0)
+              .formattedAddress
+              .replaceAll("Unnamed Road,", "");
 
             if(title=="to"){
               destination = argument;
@@ -351,6 +364,7 @@ void setflag(int flag){
 
 
   loc.LocationData? currentLocation;
+  String? address;
 
 
   LatLng strartlocation = LatLng(0, 0);
@@ -359,7 +373,7 @@ void setflag(int flag){
     loc.Location location = loc.Location();
     // we can remove this future method because we listen on data in the onLocationChanged.listen
     location.getLocation().then(
-          (location) {
+          (location) async {
         currentLocation = location;
         if(strartlocation!=LatLng(currentLocation!.latitude!,currentLocation!.longitude!)){
           strartlocation=  LatLng(
@@ -396,6 +410,18 @@ void setflag(int flag){
     );
   }
 
+  // getAddress() async {
+  //   print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+  //   final response = await api.getGeoData(
+  //       currentLocation!.latitude.toString() + "," + currentLocation!.longitude.toString());
+  //   response.fold((l) => null, (r) {
+  //     address = r.results[0].formattedAddress;
+  //
+  //     print(address);
+  //     print(response);
+  //     emit(GettingAddressState());
+  //   });
+  // }
 
   Uint8List? icon;
   Future<void> updateLocation() async {
@@ -561,6 +587,23 @@ void setflag(int flag){
     }
 
 
+  }
+
+  deleteUser(BuildContext context)async{
+  loadingDialog();
+    final response = await api.delete();
+    response.fold((l) {
+      emit(FailedDeleteUser());
+      Navigator.pop(context);
+      } ,
+            (r) {
+         if(r.code==200){
+           emit(SuccessDeleteUser());
+           Preferences.instance.clearShared();
+           Navigator.pop(context);
+           Navigator.pushReplacementNamed(context, Routes.loginRoute);
+         }
+    });
   }
 
 }

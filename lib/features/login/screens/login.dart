@@ -143,7 +143,7 @@ class _LoginState extends State<Login> {
                     text: "follow".tr(),
                     color: AppColors.primary,
                     onClick: () async {
-                      await cubit.login(context);
+                      await cubit.checkPhone(context);
                       // Navigator.pushNamedAndRemoveUntil(context,
                       //     Routes.verificationScreenRoute, (route) => false);
                     },

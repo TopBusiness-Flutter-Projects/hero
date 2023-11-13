@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../config/routes/app_routes.dart';
 import '../../../core/utils/assets_manager.dart';
@@ -29,37 +30,32 @@ class _SplashScreenState extends State<SplashScreen>     with TickerProviderStat
   }
 
   Future<void> _getStoreUser() async {
-    Navigator.pushNamedAndRemoveUntil(
-              context,
-              Routes.loginRoute,
-              ModalRoute.withName(
-                Routes.initialRoute,
-              ),
-            );
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    // if (prefs.getString('onBoarding') != null) {
-    //   if (prefs.getString('user') != null) {
-    //     if (context.read<SplashCubit>().adsList.isNotEmpty) {
-    //       Navigator.pushReplacementNamed(context, Routes.podAdsPageScreenRoute,
-    //           arguments: context.read<SplashCubit>().adsList.first);
-    //     } else {
-    //       Navigator.pushReplacementNamed(context, Routes.homePageScreenRoute);
-    //     }
-    //   } else {
-    //     Navigator.pushNamedAndRemoveUntil(
-    //       context,
-    //       Routes.loginRoute,
-    //       ModalRoute.withName(
-    //         Routes.initialRoute,
-    //       ),
-    //     );
-    //   }
-    // } else {
-    //   Navigator.pushReplacementNamed(
-    //     context,
-    //     Routes.onboardingPageScreenRoute,
-    //   );
-    // }
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      if (prefs.getString('user') != null) {
+
+          Navigator.pushReplacementNamed(context, Routes.homeRoute);
+
+      }
+      else {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          Routes.loginRoute,
+          ModalRoute.withName(
+            Routes.initialRoute,
+          ),
+        );
+        // Navigator.pushNamedAndRemoveUntil(
+        //   context,
+        //   Routes.loginRoute,
+        //   ModalRoute.withName(
+        //     Routes.initialRoute,
+        //   ),
+        // );
+      }
+
+
   }
 
   @override

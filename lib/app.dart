@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:hero/features/login/cubit/login_cubit.dart';
 import 'package:hero/features/notification/cubit/cubit/orders_cubit.dart';
+import 'package:hero/features/requestlocation/cubit/request_location_cubit.dart';
 import 'package:hero/features/signup/cubit/signup_cubit.dart';
 
 
@@ -60,9 +61,9 @@ class _HeroAppState extends State<HeroApp> {
           create: (_) => injector.serviceLocator<SignupCubit>(),
         ),
 
-    //     // BlocProvider(
-    //     //   create: (_) => injector.serviceLocator<PrivacyCubit>(),
-    //     // ),
+        BlocProvider(
+          create: (_) => injector.serviceLocator<RequestLocationCubit>(),
+        ),
     //     //
     //     //
     //     // BlocProvider(

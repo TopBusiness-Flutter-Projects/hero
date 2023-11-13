@@ -22,8 +22,23 @@ class HomeTab extends StatefulWidget {
 
 class _HomeTabState extends State<HomeTab> {
 
+  
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+  }
+  
+  
   @override
   Widget build(BuildContext context) {
+    return BlocConsumer<HomeCubit, HomeState>(
+  listener: (context, state) {
+    // TODO: implement listener
+  },
+  builder: (context, state) {
+    HomeCubit cubit = context.read<HomeCubit>();
     return Scaffold(
 
       body: Padding(
@@ -49,7 +64,7 @@ class _HomeTabState extends State<HomeTab> {
                               color: Colors.grey,
                             ),
                             Text(
-                              'welcome'.tr() + "محمد",
+                              'welcome'.tr() + "${cubit.signUpModel?.data?.name??""}",
                               style: TextStyle(
                                   fontSize: getSize(context) / 24,
                                   fontWeight: FontWeight.normal,
@@ -67,12 +82,16 @@ class _HomeTabState extends State<HomeTab> {
                               Icons.location_on_outlined,
                               size: 27,
                             ),
-                            Text(
-                              "برج الهيلتون الدور الخامس بجوار حتحوت",
-                              style: TextStyle(
-                                  fontSize: getSize(context) / 24,
-                                  fontWeight: FontWeight.normal,
-                                  color: AppColors.gray),
+                            Expanded(
+                              child: Text(
+                                "${cubit.address??""}",
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontSize: getSize(context) / 24,
+                                    fontWeight: FontWeight.normal,
+                                    color: AppColors.gray),
+                              ),
                             ),
                           ],
                         )
@@ -297,5 +316,7 @@ class _HomeTabState extends State<HomeTab> {
 
 
     );
+  },
+);
   }
 }
