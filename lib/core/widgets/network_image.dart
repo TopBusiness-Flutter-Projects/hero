@@ -34,6 +34,9 @@ class ManageNetworkImage extends StatelessWidget {
             color: AppColors.primary,
           ),
         ),
+        errorWidget: (context, url, error) {
+          return Image.asset("assets/images/logo.png",color: AppColors.primary,);
+        },
       ),
     );
   }

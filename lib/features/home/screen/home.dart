@@ -44,6 +44,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    return BlocBuilder<HomeCubit, HomeState>(
+  builder: (context, state) {
     return Scaffold(
       key: _scaffoldKey,
       body: SafeArea(
@@ -200,5 +202,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         ),
       ),
     );
+  },
+);
   }
 }

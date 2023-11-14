@@ -2,7 +2,7 @@ class EndPoints {
   static const String baseUrl = 'http://192.168.1.14:8000/api/';
   static const String checkPhoneUrl = '${baseUrl}checkPhone';
   static const String loginUrl = '${baseUrl}auth/login';
-  static const String homeUrl = '${baseUrl}home';
+  static const String homeUrl = '${baseUrl}userHome';
   static const String citiesUrl = '${baseUrl}cities';
   static const String servicesUrl = '${baseUrl}services/';
   static const String editServicesUrl = '${baseUrl}services/update/';

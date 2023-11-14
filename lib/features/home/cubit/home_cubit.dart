@@ -2,10 +2,12 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:bloc/bloc.dart';
+import 'package:carousel_slider/carousel_controller.dart';
 import 'package:dartz/dartz.dart';
 import 'package:easy_localization/easy_localization.dart' as oo;
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hero/core/models/home_model.dart';
 import 'package:hero/core/preferences/preferences.dart';
 import 'package:hero/core/utils/dialogs.dart';
 import 'package:maps_toolkit/maps_toolkit.dart' as mp;
@@ -32,31 +34,11 @@ class HomeCubit extends Cubit<HomeState> {
   SignUpModel? signUpModel ;
   HomeCubit(this.api) : super(HomeInitial()){
    getUserData();
-    // markers =  {
-    //   Marker(
-    //     markerId: const MarkerId("currentLocation"),
-    //     icon: bitmapDescriptorfrom != null
-    //         ? bitmapDescriptorfrom!
-    //         : currentLocationIcon,
-    //     position: LatLng(currentLocation?.latitude??0,
-    //         currentLocation?.longitude??0),
-    //   ),
-    //
-    //   Marker(
-    //     markerId: MarkerId("destination"),
-    //     infoWindow: InfoWindow(
-    //       title: "to",
-    //     ),
-    //     icon:  bitmapDescriptorto != null ?
-    //     bitmapDescriptorto! : currentLocationIcon,
-    //     position: destination,
-    //   ),
-    //   //  markers.first
-    // };
+
     latLngList = [];
     getmarker();
     checkAndRequestLocationPermission();
-    //todo get user name
+   //getHomeData();// it's better to call this method in initstate
 
   }
   getUserData() async {
@@ -370,6 +352,7 @@ void setflag(int flag){
   LatLng strartlocation = LatLng(0, 0);
 
   void getCurrentLocation() async {
+
     loc.Location location = loc.Location();
     // we can remove this future method because we listen on data in the onLocationChanged.listen
     location.getLocation().then(
@@ -605,5 +588,20 @@ void setflag(int flag){
          }
     });
   }
+  HomeModel? homeModel;
+  getHomeData()async{
+    //loadingDialog();
+    emit(LoadingHomeDataState());
+   final response = await api.getHomeData();
+   response.fold((l) {
+     emit(ErrorGettingHomeDataState());
+     //Navigator.pop(context);
+   }, (r) {
 
+     homeModel = r ;
+    // Navigator.pop(context);
+     emit(SuccessGettingHomeData());
+   });
+  }
+  CarouselController carouselController = CarouselController();
 }

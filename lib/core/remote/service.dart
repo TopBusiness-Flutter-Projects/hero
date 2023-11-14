@@ -2,6 +2,7 @@
 
 import 'package:dio/dio.dart';
 import 'package:hero/core/api/end_points.dart';
+import 'package:hero/core/models/home_model.dart';
 import 'package:hero/features/signup/models/register_model.dart';
 
 import '../api/base_api_consumer.dart';
@@ -189,6 +190,25 @@ class ServiceApi {
       return Left(ServerFailure());
     }
   }
+
+  Future<Either<Failure, DeleteModel>> logout() async {
+    SignUpModel signUpModel = await Preferences.instance.getUserModel();
+    try {
+      print("1111111111111111111111111111");
+      print("${signUpModel.data?.token}");
+      final response = await dio.post(
+        EndPoints.deleteUrl,
+        options: Options(
+          headers: {'Authorization': signUpModel.data?.token},
+        ),
+      );
+      print("response123 = $response");
+      print("22222222222222222222222222222222222222");
+      return Right(DeleteModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
 //
 //
 //   Future<Either<Failure, LoginModel>> postEditProfile(
@@ -243,6 +263,21 @@ class ServiceApi {
       return Left(ServerFailure());
     }
   }
+
+  Future<Either<Failure,HomeModel>> getHomeData()async{
+     SignUpModel signUpModel = await Preferences.instance.getUserModel();
+     try{
+       final response = await dio.get(
+           EndPoints.homeUrl,
+         options: Options(
+           headers: {'Authorization': signUpModel.data?.token},
+         ),
+       );
+       return Right(HomeModel.fromJson(response));
+     }on ServerException{
+       return Left(ServerFailure());
+     }
+   }
 //
 //   Future<Either<Failure, HomeModel>> homeData() async {
 //     LoginModel loginModel = await Preferences.instance.getUserModel();

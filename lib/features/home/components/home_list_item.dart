@@ -2,17 +2,19 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dash/flutter_dash.dart';
 import 'package:flutter_svg/svg.dart';
-
+import 'package:hero/core/models/home_model.dart';
 import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/assets_manager.dart';
 import '../../../core/utils/getsize.dart';
 
 class HomeListItem extends StatelessWidget {
-  const HomeListItem({super.key, this.isHome = true});
+  const HomeListItem({super.key, this.isHome = true, this.trip});
   final bool isHome;
+ final NewTrip? trip;
 
   @override
   Widget build(BuildContext context) {
+    String formattedDate = formatApiDateTime(trip!.createdAt.toString());
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 3),
       margin: EdgeInsets.symmetric(
@@ -33,7 +35,8 @@ class HomeListItem extends StatelessWidget {
                 width: getSize(context) * 0.03,
               ),
               Text(
-                "01/10/2023",
+               // "01/10/2023",
+                 formattedDate.substring(0,17),
                 style: TextStyle(
                     color: AppColors.black1,
                     fontSize: getSize(context) * 0.04,
@@ -50,14 +53,16 @@ class HomeListItem extends StatelessWidget {
                 width: getSize(context) * 0.03,
               ),
               Text(
-                "pm ",
+               // "pm ",
+                formattedDate.substring(23,26),
                 style: TextStyle(
                     color: AppColors.gray,
                     fontSize: getSize(context) * 0.04,
                     fontWeight: FontWeight.w400),
               ),
               Text(
-                "03:23 ",
+               // "03:23",
+                  formattedDate.substring(17,23),
                 style: TextStyle(
                     color: AppColors.black1,
                     fontSize: getSize(context) * 0.04,
@@ -115,7 +120,8 @@ class HomeListItem extends StatelessWidget {
               width: 3,
             ),
             Text(
-              " برج الهيلتون الدور الخامس بجوار حتحوت ",
+             // " برج الهيلتون الدور الخامس بجوار حتحوت ",
+              "${trip?.fromAddress}",
               style: TextStyle(
                   color: AppColors.gray,
                   fontSize: getSize(context) * 0.04,
@@ -146,7 +152,8 @@ class HomeListItem extends StatelessWidget {
                 width: getSize(context) * 0.03,
               ),
               Text(
-                "معهد الكبد القومى ",
+               // "معهد الكبد القومى ",
+                 "${trip?.toAddress}",
                 style: TextStyle(
                     color: AppColors.gray,
                     fontSize: getSize(context) * 0.04,
@@ -157,5 +164,14 @@ class HomeListItem extends StatelessWidget {
         ],
       ),
     );
+  }
+  String formatApiDateTime(String apiDateTime) {
+    // Parse the API date string into a DateTime object
+    DateTime dateTime = DateTime.parse(apiDateTime);
+
+    // Format the DateTime object into a user-friendly format
+    String formattedDateTime = DateFormat('MMMM d, y hh:mm a').format(dateTime);
+
+    return formattedDateTime;
   }
 }

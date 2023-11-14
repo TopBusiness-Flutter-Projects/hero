@@ -146,4 +146,11 @@ class _VerificationState extends State<Verification> {
       },
     );
   }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    context.read<LoginCubit>().codecontrol.dispose();
+    context.read<LoginCubit>().codecontrol = TextEditingController();
+  }
 }

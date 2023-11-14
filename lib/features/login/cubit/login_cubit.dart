@@ -9,6 +9,7 @@ import 'package:hero/core/models/login_model.dart';
 import 'package:hero/core/models/signup_response_model.dart';
 import 'package:hero/core/preferences/preferences.dart';
 import 'package:hero/core/remote/service.dart';
+import 'package:hero/core/utils/dialogs.dart';
 import 'package:meta/meta.dart';
 
 import '../../../config/routes/app_routes.dart';
@@ -180,6 +181,7 @@ class LoginCubit extends Cubit<LoginState> {
   var deviceType;
 
   verifySmsCode(String smsCode,BuildContext context) async {
+   print("************************************************");
     print(smsCode);
     print(verification_Id);
     PhoneAuthCredential credential = PhoneAuthProvider.credential(

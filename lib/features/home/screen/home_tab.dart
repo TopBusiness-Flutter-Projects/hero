@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dash/flutter_dash.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:hero/features/home/screen/banner.dart';
 import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/assets_manager.dart';
 import '../../../core/utils/getsize.dart';
@@ -21,13 +22,14 @@ class HomeTab extends StatefulWidget {
 }
 
 class _HomeTabState extends State<HomeTab> {
-
+ bool isLoading = true;
   
   @override
   void initState() {
-    // TODO: implement initState
-    super.initState();
 
+    super.initState();
+    context.read<HomeCubit>().getHomeData();
+    //context.read<HomeCubit>().carouselController = CarouselController();
   }
   
   
@@ -35,18 +37,27 @@ class _HomeTabState extends State<HomeTab> {
   Widget build(BuildContext context) {
     return BlocConsumer<HomeCubit, HomeState>(
   listener: (context, state) {
-    // TODO: implement listener
+    if(state is LoadingHomeDataState){
+      isLoading = true;
+    }
+    else if(state is SuccessGettingHomeData){
+      isLoading = false;
+    }    else if(state is ErrorGettingHomeDataState){
+      isLoading = false;
+    }
   },
   builder: (context, state) {
     HomeCubit cubit = context.read<HomeCubit>();
     return Scaffold(
 
-      body: Padding(
+      body: isLoading?
+          Center(child: CircularProgressIndicator(color: AppColors.primary,),)
+     : Padding(
         padding: const EdgeInsets.all(10.0),
         child: ListView(
           children: [
             SizedBox(
-              height: 10,
+              height: 10
             ),
             //welcome user
             Row(
@@ -103,67 +114,8 @@ class _HomeTabState extends State<HomeTab> {
               height: 10,
             ),
            //slider+dots
-            Column(
-              children: [
-                //slider
-                CarouselSlider(
-                  items: [
-                    Image.asset(ImageAssets.requestlocationImage),
-                    Image.asset(ImageAssets.userTypeImage),
-                    Image.asset(ImageAssets.greyToktok),
-                  ],
-                  options: CarouselOptions(
-                    enlargeCenterPage: true,
-                    //enableInfiniteScroll: false,
-                    autoPlay: true,
-                    height: MediaQuery.of(context).size.height * 0.18,
-                    reverse: false,
-                    viewportFraction: 1.0,
-                    onPageChanged: (index, reason) {
-                      widget.page = index;
-                      setState(() {});
-                    },
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                //dots
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ...List.generate(3, (index) {
-                      return index == widget.page
-                          ? Padding(
-                        padding:
-                        const EdgeInsets.symmetric(horizontal: 12.0),
-                        child: Container(
-                          height: 12,
-                          width: 40,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: AppColors.primary,
-                          ),
-                        ),
-                      )
-                          : Padding(
-                        padding:
-                        const EdgeInsets.symmetric(horizontal: 5),
-                        child: Container(
-                          height: 12,
-                          width: 12,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            color: AppColors.hint,
-                          ),
-                        ),
-                      );
-                    })
-                  ],
-                ),
-              ],
-            ),
-            // new orders     //all
+            BannerWidget(sliderData: cubit.homeModel!.data!.sliders!),
+            SizedBox(height: getSize(context)*0.1,),            // new orders     //all
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -188,21 +140,20 @@ class _HomeTabState extends State<HomeTab> {
                 ),
               ],
             ),
+
             // list of orders
             SizedBox(
                 height: getSize(context) * 1.2,
                 child: Container(
                   child: ListView.builder(
-                    itemCount: 5,
+                    itemCount: cubit.homeModel?.data?.newTrips?.length??0,
                     itemBuilder: (context, index) {
-                      return HomeListItem();
+                      return HomeListItem(trip: cubit.homeModel?.data?.newTrips?[index],);
 
                     },
                   ),
                 ),),
-            // Container(height: getSize(context)/5,
-            //  color: Colors.red,
-            // )
+
           ],
         ),
       ),

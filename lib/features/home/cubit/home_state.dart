@@ -27,3 +27,6 @@ class GettingUserData extends HomeState {}
 class GettingAddressState extends HomeState {}
 class FailedDeleteUser extends HomeState {}
 class SuccessDeleteUser extends HomeState {}
+class ErrorGettingHomeDataState extends HomeState {}
+class SuccessGettingHomeData extends HomeState {}
+class LoadingHomeDataState extends HomeState {}
