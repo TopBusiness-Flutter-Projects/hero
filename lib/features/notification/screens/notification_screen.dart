@@ -15,83 +15,96 @@ class NotificationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: ListView(
-          children: [
-            SizedBox(
-              height: 10,
-            ),
-            //welcome user
-            Row(
+    return BlocConsumer<HomeCubit, HomeState>(
+      listener: (context, state) {
+        // TODO: implement listener
+      },
+      builder: (context, state) {
+        HomeCubit cubit = context.read<HomeCubit>();
+        return Scaffold(
+          body: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: ListView(
               children: [
                 SizedBox(
                   height: 10,
                 ),
-                Expanded(
-                    child: Column(
+                //welcome user
+                Row(
                   children: [
-                    //welcome mohammed
-                    Row(
-
-                      children: [
-                        CustomBackButton(),
-                        SizedBox(width: 5,),
-                        Icon(
-                          CupertinoIcons.person_circle_fill,
-                          color: Colors.grey,
-                        ),
-                        Text(
-                          'welcome'.tr() + "محمد",
-                          style: TextStyle(
-                              fontSize: getSize(context) / 24,
-                              fontWeight: FontWeight.normal,
-                              color: AppColors.black),
-                        ),
-                        Spacer(),
-                      ],
-                    ),
                     SizedBox(
                       height: 10,
                     ),
-                    //address + location icon
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.location_on_outlined,
-                          size: 27,
-                        ),
-                        //address
-                        Text(
-                          "برج الهيلتون الدور الخامس بجوار حتحوت",
-                          style: TextStyle(
-                              fontSize: getSize(context) / 24,
-                              fontWeight: FontWeight.normal,
-                              color: AppColors.gray),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10,),
+                    Expanded(
+                        child: Column(
+                          children: [
+                            //welcome mohammed
+                            Row(
+
+                              children: [
+                                CustomBackButton(),
+                                SizedBox(width: 5,),
+                                Icon(
+                                  CupertinoIcons.person_circle_fill,
+                                  color: Colors.grey,
+                                ),
+                                Text(
+                                  'welcome'.tr() + "${cubit.signUpModel?.data?.name}",
+                                  style: TextStyle(
+                                      fontSize: getSize(context) / 24,
+                                      fontWeight: FontWeight.normal,
+                                      color: AppColors.black),
+                                ),
+                                Spacer(),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            //address + location icon
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.location_on_outlined,
+                                  size: 27,
+                                ),
+                                //address
+                                Expanded(
+                                  child: Text(
+                                    "${cubit.address}",
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        fontSize: getSize(context) / 24,
+                                        fontWeight: FontWeight.normal,
+                                        color: AppColors.gray),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 10,),
 
 
-                    SizedBox(
-                        height: getSize(context) * 2,
-                        child: ListView.separated(
-                            itemBuilder: (context, index) {
-                              return NotificationListItem();
-                            },
-                            separatorBuilder: (context, index) {
-                              return Divider(color: AppColors.grey2,thickness: 1,);
-                            },
-                            itemCount: 50))
+                            SizedBox(
+                                height: getSize(context) * 2,
+                                child: ListView.separated(
+                                    itemBuilder: (context, index) {
+                                      return NotificationListItem();
+                                    },
+                                    separatorBuilder: (context, index) {
+                                      return Divider(
+                                        color: AppColors.grey2, thickness: 1,);
+                                    },
+                                    itemCount: 50))
+                          ],
+                        )),
                   ],
-                )),
+                ),
               ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

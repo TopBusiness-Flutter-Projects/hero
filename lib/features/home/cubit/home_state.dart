@@ -30,3 +30,9 @@ class SuccessDeleteUser extends HomeState {}
 class ErrorGettingHomeDataState extends HomeState {}
 class SuccessGettingHomeData extends HomeState {}
 class LoadingHomeDataState extends HomeState {}
+class LoadingToLogOutState extends HomeState {}
+class FailureToLogOutState extends HomeState {}
+class SuccessToLogOutState extends HomeState {}
+class LoadingSettings extends HomeState {}
+class FailureSettings extends HomeState {}
+class SuccessSettings extends HomeState {}

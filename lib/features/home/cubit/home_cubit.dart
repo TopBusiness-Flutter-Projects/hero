@@ -1,13 +1,17 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:bloc/bloc.dart';
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:dartz/dartz.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:easy_localization/easy_localization.dart' as oo;
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hero/core/models/delete_user_model.dart';
 import 'package:hero/core/models/home_model.dart';
+import 'package:hero/core/models/settings_model.dart';
 import 'package:hero/core/preferences/preferences.dart';
 import 'package:hero/core/utils/dialogs.dart';
 import 'package:maps_toolkit/maps_toolkit.dart' as mp;
@@ -34,7 +38,7 @@ class HomeCubit extends Cubit<HomeState> {
   SignUpModel? signUpModel ;
   HomeCubit(this.api) : super(HomeInitial()){
    getUserData();
-
+   getSettings();
     latLngList = [];
     getmarker();
     checkAndRequestLocationPermission();
@@ -320,29 +324,7 @@ void setflag(int flag){
     markerIcon = await getBytesFromAsset(ImageAssets.marker, 100);
   }
 
-  // Future<void> enableLocationServices() async {
-  //   loc.Location location = loc.Location();
-  //
-  //   bool serviceEnabled = await location.serviceEnabled();
-  //   if (!serviceEnabled) {
-  //     serviceEnabled = await location.requestService();
-  //     if (!serviceEnabled) {
-  //       // Location services are still not enabled, handle accordingly (show a message, disable functionality, etc.)
-  //       // ...
-  //       return;
-  //     }
-  //   }
-  //
-  //   PermissionStatus permissionStatus = await Permission.location.status;
-  //   if (permissionStatus.isGranted) {
-  //     getCurrentLocation();
-  //     // Location permission is granted, continue with location-related tasks
-  //     // ...
-  //   } else {
-  //     // Location permission is not granted, handle accordingly (show a message, disable functionality, etc.)
-  //     // ...
-  //   }
-  // }
+
 
 
   loc.LocationData? currentLocation;
@@ -588,6 +570,44 @@ void setflag(int flag){
          }
     });
   }
+  Future<String?> _getId() async {
+    var deviceInfo = DeviceInfoPlugin();
+    if (Platform.isIOS) { // import 'dart:io'
+      var iosDeviceInfo = await deviceInfo.iosInfo;
+      return iosDeviceInfo.identifierForVendor; // unique ID on iOS
+    } else if(Platform.isAndroid) {
+      var androidDeviceInfo = await deviceInfo.androidInfo;
+      return androidDeviceInfo.id; // unique ID on Android
+    }
+  }
+
+  DeleteModel? deleteModel;
+  logout(BuildContext context)async{
+    emit(LoadingToLogOutState());
+    loadingDialog();
+    String? token = await _getId();
+    if(token!=null){
+      final response = await api.logout(token);
+      response.fold((l) {
+        Navigator.pop(context);
+        emit(FailureToLogOutState());
+      }, (r) {
+
+        deleteModel = r;
+        Preferences.instance.clearShared();
+        Navigator.pop(context);
+        emit(SuccessToLogOutState());
+        Navigator.pushNamedAndRemoveUntil(context,
+            Routes.loginRoute, (route) => false);
+      });
+
+    }
+    else{
+      Navigator.pop(context);
+      ErrorWidget("token is null");
+    }
+  }
+
   HomeModel? homeModel;
   getHomeData()async{
     //loadingDialog();
@@ -604,4 +624,22 @@ void setflag(int flag){
    });
   }
   CarouselController carouselController = CarouselController();
+
+  SettingsModel? settingsModel;
+bool isLoadingSettings = true;
+  getSettings()async{
+    emit(LoadingSettings());
+    isLoadingSettings = true;
+  final response = await  api.getSettings();
+  response.fold((l) {
+    emit(FailureSettings());
+  }, (r) {
+     if(r.code==200){
+       settingsModel = r;
+       isLoadingSettings = false;
+       emit(SuccessSettings());
+     }
+
+  });
+  }
 }

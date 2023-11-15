@@ -26,7 +26,7 @@ class _HomeTabState extends State<HomeTab> {
   
   @override
   void initState() {
-
+  context.read<HomeCubit>().getUserData();
     super.initState();
     context.read<HomeCubit>().getHomeData();
     //context.read<HomeCubit>().carouselController = CarouselController();

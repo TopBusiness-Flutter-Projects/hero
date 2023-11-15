@@ -13,6 +13,7 @@ import 'config/themes/app_theme.dart';
 import 'core/utils/app_strings.dart';
 import 'package:hero/injector.dart' as injector;
 
+import 'features/edit_profile/cubit/edit_profile_cubit.dart';
 import 'features/home/cubit/home_cubit.dart';
 import 'features/homedriver/screen/pages/home_map_driver/cubit/home_driver_cubit.dart';
 
@@ -64,11 +65,11 @@ class _HeroAppState extends State<HeroApp> {
         BlocProvider(
           create: (_) => injector.serviceLocator<RequestLocationCubit>(),
         ),
-    //     //
-    //     //
-    //     // BlocProvider(
-    //     //   create: (_) => injector.serviceLocator<AddServiceCubit>(),
-    //     // ),
+
+
+        BlocProvider(
+          create: (_) => injector.serviceLocator<EditProfileCubit>(),
+        ),
     //
     //
     //

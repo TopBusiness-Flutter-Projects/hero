@@ -21,7 +21,7 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
 
-  var formKey = GlobalKey<FormState>();
+  var formKey = GlobalKey<FormState>(debugLabel: "signup");
 
   @override
   Widget build(BuildContext context) {
@@ -115,18 +115,7 @@ class _SignUpState extends State<SignUp> {
                         fontSize: getSize(context) / 28),
                   ),
                 ),
-                // Container(
-                //  height: getSize(context) / 10,
-                //   padding: EdgeInsets.symmetric(horizontal: getSize(context)/32),
-                //   decoration: BoxDecoration(
-                //       border: Border.all(
-                //         color: AppColors.gray6,
-                //         width: 1,
-                //       ),
-                //       borderRadius: BorderRadius.all(
-                //           Radius.circular(getSize(context) / 66))),
-                //   child: Center(
-                //     child:
+
                     CustomTextField(
                       title: 'name'.tr(),
                       controller:cubit.nameController ,
@@ -137,8 +126,7 @@ class _SignUpState extends State<SignUp> {
                       horizontalPadding: 2,
                       // controller: controller.phoneNumberController,
                     ),
-                //   ),
-                // ),
+
                 Container(
                   padding: EdgeInsets.symmetric(vertical: getSize(context) / 22),
                   child: Text(
@@ -148,18 +136,7 @@ class _SignUpState extends State<SignUp> {
                         fontSize: getSize(context) / 28),
                   ),
                 ),
-                // Container(
-                //   height: getSize(context) / 10,
-                //   //  padding: EdgeInsets.symmetric(horizontal: getSize(context)/32),
-                //   decoration: BoxDecoration(
-                //       border: Border.all(
-                //         color: AppColors.gray6,
-                //         width: 1,
-                //       ),
-                //       borderRadius: BorderRadius.all(
-                //           Radius.circular(getSize(context) / 66))),
-                //   child: Center(
-                //     child:
+
                     CustomTextField(
                       title: 'email'.tr(),
                       controller: cubit.emailController,
@@ -246,9 +223,7 @@ class _SignUpState extends State<SignUp> {
 
                         // controller: controller.phoneNumberController,
                       ),
-                  //  ],
-                 // ),
-                // ),
+
                 Container(
                   padding: EdgeInsets.symmetric(vertical: getSize(context) / 22),
                   child: Text(
@@ -258,28 +233,7 @@ class _SignUpState extends State<SignUp> {
                         fontSize: getSize(context) / 28),
                   ),
                 ),
-                // Container(
-                //   height: getSize(context) / 10,
-                //   padding:
-                //       EdgeInsets.symmetric(horizontal: getSize(context) / 16),
-                //   decoration: BoxDecoration(
-                //       border: Border.all(
-                //         color: AppColors.gray6,
-                //         width: 1,
-                //       ),
-                //       borderRadius: BorderRadius.all(
-                //           Radius.circular(getSize(context) / 66))),
-                //   child: Row(
-                //     children: [
-                //       MySvgWidget(
-                //           path: ImageAssets.calender,
-                //           imageColor: AppColors.buttonColor,
-                //           size: 20),
-                //       SizedBox(
-                //         width: getSize(context) / 26,
-                //       ),
-                //       Expanded(
-                //         child:
+
                         CustomTextField(
                           prefixWidget:Icon(CupertinoIcons.calendar_today,size: 20,),
                           // SizedBox(
@@ -343,7 +297,7 @@ class _SignUpState extends State<SignUp> {
                           errorGetBar("pick_img".tr());
                         }
                       else{
-                          await cubit.signUp("user",context);
+                          await cubit.signUp("user",context,true);
                         }
                       }
                       // Navigator.of(context).pushNamedAndRemoveUntil(

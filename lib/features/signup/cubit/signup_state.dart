@@ -8,3 +8,4 @@ class ImagePickedSuccessfully extends SignupState {}
 class ImageNotPicked extends SignupState {}
 class SignUpFailed extends SignupState {}
 class SignUpSuccess extends SignupState {}
+class GettingUserDataState extends SignupState {}

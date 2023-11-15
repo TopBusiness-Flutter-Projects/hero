@@ -3,6 +3,7 @@
 import 'package:dio/dio.dart';
 import 'package:hero/core/api/end_points.dart';
 import 'package:hero/core/models/home_model.dart';
+import 'package:hero/core/models/settings_model.dart';
 import 'package:hero/features/signup/models/register_model.dart';
 
 import '../api/base_api_consumer.dart';
@@ -44,12 +45,12 @@ class ServiceApi {
   }
 
 //
-  Future<Either<Failure, SignUpModel>> postRegister(RegisterModel registerModel) async {
+  Future<Either<Failure, SignUpModel>> postRegister(RegisterModel registerModel,bool isSignUp) async {
     try {
       var image =  await MultipartFile.fromFile(registerModel.image.path);
       var response = await dio.post(
 
-        EndPoints.registerUrl,
+        isSignUp?  EndPoints.registerUrl:EndPoints.editProfileUrl,
         queryParameters: {
           "device_type":registerModel.deviceType,
           "token":registerModel.token,
@@ -74,6 +75,37 @@ class ServiceApi {
       return Left(ServerFailure());
     }
   }
+
+  // Future<Either<Failure, SignUpModel>> editProfile(RegisterModel registerModel)async{
+  //   try {
+  //     var image =  await MultipartFile.fromFile(registerModel.image.path);
+  //     var response = await dio.post(
+  //
+  //       EndPoints.editProfileUrl,
+  //       queryParameters: {
+  //         "device_type":registerModel.deviceType,
+  //         "token":registerModel.token,
+  //       },
+  //       formDataIsEnabled: true,
+  //       body: {
+  //         'name': registerModel.name,
+  //         'email':registerModel.email,
+  //         "phone":registerModel.phone,
+  //         "birth":registerModel.birth,
+  //         "type":registerModel.type,
+  //         "img":image
+  //
+  //       },
+  //     );
+  //
+  //     return Right(SignUpModel.fromJson(response));
+  //
+  //
+  //
+  //   } on ServerException {
+  //     return Left(ServerFailure());
+  //   }
+  // }
 //   //
 //   // Future<Either<Failure, ServiceStoreModel>> postServiceStore(ServiceModel serviceModel) async {
 //   //   LoginModel loginModel = await Preferences.instance.getUserModel();
@@ -156,22 +188,25 @@ class ServiceApi {
 //     }
 //   }
 //
-//   Future<Either<Failure, RateResponseModel>> logout() async {
-//     SignUpModel signUpModel = await Preferences.instance.getUserModel();
-//     try {
-//
-//       final response = await dio.post(
-//         EndPoints.logoutUrl,
-//         options: Options(
-//           headers: {'Authorization': signUpModel.data?.token},
-//         ),
-//
-//       );
-//       return Right(RateResponseModel.fromJson(response));
-//     } on ServerException {
-//       return Left(ServerFailure());
-//     }
-//   }
+
+  Future<Either<Failure, DeleteModel>> logout(String token) async {
+    SignUpModel signUpModel = await Preferences.instance.getUserModel();
+    try {
+
+      final response = await dio.post(
+        EndPoints.logoutUrl,
+        options: Options(
+          headers: {'Authorization': signUpModel.data?.token},
+        ),
+     queryParameters: {
+          "token":token
+     }
+      );
+      return Right(DeleteModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
   Future<Either<Failure, DeleteModel>> delete() async {
     SignUpModel signUpModel = await Preferences.instance.getUserModel();
     try {
@@ -191,24 +226,16 @@ class ServiceApi {
     }
   }
 
-  Future<Either<Failure, DeleteModel>> logout() async {
-    SignUpModel signUpModel = await Preferences.instance.getUserModel();
-    try {
-      print("1111111111111111111111111111");
-      print("${signUpModel.data?.token}");
-      final response = await dio.post(
-        EndPoints.deleteUrl,
-        options: Options(
-          headers: {'Authorization': signUpModel.data?.token},
-        ),
+    Future<Either<Failure,SettingsModel>> getSettings()async{
+    try{
+      final response = await dio.get(
+        EndPoints.settingsUrl
       );
-      print("response123 = $response");
-      print("22222222222222222222222222222222222222");
-      return Right(DeleteModel.fromJson(response));
-    } on ServerException {
+      return Right(SettingsModel.fromJson(response));
+    }on ServerException{
       return Left(ServerFailure());
     }
-  }
+    }
 //
 //
 //   Future<Either<Failure, LoginModel>> postEditProfile(

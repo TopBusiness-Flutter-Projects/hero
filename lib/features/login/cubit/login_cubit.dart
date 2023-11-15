@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -26,6 +27,7 @@ class LoginCubit extends Cubit<LoginState> {
  late LoginModel loginModel;
  bool isNewUser = true;
   checkPhone(BuildContext context)async{
+    print("111111111111111111111111111111111");
     emit(LoadingCheckPhoneStatus());
     AppWidget.createProgressDialog(context, 'wait'.tr());
     //todo=> country code may be change to be iraq code
@@ -38,12 +40,19 @@ class LoginCubit extends Cubit<LoginState> {
 
             },
             (r) {
+              print("2222222222222222222222222222222222222");
+              print("r = $r");
               loginModel = r;
-              if(r.code==406){
+              if(r.code==406|| r.code == 500){
                 //new user=> go to register
                 isNewUser = true;
+                print("is new User = $isNewUser");
                 emit(PhoneNotExistState());
               }
+              // else if (r.code==500){
+              //   ErrorWidget("this number is blocked");
+              //   emit(PhoneNotExistState());
+              // }
               else if(r.code == 200){
                 isNewUser = false;
                 //old user=>go to home
@@ -59,13 +68,23 @@ class LoginCubit extends Cubit<LoginState> {
             });
   }
 
-
+  Future<String?> _getId() async {
+    var deviceInfo = DeviceInfoPlugin();
+    if (Platform.isIOS) { // import 'dart:io'
+      var iosDeviceInfo = await deviceInfo.iosInfo;
+      return iosDeviceInfo.identifierForVendor; // unique ID on iOS
+    } else if(Platform.isAndroid) {
+      var androidDeviceInfo = await deviceInfo.androidInfo;
+      return androidDeviceInfo.id; // unique ID on Android
+    }
+  }
   SignUpModel? signUpModel;
   login(BuildContext context)async{
     emit(LoadingLoginStatus());
+    String? token = await _getId();
     AppWidget.createProgressDialog(context, 'wait'.tr());
     //todo=> country code may be change to be iraq code
-    final response =await api.login(phoneController.text, "+2",deviceType,firebaseToken);
+    final response =await api.login(phoneController.text, "+2",deviceType,token!);
 
     response.fold(
             (l) {
@@ -80,6 +99,7 @@ class LoginCubit extends Cubit<LoginState> {
            // isNewUser = true;
             Navigator.pop(context);
             emit(PhoneNotExistState());
+            ErrorWidget(r.message.toString());
           }
           else if(r.code == 200){
             emit(SuccessLoginState());
@@ -102,9 +122,10 @@ class LoginCubit extends Cubit<LoginState> {
 
   int? resendToken;
   String smsCode = '';
-  String? verification_Id;
+  String? verification_Id ;
 
   verifyPhoneNumber(BuildContext context)async{
+
     await FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: "+2"+phoneController.text,
       forceResendingToken: resendToken,
@@ -135,70 +156,23 @@ class LoginCubit extends Cubit<LoginState> {
     );
   }
 
-  // sendSmsCode({String? code, String? phoneNum}) async {
-  //   if(phoneNum!.startsWith("0")){
-  //     phoneNum = phoneNum.substring(1,11);
-  //   }
-  //
-  //   //emit(SendCodeLoading());
-  //   await FirebaseAuth.instance.setSettings(forceRecaptchaFlow: true);
-  //   await FirebaseAuth.instance.verifyPhoneNumber(
-  //
-  //   //  phoneNumber: '${code ?? phoneCode}' + "${phoneNum ?? phoneController.text}",
-  //     timeout: Duration(seconds: 25),
-  //
-  //     verificationCompleted: (PhoneAuthCredential credential) {
-  //   //    smsCode = credential.smsCode!;
-  //       // verification_Id = credential.verificationId;
-  //       // print("_____________________________________________ $verification_Id");
-  //       // print("verificationId=$verification_Id");
-  //       // if(codecontrol.hasListeners){
-  //       //   codecontrol.text=smsCode.toString();
-  //       // }
-  //       // verifySmsCode(smsCode);
-  //       // emit(OnSmsCodeSent(smsCode));
-  //       //  verifySmsCode(smsCode);
-  //     },
-  //
-  //     codeSent: (String verificationId, int? resendToken) {
-  //       this.resendToken = resendToken;
-  //       this.verification_Id = verificationId;
-  //
-  //       print("verificationId=>${verificationId}");
-  //
-  //       emit(OnSmsCodeSent());
-  //     },
-  //
-  //
-  //     codeAutoRetrievalTimeout: (String verificationId) {
-  //       verificationId = verificationId;
-  //     },
-  //   );
-  // }
-
 
   var firebaseToken;
   var deviceType;
 
   verifySmsCode(String smsCode,BuildContext context) async {
-   print("************************************************");
-    print(smsCode);
-    print(verification_Id);
+    //loadingDialog();
     PhoneAuthCredential credential = PhoneAuthProvider.credential(
       verificationId: verification_Id!,
       smsCode: smsCode,
+
     );
     await  FirebaseAuth.instance.signInWithCredential(credential).then((value) async {
       // var model= await Preferences.instance.getUserModel();
-      if(isNewUser){
-        emit(NewUserAuthinticatedState());
-      }
-      else{
-        emit(OldUserAuthinticatedState());
-      }
     //  Get.offAndToNamed(Routes.resetPasswordRoute);
 
       emit(CheckCodeSuccessfully());
+
       //  if(model.data==null){
       //    print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
       //    print(model.data);
@@ -213,17 +187,16 @@ class LoginCubit extends Cubit<LoginState> {
       // }
 
       if(isNewUser){
+       // Navigator.pop(context);
+      emit(NewUserAuthinticatedState());
         Navigator.pushNamedAndRemoveUntil(
             context, Routes.usertypeScreenRoute, (route) => false);
       }
       else{
+       // Navigator.pop(context);
+        emit(OldUserAuthinticatedState());
         //todo => login api request to save user data in shared preferences
-        FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance; // Change here
-      await  _firebaseMessaging.getToken().then((token){
-          print("token is $token");
-          print("***************************************** token ");
-          firebaseToken = token ;
-        });
+
         deviceType = Platform.isAndroid ? 'Android' : 'iOS';
         login(context);
 
@@ -234,4 +207,6 @@ class LoginCubit extends Cubit<LoginState> {
       print('phone auth =>${error.toString()}');
     });
   }
+
+
 }

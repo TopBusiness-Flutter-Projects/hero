@@ -179,10 +179,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                             Navigator.pop(context);
                           }
                           else if(index == 11){
-                           //todo=>logout
+                          //log out
+                            context.read<HomeCubit>().logout(context);
                           }
                           else if(index == 10){
-                            //todo=>delete
+                            //delete
                             context.read<HomeCubit>().deleteUser(context);
                           }
                         },

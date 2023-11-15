@@ -22,6 +22,12 @@ class Verification extends StatefulWidget {
 
 class _VerificationState extends State<Verification> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    context.read<LoginCubit>().codecontrol = TextEditingController();
+  }
+  @override
   Widget build(BuildContext context) {
     return BlocConsumer<LoginCubit, LoginState>(
       listener: (context, state) {
@@ -146,11 +152,11 @@ class _VerificationState extends State<Verification> {
       },
     );
   }
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    context.read<LoginCubit>().codecontrol.dispose();
-    context.read<LoginCubit>().codecontrol = TextEditingController();
-  }
+  // @override
+  // void dispose() {
+  //   // TODO: implement dispose
+  //   super.dispose();
+  //   context.read<LoginCubit>().codecontrol.dispose();
+  //   //context.read<LoginCubit>().codecontrol = TextEditingController();
+  // }
 }

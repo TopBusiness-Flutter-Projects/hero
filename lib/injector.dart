@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'core/api/app_interceptors.dart';
 import 'core/api/base_api_consumer.dart';
 import 'core/api/dio_consumer.dart';
+import 'features/edit_profile/cubit/edit_profile_cubit.dart';
 import 'features/home/cubit/home_cubit.dart';
 import 'features/homedriver/screen/pages/home_map_driver/cubit/home_driver_cubit.dart';
 
@@ -57,54 +58,11 @@ Future<void> setup() async {
     () => HomeCubit(
       serviceLocator(),
     ),
-
-  // serviceLocator.registerFactory(
-  //   () => PostsCubit(
-  //     serviceLocator(),
-  //   ),
-  // );
-  // serviceLocator.registerFactory(
-  //       () => EditProfileCubit(
-  //     serviceLocator(),
-  //   ),
-  //
-  // );
-  // serviceLocator.registerFactory(
-  //       () => MyPostsCubit(
-  //     serviceLocator(),
-  //   ),
-  //
-  // );
-  // serviceLocator.registerFactory(
-  //       () => AddServiceCubit(
-  //     serviceLocator(),
-  //   ),
-  //
-  // );
-  // serviceLocator.registerFactory(
-  //       () => DetailsCubit(
-  //     serviceLocator(),
-  //   ),
-  //
-  // );
-  //
-  // serviceLocator.registerFactory(
-  //       () => PrivacyCubit(
-  //     serviceLocator(),
-  //   ),
-  //
-  // );
-  // serviceLocator.registerFactory(
-  //       () => ContactUsCubit(
-  //     serviceLocator(),
-  //   ),
-  //
-  // );
-  // serviceLocator.registerFactory(
-  //       () => NottificationCubit(
-  //     serviceLocator(),
-  //   ),
-  //
+   );
+  serviceLocator.registerFactory(
+    () => EditProfileCubit(
+      serviceLocator(),
+    ),
    );
 
 
