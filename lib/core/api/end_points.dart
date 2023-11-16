@@ -4,6 +4,8 @@ class EndPoints {
   static const String loginUrl = '${baseUrl}auth/login';
   static const String homeUrl = '${baseUrl}userHome';
   static const String editProfileUrl = '${baseUrl}editProfile';
+  static const String createTripUrl = '${baseUrl}createTrip';
+  static const String createScheduleTripUrl = '${baseUrl}createScheduleTrip';
   static const String citiesUrl = '${baseUrl}cities';
   static const String servicesUrl = '${baseUrl}services/';
   static const String editServicesUrl = '${baseUrl}services/update/';

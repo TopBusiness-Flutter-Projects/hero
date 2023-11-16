@@ -9,7 +9,7 @@ NotificationModel notificationModelFromJson(String str) => NotificationModel.fro
 String notificationModelToJson(NotificationModel data) => json.encode(data.toJson());
 
 class NotificationModel {
-  final List<Datum>? data;
+  final List<NotificationData>? data;
   final String? message;
   final int? code;
 
@@ -20,7 +20,7 @@ class NotificationModel {
   });
 
   factory NotificationModel.fromJson(Map<String, dynamic> json) => NotificationModel(
-    data: json["data"] == null ? [] : List<Datum>.from(json["data"]!.map((x) => Datum.fromJson(x))),
+    data: json["data"] == null ? [] : List<NotificationData>.from(json["data"]!.map((x) => NotificationData.fromJson(x))),
     message: json["message"],
     code: json["code"],
   );
@@ -32,7 +32,7 @@ class NotificationModel {
   };
 }
 
-class Datum {
+class NotificationData {
   final int? id;
   final dynamic userId;
   final String? title;
@@ -42,7 +42,7 @@ class Datum {
   final DateTime? updatedAt;
   final dynamic deletedAt;
 
-  Datum({
+  NotificationData({
     this.id,
     this.userId,
     this.title,
@@ -53,7 +53,7 @@ class Datum {
     this.deletedAt,
   });
 
-  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+  factory NotificationData.fromJson(Map<String, dynamic> json) => NotificationData(
     id: json["id"],
     userId: json["user_id"],
     title: json["title"],

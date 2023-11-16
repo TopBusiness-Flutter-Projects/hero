@@ -10,14 +10,34 @@ import '../../../core/widgets/back_button.dart';
 import '../../home/cubit/home_cubit.dart';
 import '../components/notification_list_item.dart';
 
-class NotificationScreen extends StatelessWidget {
-  const NotificationScreen({super.key});
+class NotificationScreen extends StatefulWidget {
+   NotificationScreen({super.key});
+
+  @override
+  State<NotificationScreen> createState() => _NotificationScreenState();
+}
+
+class _NotificationScreenState extends State<NotificationScreen> {
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    context.read<HomeCubit>().getNotification();
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<HomeCubit, HomeState>(
       listener: (context, state) {
-        // TODO: implement listener
+        if(state is LoadingNotificationState){
+          isLoading = true;
+        }
+        else{
+          isLoading = false;
+        }
       },
       builder: (context, state) {
         HomeCubit cubit = context.read<HomeCubit>();
@@ -29,7 +49,7 @@ class NotificationScreen extends StatelessWidget {
                 SizedBox(
                   height: 10,
                 ),
-                //welcome user
+
                 Row(
                   children: [
                     SizedBox(
@@ -38,7 +58,7 @@ class NotificationScreen extends StatelessWidget {
                     Expanded(
                         child: Column(
                           children: [
-                            //welcome mohammed
+                            //welcome user
                             Row(
 
                               children: [
@@ -83,19 +103,19 @@ class NotificationScreen extends StatelessWidget {
                               ],
                             ),
                             SizedBox(height: 10,),
-
-
-                            SizedBox(
+                            isLoading?
+                         Center(child: CircularProgressIndicator(color: AppColors.primary,),)
+                            :SizedBox(
                                 height: getSize(context) * 2,
                                 child: ListView.separated(
                                     itemBuilder: (context, index) {
-                                      return NotificationListItem();
+                                      return NotificationListItem(notificationData: cubit.notificationModel?.data?[index],);
                                     },
                                     separatorBuilder: (context, index) {
                                       return Divider(
                                         color: AppColors.grey2, thickness: 1,);
                                     },
-                                    itemCount: 50))
+                                    itemCount: cubit.notificationModel?.data?.length??0))
                           ],
                         )),
                   ],

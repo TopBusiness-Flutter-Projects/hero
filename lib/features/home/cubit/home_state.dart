@@ -36,3 +36,12 @@ class SuccessToLogOutState extends HomeState {}
 class LoadingSettings extends HomeState {}
 class FailureSettings extends HomeState {}
 class SuccessSettings extends HomeState {}
+class LoadingNotificationState extends HomeState {}
+class FailureNotificationState extends HomeState {}
+class SuccessNotificationState extends HomeState {}
+class LoadingCreateTripState extends HomeState {}
+class FailureCreateTrip extends HomeState {}
+class SuccessCreateTripState extends HomeState {}
+class ProgressState extends HomeState {}
+class ProgressFinishState extends HomeState {}
+class AlreadyInTrip extends HomeState {}

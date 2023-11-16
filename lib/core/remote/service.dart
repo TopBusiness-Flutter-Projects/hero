@@ -3,6 +3,7 @@
 import 'package:dio/dio.dart';
 import 'package:hero/core/api/end_points.dart';
 import 'package:hero/core/models/home_model.dart';
+import 'package:hero/core/models/notification_model.dart';
 import 'package:hero/core/models/settings_model.dart';
 import 'package:hero/features/signup/models/register_model.dart';
 
@@ -11,6 +12,8 @@ import '../api/end_points.dart';
 import '../error/exceptions.dart';
 import '../error/failures.dart';
 import 'package:dartz/dartz.dart';
+import '../models/create_schedual_trip_model.dart';
+import '../models/create_trip_model.dart';
 import '../models/delete_user_model.dart';
 import '../models/direction.dart';
 import '../models/login_model.dart';
@@ -210,16 +213,13 @@ class ServiceApi {
   Future<Either<Failure, DeleteModel>> delete() async {
     SignUpModel signUpModel = await Preferences.instance.getUserModel();
     try {
-      print("1111111111111111111111111111");
-      print("${signUpModel.data?.token}");
+
       final response = await dio.post(
         EndPoints.deleteUrl,
         options: Options(
           headers: {'Authorization': signUpModel.data?.token},
         ),
       );
-      print("response123 = $response");
-      print("22222222222222222222222222222222222222");
       return Right(DeleteModel.fromJson(response));
     } on ServerException {
       return Left(ServerFailure());
@@ -305,6 +305,81 @@ class ServiceApi {
        return Left(ServerFailure());
      }
    }
+
+  Future<Either<Failure,NotificationModel>> getNotification()async{
+    SignUpModel signUpModel = await Preferences.instance.getUserModel();
+    try{
+      final response = await dio.get(
+        EndPoints.notificationUrl,
+        options: Options(
+          headers: {'Authorization': signUpModel.data?.token},
+        ),
+      );
+      return Right(NotificationModel.fromJson(response));
+    }on ServerException{
+      return Left(ServerFailure());
+    }
+  }
+
+
+  Future<Either<Failure, CreateTripModel>> createTrip({required String tripType,
+    required String fromAddress , required double fromLng , required fromLat,
+    String? toAddress , double? toLng , double? toLat}) async {
+    SignUpModel signUpModel = await Preferences.instance.getUserModel();
+    try {
+
+      final response = await dio.post(
+        EndPoints.createTripUrl,
+        options: Options(
+          headers: {'Authorization': signUpModel.data?.token},
+        ),
+        body: {
+          "trip_type":tripType,
+          "from_address":fromAddress,
+          "from_long":fromLng,
+          "from_lat":fromLat,
+          "to_address":toAddress,
+          "to_long":toLng,
+          "to_lat":toLat
+
+        }
+      );
+      return Right(CreateTripModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
+  Future<Either<Failure, CreateScedualTripModel>> createScheduleTrip({required String tripType,
+    required String fromAddress , required double fromLng , required fromLat,
+    String? toAddress , double? toLng , double? toLat ,required String date ,
+    required String time}) async {
+    SignUpModel signUpModel = await Preferences.instance.getUserModel();
+    try {
+
+      final response = await dio.post(
+          EndPoints.createScheduleTripUrl,
+          options: Options(
+            headers: {'Authorization': signUpModel.data?.token},
+          ),
+          body: {
+            "trip_type":tripType,
+            "from_address":fromAddress,
+            "from_long":fromLng,
+            "from_lat":fromLat,
+            "to_address":toAddress,
+            "to_long":toLng,
+            "to_lat":toLat,
+            "date": date ,
+            "time": time ,
+
+          }
+      );
+      return Right(CreateScedualTripModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
 //
 //   Future<Either<Failure, HomeModel>> homeData() async {
 //     LoginModel loginModel = await Preferences.instance.getUserModel();

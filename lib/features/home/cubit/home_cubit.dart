@@ -4,13 +4,14 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:bloc/bloc.dart';
 import 'package:carousel_slider/carousel_controller.dart';
-import 'package:dartz/dartz.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:easy_localization/easy_localization.dart' as oo;
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hero/core/models/create_trip_model.dart';
 import 'package:hero/core/models/delete_user_model.dart';
 import 'package:hero/core/models/home_model.dart';
+import 'package:hero/core/models/notification_model.dart';
 import 'package:hero/core/models/settings_model.dart';
 import 'package:hero/core/preferences/preferences.dart';
 import 'package:hero/core/utils/dialogs.dart';
@@ -42,6 +43,7 @@ class HomeCubit extends Cubit<HomeState> {
     latLngList = [];
     getmarker();
     checkAndRequestLocationPermission();
+   //getNotification();
    //getHomeData();// it's better to call this method in initstate
 
   }
@@ -84,15 +86,7 @@ void setflag(int flag){
   this.flag=flag;
   emit(HomeInitial());
 }
-  // onMapCreated(GoogleMapController mapController){
-  //   controller.complete(mapController);
-  //  // _customInfoWindowController.googleMapController = mapController;
-  //   this.mapController = mapController;
-  //   // setState(() {
-  //   //
-  //   // });
-  //   emit(OnMapCreatedState());
-  // }
+
 
 
   List<LatLng> latLngList = [];
@@ -642,4 +636,152 @@ bool isLoadingSettings = true;
 
   });
   }
+
+  NotificationModel? notificationModel;
+  getNotification()async{
+    emit(LoadingNotificationState());
+    final response = await api.getNotification();
+    response.fold((l) {
+      emit(FailureNotificationState());
+    }, (r) {
+      notificationModel = r ;
+      // Calculate the time difference
+      emit(SuccessNotificationState());
+    });
+
+  }
+
+  CreateTripModel? createTripModel;
+
+  createTrip({required String tripType , required BuildContext context})async{
+    if(address!=null && currentLocation!=null){
+       emit(LoadingCreateTripState());
+       loadingDialog();
+      final response = await  api.createTrip(
+          tripType: tripType, fromAddress: address!, fromLng: currentLocation!.longitude!,
+          fromLat: currentLocation!.latitude!,
+          toAddress:tripType=="with"?
+          location_control.text :null,
+          toLat:tripType=="with"?
+          destination.latitude:null,
+          toLng:tripType=="with"?
+          destination.longitude:null );
+      response.fold((l) {
+        emit(FailureCreateTrip());
+        Navigator.pop(context);
+      }, (r) {
+      if(r==200){
+        createTripModel = r;
+        bottomContainerLoadingState = true;
+        Navigator.pop(context);
+        emit(SuccessCreateTripState());
+      }
+      else if(r.code == 202 ){
+        emit(AlreadyInTrip());
+        Navigator.pop(context);
+        ErrorWidget(r.message!);
+      }
+      else{
+        ErrorWidget(r.message!);
+      }
+      });
+
+
+
+
+     //  // with destination
+     // if(flag==1){
+     //   final response = await  api.createTrip(
+     //       tripType: "with", fromAddress: address!, fromLng: currentLocation!.longitude!,
+     //       fromLat: currentLocation!.latitude!,toAddress:location_control.text ,
+     //       toLat: destination.latitude,toLng:destination.longitude );
+     // }
+     // //without
+     // else{
+     //   final response = await  api.createTrip(
+     //       tripType: "without", fromAddress: address!, fromLng: currentLocation!.longitude!,
+     //       fromLat: currentLocation!.latitude!);
+     // }
+    }
+    else{
+      ErrorWidget("some required field is null we can't make the request");
+    }
+
+  }
+
+
+  createScheduleTrip({required String tripType , required BuildContext context})async{
+    if(address!=null && currentLocation!=null){
+      emit(LoadingCreateTripState());
+      loadingDialog();
+      final response = await  api.createScheduleTrip(
+          tripType: tripType, fromAddress: address!, fromLng: currentLocation!.longitude!,
+          fromLat: currentLocation!.latitude!,
+          toAddress:tripType=="with"?
+          location_control.text :null,
+          toLat:tripType=="with"?
+          destination.latitude:null,
+          toLng:tripType=="with"?
+          destination.longitude:null, date: date, time: time );
+      response.fold((l) {
+        emit(FailureCreateTrip());
+        Navigator.pop(context);
+      }, (r) {
+        if(r==200){
+          createScheduleTripModel = r;
+          bottomContainerLoadingState = true;
+          Navigator.pop(context);
+          emit(SuccessCreateTripState());
+        }
+        else if(r.code == 202 ){
+          emit(AlreadyInTrip());
+          Navigator.pop(context);
+          ErrorWidget(r.message!);
+        }
+        else{
+          ErrorWidget(r.message!);
+        }
+      });
+
+
+
+
+      //  // with destination
+      // if(flag==1){
+      //   final response = await  api.createTrip(
+      //       tripType: "with", fromAddress: address!, fromLng: currentLocation!.longitude!,
+      //       fromLat: currentLocation!.latitude!,toAddress:location_control.text ,
+      //       toLat: destination.latitude,toLng:destination.longitude );
+      // }
+      // //without
+      // else{
+      //   final response = await  api.createTrip(
+      //       tripType: "without", fromAddress: address!, fromLng: currentLocation!.longitude!,
+      //       fromLat: currentLocation!.latitude!);
+      // }
+    }
+    else{
+      ErrorWidget("some required field is null we can't make the request");
+    }
+
+  }
+
+
+  //
+  // double progressValue = 0.0;
+  // late Timer timer;
+  // final Duration duration = const Duration(minutes: 5);
+  // void startTimer() {
+  //   const oneSecond = const Duration(seconds: 1);
+  //   timer = Timer.periodic(oneSecond, (Timer timer) {
+  //       if (progressValue < 1.0) {
+  //         progressValue += 1.0 / (duration.inSeconds);
+  //         emit(ProgressState());
+  //       } else {
+  //         timer.cancel();
+  //         emit(ProgressFinishState());
+  //       }
+  //
+  //   });
+  // }
 }

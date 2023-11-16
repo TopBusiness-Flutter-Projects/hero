@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:custom_info_window/custom_info_window.dart';
@@ -29,6 +30,7 @@ class AddTripTab extends StatefulWidget {
 
 class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
   // final scaffoldKey = GlobalKey<ScaffoldState>();
+
   CustomInfoWindowController _customInfoWindowController =
       CustomInfoWindowController();
 
@@ -37,40 +39,40 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
   @override
   void dispose() {
     _customInfoWindowController.dispose();
-
+   _timer.cancel();
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
-
+    context.read<HomeCubit>().destination=LatLng(0, 0);
     context.read<HomeCubit>().getCurrentLocation();
     gifController = FlutterGifController(vsync: this);
     context.read<HomeCubit>().checkAndRequestLocationPermission();
-    // context.read<HomeCubit>().setMarkers(
-    //   Marker(
-    //     markerId: const MarkerId("currentLocation"),
-    //     icon: context.read<HomeCubit>().bitmapDescriptorfrom != null
-    //         ? context.read<HomeCubit>().bitmapDescriptorfrom!
-    //         : context.read<HomeCubit>().currentLocationIcon,
-    //
-    //     position: LatLng(context.read<HomeCubit>().currentLocation?.latitude??0,
-    //         context.read<HomeCubit>().currentLocation?.longitude??0),
-    //   ),
-    //     Marker(
-    //   markerId: MarkerId("destination"),
-    //   infoWindow: InfoWindow(
-    //     title: "to",
-    //   ),
-    //       icon: context.read<HomeCubit>().bitmapDescriptorto != null
-    //           ? context.read<HomeCubit>().bitmapDescriptorto!
-    //           : context.read<HomeCubit>().currentLocationIcon,
-    //   position: context.read<HomeCubit>().destination,
-    // ), );
+    startTimer();
+
+  }
+  double _progressValue = 0.0;
+  late Timer _timer;
+  final Duration _duration = const Duration(minutes: 1);
+  void startTimer() {
+    const oneSecond = const Duration(seconds: 1);
+    _timer = Timer.periodic(oneSecond, (Timer timer) {
+      setState(() {
+        if (_progressValue < 1.0) {
+          _progressValue += 1.0 / (_duration.inSeconds);
+        } else {
+          _timer.cancel();
+          context.read<HomeCubit>().bottomContainerLoadingState = false;
+          context.read<HomeCubit>().bottomContainerFailureState = true;
+
+
+        }
+      });
+    });
   }
 
-  Set markers = {};
 
   @override
   Widget build(BuildContext context) {
@@ -137,6 +139,7 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
                           cubit.mapController = mapController;
                         },
                         onTap: (argument) {
+
                           if (context.read<HomeCubit>().flag == 1) {
                             //   cubit.getLocation(argument);
                             cubit.getLocation(argument, "to");
@@ -146,7 +149,7 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
                         },
                         onCameraMove: (position) {
                           if (cubit.strartlocation != position.target) {
-                            print(cubit.strartlocation);
+                           // print(cubit.strartlocation);
                             cubit.strartlocation = position.target;
                             cubit.getCurrentLocation();
                           }
@@ -291,8 +294,9 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
                                     text: "ride_now".tr(),
                                     color: AppColors.white,
                                     textcolor: AppColors.primary,
-                                    onClick: () {
-                                      cubit.changeToRideNowState();
+                                    onClick: () async {
+                                    await  cubit.createTrip(tripType: cubit.flag==1?"with":"without",context: context);
+                                     // cubit.changeToRideNowState();
                                     },
                                     width: getSize(context) / 3,
                                   ),
@@ -331,7 +335,7 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
                                   const EdgeInsets.symmetric(horizontal: 10.0),
                               child: LinearProgressIndicator(
                                 borderRadius: BorderRadius.circular(20),
-                                value: 0.7,
+                                value: _progressValue,
                                 color: AppColors.primary, //<-- SEE HERE
                                 backgroundColor: AppColors.grey1, //<-- SEE HERE
                               ),
@@ -624,29 +628,4 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
 // }
 }
 
-// class CustomMarkerWidget extends StatelessWidget {
-//   final Uint8List markerIcon;
-//   final String text1;
-//   final String text2;
-//
-//   CustomMarkerWidget({
-//     required this.markerIcon,
-//     required this.text1,
-//     required this.text2,
-//   });
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(
-//       children: [
-//         Image.memory(
-//           markerIcon,
-//           width: 40,
-//           height: 40,
-//         ),
-//         Text(text1),
-//         Text(text2),
-//       ],
-//     );
-//   }
-// }
+

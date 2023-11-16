@@ -119,13 +119,17 @@ class HomeListItem extends StatelessWidget {
             SizedBox(
               width: 3,
             ),
-            Text(
-             // " برج الهيلتون الدور الخامس بجوار حتحوت ",
-              "${trip?.fromAddress}",
-              style: TextStyle(
-                  color: AppColors.gray,
-                  fontSize: getSize(context) * 0.04,
-                  fontWeight: FontWeight.w400),
+            Expanded(
+              child: Text(
+               // " برج الهيلتون الدور الخامس بجوار حتحوت ",
+                "${trip?.fromAddress}",
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                    color: AppColors.gray,
+                    fontSize: getSize(context) * 0.04,
+                    fontWeight: FontWeight.w400),
+              ),
             ),
           ]),
           Row(
@@ -151,13 +155,18 @@ class HomeListItem extends StatelessWidget {
               SizedBox(
                 width: getSize(context) * 0.03,
               ),
-              Text(
-               // "معهد الكبد القومى ",
-                 "${trip?.toAddress}",
-                style: TextStyle(
-                    color: AppColors.gray,
-                    fontSize: getSize(context) * 0.04,
-                    fontWeight: FontWeight.w400),
+              Expanded(
+                child: Text(
+                 // "معهد الكبد القومى ",
+                   "${trip?.toAddress}",
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      overflow: TextOverflow.ellipsis,
+                      color: AppColors.gray,
+                      fontSize: getSize(context) * 0.04,
+                      fontWeight: FontWeight.w400),
+                ),
               ),
             ],
           ),

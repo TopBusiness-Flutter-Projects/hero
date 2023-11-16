@@ -192,6 +192,7 @@ class _HomeTabState extends State<HomeTab> {
                               ),
                               Text("choose_trip").tr(),
                               Spacer(),
+                              //close
                               InkWell(
                                   onTap: () {
                                     Navigator.pop(context);
