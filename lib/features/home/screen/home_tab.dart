@@ -1,11 +1,9 @@
-import 'package:carousel_slider/carousel_slider.dart';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_dash/flutter_dash.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hero/features/home/screen/banner.dart';
 import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/assets_manager.dart';
@@ -53,7 +51,7 @@ class _HomeTabState extends State<HomeTab> {
       body: isLoading?
           Center(child: CircularProgressIndicator(color: AppColors.primary,),)
      : Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.only(top: 10.0,right: 10,left: 10,bottom: 10),
         child: ListView(
           children: [
             SizedBox(
@@ -114,7 +112,9 @@ class _HomeTabState extends State<HomeTab> {
               height: 10,
             ),
            //slider+dots
-            BannerWidget(sliderData: cubit.homeModel!.data!.sliders!),
+            cubit.homeModel?.data?.sliders !=null?
+            BannerWidget(sliderData: cubit.homeModel!.data!.sliders!):
+            Container(),
             SizedBox(height: getSize(context)*0.1,),            // new orders     //all
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -143,16 +143,33 @@ class _HomeTabState extends State<HomeTab> {
 
             // list of orders
             SizedBox(
-                height: getSize(context) * 1.2,
+                height: getSize(context) * 1.24,
                 child: Container(
-                  child: ListView.builder(
-                    itemCount: cubit.homeModel?.data?.newTrips?.length??0,
-                    itemBuilder: (context, index) {
-                      return HomeListItem(trip: cubit.homeModel?.data?.newTrips?[index],);
+                  child:
+                  Column(
+                    children: [
+                      Expanded(
+                        child: RefreshIndicator(
+                          onRefresh: () async {
+                           await cubit.getHomeData();
+                          },
+                          child: ListView.builder(
+                            itemCount: cubit.homeModel?.data?.newTrips?.length??0,
+                            itemBuilder: (context, index) {
+                              print("&^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^&");
+                              print("${cubit.homeModel?.data?.newTrips?.length}");
+                              return HomeListItem(trip: cubit.homeModel?.data?.newTrips?[index],);
 
-                    },
+                            },
+                          ),
+
+                        ),
+                      ),
+                      SizedBox(height: getSize(context)*0.25),
+                    ],
                   ),
                 ),),
+
 
           ],
         ),
@@ -160,7 +177,7 @@ class _HomeTabState extends State<HomeTab> {
 
         floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
         floatingActionButton: Padding(
-          padding: EdgeInsets.only(bottom: getSize(context) / 10),
+          padding: EdgeInsets.only(bottom: getSize(context) / 30),
           child: CustomButton(
             width: getSize(context) / 3,
             text: 'ask_trip'.tr(),

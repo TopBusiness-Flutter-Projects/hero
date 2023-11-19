@@ -45,3 +45,12 @@ class SuccessCreateTripState extends HomeState {}
 class ProgressState extends HomeState {}
 class ProgressFinishState extends HomeState {}
 class AlreadyInTrip extends HomeState {}
+class FailureCreateSchedualTrip extends HomeState {}
+class LoadingCreateScheduelTripState extends HomeState {}
+class SuccessCreateSchedualTripState extends HomeState {}
+class LoadingFavouriteState extends HomeState {}
+class FailureFavouriteState extends HomeState {}
+class SuccessFavouriteState extends HomeState {}
+class FailureDeletingFavourite extends HomeState {}
+class SuccessDeletingFavourite extends HomeState {}
+class NoAdressFound extends HomeState {}

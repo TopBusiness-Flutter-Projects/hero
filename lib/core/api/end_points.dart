@@ -1,15 +1,17 @@
 class EndPoints {
-  static const String baseUrl = 'http://192.168.1.14:8000/api/';
+  //static const String baseUrl = 'http://192.168.1.14:8000/api/';
+  static const String baseUrl = 'https://hero.topbusiness.io/api/';
   static const String checkPhoneUrl = '${baseUrl}checkPhone';
   static const String loginUrl = '${baseUrl}auth/login';
   static const String homeUrl = '${baseUrl}userHome';
   static const String editProfileUrl = '${baseUrl}editProfile';
   static const String createTripUrl = '${baseUrl}createTrip';
   static const String createScheduleTripUrl = '${baseUrl}createScheduleTrip';
+  static const String favouriteUrl = '${baseUrl}favouriteLocations';
+  static const String removeFavouriteUrl = '${baseUrl}removeFavouriteLocations';
   static const String citiesUrl = '${baseUrl}cities';
   static const String servicesUrl = '${baseUrl}services/';
   static const String editServicesUrl = '${baseUrl}services/update/';
-  static const String favoriteUrl = '${baseUrl}services/get-favourites';
   static const String myServicesUrl = '${baseUrl}services/my_services';
   static const String updateProfileUrl = '${baseUrl}client/auth/update-profile';
   static const String settingsUrl = '${baseUrl}settings';

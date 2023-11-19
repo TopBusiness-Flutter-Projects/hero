@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:hero/core/utils/app_colors.dart';
 import 'package:hero/core/utils/getsize.dart';
 import 'package:hero/features/home/cubit/home_cubit.dart';
@@ -42,7 +43,10 @@ class HeroTripPolicyScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Wrap(
                   children: [
-                    Text("${cubit.settingsModel?.data?.polices}").tr()
+                    Html(
+                        data: cubit.settingsModel?.data?.polices,
+                     //   child: Text("${cubit.settingsModel?.data?.polices}").tr()
+                     )
                   ],
                 ),
               )

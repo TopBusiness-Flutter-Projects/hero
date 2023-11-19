@@ -52,6 +52,7 @@ dependencies:
   calendar_view: ^1.0.3
   flutter_colorpicker: ^1.0.3
   http: ^0.13.5
+  flutter_html:
   path_provider: any
   permission_handler: ^10.2.0
   any_link_preview: ^3.0.0

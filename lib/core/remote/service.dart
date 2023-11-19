@@ -16,6 +16,7 @@ import '../models/create_schedual_trip_model.dart';
 import '../models/create_trip_model.dart';
 import '../models/delete_user_model.dart';
 import '../models/direction.dart';
+import '../models/favourite_model.dart';
 import '../models/login_model.dart';
 import '../models/place_details.dart';
 import '../models/place_geocode.dart';
@@ -316,6 +317,40 @@ class ServiceApi {
         ),
       );
       return Right(NotificationModel.fromJson(response));
+    }on ServerException{
+      return Left(ServerFailure());
+    }
+  }
+
+  Future<Either<Failure, DeleteModel>> deleteFavourite(int addressId) async {
+    SignUpModel signUpModel = await Preferences.instance.getUserModel();
+    try {
+
+      final response = await dio.post(
+          EndPoints.removeFavouriteUrl,
+          options: Options(
+            headers: {'Authorization': signUpModel.data?.token},
+          ),
+         body: {
+            "address_id":addressId
+         }
+      );
+      return Right(DeleteModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
+  Future<Either<Failure,FavouriteModel>> getFavourite()async{
+    SignUpModel signUpModel = await Preferences.instance.getUserModel();
+    try{
+      final response = await dio.get(
+        EndPoints.favouriteUrl,
+        options: Options(
+          headers: {'Authorization': signUpModel.data?.token},
+        ),
+      );
+      return Right(FavouriteModel.fromJson(response));
     }on ServerException{
       return Left(ServerFailure());
     }

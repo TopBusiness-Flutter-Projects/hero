@@ -27,6 +27,8 @@ import 'package:location/location.dart'as loc;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:widget_to_marker/widget_to_marker.dart';
 import '../../../config/routes/app_routes.dart';
+import '../../../core/models/create_schedual_trip_model.dart';
+import '../../../core/models/favourite_model.dart';
 import '../../../core/models/signup_response_model.dart';
 import '../../../core/utils/custom_marker.dart';
 part 'home_state.dart';
@@ -43,6 +45,7 @@ class HomeCubit extends Cubit<HomeState> {
     latLngList = [];
     getmarker();
     checkAndRequestLocationPermission();
+   getNotification();
    //getNotification();
    //getHomeData();// it's better to call this method in initstate
 
@@ -514,9 +517,11 @@ void setflag(int flag){
                   Text("sure_about_date").tr(),
                   Text(" $dateFormatted $timeFormatted",textDirection: TextDirection.ltr,),
                   //Text("time: $timeFormatted"),
-                  ElevatedButton(onPressed: () {
+                  ElevatedButton(onPressed: () async {
                     Navigator.pop(context);
-                  context.read<HomeCubit>().tabsController.animateTo(0);
+                    await createScheduleTrip(tripType: flag==1?"with":"without", context: context);
+
+                    context.read<HomeCubit>().tabsController.animateTo(0);
                   }, child: Text("confirm".tr()))
 
                 ],
@@ -651,8 +656,48 @@ bool isLoadingSettings = true;
 
   }
 
-  CreateTripModel? createTripModel;
+  FavouriteModel? favouriteModel;
+  getFavourite()async{
+    emit(LoadingFavouriteState());
+    final response = await api.getFavourite();
+    response.fold((l) {
+      emit(FailureFavouriteState());
+    }, (r) {
+      favouriteModel = r ;
+      // Calculate the time difference
+      emit(SuccessFavouriteState());
+    });
 
+  }
+
+  deleteFavourite({required int addressId , required BuildContext context})async{
+    loadingDialog();
+     final response = await api.deleteFavourite(addressId);
+     response.fold((l) {
+       Navigator.pop(context);
+       emit(FailureDeletingFavourite());
+     }, (r) {
+       if(r.code==200){
+         Navigator.pop(context);
+         getFavourite();
+         emit(SuccessDeletingFavourite());
+         successGetBar(r.message);
+       }
+       else if(r.code==404){
+         Navigator.pop(context);
+         emit(NoAdressFound());
+         errorGetBar(r.message!);
+       }
+       else{
+         Navigator.pop(context);
+         emit(FailureDeletingFavourite());
+         errorGetBar(r.message!);
+       }
+     });
+  }
+
+  CreateTripModel? createTripModel;
+//todo=>add favourite location
   createTrip({required String tripType , required BuildContext context})async{
     if(address!=null && currentLocation!=null){
        emit(LoadingCreateTripState());
@@ -677,11 +722,13 @@ bool isLoadingSettings = true;
         emit(SuccessCreateTripState());
       }
       else if(r.code == 202 ){
-        emit(AlreadyInTrip());
         Navigator.pop(context);
+        emit(AlreadyInTrip());
         ErrorWidget(r.message!);
       }
       else{
+        Navigator.pop(context);
+        emit(FailureCreateTrip());
         ErrorWidget(r.message!);
       }
       });
@@ -708,12 +755,25 @@ bool isLoadingSettings = true;
     }
 
   }
-
+  CreateScedualTripModel? createScedualTripModel;
 
   createScheduleTrip({required String tripType , required BuildContext context})async{
-    if(address!=null && currentLocation!=null){
-      emit(LoadingCreateTripState());
+    print("__________________________________________________");
+    if(address!=null && currentLocation!=null&&date!=null&&time!=null){
+      print("yeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeees");
+      emit(LoadingCreateScheduelTripState());
       loadingDialog();
+      // Convert TimeOfDay to a DateTime object with the current date
+      DateTime dateTime = DateTime(
+        date!.year,
+        date!.month,
+        date!.day,
+        time.hour,
+        time.minute,
+      );
+      String formattedDateTime = oo.DateFormat('yyyy-MM-dd hh:mm:ss').format(dateTime);
+      print("***************************************************");
+      print(formattedDateTime);
       final response = await  api.createScheduleTrip(
           tripType: tripType, fromAddress: address!, fromLng: currentLocation!.longitude!,
           fromLat: currentLocation!.latitude!,
@@ -722,23 +782,27 @@ bool isLoadingSettings = true;
           toLat:tripType=="with"?
           destination.latitude:null,
           toLng:tripType=="with"?
-          destination.longitude:null, date: date, time: time );
+          destination.longitude:null, date: formattedDateTime.substring(0,10), time: formattedDateTime.substring(10,19) );
       response.fold((l) {
-        emit(FailureCreateTrip());
         Navigator.pop(context);
+        emit(FailureCreateSchedualTrip());
+
       }, (r) {
-        if(r==200){
-          createScheduleTripModel = r;
+        if(r.code==200||r.code==201){
+          Navigator.pop(context);
+          createScedualTripModel = r;
           bottomContainerLoadingState = true;
-          Navigator.pop(context);
-          emit(SuccessCreateTripState());
+
+          emit(SuccessCreateSchedualTripState());
         }
-        else if(r.code == 202 ){
-          emit(AlreadyInTrip());
-          Navigator.pop(context);
-          ErrorWidget(r.message!);
-        }
+        // else if(r.code == 202 ){
+        //   emit(AlreadyInTrip());
+        //   Navigator.pop(context);
+        //   ErrorWidget(r.message!);
+        // }
         else{
+          emit(FailureCreateSchedualTrip());
+          Navigator.pop(context);
           ErrorWidget(r.message!);
         }
       });

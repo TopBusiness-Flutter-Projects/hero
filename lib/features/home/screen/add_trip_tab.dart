@@ -278,6 +278,7 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
                                   color: AppColors.primary,
                                   borderRadius: 16,
                                   onClick: () async {
+                                    print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
                                     await cubit.selectDateAndTime(context);
                                   },
                                   width: getSize(context) / 2,

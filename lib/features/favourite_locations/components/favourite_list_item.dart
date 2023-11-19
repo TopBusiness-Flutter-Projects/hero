@@ -1,18 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hero/features/home/cubit/home_cubit.dart';
 
+import '../../../core/models/favourite_model.dart';
 import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/assets_manager.dart';
 import '../../../core/utils/getsize.dart';
 import '../../../core/widgets/close_widget.dart';
 
 class FavouriteListItem extends StatelessWidget {
-  const FavouriteListItem({super.key});
+  const FavouriteListItem({super.key,required this.favouriteData});
+ final FavouriteData favouriteData;
 
   @override
   Widget build(BuildContext context) {
     return
-      Stack(
+      BlocConsumer<HomeCubit, HomeState>(
+  listener: (context, state) {
+    // TODO: implement listener
+  },
+  builder: (context, state) {
+    return Stack(
         children: [
           Container(
           margin: EdgeInsets.symmetric(horizontal: 3),
@@ -31,7 +40,7 @@ class FavouriteListItem extends StatelessWidget {
                 child: SvgPicture.asset(ImageAssets.location),
               ),
               Flexible(
-                child: Text(" برج الهيلتون الدور الخامس بجوار حتحوت",
+                child: Text("${favouriteData.address}",
                   maxLines: 2,
                   style: TextStyle(
                       color: AppColors.black4,
@@ -45,9 +54,15 @@ class FavouriteListItem extends StatelessWidget {
           Positioned(
             left: getSize(context)*0.025,
               top: getSize(context)*0.025,
-              child:CloseWidget() ,
+              child:InkWell(
+                onTap: () {
+                  context.read<HomeCubit>().deleteFavourite(addressId: favouriteData.id!, context: context);
+                },
+                  child: CloseWidget()) ,
           )
         ],
       );
+  },
+);
   }
 }

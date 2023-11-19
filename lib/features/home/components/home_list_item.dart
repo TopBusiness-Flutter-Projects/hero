@@ -14,7 +14,7 @@ class HomeListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String formattedDate = formatApiDateTime(trip!.createdAt.toString());
+   // String formattedDate = formatApiDateTime(trip!.createdAt.toString());
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 3),
       margin: EdgeInsets.symmetric(
@@ -36,7 +36,8 @@ class HomeListItem extends StatelessWidget {
               ),
               Text(
                // "01/10/2023",
-                 formattedDate.substring(0,17),
+               //  formattedDate.substring(0,17),
+                trip?.createdAt.toString().substring(0,10)??"",
                 style: TextStyle(
                     color: AppColors.black1,
                     fontSize: getSize(context) * 0.04,
@@ -54,7 +55,9 @@ class HomeListItem extends StatelessWidget {
               ),
               Text(
                // "pm ",
-                formattedDate.substring(23,26),
+               // trip?.createdAt?.day.toString()+ trip?.createdAt.month.toString()+ trip.createdAt.year.toString(),
+                //todo =>
+                "${trip!.createdAt!.substring(17,19)} ",
                 style: TextStyle(
                     color: AppColors.gray,
                     fontSize: getSize(context) * 0.04,
@@ -62,7 +65,7 @@ class HomeListItem extends StatelessWidget {
               ),
               Text(
                // "03:23",
-                  formattedDate.substring(17,23),
+                trip!.createdAt!.substring(12,17),
                 style: TextStyle(
                     color: AppColors.black1,
                     fontSize: getSize(context) * 0.04,
@@ -158,7 +161,7 @@ class HomeListItem extends StatelessWidget {
               Expanded(
                 child: Text(
                  // "معهد الكبد القومى ",
-                   "${trip?.toAddress}",
+                   trip?.toAddress??"without destination",
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
