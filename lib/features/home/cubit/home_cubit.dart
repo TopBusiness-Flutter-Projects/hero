@@ -307,6 +307,7 @@ void setflag(int flag){
     }
   }
   Uint8List? markerIcon;
+
   Future<Uint8List> getBytesFromAsset(String path, int width) async {
     ByteData data = await rootBundle.load(path);
     ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
@@ -695,9 +696,32 @@ bool isLoadingSettings = true;
        }
      });
   }
+//todo=>add favourite location
+  addFavourite({required String address,required String lat ,required String  long, required BuildContext context})async{
+    emit(LoadingAddToFavourite());
+    loadingDialog();
+    final response = await api.addFavourite(address: address,lat: lat,long:long );
+    response.fold((l) {
+      Navigator.pop(context);
+      emit(FailureAddingFavourite());
+    }, (r) {
+      if(r.code==200 || r.code ==201){
+        Navigator.pop(context);
+        getFavourite();
+        emit(SuccessAddingFavourite());
+        successGetBar(r.message);
+      }
+
+      else{
+        Navigator.pop(context);
+        emit(FailureAddingFavourite());
+        errorGetBar(r.message!);
+      }
+    });
+  }
 
   CreateTripModel? createTripModel;
-//todo=>add favourite location
+
   createTrip({required String tripType , required BuildContext context})async{
     if(address!=null && currentLocation!=null){
        emit(LoadingCreateTripState());

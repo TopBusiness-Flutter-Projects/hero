@@ -5,7 +5,9 @@ import 'package:flutter_dash/flutter_dash.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:hero/core/models/home_model.dart';
 import 'package:hero/core/utils/getsize.dart';
+import 'package:hero/features/trip_details/cubit/trip_details_cubit.dart';
 
 import '../../../config/routes/app_routes.dart';
 import '../../../core/utils/app_colors.dart';
@@ -14,8 +16,23 @@ import '../../../core/widgets/back_button.dart';
 import '../../../core/widgets/custom_button.dart';
 import '../../home/cubit/home_cubit.dart';
 
-class TripDetailsScreen extends StatelessWidget {
-  const TripDetailsScreen({super.key});
+class TripDetailsScreen extends StatefulWidget {
+  const TripDetailsScreen({super.key,required this.trip});
+  final NewTrip trip ;
+
+  @override
+  State<TripDetailsScreen> createState() => _TripDetailsScreenState();
+}
+
+class _TripDetailsScreenState extends State<TripDetailsScreen> {
+
+  @override
+  void initState() {
+   context.read<TripDetailsCubit>().setMarkerIcon(widget.trip.toAddress??" ", LatLng(double.parse(widget.trip.fromLat??"31.98354"), double.parse(widget.trip.fromLong??"31.1234065")),
+       LatLng(double.parse(widget.trip.toLat??"31.98354"), double.parse(widget.trip.toLong??"31.1234065")));
+    super.initState();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -36,9 +53,30 @@ class TripDetailsScreen extends StatelessWidget {
                     height: getSize(context) * 1.2,
                     child: GoogleMap(
                       initialCameraPosition: CameraPosition(
-                        target: LatLng(31.1234, 31.098765),
+                        target:LatLng(double.parse(widget.trip.fromLat??"31.1234"),double.parse(widget.trip.fromLong??"31.098765")),
+                            //LatLng(31.1234, 31.098765),
                         zoom: 12,
                       ),
+                      markers:
+                     // context.read<TripDetailsCubit>().markers,
+                         {
+                        Marker(markerId: MarkerId("from"),
+                            position: LatLng(double.parse(widget.trip.fromLat!),double.parse(widget.trip.fromLong!)),),
+                        Marker(markerId: MarkerId("to"),
+                          position: LatLng(double.parse(widget.trip.toLat!),double.parse(widget.trip.toLong!)),),
+                     }
+                     ,
+                      polylines: {
+                        Polyline(
+                          polylineId: const PolylineId("route"),
+                          points: [
+                            LatLng(double.parse(widget.trip.fromLat!), double.parse(widget.trip.fromLong!)),
+                            LatLng(double.parse(widget.trip.toLat!),double.parse(widget.trip.toLong!)),
+                          ],
+                          color: const Color(0xFF7B61FF),
+                          width: 6,
+                        ),
+                      },
                     ),
                   ),
                   //  SizedBox(height: 10,),
@@ -173,7 +211,7 @@ class TripDetailsScreen extends StatelessWidget {
                         width: 3,
                       ),
                       Text(
-                        " برج الهيلتون الدور الخامس بجوار حتحوت ",
+                        " ${widget.trip.fromAddress}",
                         style: TextStyle(
                             color: AppColors.gray,
                             fontSize: getSize(context) * 0.04,
@@ -206,7 +244,7 @@ class TripDetailsScreen extends StatelessWidget {
                           width: getSize(context) * 0.03,
                         ),
                         Text(
-                          "معهد الكبد القومى ",
+                          "${widget.trip.toAddress}",
                           style: TextStyle(
                               color: AppColors.gray,
                               fontSize: getSize(context) * 0.04,
@@ -226,7 +264,7 @@ class TripDetailsScreen extends StatelessWidget {
                                   fontSize: getSize(context) * 0.04),
                             ),
                             Text(
-                              "7:10 PM",
+                              "${widget.trip.timeRide}",
                               style: TextStyle(
                                   color: AppColors.primary,
                                   fontSize: getSize(context) * 0.04),
@@ -247,7 +285,7 @@ class TripDetailsScreen extends StatelessWidget {
                                   fontSize: getSize(context) * 0.04),
                             ),
                             Text(
-                              "7:10 PM",
+                              "${widget.trip.timeArrive}",
                               style: TextStyle(
                                   color: AppColors.primary,
                                   fontSize: getSize(context) * 0.04),
@@ -260,7 +298,7 @@ class TripDetailsScreen extends StatelessWidget {
                       children: [
                         Icon(Icons.location_on_outlined),
                         Text(
-                          "0.5 km",
+                          "${widget.trip.distance}km",
                           style: TextStyle(fontSize: getSize(context) * 0.04),
                         ),
                         SizedBox(
@@ -275,7 +313,7 @@ class TripDetailsScreen extends StatelessWidget {
                           width: getSize(context) * 0.02,
                         ),
                         Text(
-                          "15 min",
+                          "${widget.trip.time} min",
                           style: TextStyle(fontSize: getSize(context) * 0.04),
                         ),
                         SizedBox(
@@ -289,7 +327,7 @@ class TripDetailsScreen extends StatelessWidget {
                           width: getSize(context) * 0.02,
                         ),
                         Text(
-                          "15 د.ع",
+                          "${widget.trip.price} د.ع",
                           style: TextStyle(fontSize: getSize(context) * 0.04),
                         ),
                       ],
@@ -302,7 +340,10 @@ class TripDetailsScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: getSize(context) * 0.02),
-            CustomButton(
+            BlocBuilder<TripDetailsCubit, TripDetailsState>(
+                 builder: (context, state) {
+                   TripDetailsCubit cubit = context.read<TripDetailsCubit>();
+                   return CustomButton(
               text: 'rate_trip'.tr(),
               color: AppColors.primary,
               onClick: () {
@@ -352,8 +393,9 @@ class TripDetailsScreen extends StatelessWidget {
                                 Icons.star,
                                 color: Colors.amber,
                               ),
-                              onRatingUpdate: (rating) {
+                              onRatingUpdate: (double rating) {
                                 print(rating);
+                                cubit.rate = rating;
                               },
                             ),
                             SizedBox(
@@ -362,6 +404,7 @@ class TripDetailsScreen extends StatelessWidget {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: TextField(
+                                controller: cubit.commentController,
                                 maxLines: 3,
                                 decoration: InputDecoration(
                                     hintText: "write_comment".tr(),
@@ -375,7 +418,12 @@ class TripDetailsScreen extends StatelessWidget {
                               height: getSize(context) * 0.03,
                             ),
                             ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () async {
+
+                               cubit.giveRate(tripId: widget.trip.id!,description: cubit.commentController.text,context: context);
+                             // Navigator.pop(context);
+
+                              },
                               child: Text(
                                 "confirm".tr(),
                                 style: TextStyle(color: AppColors.green1),
@@ -397,7 +445,9 @@ class TripDetailsScreen extends StatelessWidget {
               },
               width: getSize(context) * 0.9,
               height: getSize(context) * 0.14,
-            )
+            );
+  },
+)
           ],
         ),
       ),

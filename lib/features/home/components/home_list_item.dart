@@ -65,7 +65,7 @@ class HomeListItem extends StatelessWidget {
               ),
               Text(
                // "03:23",
-                trip!.createdAt!.substring(12,17),
+                trip!.createdAt!.substring(10,17),
                 style: TextStyle(
                     color: AppColors.black1,
                     fontSize: getSize(context) * 0.04,

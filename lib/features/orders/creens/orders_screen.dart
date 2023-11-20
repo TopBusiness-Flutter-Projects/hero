@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hero/features/home/cubit/home_cubit.dart';
 
 import '../../../config/routes/app_routes.dart';
 import '../../../core/utils/app_colors.dart';
@@ -26,6 +27,9 @@ class _OrdersScreenState extends State<OrdersScreen>
         // length: widget.allCategoriesModel!.count! + 1, vsync: this);
         length: 3,
         vsync: this);
+    context.read<OrdersCubit>().getAllTrips("new");
+    context.read<OrdersCubit>().getAllTrips("reject");
+    context.read<OrdersCubit>().getAllTrips("complete");
     super.initState();
   }
 
@@ -55,7 +59,7 @@ class _OrdersScreenState extends State<OrdersScreen>
                     color: Colors.grey,
                   ),
                   Text(
-                    'welcome'.tr() + "محمد",
+                    'welcome'.tr() + "${context.read<HomeCubit>().homeModel?.data?.user?.name}",
                     style: TextStyle(
                         fontSize: getSize(context) / 24,
                         fontWeight: FontWeight.normal,
@@ -75,12 +79,14 @@ class _OrdersScreenState extends State<OrdersScreen>
                     size: 27,
                   ),
                   //address
-                  Text(
-                    "برج الهيلتون الدور الخامس بجوار حتحوت",
-                    style: TextStyle(
-                        fontSize: getSize(context) / 24,
-                        fontWeight: FontWeight.normal,
-                        color: AppColors.gray),
+                  Flexible(
+                    child: Text(
+                      "${context.read<HomeCubit>().address}",
+                      style: TextStyle(
+                          fontSize: getSize(context) / 24,
+                          fontWeight: FontWeight.normal,
+                          color: AppColors.gray),
+                    ),
                   ),
                 ],
               ),
@@ -97,6 +103,18 @@ class _OrdersScreenState extends State<OrdersScreen>
                   indicatorPadding: EdgeInsets.zero,
                   padding: EdgeInsets.zero,
                   isScrollable: true,
+                  onTap: (int value) {
+                    if(value == 0 ){
+                      print("___________________________________");
+                      cubit.getAllTrips("new");
+                    }
+                    if(value == 1 ){
+                      cubit.getAllTrips("complete");
+                    }
+                    if(value == 2 ){
+                      cubit.getAllTrips("reject");
+                    }
+                  },
                   tabs: [
                     Text("recent_orders".tr()),
                     Text("completed_orders".tr()),
@@ -108,42 +126,50 @@ class _OrdersScreenState extends State<OrdersScreen>
                     physics: NeverScrollableScrollPhysics(),
                     controller: cubit.tabController,
                     children: [
+                      // new orders
+                      state is LoadingGettingAllTripsState?
+                      Center(child: CircularProgressIndicator(color: AppColors.primary,)):
                       ListView.builder(
                         itemBuilder: (context, index) {
                           return Padding(
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: HomeListItem(isHome: false),
+                            child: HomeListItem(isHome: false,trip: cubit.newTrips![index]),
                           );
                         },
-                        itemCount: 10,
+                        itemCount: cubit.newTrips?.length??0,
                       ),
+                      state is LoadingGettingAllTripsState?
+                      Center(child: CircularProgressIndicator(color: AppColors.primary,)):
                       //completed orders
                       ListView.builder(
                         itemBuilder: (context, index) {
                           return InkWell(
                             onTap: () {
                               Navigator.pushNamed(
-                                  context, Routes.tripDetailsRoute);
+                                  context, Routes.tripDetailsRoute,arguments: cubit.completeTrips![index]);
                             },
                             child: Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 8.0),
-                              child: HomeListItem(isHome: false),
+                              child: HomeListItem(isHome: false,trip:cubit.completeTrips![index] ,),
                             ),
                           );
                         },
-                        itemCount: 10,
+                        itemCount: cubit.completeTrips?.length??0,
                       ),
+                      // rejected orders
+                      state is LoadingGettingAllTripsState?
+                      Center(child: CircularProgressIndicator(color: AppColors.primary,)):
                       ListView.builder(
                         itemBuilder: (context, index) {
                           return Padding(
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: HomeListItem(isHome: false),
+                            child: HomeListItem(isHome: false,trip: cubit.rejectedTrips![index]),
                           );
                         },
-                        itemCount: 10,
+                        itemCount:  cubit.rejectedTrips?.length??0,
                       ),
                     ]),
               )

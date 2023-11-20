@@ -25,7 +25,7 @@ class FavouriteListItem extends StatelessWidget {
         children: [
           Container(
           margin: EdgeInsets.symmetric(horizontal: 3),
-          height: getSize(context)/5,
+         // height: getSize(context)/5,
           decoration: BoxDecoration(
             color: AppColors.white,
           borderRadius: BorderRadius.circular(10),
@@ -40,14 +40,17 @@ class FavouriteListItem extends StatelessWidget {
                 child: SvgPicture.asset(ImageAssets.location),
               ),
               Flexible(
-                child: Text("${favouriteData.address}",
-                  maxLines: 2,
-                  style: TextStyle(
-                      color: AppColors.black4,
-                      fontWeight: FontWeight.w400,
-                      fontSize: getSize(context)*0.04
-                  ),
-                  overflow: TextOverflow.ellipsis,),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 15),
+                  child: Text("${favouriteData.address}",
+                    maxLines: 2,
+                    style: TextStyle(
+                        color: AppColors.black4,
+                        fontWeight: FontWeight.w400,
+                        fontSize: getSize(context)*0.04
+                    ),
+                    overflow: TextOverflow.ellipsis,),
+                ),
               ),
             ],),
     ),

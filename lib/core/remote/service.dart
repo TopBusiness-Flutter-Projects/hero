@@ -12,6 +12,8 @@ import '../api/end_points.dart';
 import '../error/exceptions.dart';
 import '../error/failures.dart';
 import 'package:dartz/dartz.dart';
+import '../models/add_favourite_model.dart';
+import '../models/all_trips_model.dart';
 import '../models/create_schedual_trip_model.dart';
 import '../models/create_trip_model.dart';
 import '../models/delete_user_model.dart';
@@ -20,6 +22,7 @@ import '../models/favourite_model.dart';
 import '../models/login_model.dart';
 import '../models/place_details.dart';
 import '../models/place_geocode.dart';
+import '../models/rate_trip_model.dart';
 import '../models/signup_response_model.dart';
 import '../preferences/preferences.dart';
 import '../utils/app_strings.dart';
@@ -211,6 +214,8 @@ class ServiceApi {
       return Left(ServerFailure());
     }
   }
+
+
   Future<Either<Failure, DeleteModel>> delete() async {
     SignUpModel signUpModel = await Preferences.instance.getUserModel();
     try {
@@ -237,6 +242,26 @@ class ServiceApi {
       return Left(ServerFailure());
     }
     }
+
+  Future<Either<Failure,AllTripsModel>> getAllTrips({required String type})async{
+    SignUpModel signUpModel = await Preferences.instance.getUserModel();
+    try{
+      final response = await dio.get(
+          EndPoints.allTripsUrl,
+          options: Options(
+            headers: {'Authorization': signUpModel.data?.token},
+          ),
+        queryParameters: {
+            "type":type
+        }
+      );
+      print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+      print(response);
+      return Right(AllTripsModel.fromJson(response));
+    }on ServerException{
+      return Left(ServerFailure());
+    }
+  }
 //
 //
 //   Future<Either<Failure, LoginModel>> postEditProfile(
@@ -269,6 +294,26 @@ class ServiceApi {
         },
       );
       return Right(LoginModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
+  Future<Either<Failure, RateTripModel>> giveRate({required int tripId ,required double rate , String? description}) async {
+    SignUpModel signUpModel = await Preferences.instance.getUserModel();
+    try {
+      final response = await dio.post(
+        EndPoints.giveRateUrl,
+        options: Options(
+          headers: {'Authorization': signUpModel.data?.token},
+        ),
+        body: {
+          'trip_id': tripId,
+           'rate':rate,
+          'description':description
+        },
+      );
+      return Right(RateTripModel.fromJson(response));
     } on ServerException {
       return Left(ServerFailure());
     }
@@ -336,6 +381,29 @@ class ServiceApi {
          }
       );
       return Right(DeleteModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
+
+  Future<Either<Failure, AddFavouriteModel>> addFavourite(
+      {required String address,required String lat,required String long}) async {
+    SignUpModel signUpModel = await Preferences.instance.getUserModel();
+    try {
+
+      final response = await dio.post(
+          EndPoints.addFavouriteUrl,
+          options: Options(
+            headers: {'Authorization': signUpModel.data?.token},
+          ),
+          body: {
+            "address":address,
+            "lat":lat,
+            "long":long
+          }
+      );
+      return Right(AddFavouriteModel.fromJson(response));
     } on ServerException {
       return Left(ServerFailure());
     }

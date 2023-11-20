@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gif/flutter_gif.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hero/core/utils/dialogs.dart';
 import 'package:hero/core/widgets/custom_button.dart';
 import 'package:hero/features/home/screen/home.dart';
 import '../../../core/utils/app_colors.dart';
@@ -197,6 +198,15 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
                                 width: double.infinity,
                                 height: 50,
                                 child: CustomTextField(
+                                  suffixIcon: IconButton(icon:Icon(Icons.favorite_border),onPressed: () {
+                                    if(cubit.location_control.text != "" &&cubit.destination!=LatLng(0, 0)){
+
+                                      cubit.addFavourite(address: cubit.location_control.text!, lat: cubit.destination.latitude.toString(), long: cubit.destination.longitude.toString(), context: context);
+                                    }
+                                    else{
+                                      errorGetBar("the location is empty ");
+                                    }
+                                  },),
                                   title: 'search_location'.tr(),
                                   backgroundColor: AppColors.white,
                                   prefixWidget: MySvgWidget(

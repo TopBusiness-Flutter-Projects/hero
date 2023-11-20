@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hero/core/models/home_model.dart';
 import 'package:hero/features/documents/screens/upload_documents.dart';
 import 'package:hero/features/home/screen/home.dart';
 import 'package:hero/features/login/screens/login.dart';
@@ -99,8 +100,10 @@ class AppRoutes {
         );
 
       case Routes.tripDetailsRoute:
+        final trip = settings.arguments as NewTrip;
         return MaterialPageRoute(
-          builder: (context) =>  TripDetailsScreen(),
+
+          builder: (context) =>  TripDetailsScreen(trip: trip),
         );
 
       // case Routes.detailsRoute:

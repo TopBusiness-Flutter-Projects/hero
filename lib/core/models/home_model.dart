@@ -291,6 +291,7 @@ class Data {
   };
 }
 
+
 class NewTrip {
   final int? id;
   final String? type;
