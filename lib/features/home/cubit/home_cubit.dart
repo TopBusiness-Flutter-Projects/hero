@@ -474,7 +474,7 @@ void setflag(int flag){
 
 
     if(datePicked != null && datePicked != date) {
-      print('Date selected: ${date.toString()}');
+     // print('Date selected: ${date.toString()}');
      // setState((){
         date = datePicked;
 
@@ -570,6 +570,8 @@ void setflag(int flag){
          }
     });
   }
+
+
   Future<String?> _getId() async {
     var deviceInfo = DeviceInfoPlugin();
     if (Platform.isIOS) { // import 'dart:io'
@@ -750,6 +752,11 @@ bool isLoadingSettings = true;
         emit(AlreadyInTrip());
         ErrorWidget(r.message!);
       }
+      else if(r.code==502){
+        Navigator.pop(context);
+        emit(AlreadyInTrip());
+        ErrorWidget(r.message!);
+      }
       else{
         Navigator.pop(context);
         emit(FailureCreateTrip());
@@ -782,9 +789,9 @@ bool isLoadingSettings = true;
   CreateScedualTripModel? createScedualTripModel;
 
   createScheduleTrip({required String tripType , required BuildContext context})async{
-    print("__________________________________________________");
+
     if(address!=null && currentLocation!=null&&date!=null&&time!=null){
-      print("yeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeees");
+
       emit(LoadingCreateScheduelTripState());
       loadingDialog();
       // Convert TimeOfDay to a DateTime object with the current date
@@ -796,8 +803,7 @@ bool isLoadingSettings = true;
         time.minute,
       );
       String formattedDateTime = oo.DateFormat('yyyy-MM-dd hh:mm:ss').format(dateTime);
-      print("***************************************************");
-      print(formattedDateTime);
+
       final response = await  api.createScheduleTrip(
           tripType: tripType, fromAddress: address!, fromLng: currentLocation!.longitude!,
           fromLat: currentLocation!.latitude!,
@@ -854,7 +860,30 @@ bool isLoadingSettings = true;
 
   }
 
-
+cancelTrip(
+  //  {required int tripId}
+    )async{
+   if(createTripModel!=null){
+     emit(CancelTripLoading());
+     final response = await api.cancelTrip(tripId: createTripModel!.data!.id!);
+     response.fold((l) {
+       errorGetBar("something wrong");
+       emit(CancelTripFailure());
+     }, (r) {
+       if(r.code==200){
+         emit(CancelTripSuccess());
+         successGetBar(r.message);
+       }
+       else if(r.code==500){
+         emit(CancelTripFailure());
+         errorGetBar(r.message??"something wrong");
+       }
+     });
+   }
+   else{
+     errorGetBar("there is no trip to cancel it");
+   }
+}
   //
   // double progressValue = 0.0;
   // late Timer timer;

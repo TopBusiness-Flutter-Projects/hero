@@ -3,13 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hero/core/utils/assets_manager.dart';
+import 'package:hero/core/utils/dialogs.dart';
 import 'package:hero/core/utils/getsize.dart';
 import 'package:hero/core/widgets/custom_button.dart';
 import 'package:hero/features/login/cubit/login_cubit.dart';
-import 'package:hero/features/login/cubit/login_cubit.dart';
-
 import '../../../config/routes/app_routes.dart';
 import '../../../core/utils/app_colors.dart';
+import '../../../core/utils/app_strings.dart';
 import '../../../core/widgets/custom_textfield.dart';
 
 class Login extends StatefulWidget {
@@ -46,8 +46,7 @@ class _LoginState extends State<Login> {
                         ImageAssets.loginImage,
                         height: getSize(context) / 2.5,
                         width: getSize(context) / 2,
-                        // height: getSize(context) / 1.2,
-                        // width: getSize(context) / 1.2,
+
                       ),
                     ),
                   ),
@@ -55,9 +54,6 @@ class _LoginState extends State<Login> {
                     height: getSize(context) / 8,
                   ),
                   SizedBox(
-
-                    /// height: getSize(context) / 24,
-                    ///width: getSize(context),
                     child: Text("phone".tr(),
                         style: TextStyle(
                           color: AppColors.black,
@@ -82,7 +78,7 @@ class _LoginState extends State<Login> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal:
                                 8.0),
-                            child: Text("+20",
+                            child: Text(AppStrings.countryCode,
                                 style: TextStyle(
                                   color: AppColors.black,
                                   fontSize: getSize(context) / 24,
@@ -110,7 +106,11 @@ class _LoginState extends State<Login> {
                   Row(
                     children: [
                       Checkbox(
-                        value: true, onChanged: (value) {},
+                        value: cubit.checked,
+                        onChanged: (bool? value) {
+                          //todo change state
+                          cubit.changeCheckBox(value!);
+                        },
                         checkColor: AppColors.white,
                         //  hoverColor: AppColors.primary,
                         activeColor: AppColors.primary,
@@ -121,11 +121,17 @@ class _LoginState extends State<Login> {
                             color: AppColors.black,
                             fontSize: getSize(context) / 32),
                       ),
-                      Text(
-                        "terms".tr(),
-                        style: TextStyle(
-                            color: AppColors.primary,
-                            fontSize: getSize(context) / 32),
+                      InkWell(
+                        onTap: () {
+                          //navigate to terms and conditions screen
+                          Navigator.pushNamed(context, Routes.termsConditionsRoute);
+                        },
+                        child: Text(
+                          "terms".tr(),
+                          style: TextStyle(
+                              color: AppColors.primary,
+                              fontSize: getSize(context) / 32),
+                        ),
                       ),
                       Text(
                         "company".tr(),
@@ -143,9 +149,20 @@ class _LoginState extends State<Login> {
                     text: "follow".tr(),
                     color: AppColors.primary,
                     onClick: () async {
-                      await cubit.checkPhone(context);
-                      // Navigator.pushNamedAndRemoveUntil(context,
-                      //     Routes.verificationScreenRoute, (route) => false);
+                      if(cubit.checked==false){
+                        errorGetBar("agree_terms".tr());
+                      }
+                    else  if (cubit.phoneController.text.length<10||cubit.phoneController.text.length>11){
+                        errorGetBar("invalid number");
+                      }
+                    else{
+
+                        await cubit.checkPhone(context);
+                      }
+
+
+
+
                     },
                   )
                 ],

@@ -3,6 +3,7 @@ import 'package:hero/core/models/home_model.dart';
 import 'package:hero/features/documents/screens/upload_documents.dart';
 import 'package:hero/features/home/screen/home.dart';
 import 'package:hero/features/login/screens/login.dart';
+import 'package:hero/features/login/screens/terms_conditions_screen.dart';
 import 'package:hero/features/notification/screens/notification_screen.dart';
 import 'package:hero/features/splash/screens/splash_screen.dart';
 import 'package:hero/features/trip_details/screens/trip_details_screen.dart';
@@ -40,6 +41,7 @@ class Routes {
   static const String driversignupRoute = '/driversignup';
   static const String notificationRoute = '/notification_screen';
   static const String tripDetailsRoute = '/trip_details_screen';
+  static const String termsConditionsRoute = '/terms_conditions_screen';
 }
 
 class AppRoutes {
@@ -97,6 +99,10 @@ class AppRoutes {
         case Routes.driverwaitScreenRoute:
         return MaterialPageRoute(
           builder: (context) =>  DriverWaiting(),
+        );
+      case Routes.termsConditionsRoute:
+        return MaterialPageRoute(
+          builder: (context) =>  TermsConditionsScreen(),
         );
 
       case Routes.tripDetailsRoute:

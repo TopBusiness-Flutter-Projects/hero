@@ -57,3 +57,6 @@ class NoAdressFound extends HomeState {}
 class LoadingAddToFavourite extends HomeState {}
 class SuccessAddingFavourite extends HomeState {}
 class FailureAddingFavourite extends HomeState {}
+class CancelTripSuccess extends HomeState {}
+class CancelTripFailure extends HomeState {}
+class CancelTripLoading extends HomeState {}

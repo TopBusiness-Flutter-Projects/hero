@@ -255,8 +255,7 @@ class ServiceApi {
             "type":type
         }
       );
-      print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-      print(response);
+
       return Right(AllTripsModel.fromJson(response));
     }on ServerException{
       return Left(ServerFailure());
@@ -432,22 +431,41 @@ class ServiceApi {
     try {
 
       final response = await dio.post(
-        EndPoints.createTripUrl,
+          EndPoints.createTripUrl,
+          options: Options(
+            headers: {'Authorization': signUpModel.data?.token},
+          ), formDataIsEnabled: true,
+          body: {
+            "trip_type":tripType,
+            "from_address":fromAddress,
+            "from_long":fromLng,
+            "from_lat":fromLat,
+            "to_address":toAddress,
+            "to_long":toLng,
+            "to_lat":toLat
+
+          }
+      );
+      return Right(CreateTripModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
+  Future<Either<Failure, LoginModel>> cancelTrip({required int tripId,}) async {
+    SignUpModel signUpModel = await Preferences.instance.getUserModel();
+    try {
+
+      final response = await dio.post(
+        EndPoints.cancelTripUrl,
         options: Options(
           headers: {'Authorization': signUpModel.data?.token},
         ),
-        body: {
-          "trip_type":tripType,
-          "from_address":fromAddress,
-          "from_long":fromLng,
-          "from_lat":fromLat,
-          "to_address":toAddress,
-          "to_long":toLng,
-          "to_lat":toLat
-
-        }
+      queryParameters: {
+          "trip_id":tripId
+      }
       );
-      return Right(CreateTripModel.fromJson(response));
+      return Right(LoginModel.fromJson(response));
     } on ServerException {
       return Left(ServerFailure());
     }

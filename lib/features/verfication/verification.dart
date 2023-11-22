@@ -3,15 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hero/core/utils/assets_manager.dart';
+import 'package:hero/core/utils/dialogs.dart';
 import 'package:hero/core/utils/getsize.dart';
 import 'package:hero/core/widgets/custom_button.dart';
 import 'package:hero/features/login/cubit/login_cubit.dart';
-import 'package:hero/features/login/cubit/login_cubit.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-
 import '../../../core/utils/app_colors.dart';
-import '../../../core/widgets/custom_textfield.dart';
-import '../../config/routes/app_routes.dart';
+
 
 class Verification extends StatefulWidget {
   const Verification({super.key});
@@ -141,7 +139,12 @@ class _VerificationState extends State<Verification> {
                     width: getSize(context),
                     text: "follow".tr(), color: AppColors.primary,
                     onClick: () async {
-                await  cubit.verifySmsCode(cubit.codecontrol.text,context);
+                 if(cubit.codecontrol.text.length==6){
+                   await  cubit.verifySmsCode(cubit.codecontrol.text,context);
+                 }
+                 else{
+                   errorGetBar("invalid code");
+                 }
                   },
                   )
                 ],

@@ -2,13 +2,16 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hero/core/models/login_model.dart';
 import 'package:hero/core/utils/assets_manager.dart';
 import 'package:hero/core/utils/getsize.dart';
 import 'package:hero/core/widgets/custom_button.dart';
 import 'package:hero/core/widgets/my_svg_widget.dart';
+import 'package:hero/features/login/cubit/login_cubit.dart';
 import 'package:hero/features/signup/cubit/signup_cubit.dart';
 import '../../../config/routes/app_routes.dart';
 import '../../../core/utils/app_colors.dart';
+import '../../../core/utils/app_strings.dart';
 import '../../../core/utils/dialogs.dart';
 import '../../../core/widgets/custom_textfield.dart';
 
@@ -23,6 +26,12 @@ class _SignUpState extends State<SignUp> {
 
   var formKey = GlobalKey<FormState>(debugLabel: "signup");
 
+
+  @override
+  void initState() {
+    context.read<SignupCubit>().phoneController.text = context.read<LoginCubit>().phoneController.text;
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -143,7 +152,7 @@ class _SignUpState extends State<SignUp> {
                       textInputType: TextInputType.emailAddress,
                       backgroundColor: AppColors.white,
                       prefixWidget: const Icon(CupertinoIcons.mail),
-                      validatorMessage: 'email_msg'.tr(),
+                     // validatorMessage: 'email_msg'.tr(),
                       horizontalPadding: 2,
 
                       // controller: controller.phoneNumberController,
@@ -194,7 +203,7 @@ class _SignUpState extends State<SignUp> {
                             children: [
                                Padding(
                                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                                 child: Text("+20",
+                                 child: Text(AppStrings.countryCode,
                                    style: TextStyle(
                                      color: AppColors.black,
                                      fontSize: getSize(context) / 24,
@@ -293,12 +302,12 @@ class _SignUpState extends State<SignUp> {
                   onClick: () async {
                     if (widget.type == "client") {
                       if(formKey.currentState!.validate()){
-                        if(cubit.image==null){
-                          errorGetBar("pick_img".tr());
-                        }
-                      else{
+                        // if(cubit.image==null){
+                        //   errorGetBar("pick_img".tr());
+                        // }
+                     // else{
                           await cubit.signUp("user",context,true);
-                        }
+                       // }
                       }
                       // Navigator.of(context).pushNamedAndRemoveUntil(
                       //     Routes.homeRoute, (route) => false);

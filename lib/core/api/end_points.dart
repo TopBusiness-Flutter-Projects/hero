@@ -8,6 +8,7 @@ class EndPoints {
   static const String createTripUrl = '${baseUrl}createTrip';
   static const String createScheduleTripUrl = '${baseUrl}createScheduleTrip';
   static const String favouriteUrl = '${baseUrl}favouriteLocations';
+  static const String cancelTripUrl = '${baseUrl}cancelUserTrip';
   static const String removeFavouriteUrl = '${baseUrl}removeFavouriteLocations';
   static const String addFavouriteUrl = '${baseUrl}createFavouriteLocations';
   static const String giveRateUrl = '${baseUrl}createTripRate';

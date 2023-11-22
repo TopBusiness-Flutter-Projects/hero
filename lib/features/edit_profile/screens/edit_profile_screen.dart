@@ -8,6 +8,7 @@ import 'package:hero/features/signup/cubit/signup_cubit.dart';
 
 import '../../../config/routes/app_routes.dart';
 import '../../../core/utils/app_colors.dart';
+import '../../../core/utils/app_strings.dart';
 import '../../../core/utils/assets_manager.dart';
 import '../../../core/utils/dialogs.dart';
 import '../../../core/utils/getsize.dart';
@@ -243,7 +244,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 children: [
                                   Padding(
                                     padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                                    child: Text("+20",
+                                    child: Text(AppStrings.countryCode,
                                         style: TextStyle(
                                           color: AppColors.black,
                                           fontSize: getSize(context) / 24,

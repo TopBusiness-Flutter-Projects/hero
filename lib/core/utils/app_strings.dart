@@ -2,6 +2,7 @@ class AppStrings {
   static const String appName = 'app_name';
 
   // static const String googleApiKey = '';
+  static const String countryCode = '+20';
   static const String fontFamily = 'cairo';
   static const String noRouteFound = 'No Route Found';
   static const String ok = 'Ok';

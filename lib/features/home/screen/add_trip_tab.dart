@@ -48,6 +48,7 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     context.read<HomeCubit>().destination=LatLng(0, 0);
+    context.read<HomeCubit>().location_control.text = "";
     context.read<HomeCubit>().getCurrentLocation();
     gifController = FlutterGifController(vsync: this);
     context.read<HomeCubit>().checkAndRequestLocationPermission();
@@ -383,6 +384,7 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
                                 cubit.tabsController.animateTo(0);
                                 cubit.bottomContainerLoadingState = false;
                                 cubit.bottomContainerInitialState = true;
+                                cubit.cancelTrip();
                               },
                               width: getSize(context) * 0.9,
                               borderRadius: 16,

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hero/features/home/screen/banner.dart';
+import '../../../config/routes/app_routes.dart';
 import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/assets_manager.dart';
 import '../../../core/utils/getsize.dart';
@@ -156,9 +157,14 @@ class _HomeTabState extends State<HomeTab> {
                           child: ListView.builder(
                             itemCount: cubit.homeModel?.data?.newTrips?.length??0,
                             itemBuilder: (context, index) {
-                              print("&^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^&");
-                              print("${cubit.homeModel?.data?.newTrips?.length}");
-                              return HomeListItem(trip: cubit.homeModel?.data?.newTrips?[index],);
+
+                              return InkWell(
+                                onTap: () {
+                                  if(cubit.homeModel?.data?.newTrips?[index].type=="with"){
+                                    Navigator.pushNamed(context, Routes.homeRoute);
+                                  }
+                                },
+                                  child: HomeListItem(trip: cubit.homeModel?.data?.newTrips?[index],));
 
                             },
                           ),

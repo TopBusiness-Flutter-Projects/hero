@@ -11,6 +11,7 @@ import 'package:hero/features/signup/models/register_model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
 import '../../../config/routes/app_routes.dart';
+import '../../../core/utils/app_strings.dart';
 part 'signup_state.dart';
 
 class SignupCubit extends Cubit<SignupState> {
@@ -30,9 +31,9 @@ SignUpModel? sharedUserData;
     String? deviceId = await _getId();
     deviceType = deviceType = Platform.isAndroid ? 'Android' : 'iOS';
   RegisterModel registerModel = RegisterModel(name: nameController.text, email: emailController.text,
-    phone: "+2"+phoneController.text,
+    phone: AppStrings.countryCode+phoneController.text,
     birth: dateOfBirthController.text, type: userType,
-      image:image!,
+      image:image,
     deviceType: deviceType, token: deviceId!);
   print("2222222222222222222222222222222222222");
   print(registerModel);
