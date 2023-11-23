@@ -53,6 +53,7 @@ class ServiceApi {
 
 //
   Future<Either<Failure, SignUpModel>> postRegister(RegisterModel registerModel,bool isSignUp) async {
+
     try {
       var image = registerModel.image!=null? await MultipartFile.fromFile(registerModel.image!.path):null;
       var response = await dio.post(
@@ -60,7 +61,7 @@ class ServiceApi {
         isSignUp?  EndPoints.registerUrl:EndPoints.editProfileUrl,
         queryParameters: {
           "device_type":registerModel.deviceType,
-          "token":registerModel.token,
+          "token": registerModel.token
         },
         formDataIsEnabled:image==null?false: true,
         body: {

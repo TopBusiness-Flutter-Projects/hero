@@ -2,20 +2,15 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hero/features/edit_profile/cubit/edit_profile_cubit.dart';
 import 'package:hero/features/home/cubit/home_cubit.dart';
 import 'package:hero/features/signup/cubit/signup_cubit.dart';
-
-import '../../../config/routes/app_routes.dart';
 import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/app_strings.dart';
-import '../../../core/utils/assets_manager.dart';
 import '../../../core/utils/dialogs.dart';
 import '../../../core/utils/getsize.dart';
 import '../../../core/widgets/back_button.dart';
 import '../../../core/widgets/custom_button.dart';
 import '../../../core/widgets/custom_textfield.dart';
-import '../../../core/widgets/my_svg_widget.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key,});
@@ -155,22 +150,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                    ))
                              ],
                            ),
-                           // Stack(
-                           //   children: [
-                           //     CircleAvatar(
-                           //       radius: getSize(context)/7,
-                           //         backgroundColor: AppColors.grey3.withOpacity(0.3),
-                           //         child: Icon(Icons.person,size: getSize(context)/4,color: AppColors.grey1,)),
-                           //     Positioned(
-                           //       bottom: getSize(context)*0.005,
-                           //         right: 0,
-                           //         child: CircleAvatar(
-                           //             radius: getSize(context)/20,
-                           //             backgroundColor: AppColors.grey1,
-                           //             child: Icon(Icons.camera_alt_rounded,size: getSize(context)/14,
-                           //               color: AppColors.grey3,)), )
-                           //   ],
-                           // ),
                          ),
 
 
@@ -329,16 +308,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           ),
                           CustomTextField(
                             prefixWidget:Icon(CupertinoIcons.calendar_today,size: 20,),
-                            // SizedBox(
-                            //   width: 20,
-                            //   height: 10,
-                            //   child:
-                            //   MySvgWidget(
-                            //       path: ImageAssets.calender,
-                            //       imageColor: AppColors.buttonColor,
-                            //       size: 10
-                            //   ),
-                            // ),
                             title: 'date_of_birth'.tr(),
                             controller: cubit.dateOfBirthController,
                             textInputType: TextInputType.phone,
@@ -362,27 +331,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             },
                             // controller: controller.phoneNumberController,
                           ),
-                          // Container(
-                          //   height: getSize(context)/10,
-                          //   padding: EdgeInsets.symmetric(horizontal: getSize(context)/16),
-                          //   decoration: BoxDecoration(
-                          //       border: Border.all(color: AppColors.gray6),
-                          //       borderRadius: BorderRadius.all(
-                          //           Radius.circular(getSize(context) / 22))),
-                          //   child: Row(
-                          //     children: [
-                          //       MySvgWidget(path: ImageAssets.calender, imageColor: AppColors.buttonColor, size: 20),
-                          //    SizedBox(width: 10,),
-                          //       Expanded(
-                          //         child: Text(
-                          //           "1/1/2008",
-                          //           style: TextStyle(color: AppColors.gray5,fontSize: getSize(context)/24),
-                          //           // controller: controller.phoneNumberController,
-                          //         ),
-                          //       ),
-                          //     ],
-                          //   ),
-                          // ),
+
                           SizedBox(
                             height: getSize(context) / 8,
                           ),
@@ -395,13 +344,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                              // type == "client";
                              // if (type == "client") {
                                 if(formKey.currentState!.validate()){
-                                  if(cubit.image==null){
-                                    errorGetBar("pick_img".tr());
-                                  }
-                                  else{
+                                  // if(cubit.image==null){
+                                  //   errorGetBar("pick_img".tr());
+                                  // }
+                                 // else{
 
-                                    await cubit.signUp("user",context,true);
-                                  }
+                                    await cubit.signUp("user",context,false);
+                                 // }
                                 }
                                 // Navigator.of(context).pushNamedAndRemoveUntil(
                                 //     Routes.homeRoute, (route) => false);

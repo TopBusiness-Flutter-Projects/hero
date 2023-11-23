@@ -27,14 +27,20 @@ class SignupCubit extends Cubit<SignupState> {
   SignUpModel? signUpModel ;
 
 SignUpModel? sharedUserData;
+
+
   signUp(String userType,BuildContext context,bool isSignUp)async{
     String? deviceId = await _getId();
+    SignUpModel? signUpModel = await Preferences.instance.getUserModel();
     deviceType = deviceType = Platform.isAndroid ? 'Android' : 'iOS';
-  RegisterModel registerModel = RegisterModel(name: nameController.text, email: emailController.text,
+  RegisterModel registerModel = RegisterModel(name: nameController.text,
+      email: emailController.text,
     phone: AppStrings.countryCode+phoneController.text,
-    birth: dateOfBirthController.text, type: userType,
+    birth: dateOfBirthController.text,
+    type: userType,
       image:image,
-    deviceType: deviceType, token: deviceId!);
+    deviceType: deviceType,
+      token: isSignUp?deviceId!:signUpModel.data!.token!,);
   print("2222222222222222222222222222222222222");
   print(registerModel);
      loadingDialog();
@@ -74,6 +80,7 @@ SignUpModel? sharedUserData;
        }
        else{
          Navigator.pop(context);
+         print("r = ${r.message}");
          errorGetBar("${r.message}");
        }
 
@@ -81,6 +88,12 @@ SignUpModel? sharedUserData;
   }
   getUserData() async {
     sharedUserData = await Preferences.instance.getUserModel();
+   if(sharedUserData!=null){
+     nameController.text = sharedUserData!.data!.name!;
+     emailController.text = (sharedUserData!.data!.email !=null?sharedUserData!.data!.email:"")!;
+     phoneController.text = sharedUserData!.data!.phone!;
+     dateOfBirthController.text = sharedUserData!.data!.birth!.toString().substring(0,10);
+   }
     emit(GettingUserDataState());
   }
   Future<String?> _getId() async {

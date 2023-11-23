@@ -60,3 +60,4 @@ class FailureAddingFavourite extends HomeState {}
 class CancelTripSuccess extends HomeState {}
 class CancelTripFailure extends HomeState {}
 class CancelTripLoading extends HomeState {}
+class AddressAlreadyExists extends HomeState {}

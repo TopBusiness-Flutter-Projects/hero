@@ -126,10 +126,14 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   },),
                 ],
               ),
-              leading: CircleAvatar(
+              leading:
+              context.read<HomeCubit>().signUpModel?.data?.image==null?
+              CircleAvatar(
                 radius: getSize(context) * 0.1,
                 backgroundImage: AssetImage(ImageAssets.person),
-              ),
+              ):ClipRRect(
+                borderRadius: BorderRadius.circular(30),
+                  child: Image.network(context.read<HomeCubit>().signUpModel!.data?.image ?? '')),
               subtitle: Text(
                 "${context.read<HomeCubit>().signUpModel?.data?.email}",
                 style: TextStyle(

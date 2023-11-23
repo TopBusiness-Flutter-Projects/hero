@@ -520,11 +520,7 @@ void setflag(int flag){
                   //Text("time: $timeFormatted"),
                   ElevatedButton(onPressed: ()  {
                     Navigator.pop(context);
-                     createScheduleTrip(tripType: flag==1?"with":"without", context: context).then((e){
-                       Navigator.pop(context);
-                       context.read<HomeCubit>().tabsController.animateTo(0);
-
-                     });
+                     createScheduleTrip(tripType: flag==1?"with":"without", context: context);
 
 
                   }, child: Text("confirm".tr()))
@@ -589,6 +585,7 @@ void setflag(int flag){
 
   DeleteModel? deleteModel;
   logout(BuildContext context)async{
+    print("55555555555555555555555555555555555555");
     emit(LoadingToLogOutState());
     loadingDialog();
     String? token = await _getId();
@@ -702,10 +699,29 @@ bool isLoadingSettings = true;
        }
      });
   }
+
+
 //todo=>add favourite location
   addFavourite({required String address,required String lat ,required String  long, required BuildContext context})async{
+    print("####################################");
+    print(favouriteModel);
     emit(LoadingAddToFavourite());
     loadingDialog();
+
+    // Check if the address already exists in the favoriteModel
+  if(favouriteModel != null && favouriteModel?.data != null){
+    for(FavouriteData data in favouriteModel!.data!){
+
+      if(data.address?.trim() == address.trim()){
+        Navigator.pop(context);
+        emit(AddressAlreadyExists());
+        successGetBar("address_exist".tr());
+        return;
+      }
+    }
+  }
+
+  //  print("Address not found in existing addresses, proceeding with API call.");
     final response = await api.addFavourite(address: address,lat: lat,long:long );
     response.fold((l) {
       Navigator.pop(context);
@@ -731,7 +747,7 @@ bool isLoadingSettings = true;
   createTrip({required String tripType , required BuildContext context})async{
     if(address!=null && currentLocation!=null){
        emit(LoadingCreateTripState());
-       loadingDialog();
+      // loadingDialog();
        bottomContainerLoadingState = true;
       final response = await  api.createTrip(
           tripType: tripType, fromAddress: address!, fromLng: currentLocation!.longitude!,
@@ -744,28 +760,28 @@ bool isLoadingSettings = true;
           destination.longitude:null);
           response.fold((l) {
            emit(FailureCreateTrip());
-           Navigator.pop(context);
+          // Navigator.pop(context);
            errorGetBar("couldn't create trip");
           }, (r) {
       if(r==200){
         createTripModel = r;
        // bottomContainerLoadingState = true;
-        Navigator.pop(context);
+       // Navigator.pop(context);
         successGetBar("yeeeeeeeeeeeeeeeees");
         emit(SuccessCreateTripState());
       }
       else if(r.code == 202 ){
-        Navigator.pop(context);
+       // Navigator.pop(context);
         emit(AlreadyInTrip());
         ErrorWidget(r.message!);
       }
       else if(r.code==502){
-        Navigator.pop(context);
+       // Navigator.pop(context);
         emit(AlreadyInTrip());
         ErrorWidget(r.message!);
       }
       else{
-        Navigator.pop(context);
+       // Navigator.pop(context);
         emit(FailureCreateTrip());
         ErrorWidget(r.message!);
       }
@@ -793,14 +809,14 @@ bool isLoadingSettings = true;
     }
 
   }
+
   CreateScedualTripModel? createScedualTripModel;
-
-  createScheduleTrip({required String tripType , required BuildContext context})async{
-
-    if(address!=null && currentLocation!=null&&date!=null&&time!=null){
-
+  createScheduleTrip({required String tripType, required BuildContext context}) async {
+    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+    if (address != null && currentLocation != null && date != null && time != null) {
       emit(LoadingCreateScheduelTripState());
-      loadingDialog();
+     // loadingDialog();
+
       // Convert TimeOfDay to a DateTime object with the current date
       DateTime dateTime = DateTime(
         date!.year,
@@ -809,71 +825,133 @@ bool isLoadingSettings = true;
         time.hour,
         time.minute,
       );
-      String formattedDateTime = oo.DateFormat('yyyy-MM-dd hh:mm:ss').format(dateTime);
-     print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-      final response = await  api.createScheduleTrip(
-          tripType: tripType, fromAddress: address!,
+      String formattedDateTime = oo.DateFormat('yyyy-MM-dd HH:mm:ss').format(dateTime);
+
+      try {
+        final response = await api.createScheduleTrip(
+          tripType: tripType,
+          fromAddress: address!,
           fromLng: currentLocation!.longitude!,
           fromLat: currentLocation!.latitude!,
-          toAddress:tripType=="with"?
-          location_control.text :null,
-          toLat:tripType=="with"?
-          destination.latitude:null,
-          toLng:tripType=="with"?
-          destination.longitude:null,
-          date: formattedDateTime.substring(0,10),
-          time: formattedDateTime.substring(11,19)
+          toAddress: tripType == "with" ? location_control.text : null,
+          toLat: tripType == "with" ? destination.latitude : null,
+          toLng: tripType == "with" ? destination.longitude : null,
+          date: formattedDateTime.substring(0, 10),
+          time: formattedDateTime.substring(11, 19),
+        );
 
-      );
-      print("********************************************************************");
+        response.fold((l) {
+          // Navigator.pop(context);
+          // Navigator.pop(context);
+          emit(FailureCreateSchedualTrip());
+          errorGetBar("failed to create schedule trip");
+        }, (r) {
+          if (r.code == 200 || r.code == 201) {
+            successGetBar("the trip created successfully");
+            emit(SuccessCreateSchedualTripState());
+            createScedualTripModel = r;
+           // bottomContainerLoadingState = true;
 
-      response.fold((l) {
-        Navigator.pop(context);
+
+            // Navigator.pop(context); // Ensure Navigator.pop is called here
+            // Navigator.pop(context);
+          } else {
+            // Navigator.pop(context);
+            // Navigator.pop(context);
+            ErrorWidget(r.message!);
+            emit(FailureCreateSchedualTrip());
+          }
+        });
+      } catch (e) {
+        print("Exception: $e");
+      //  Navigator.pop(context);
         emit(FailureCreateSchedualTrip());
-
-      }, (r) {
-        if(r.code==200||r.code==201){
-          Navigator.pop(context);
-          Navigator.pop(context);
-          createScedualTripModel = r;
-          bottomContainerLoadingState = true;
-          emit(SuccessCreateSchedualTripState());
-
-        }
-        // else if(r.code == 202 ){
-        //   emit(AlreadyInTrip());
-        //   Navigator.pop(context);
-        //   ErrorWidget(r.message!);
-        // }
-        else{
-          Navigator.pop(context);
-          ErrorWidget(r.message!);          emit(FailureCreateSchedualTrip());
-
-        }
-      });
-
-
-
-
-      //  // with destination
-      // if(flag==1){
-      //   final response = await  api.createTrip(
-      //       tripType: "with", fromAddress: address!, fromLng: currentLocation!.longitude!,
-      //       fromLat: currentLocation!.latitude!,toAddress:location_control.text ,
-      //       toLat: destination.latitude,toLng:destination.longitude );
-      // }
-      // //without
-      // else{
-      //   final response = await  api.createTrip(
-      //       tripType: "without", fromAddress: address!, fromLng: currentLocation!.longitude!,
-      //       fromLat: currentLocation!.latitude!);
-      // }
+      }
+    } else {
+      ErrorWidget("Some required field is null. We can't make the request.");
     }
-    else{
-      ErrorWidget("some required field is null we can't make the request");
-    }
-
   }
+
+  // createScheduleTrip({required String tripType , required BuildContext context})async{
+  //
+  //   if(address!=null && currentLocation!=null&&date!=null&&time!=null){
+  //
+  //     emit(LoadingCreateScheduelTripState());
+  //     loadingDialog();
+  //     // Convert TimeOfDay to a DateTime object with the current date
+  //     DateTime dateTime = DateTime(
+  //       date!.year,
+  //       date!.month,
+  //       date!.day,
+  //       time.hour,
+  //       time.minute,
+  //     );
+  //     String formattedDateTime = oo.DateFormat('yyyy-MM-dd hh:mm:ss').format(dateTime);
+  //    print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+  //     final response = await  api.createScheduleTrip(
+  //         tripType: tripType, fromAddress: address!,
+  //         fromLng: currentLocation!.longitude!,
+  //         fromLat: currentLocation!.latitude!,
+  //         toAddress:tripType=="with"?
+  //         location_control.text :null,
+  //         toLat:tripType=="with"?
+  //         destination.latitude:null,
+  //         toLng:tripType=="with"?
+  //         destination.longitude:null,
+  //         date: formattedDateTime.substring(0,10),
+  //         time: formattedDateTime.substring(11,19)
+  //
+  //     );
+  //     print("********************************************************************");
+  //
+  //     response.fold((l) {
+  //       Navigator.pop(context);
+  //       emit(FailureCreateSchedualTrip());
+  //
+  //     }, (r) {
+  //       if(r.code==200||r.code==201){
+  //         Navigator.pop(context);
+  //         Navigator.pop(context);
+  //         createScedualTripModel = r;
+  //         bottomContainerLoadingState = true;
+  //         emit(SuccessCreateSchedualTripState());
+  //
+  //       }
+  //       // else if(r.code == 202 ){
+  //       //   emit(AlreadyInTrip());
+  //       //   Navigator.pop(context);
+  //       //   ErrorWidget(r.message!);
+  //       // }
+  //       else{
+  //         Navigator.pop(context);
+  //         ErrorWidget(r.message!);
+  //         emit(FailureCreateSchedualTrip());
+  //
+  //       }
+  //     });
+  //
+  //
+  //
+  //
+  //     //  // with destination
+  //     // if(flag==1){
+  //     //   final response = await  api.createTrip(
+  //     //       tripType: "with", fromAddress: address!, fromLng: currentLocation!.longitude!,
+  //     //       fromLat: currentLocation!.latitude!,toAddress:location_control.text ,
+  //     //       toLat: destination.latitude,toLng:destination.longitude );
+  //     // }
+  //     // //without
+  //     // else{
+  //     //   final response = await  api.createTrip(
+  //     //       tripType: "without", fromAddress: address!, fromLng: currentLocation!.longitude!,
+  //     //       fromLat: currentLocation!.latitude!);
+  //     // }
+  //   }
+  //   else{
+  //     ErrorWidget("some required field is null we can't make the request");
+  //   }
+  //
+  // }
 
 cancelTrip(
   //  {required int tripId}

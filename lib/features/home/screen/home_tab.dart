@@ -69,10 +69,13 @@ class _HomeTabState extends State<HomeTab> {
                       children: [
                         Row(
                           children: [
+                            context.read<HomeCubit>().signUpModel?.data?.image==null?
                             Icon(
                               CupertinoIcons.person_circle_fill,
                               color: Colors.grey,
-                            ),
+                            ):ClipRRect(
+                        borderRadius: BorderRadius.circular(30),
+                        child: Image.network(context.read<HomeCubit>().signUpModel!.data?.image ?? '',width: getSize(context)*0.1,)),
                             Text(
                               'welcome'.tr() + "${cubit.signUpModel?.data?.name??""}",
                               style: TextStyle(
@@ -183,7 +186,7 @@ class _HomeTabState extends State<HomeTab> {
 
         floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
         floatingActionButton: Padding(
-          padding: EdgeInsets.only(bottom: getSize(context) / 30),
+          padding: EdgeInsets.only(bottom: getSize(context)*0.0009),
           child: CustomButton(
             width: getSize(context) / 3,
             text: 'ask_trip'.tr(),

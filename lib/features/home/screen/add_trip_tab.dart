@@ -85,14 +85,14 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
         //  key: scaffoldKey,
         body: BlocConsumer<HomeCubit, HomeState>(
           listener: (context, state) {
-         if(state is SuccessCreateSchedualTripState || state is FailureCreateSchedualTrip ){
-           Navigator.pop(context);
-           Fluttertoast.showToast(msg: "333333333333333333333333333333");
-         }
-         else{
-
-           Fluttertoast.showToast(msg: "111111111111111111111111111");
-         }
+         // if(state is SuccessCreateSchedualTripState || state is FailureCreateSchedualTrip ){
+         //   Navigator.pop(context);
+         //   Fluttertoast.showToast(msg: "333333333333333333333333333333");
+         // }
+         // else{
+         //
+         //
+         // }
           },
           builder: (context, state) {
             HomeCubit cubit = context.read<HomeCubit>();
@@ -233,33 +233,7 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
                                   controller: cubit.location_control,
                                 ),
                               ),
-                              // InkWell(
-                              //
-                              //     onTap: () async {
-                              //
-                              //      // await cubit.searchOnMapH();
-                              //     },
-                              //     child: Padding(
-                              //       padding: EdgeInsets.all(15),
-                              //       child: Card(
-                              //         child: Container(
-                              //
-                              //             padding: EdgeInsets.all(0),
-                              //             width: MediaQuery.of(context).size.width -
-                              //                 40,
-                              //             child: ListTile(
-                              //               title: Text(
-                              //                 cubit.location,
-                              //                 style: TextStyle(fontSize: 18),
-                              //               ),
-                              //               trailing: Icon(Icons.search),
-                              //               dense: true,
-                              //              // leading: TextField(),
-                              //             )),
-                              //       ),
-                              //     )
-                              //
-                              //     ),
+
                             ),
                             SizedBox(
                               height: 15,

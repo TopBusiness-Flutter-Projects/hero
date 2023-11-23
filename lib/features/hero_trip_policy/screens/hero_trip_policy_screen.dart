@@ -7,6 +7,8 @@ import 'package:hero/core/utils/getsize.dart';
 import 'package:hero/features/home/cubit/home_cubit.dart';
 import 'package:hero/features/home/screen/home.dart';
 
+import '../../../core/utils/assets_manager.dart';
+
 class HeroTripPolicyScreen extends StatelessWidget {
   const HeroTripPolicyScreen({super.key});
 
@@ -19,37 +21,63 @@ class HeroTripPolicyScreen extends StatelessWidget {
       builder: (context, state) {
         HomeCubit cubit = context.read<HomeCubit>();
         return Scaffold(
-          body: Column(
+          body: Stack(
             children: [
-              SizedBox(
-                height: getSize(context) * 0.2,
+              Column(
+                children: [
+                  SizedBox(
+                    height: getSize(context) * 0.2,
+                  ),
+                  Center(
+                    child: Text(
+                      "hero_trip_policy".tr(),
+                      style: TextStyle(
+                          color: AppColors.primary,
+                          fontSize: getSize(context) * 0.06,
+                          fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                  SizedBox(
+                    height: getSize(context) * 0.1,
+                  ),
+                  cubit.isLoadingSettings?
+                  Center(child: CircularProgressIndicator(color: AppColors.primary,),)
+                      :
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Wrap(
+                      children: [
+                        Html(
+                            data: cubit.settingsModel?.data?.polices,
+                         //   child: Text("${cubit.settingsModel?.data?.polices}").tr()
+                         )
+                      ],
+                    ),
+                  )
+                ],
               ),
-              Center(
-                child: Text(
-                  "hero_trip_policy".tr(),
-                  style: TextStyle(
-                      color: AppColors.primary,
-                      fontSize: getSize(context) * 0.06,
-                      fontWeight: FontWeight.w700),
+              //back button
+              Positioned(
+                top: getSize(context) * 0.01,
+                right:getSize(context)*0.02,
+                //  left: 0,
+                child: InkWell(
+                  onTap: () {
+                    context.read<HomeCubit>().tabsController.animateTo(0);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10.0, horizontal: 12),
+                    child:  Image.asset(
+                      ImageAssets.backImage,
+                      color: AppColors.grey3,
+                      height: getSize(context) / 15,
+                      width: getSize(context) / 15,
+
+                    ),
+                  ),
                 ),
               ),
-              SizedBox(
-                height: getSize(context) * 0.1,
-              ),
-              cubit.isLoadingSettings?
-              Center(child: CircularProgressIndicator(color: AppColors.primary,),)
-                  :
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Wrap(
-                  children: [
-                    Html(
-                        data: cubit.settingsModel?.data?.polices,
-                     //   child: Text("${cubit.settingsModel?.data?.polices}").tr()
-                     )
-                  ],
-                ),
-              )
             ],
           ),
         );

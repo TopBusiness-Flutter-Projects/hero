@@ -1,11 +1,9 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:bloc/bloc.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hero/core/models/login_model.dart';
 import 'package:hero/core/models/signup_response_model.dart';
@@ -13,11 +11,10 @@ import 'package:hero/core/preferences/preferences.dart';
 import 'package:hero/core/remote/service.dart';
 import 'package:hero/core/utils/dialogs.dart';
 import 'package:meta/meta.dart';
-
 import '../../../config/routes/app_routes.dart';
 import '../../../core/utils/app_strings.dart';
 import '../../../core/utils/appwidget.dart';
-import '../../../core/widgets/show_loading_indicator.dart';
+
 
 part 'login_state.dart';
 
