@@ -491,7 +491,7 @@ void setflag(int flag){
     );
 
     if(timePicked != null && timePicked != time) {
-      print('Time selected: ${time.toString()}');
+
       //setState((){
         time = timePicked!;
         timeFormatted = time.format(context);
@@ -518,11 +518,15 @@ void setflag(int flag){
                   Text("sure_about_date").tr(),
                   Text(" $dateFormatted $timeFormatted",textDirection: TextDirection.ltr,),
                   //Text("time: $timeFormatted"),
-                  ElevatedButton(onPressed: () async {
+                  ElevatedButton(onPressed: ()  {
                     Navigator.pop(context);
-                    await createScheduleTrip(tripType: flag==1?"with":"without", context: context);
+                     createScheduleTrip(tripType: flag==1?"with":"without", context: context).then((e){
+                       Navigator.pop(context);
+                       context.read<HomeCubit>().tabsController.animateTo(0);
 
-                    context.read<HomeCubit>().tabsController.animateTo(0);
+                     });
+
+
                   }, child: Text("confirm".tr()))
 
                 ],
@@ -728,6 +732,7 @@ bool isLoadingSettings = true;
     if(address!=null && currentLocation!=null){
        emit(LoadingCreateTripState());
        loadingDialog();
+       bottomContainerLoadingState = true;
       final response = await  api.createTrip(
           tripType: tripType, fromAddress: address!, fromLng: currentLocation!.longitude!,
           fromLat: currentLocation!.latitude!,
@@ -736,15 +741,17 @@ bool isLoadingSettings = true;
           toLat:tripType=="with"?
           destination.latitude:null,
           toLng:tripType=="with"?
-          destination.longitude:null );
-      response.fold((l) {
-        emit(FailureCreateTrip());
-        Navigator.pop(context);
-      }, (r) {
+          destination.longitude:null);
+          response.fold((l) {
+           emit(FailureCreateTrip());
+           Navigator.pop(context);
+           errorGetBar("couldn't create trip");
+          }, (r) {
       if(r==200){
         createTripModel = r;
-        bottomContainerLoadingState = true;
+       // bottomContainerLoadingState = true;
         Navigator.pop(context);
+        successGetBar("yeeeeeeeeeeeeeeeees");
         emit(SuccessCreateTripState());
       }
       else if(r.code == 202 ){
@@ -803,16 +810,23 @@ bool isLoadingSettings = true;
         time.minute,
       );
       String formattedDateTime = oo.DateFormat('yyyy-MM-dd hh:mm:ss').format(dateTime);
-
+     print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
       final response = await  api.createScheduleTrip(
-          tripType: tripType, fromAddress: address!, fromLng: currentLocation!.longitude!,
+          tripType: tripType, fromAddress: address!,
+          fromLng: currentLocation!.longitude!,
           fromLat: currentLocation!.latitude!,
           toAddress:tripType=="with"?
           location_control.text :null,
           toLat:tripType=="with"?
           destination.latitude:null,
           toLng:tripType=="with"?
-          destination.longitude:null, date: formattedDateTime.substring(0,10), time: formattedDateTime.substring(10,19) );
+          destination.longitude:null,
+          date: formattedDateTime.substring(0,10),
+          time: formattedDateTime.substring(11,19)
+
+      );
+      print("********************************************************************");
+
       response.fold((l) {
         Navigator.pop(context);
         emit(FailureCreateSchedualTrip());
@@ -820,10 +834,11 @@ bool isLoadingSettings = true;
       }, (r) {
         if(r.code==200||r.code==201){
           Navigator.pop(context);
+          Navigator.pop(context);
           createScedualTripModel = r;
           bottomContainerLoadingState = true;
-
           emit(SuccessCreateSchedualTripState());
+
         }
         // else if(r.code == 202 ){
         //   emit(AlreadyInTrip());
@@ -831,9 +846,9 @@ bool isLoadingSettings = true;
         //   ErrorWidget(r.message!);
         // }
         else{
-          emit(FailureCreateSchedualTrip());
           Navigator.pop(context);
-          ErrorWidget(r.message!);
+          ErrorWidget(r.message!);          emit(FailureCreateSchedualTrip());
+
         }
       });
 

@@ -37,11 +37,11 @@ class Data {
   final String? type;
   final String? tripType;
   final String? fromAddress;
-  final double? fromLong;
-  final double? fromLat;
+  final String? fromLong;
+  final String? fromLat;
   final String? toAddress;
-  final double? toLong;
-  final double? toLat;
+  final String? toLong;
+  final String? toLat;
   final dynamic timeRide;
   final dynamic timeArrive;
   final dynamic distance;

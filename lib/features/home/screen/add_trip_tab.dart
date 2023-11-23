@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:ui';
-
 import 'package:custom_info_window/custom_info_window.dart';
 import 'package:easy_localization/easy_localization.dart' as oo;
 import 'package:flutter/material.dart';
@@ -8,17 +7,14 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gif/flutter_gif.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hero/core/utils/dialogs.dart';
 import 'package:hero/core/widgets/custom_button.dart';
-import 'package:hero/features/home/screen/home.dart';
 import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/assets_manager.dart';
 import '../../../core/utils/getsize.dart';
 import '../../../core/widgets/back_button.dart';
 import '../../../core/widgets/custom_textfield.dart';
-import '../../../core/widgets/my_svg_widget.dart';
-import '../components/drawer_list_item.dart';
 import '../cubit/home_cubit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -52,7 +48,7 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
     context.read<HomeCubit>().getCurrentLocation();
     gifController = FlutterGifController(vsync: this);
     context.read<HomeCubit>().checkAndRequestLocationPermission();
-    startTimer();
+
 
   }
   double _progressValue = 0.0;
@@ -89,7 +85,14 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
         //  key: scaffoldKey,
         body: BlocConsumer<HomeCubit, HomeState>(
           listener: (context, state) {
-            // TODO: implement listener
+         if(state is SuccessCreateSchedualTripState || state is FailureCreateSchedualTrip ){
+           Navigator.pop(context);
+           Fluttertoast.showToast(msg: "333333333333333333333333333333");
+         }
+         else{
+
+           Fluttertoast.showToast(msg: "111111111111111111111111111");
+         }
           },
           builder: (context, state) {
             HomeCubit cubit = context.read<HomeCubit>();
@@ -196,8 +199,8 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
                             Visibility(
                               visible: context.read<HomeCubit>().flag == 1,
                               child: SizedBox(
-                                width: double.infinity,
-                                height: 50,
+                                width: getSize(context)*0.9,
+                              //  height: getSize(context)/4,
                                 child: CustomTextField(
                                   suffixIcon: IconButton(icon:Icon(Icons.favorite_border),onPressed: () {
                                     if(cubit.location_control.text != "" &&cubit.destination!=LatLng(0, 0)){
@@ -210,10 +213,16 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
                                   },),
                                   title: 'search_location'.tr(),
                                   backgroundColor: AppColors.white,
-                                  prefixWidget: MySvgWidget(
-                                    path: ImageAssets.mapIcon,
-                                    imageColor: AppColors.black,
-                                    size: 10,
+                                  prefixWidget: SizedBox(
+                                    height: 10,
+                                    width: 10,
+                                    child:
+                                      Icon(Icons.pin_drop_outlined,size: 25,)
+                                    // MySvgWidget(
+                                    //   path: ImageAssets.mapIcon,
+                                    //   imageColor: AppColors.black,
+                                    //   size: 5,
+                                    // ),
                                   ),
                                   validatorMessage: 'loaction_msg'.tr(),
                                   horizontalPadding: 2,
@@ -307,7 +316,8 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
                                     color: AppColors.white,
                                     textcolor: AppColors.primary,
                                     onClick: () async {
-                                    await  cubit.createTrip(tripType: cubit.flag==1?"with":"without",context: context);
+                                      startTimer();
+                                      await  cubit.createTrip(tripType: cubit.flag==1?"with":"without",context: context);
                                      // cubit.changeToRideNowState();
                                     },
                                     width: getSize(context) / 3,

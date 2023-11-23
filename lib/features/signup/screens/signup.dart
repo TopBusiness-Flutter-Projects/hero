@@ -16,8 +16,8 @@ import '../../../core/utils/dialogs.dart';
 import '../../../core/widgets/custom_textfield.dart';
 
 class SignUp extends StatefulWidget {
-  const SignUp({super.key, required this.type});
-  final String type;
+  const SignUp({super.key, });
+ // final String type;
   @override
   State<SignUp> createState() => _SignUpState();
 }
@@ -56,13 +56,18 @@ class _SignUpState extends State<SignUp> {
                   height: getSize(context) / 24,
                 ),
                 //back arrow
-                Image.asset(
-                  ImageAssets.backImage,
-                  height: getSize(context) / 13,
-                  width: getSize(context) / 13,
+                InkWell(
+                  onTap: (){
+                    Navigator.pushReplacementNamed(context, Routes.loginRoute);
+                  },
+                  child: Image.asset(
+                    ImageAssets.backImage,
+                    height: getSize(context) / 13,
+                    width: getSize(context) / 13,
 
-                  // height: getSize(context) / 1.2,
-                  // width: getSize(context) / 1.2,
+                    // height: getSize(context) / 1.2,
+                    // width: getSize(context) / 1.2,
+                  ),
                 ),
                 //image picker
                 SizedBox(
@@ -152,7 +157,7 @@ class _SignUpState extends State<SignUp> {
                       textInputType: TextInputType.emailAddress,
                       backgroundColor: AppColors.white,
                       prefixWidget: const Icon(CupertinoIcons.mail),
-                     // validatorMessage: 'email_msg'.tr(),
+                     validatorMessage: 'email_msg'.tr(),
                       horizontalPadding: 2,
 
                       // controller: controller.phoneNumberController,
@@ -168,33 +173,7 @@ class _SignUpState extends State<SignUp> {
                         fontSize: getSize(context) / 28),
                   ),
                 ),
-                // Container(
-                //   height: getSize(context) / 10,
-                //   padding:
-                //       EdgeInsets.symmetric(horizontal: getSize(context) / 16),
-                //   decoration: BoxDecoration(
-                //       border: Border.all(
-                //         color: AppColors.gray6,
-                //         width: 1,
-                //       ),
-                //       borderRadius: BorderRadius.all(
-                //           Radius.circular(getSize(context) / 66))),
-                //   child:
-                 // Row(
-                  //  children: [
-                      // Text("+20",
-                      //     style: TextStyle(
-                      //       color: AppColors.black,
-                      //       fontSize: getSize(context) / 24,
-                      //     )),
-                      // Padding(
-                      //   padding: const EdgeInsets.symmetric(vertical: 5),
-                      //   child: VerticalDivider(
-                      //     color: AppColors.primary,
-                      //     // height: getSize(context)/10-2,
-                      //     thickness: 2,
-                      //   ),
-                      // ),
+
                       CustomTextField(
                         prefixWidget:
                         SizedBox(
@@ -300,21 +279,24 @@ class _SignUpState extends State<SignUp> {
                   borderRadius: getSize(context) / 24,
                   color: AppColors.primary,
                   onClick: () async {
-                    if (widget.type == "client") {
-                      if(formKey.currentState!.validate()){
-                        // if(cubit.image==null){
-                        //   errorGetBar("pick_img".tr());
-                        // }
-                     // else{
-                          await cubit.signUp("user",context,true);
-                       // }
-                      }
-                      // Navigator.of(context).pushNamedAndRemoveUntil(
-                      //     Routes.homeRoute, (route) => false);
-                    } else {
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          Routes.driversignupRoute, (route) => false);
-                    }
+                    if(formKey.currentState!.validate()){
+                    Navigator.pushNamed(context, Routes.usertypeScreenRoute);
+;                    }
+                    // if (widget.type == "client") {
+                    //   if(formKey.currentState!.validate()){
+                    //     // if(cubit.image==null){
+                    //     //   errorGetBar("pick_img".tr());
+                    //     // }
+                    //  // else{
+                    //       await cubit.signUp("user",context,true);
+                    //    // }
+                    //   }
+                    //   // Navigator.of(context).pushNamedAndRemoveUntil(
+                    //   //     Routes.homeRoute, (route) => false);
+                    // } else {
+                    //   Navigator.of(context).pushNamedAndRemoveUntil(
+                    //       Routes.driversignupRoute, (route) => false);
+                    // }
                   },
                 ),
               ],

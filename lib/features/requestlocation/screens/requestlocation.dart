@@ -39,13 +39,18 @@ class _RequestLocationState extends State<RequestLocation> {
               SizedBox(
                 height: getSize(context) / 24,
               ),
-              Image.asset(
-                ImageAssets.backImage,
-                height: getSize(context) / 13,
-                width: getSize(context) /13,
+              InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context,Routes.usertypeScreenRoute);
+                },
+                child: Image.asset(
+                  ImageAssets.backImage,
+                  height: getSize(context) / 13,
+                  width: getSize(context) /13,
 
-                // height: getSize(context) / 1.2,
-                // width: getSize(context) / 1.2,
+                  // height: getSize(context) / 1.2,
+                  // width: getSize(context) / 1.2,
+                ),
               ),
               SizedBox(
                 height: getSize(context) / 24,
@@ -105,7 +110,8 @@ class _RequestLocationState extends State<RequestLocation> {
                 borderRadius: getSize(context) / 24,
                 color: AppColors.primary,
                 onClick: () {
-                  Navigator.of(context).pushNamedAndRemoveUntil(Routes.registerScreenRoute, (route) => false,arguments: widget.type);
+                //  Navigator.of(context).pushNamedAndRemoveUntil(Routes.registerScreenRoute, (route) => false,arguments: widget.type);
+                  Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeRoute, (route) => false,arguments: widget.type);
                 },
               ),
 

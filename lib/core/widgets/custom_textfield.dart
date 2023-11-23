@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hero/core/utils/getsize.dart';
@@ -117,11 +118,14 @@ class CustomTextField extends StatelessWidget {
 
         minLines: minLine,
         validator: (value) {
-          if (value == null || value.isEmpty) {
-            return validatorMessage;
-          }
-          return null;
-        },
+          if(validatorMessage=='email_msg'.tr()){
+            return null;
+          }else{  if (value == null || value.isEmpty) {
+         return validatorMessage;
+        }
+             return null;
+               }}
+
       ),
     );
   }

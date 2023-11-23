@@ -59,8 +59,14 @@ SignUpModel? sharedUserData;
          Preferences.instance.setUser(r);
         sharedUserData = await Preferences.instance.getUserModel();
          Navigator.pop(context);
-         Navigator.of(context).pushNamedAndRemoveUntil(
-             Routes.homeRoute, (route) => false);
+         if(userType=="user"){
+           Navigator.pushNamedAndRemoveUntil(context, Routes.requestlocationScreenRoute, (route) => false,arguments: "client");
+         }
+         else{
+           Navigator.pushNamedAndRemoveUntil(context, Routes.requestlocationScreenRoute, (route) => false,arguments: "driver");
+         }
+         // Navigator.of(context).pushNamedAndRemoveUntil(
+         //     Routes.homeRoute, (route) => false);
          nameController.clear();
          phoneController.clear();
          emailController.clear();

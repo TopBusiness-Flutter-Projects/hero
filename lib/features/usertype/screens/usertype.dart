@@ -1,9 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hero/core/utils/assets_manager.dart';
 import 'package:hero/core/utils/getsize.dart';
 import 'package:hero/core/widgets/custom_button.dart';
+import 'package:hero/features/signup/cubit/signup_cubit.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 import '../../../config/routes/app_routes.dart';
@@ -107,8 +109,9 @@ class _ChooseTypeState extends State<ChooseType> {
                 text: "register_user".tr(),
                 borderRadius: getSize(context) / 24,
                 color: AppColors.primary,
-                onClick: () {
-                  Navigator.pushNamedAndRemoveUntil(context, Routes.requestlocationScreenRoute, (route) => false,arguments: "client");
+                onClick: ()  {
+                  context.read<SignupCubit>().signUp("user", context, true);
+                  // Navigator.pushNamedAndRemoveUntil(context, Routes.requestlocationScreenRoute, (route) => false,arguments: "client");
                 },
               ),
               SizedBox(
@@ -135,8 +138,9 @@ class _ChooseTypeState extends State<ChooseType> {
                   color: AppColors.white,
                   textcolor: AppColors.primary,
                   borderRadius: getSize(context) / 24,
-                  onClick: () {
-                    Navigator.pushNamedAndRemoveUntil(context, Routes.requestlocationScreenRoute, (route) => false,arguments: "driver");
+                  onClick: () async {
+                    await  context.read<SignupCubit>().signUp("driver", context, true);
+                   // Navigator.pushNamedAndRemoveUntil(context, Routes.requestlocationScreenRoute, (route) => false,arguments: "driver");
 
                   },
                 ),

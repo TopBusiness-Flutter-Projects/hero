@@ -68,7 +68,9 @@ class LoginCubit extends Cubit<LoginState> {
       emit(SuccessCheckPhoneState());
       Navigator.pop(context);
       //otp request
-      verification_Id = await verifyPhoneNumber(context);
+      //todo=> firebase auth stopped for test
+     // verification_Id = await verifyPhoneNumber(context);
+
       Navigator.pushNamedAndRemoveUntil(
           context, Routes.verificationScreenRoute, (route) => false);
     });
@@ -154,6 +156,7 @@ class LoginCubit extends Cubit<LoginState> {
       },
       codeAutoRetrievalTimeout: (String verificationId) {
         //Handle a timeout of when automatic SMS code handling fails.
+        errorGetBar("timeout ");
       },
     );
 
@@ -164,8 +167,11 @@ class LoginCubit extends Cubit<LoginState> {
   var deviceType;
 
   verifySmsCode(String smsCode, BuildContext context) async {
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    print(verification_Id);
     loadingDialog();
-
+   print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+   print(verification_Id);
     PhoneAuthCredential credential = PhoneAuthProvider.credential(
       verificationId: verification_Id!,
       smsCode: smsCode,
@@ -196,7 +202,7 @@ class LoginCubit extends Cubit<LoginState> {
         // Navigator.pop(context);
         emit(NewUserAuthinticatedState());
         Navigator.pushNamedAndRemoveUntil(
-            context, Routes.usertypeScreenRoute, (route) => false);
+            context, Routes.registerScreenRoute, (route) => false);
       } else {
         // Navigator.pop(context);
         emit(OldUserAuthinticatedState());

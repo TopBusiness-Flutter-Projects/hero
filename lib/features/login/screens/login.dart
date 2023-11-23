@@ -156,13 +156,8 @@ class _LoginState extends State<Login> {
                         errorGetBar("invalid number");
                       }
                     else{
-
                         await cubit.checkPhone(context);
                       }
-
-
-
-
                     },
                   )
                 ],

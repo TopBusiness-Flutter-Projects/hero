@@ -70,11 +70,17 @@ class AppRoutes {
         return MaterialPageRoute(
           builder: (context) =>  RequestLocation(type: type,),
         );
-  case Routes.registerScreenRoute:
-    String type=settings.arguments as String;
+  // case Routes.registerScreenRoute:
+  //   String type=settings.arguments as String;
+  //
+  //   return MaterialPageRoute(
+  //         builder: (context) =>  SignUp(type: type,),
+  //       );
+      case Routes.registerScreenRoute:
+        //String type=settings.arguments as String;
 
-    return MaterialPageRoute(
-          builder: (context) =>  SignUp(type: type,),
+        return MaterialPageRoute(
+          builder: (context) =>  SignUp(),
         );
         case Routes.homeRoute:
         return MaterialPageRoute(

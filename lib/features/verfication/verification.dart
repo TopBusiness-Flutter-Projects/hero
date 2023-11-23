@@ -9,6 +9,7 @@ import 'package:hero/core/widgets/custom_button.dart';
 import 'package:hero/features/login/cubit/login_cubit.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import '../../../core/utils/app_colors.dart';
+import '../../config/routes/app_routes.dart';
 
 
 class Verification extends StatefulWidget {
@@ -140,7 +141,10 @@ class _VerificationState extends State<Verification> {
                     text: "follow".tr(), color: AppColors.primary,
                     onClick: () async {
                  if(cubit.codecontrol.text.length==6){
-                   await  cubit.verifySmsCode(cubit.codecontrol.text,context);
+                   //todo => stopped firebase for test
+                  // await  cubit.verifySmsCode(cubit.codecontrol.text,context);
+                   Navigator.pushNamedAndRemoveUntil(
+                       context, Routes.registerScreenRoute, (route) => false);
                  }
                  else{
                    errorGetBar("invalid code");

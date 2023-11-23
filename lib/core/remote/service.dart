@@ -54,7 +54,7 @@ class ServiceApi {
 //
   Future<Either<Failure, SignUpModel>> postRegister(RegisterModel registerModel,bool isSignUp) async {
     try {
-      var image =  await MultipartFile.fromFile(registerModel.image.path);
+      var image = registerModel.image!=null? await MultipartFile.fromFile(registerModel.image!.path):null;
       var response = await dio.post(
 
         isSignUp?  EndPoints.registerUrl:EndPoints.editProfileUrl,
@@ -62,7 +62,7 @@ class ServiceApi {
           "device_type":registerModel.deviceType,
           "token":registerModel.token,
         },
-        formDataIsEnabled: true,
+        formDataIsEnabled:image==null?false: true,
         body: {
           'name': registerModel.name,
           'email':registerModel.email,
@@ -70,14 +70,9 @@ class ServiceApi {
           "birth":registerModel.birth,
           "type":registerModel.type,
           "img":image
-
         },
       );
-
         return Right(SignUpModel.fromJson(response));
-
-
-
     } on ServerException {
       return Left(ServerFailure());
     }
@@ -475,6 +470,7 @@ class ServiceApi {
     required String fromAddress , required double fromLng , required fromLat,
     String? toAddress , double? toLng , double? toLat ,required String date ,
     required String time}) async {
+
     SignUpModel signUpModel = await Preferences.instance.getUserModel();
     try {
 
@@ -482,7 +478,7 @@ class ServiceApi {
           EndPoints.createScheduleTripUrl,
           options: Options(
             headers: {'Authorization': signUpModel.data?.token},
-          ),
+          ),formDataIsEnabled: true,
           body: {
             "trip_type":tripType,
             "from_address":fromAddress,
@@ -496,6 +492,7 @@ class ServiceApi {
 
           }
       );
+
       return Right(CreateScedualTripModel.fromJson(response));
     } on ServerException {
       return Left(ServerFailure());
