@@ -349,7 +349,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   // }
                                  // else{
 
-                                    await cubit.signUp("user",context,false);
+                                    await cubit.editProfile("user",context);
                                  // }
                                 }
                                 // Navigator.of(context).pushNamedAndRemoveUntil(

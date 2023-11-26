@@ -51,8 +51,8 @@ class Data {
   final dynamic phone;
   final User? user;
   final dynamic driver;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
+  final dynamic createdAt;
+  final dynamic updatedAt;
 
   Data({
     this.id,

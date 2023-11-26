@@ -1,4 +1,3 @@
-// import 'package:http/http.dart' as http;
 
 import 'package:dio/dio.dart';
 import 'package:hero/core/api/end_points.dart';
@@ -6,9 +5,7 @@ import 'package:hero/core/models/home_model.dart';
 import 'package:hero/core/models/notification_model.dart';
 import 'package:hero/core/models/settings_model.dart';
 import 'package:hero/features/signup/models/register_model.dart';
-
 import '../api/base_api_consumer.dart';
-import '../api/end_points.dart';
 import '../error/exceptions.dart';
 import '../error/failures.dart';
 import 'package:dartz/dartz.dart';
@@ -63,11 +60,11 @@ class ServiceApi {
           "device_type":registerModel.deviceType,
           "token": registerModel.token
         },
-        formDataIsEnabled:image==null?false: true,
+        formDataIsEnabled:true,
         body: {
           'name': registerModel.name,
           'email':registerModel.email,
-          "phone":registerModel.phone,
+          "phone":registerModel.countryCode+registerModel.phone,
           "birth":registerModel.birth,
           "type":registerModel.type,
           "img":image
@@ -78,6 +75,35 @@ class ServiceApi {
       return Left(ServerFailure());
     }
   }
+
+
+  Future<Either<Failure, SignUpModel>> editProfile(RegisterModel registerModel) async {
+    SignUpModel signUpModel = await Preferences.instance.getUserModel();
+    try {
+      var image = registerModel.image!=null? await MultipartFile.fromFile(registerModel.image!.path):null;
+      var response = await dio.post(
+        EndPoints.editProfileUrl,
+        options: Options(
+          headers: {'Authorization': signUpModel.data?.token},
+        ),
+
+        formDataIsEnabled:true,
+        body: {
+          'name': registerModel.name,
+          'email':registerModel.email,
+          "phone":registerModel.countryCode+registerModel.phone,
+          "birth":registerModel.birth,
+          "type":registerModel.type,
+          "img":image
+        },
+      );
+      return Right(SignUpModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
+
 
   // Future<Either<Failure, SignUpModel>> editProfile(RegisterModel registerModel)async{
   //   try {
@@ -442,6 +468,8 @@ class ServiceApi {
 
           }
       );
+      print("1111111111111111111111111111111111111111");
+      print(response);
       return Right(CreateTripModel.fromJson(response));
     } on ServerException {
       return Left(ServerFailure());
@@ -471,7 +499,8 @@ class ServiceApi {
     required String fromAddress , required double fromLng , required fromLat,
     String? toAddress , double? toLng , double? toLat ,required String date ,
     required String time}) async {
-
+  print("4444444444444444444444444444444444444444");
+  print("date = $date , time = $time" );
     SignUpModel signUpModel = await Preferences.instance.getUserModel();
     try {
 
@@ -493,7 +522,8 @@ class ServiceApi {
 
           }
       );
-
+  print("33333333333333333333333333333333333333");
+  print(response);
       return Right(CreateScedualTripModel.fromJson(response));
     } on ServerException {
       return Left(ServerFailure());

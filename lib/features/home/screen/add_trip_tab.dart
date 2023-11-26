@@ -171,7 +171,7 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
                           ),
                         },
                       ),
-
+                  // default case
                 Visibility(
                   visible: cubit.bottomContainerInitialState,
                   child: Align(

@@ -37,9 +37,9 @@ class _SignUpState extends State<SignUp> {
     return Scaffold(
       backgroundColor: AppColors.white,
       body: BlocConsumer<SignupCubit, SignupState>(
-  listener: (context, state) {
-    // TODO: implement listener
-  },
+      listener: (context, state) {
+        // TODO: implement listener
+       },
        builder: (context, state) {
        SignupCubit cubit = context.read<SignupCubit>();
        return SingleChildScrollView(

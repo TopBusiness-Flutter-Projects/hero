@@ -568,6 +568,11 @@ void setflag(int flag){
            Navigator.pop(context);
            Navigator.pushReplacementNamed(context, Routes.loginRoute);
          }
+         else{
+           emit(FailedDeleteUser());
+           Navigator.pop(context);
+           errorGetBar(r.message??"failed to delete user");
+         }
     });
   }
 
@@ -745,10 +750,10 @@ bool isLoadingSettings = true;
   CreateTripModel? createTripModel;
 
   createTrip({required String tripType , required BuildContext context})async{
+
     if(address!=null && currentLocation!=null){
        emit(LoadingCreateTripState());
-      // loadingDialog();
-       bottomContainerLoadingState = true;
+      loadingDialog();
       final response = await  api.createTrip(
           tripType: tripType, fromAddress: address!, fromLng: currentLocation!.longitude!,
           fromLat: currentLocation!.latitude!,
@@ -760,30 +765,27 @@ bool isLoadingSettings = true;
           destination.longitude:null);
           response.fold((l) {
            emit(FailureCreateTrip());
-          // Navigator.pop(context);
+           Navigator.pop(context);
            errorGetBar("couldn't create trip");
           }, (r) {
       if(r==200){
         createTripModel = r;
        // bottomContainerLoadingState = true;
-       // Navigator.pop(context);
+        Navigator.pop(context);
         successGetBar("yeeeeeeeeeeeeeeeees");
+        bottomContainerLoadingState = true;
         emit(SuccessCreateTripState());
       }
-      else if(r.code == 202 ){
-       // Navigator.pop(context);
+
+      else if(r.code==502|| r.code==202){
+        Navigator.pop(context);
         emit(AlreadyInTrip());
-        ErrorWidget(r.message!);
-      }
-      else if(r.code==502){
-       // Navigator.pop(context);
-        emit(AlreadyInTrip());
-        ErrorWidget(r.message!);
+        errorGetBar(r.message??"Already in trip");
       }
       else{
-       // Navigator.pop(context);
+        Navigator.pop(context);
         emit(FailureCreateTrip());
-        ErrorWidget(r.message!);
+        errorGetBar(r.message??"something wrong");
       }
       });
 
@@ -812,10 +814,10 @@ bool isLoadingSettings = true;
 
   CreateScedualTripModel? createScedualTripModel;
   createScheduleTrip({required String tripType, required BuildContext context}) async {
-    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+
     if (address != null && currentLocation != null && date != null && time != null) {
       emit(LoadingCreateScheduelTripState());
-     // loadingDialog();
+      loadingDialog();
 
       // Convert TimeOfDay to a DateTime object with the current date
       DateTime dateTime = DateTime(
@@ -836,39 +838,46 @@ bool isLoadingSettings = true;
           toAddress: tripType == "with" ? location_control.text : null,
           toLat: tripType == "with" ? destination.latitude : null,
           toLng: tripType == "with" ? destination.longitude : null,
-          date: formattedDateTime.substring(0, 10),
-          time: formattedDateTime.substring(11, 19),
+          // date: formattedDateTime.substring(0, 10),
+          // time: formattedDateTime.substring(11, 19),
+          date: "1-1-2026",
+          time: "01:01:01"
         );
 
         response.fold((l) {
-          // Navigator.pop(context);
+           Navigator.pop(context);
           // Navigator.pop(context);
           emit(FailureCreateSchedualTrip());
           errorGetBar("failed to create schedule trip");
         }, (r) {
           if (r.code == 200 || r.code == 201) {
+            Navigator.pop(context);
             successGetBar("the trip created successfully");
             emit(SuccessCreateSchedualTripState());
             createScedualTripModel = r;
            // bottomContainerLoadingState = true;
 
-
-            // Navigator.pop(context); // Ensure Navigator.pop is called here
+             Navigator.pop(context); // Ensure Navigator.pop is called here
             // Navigator.pop(context);
           } else {
+             Navigator.pop(context);
             // Navigator.pop(context);
-            // Navigator.pop(context);
-            ErrorWidget(r.message!);
+             errorGetBar(r.message??"something wrong");
             emit(FailureCreateSchedualTrip());
           }
         });
       } catch (e) {
-        print("Exception: $e");
-      //  Navigator.pop(context);
+        print("Exception*****: $e");
         emit(FailureCreateSchedualTrip());
+      //  errorGetBar(e.toString()??"something wrong");
+
+
+
       }
     } else {
-      ErrorWidget("Some required field is null. We can't make the request.");
+      Navigator.pop(context);
+      errorGetBar("Some required field is null. We can't make the request.");
+
     }
   }
 
