@@ -85,14 +85,10 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
         //  key: scaffoldKey,
         body: BlocConsumer<HomeCubit, HomeState>(
           listener: (context, state) {
-         // if(state is SuccessCreateSchedualTripState || state is FailureCreateSchedualTrip ){
-         //   Navigator.pop(context);
-         //   Fluttertoast.showToast(msg: "333333333333333333333333333333");
-         // }
-         // else{
-         //
-         //
-         // }
+         if(state is SuccessCreateSchedualTripState ){
+           Navigator.pop(context);
+
+         }
           },
           builder: (context, state) {
             HomeCubit cubit = context.read<HomeCubit>();
@@ -290,6 +286,7 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
                                     color: AppColors.white,
                                     textcolor: AppColors.primary,
                                     onClick: () async {
+                                      print("cubit.flag = ${cubit.flag}");
                                       startTimer();
                                       await  cubit.createTrip(tripType: cubit.flag==1?"with":"without",context: context);
                                      // cubit.changeToRideNowState();
@@ -303,178 +300,178 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
                         )),
                   ),
                 ),
-                // loading state
-                Visibility(
-                  visible: cubit.bottomContainerLoadingState,
-                  //visible: false,
-                  child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                        height: getSize(context) * 0.8,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(30),
-                            topLeft: Radius.circular(30),
-                          ),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Image.asset(
-                              ImageAssets.search,
-                              width: getSize(context) / 4,
-                            ),
-                            //progress indicator
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10.0),
-                              child: LinearProgressIndicator(
-                                borderRadius: BorderRadius.circular(20),
-                                value: _progressValue,
-                                color: AppColors.primary, //<-- SEE HERE
-                                backgroundColor: AppColors.grey1, //<-- SEE HERE
-                              ),
-                            ),
-                            //rich text
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 12.0),
-                              child: RichText(
-                                  textDirection: TextDirection.rtl,
-                                  text: TextSpan(
-                                      text: "search_for_drivers".tr(),
-                                      style: TextStyle(
-                                        color: AppColors.black2,
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: getSize(context) * 0.04,
-                                      ),
-                                      children: [
-                                        TextSpan(
-                                          text: "appreciate_your_patience".tr(),
-                                          style: TextStyle(
-                                            color: AppColors.primary,
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: getSize(context) * 0.04,
-                                          ),
-                                        )
-                                      ])),
-                            ),
-                            //button
-                            CustomButton(
-                              text: "cancel".tr(),
-                              color: AppColors.red,
-                              onClick: () {
-                                cubit.tabsController.animateTo(0);
-                                cubit.bottomContainerLoadingState = false;
-                                cubit.bottomContainerInitialState = true;
-                                cubit.cancelTrip();
-                              },
-                              width: getSize(context) * 0.9,
-                              borderRadius: 16,
-                            )
-                          ],
-                        ),
-                      )),
-                ),
-                //success state
-                Visibility(
-                  visible: cubit.bottomContainerSuccessState,
-                  //visible: false,
-                  child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                        height: getSize(context) * 0.6,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(30),
-                            topLeft: Radius.circular(30),
-                          ),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Image.asset(
-                              ImageAssets.success,
-                              width: getSize(context) / 4,
-                            ),
-
-                            //rich text
-                            Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12.0),
-                                child: Text("confirm_driver".tr())),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Icon(
-                                  Icons.person,
-                                  color: Colors.grey,
-                                ),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Text(
-                                  "محمد محمود",
-                                  style: TextStyle(color: AppColors.black3),
-                                )
-                              ],
-                            )
-                          ],
-                        ),
-                      )),
-                ),
-                //failure state
-                Visibility(
-                  visible: cubit.bottomContainerFailureState,
-                  //visible: false,
-                  child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                        height: getSize(context) * 0.55,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(30),
-                            topLeft: Radius.circular(30),
-                          ),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Image.asset(
-                              ImageAssets.failure,
-                              width: getSize(context) / 4,
-                            ),
-
-                            //rich text
-                            Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12.0),
-                                child: Text("no_drivers".tr())),
-                            //button
-                            CustomButton(
-                              text: "try_again".tr(),
-                              color: AppColors.red,
-                              onClick: () {
-                                cubit.tabsController.animateTo(0);
-                                cubit.bottomContainerLoadingState = false;
-                                cubit.bottomContainerFailureState = false;
-                                cubit.bottomContainerSuccessState = false;
-                                cubit.bottomContainerInitialState = true;
-                              },
-                              width: getSize(context) * 0.9,
-                              borderRadius: 16,
-                            )
-                          ],
-                        ),
-                      )),
-                ),
+                // // loading state
+                // Visibility(
+                //   visible: cubit.bottomContainerLoadingState,
+                //   //visible: false,
+                //   child: Align(
+                //       alignment: Alignment.bottomCenter,
+                //       child: Container(
+                //         height: getSize(context) * 0.8,
+                //         decoration: BoxDecoration(
+                //           color: Colors.white,
+                //           borderRadius: BorderRadius.only(
+                //             topRight: Radius.circular(30),
+                //             topLeft: Radius.circular(30),
+                //           ),
+                //         ),
+                //         child: Column(
+                //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                //           children: [
+                //             Image.asset(
+                //               ImageAssets.search,
+                //               width: getSize(context) / 4,
+                //             ),
+                //             //progress indicator
+                //             Padding(
+                //               padding:
+                //                   const EdgeInsets.symmetric(horizontal: 10.0),
+                //               child: LinearProgressIndicator(
+                //                 borderRadius: BorderRadius.circular(20),
+                //                 value: _progressValue,
+                //                 color: AppColors.primary, //<-- SEE HERE
+                //                 backgroundColor: AppColors.grey1, //<-- SEE HERE
+                //               ),
+                //             ),
+                //             //rich text
+                //             Padding(
+                //               padding:
+                //                   const EdgeInsets.symmetric(horizontal: 12.0),
+                //               child: RichText(
+                //                   textDirection: TextDirection.rtl,
+                //                   text: TextSpan(
+                //                       text: "search_for_drivers".tr(),
+                //                       style: TextStyle(
+                //                         color: AppColors.black2,
+                //                         fontWeight: FontWeight.w700,
+                //                         fontSize: getSize(context) * 0.04,
+                //                       ),
+                //                       children: [
+                //                         TextSpan(
+                //                           text: "appreciate_your_patience".tr(),
+                //                           style: TextStyle(
+                //                             color: AppColors.primary,
+                //                             fontWeight: FontWeight.w700,
+                //                             fontSize: getSize(context) * 0.04,
+                //                           ),
+                //                         )
+                //                       ])),
+                //             ),
+                //             //button
+                //             CustomButton(
+                //               text: "cancel".tr(),
+                //               color: AppColors.red,
+                //               onClick: () {
+                //                 cubit.tabsController.animateTo(0);
+                //                 cubit.bottomContainerLoadingState = false;
+                //                 cubit.bottomContainerInitialState = true;
+                //                 cubit.cancelTrip();
+                //               },
+                //               width: getSize(context) * 0.9,
+                //               borderRadius: 16,
+                //             )
+                //           ],
+                //         ),
+                //       )),
+                // ),
+                // //success state
+                // Visibility(
+                //   visible: cubit.bottomContainerSuccessState,
+                //   //visible: false,
+                //   child: Align(
+                //       alignment: Alignment.bottomCenter,
+                //       child: Container(
+                //         height: getSize(context) * 0.6,
+                //         decoration: BoxDecoration(
+                //           color: Colors.white,
+                //           borderRadius: BorderRadius.only(
+                //             topRight: Radius.circular(30),
+                //             topLeft: Radius.circular(30),
+                //           ),
+                //         ),
+                //         child: Column(
+                //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                //           children: [
+                //             Image.asset(
+                //               ImageAssets.success,
+                //               width: getSize(context) / 4,
+                //             ),
+                //
+                //             //rich text
+                //             Padding(
+                //                 padding: const EdgeInsets.symmetric(
+                //                     horizontal: 12.0),
+                //                 child: Text("confirm_driver".tr())),
+                //             Row(
+                //               mainAxisAlignment: MainAxisAlignment.start,
+                //               children: [
+                //                 SizedBox(
+                //                   width: 10,
+                //                 ),
+                //                 Icon(
+                //                   Icons.person,
+                //                   color: Colors.grey,
+                //                 ),
+                //                 SizedBox(
+                //                   width: 10,
+                //                 ),
+                //                 Text(
+                //                   "محمد محمود",
+                //                   style: TextStyle(color: AppColors.black3),
+                //                 )
+                //               ],
+                //             )
+                //           ],
+                //         ),
+                //       )),
+                // ),
+                // //failure state
+                // Visibility(
+                //   visible: cubit.bottomContainerFailureState,
+                //   //visible: false,
+                //   child: Align(
+                //       alignment: Alignment.bottomCenter,
+                //       child: Container(
+                //         height: getSize(context) * 0.55,
+                //         width: double.infinity,
+                //         decoration: BoxDecoration(
+                //           color: Colors.white,
+                //           borderRadius: BorderRadius.only(
+                //             topRight: Radius.circular(30),
+                //             topLeft: Radius.circular(30),
+                //           ),
+                //         ),
+                //         child: Column(
+                //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                //           children: [
+                //             Image.asset(
+                //               ImageAssets.failure,
+                //               width: getSize(context) / 4,
+                //             ),
+                //
+                //             //rich text
+                //             Padding(
+                //                 padding: const EdgeInsets.symmetric(
+                //                     horizontal: 12.0),
+                //                 child: Text("no_drivers".tr())),
+                //             //button
+                //             CustomButton(
+                //               text: "try_again".tr(),
+                //               color: AppColors.red,
+                //               onClick: () {
+                //                 cubit.tabsController.animateTo(0);
+                //                 cubit.bottomContainerLoadingState = false;
+                //                 cubit.bottomContainerFailureState = false;
+                //                 cubit.bottomContainerSuccessState = false;
+                //                 cubit.bottomContainerInitialState = true;
+                //               },
+                //               width: getSize(context) * 0.9,
+                //               borderRadius: 16,
+                //             )
+                //           ],
+                //         ),
+                //       )),
+                // ),
 
                 //back button
                 Positioned(

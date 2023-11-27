@@ -142,9 +142,9 @@ class _VerificationState extends State<Verification> {
                     onClick: () async {
                  if(cubit.codecontrol.text.length==6){
                    //todo => stopped firebase for test
-                  // await  cubit.verifySmsCode(cubit.codecontrol.text,context);
-                   Navigator.pushNamedAndRemoveUntil(
-                       context, Routes.registerScreenRoute, (route) => false);
+                   await  cubit.verifySmsCode(cubit.codecontrol.text,context);
+                   // Navigator.pushNamedAndRemoveUntil(
+                   //     context, Routes.registerScreenRoute, (route) => false);
                  }
                  else{
                    errorGetBar("invalid code");

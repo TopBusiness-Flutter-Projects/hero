@@ -144,7 +144,7 @@ class _HomeTabState extends State<HomeTab> {
                 ),
               ],
             ),
-
+            SizedBox(height: getSize(context)*0.03,),
             // list of orders
             SizedBox(
                 height: getSize(context) * 1.24,
@@ -163,8 +163,11 @@ class _HomeTabState extends State<HomeTab> {
 
                               return InkWell(
                                 onTap: () {
-                                  if(cubit.homeModel?.data?.newTrips?[index].type=="with"){
-                                    Navigator.pushNamed(context, Routes.homeRoute);
+                                  //todo=>
+                                  if(cubit.homeModel?.data?.newTrips?[index].type=="new"){
+
+                                 //   context.read<HomeCubit>().tabsController.animateTo(10);
+                                 //   Navigator.pushNamed(context, Routes.homeRoute);
                                   }
                                 },
                                   child: HomeListItem(trip: cubit.homeModel?.data?.newTrips?[index],));

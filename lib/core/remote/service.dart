@@ -495,22 +495,25 @@ class ServiceApi {
     }
   }
 
-  Future<Either<Failure, CreateScedualTripModel>> createScheduleTrip({required String tripType,
-    required String fromAddress , required double fromLng , required fromLat,
-    String? toAddress , double? toLng , double? toLat ,required String date ,
+  Future<Either<Failure, CreateScedualTripModel>> createScheduleTrip(
+      {required String tripType,
+    required String fromAddress , required String fromLng , required String fromLat,
+    String? toAddress , String? toLng , String? toLat ,required String date ,
     required String time}) async {
-  print("4444444444444444444444444444444444444444");
+  print("55555555555555555555555555555555555555555");
   print("date = $date , time = $time" );
     SignUpModel signUpModel = await Preferences.instance.getUserModel();
+    print("token = ${signUpModel?.data?.token}");
     try {
 
       final response = await dio.post(
           EndPoints.createScheduleTripUrl,
           options: Options(
             headers: {'Authorization': signUpModel.data?.token},
-          ),formDataIsEnabled: true,
+          ),
+          // formDataIsEnabled: true,
           body: {
-            "trip_type":tripType,
+           // "trip_type":tripType,
             "from_address":fromAddress,
             "from_long":fromLng,
             "from_lat":fromLat,
@@ -519,13 +522,14 @@ class ServiceApi {
             "to_lat":toLat,
             "date": date ,
             "time": time ,
-
           }
       );
-  print("33333333333333333333333333333333333333");
+  print("666666666666666666666666666666666666666");
   print(response);
       return Right(CreateScedualTripModel.fromJson(response));
     } on ServerException {
+      print("0000000000000000000000000000000000000000000");
+
       return Left(ServerFailure());
     }
   }

@@ -13,6 +13,11 @@ class CreateScedualTripModel {
   final String? message;
   final int? code;
 
+  @override
+  String toString() {
+    return 'CreateScedualTripModel{data: $data, message: $message, code: $code}';
+  }
+
   CreateScedualTripModel({
     this.data,
     this.message,
@@ -53,6 +58,11 @@ class Data {
   final dynamic driver;
   final dynamic createdAt;
   final dynamic updatedAt;
+
+  @override
+  String toString() {
+    return 'Data{id: $id, type: $type, tripType: $tripType, fromAddress: $fromAddress, fromLong: $fromLong, fromLat: $fromLat, toAddress: $toAddress, toLong: $toLong, toLat: $toLat, timeRide: $timeRide, timeArrive: $timeArrive, distance: $distance, time: $time, price: $price, name: $name, phone: $phone, user: $user, driver: $driver, createdAt: $createdAt, updatedAt: $updatedAt}';
+  }
 
   Data({
     this.id,
@@ -96,8 +106,8 @@ class Data {
     phone: json["phone"],
     user: json["user"] == null ? null : User.fromJson(json["user"]),
     driver: json["driver"],
-    createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
-    updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
+    createdAt: json["created_at"],
+    updatedAt: json["updated_at"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -119,15 +129,15 @@ class Data {
     "phone": phone,
     "user": user?.toJson(),
     "driver": driver,
-    "created_at": createdAt?.toIso8601String(),
-    "updated_at": updatedAt?.toIso8601String(),
+    "created_at": createdAt,
+    "updated_at": updatedAt,
   };
 }
 
 class User {
   final int? id;
   final String? name;
-  final String? email;
+  final dynamic email;
   final String? phone;
   final String? image;
   final DateTime? birth;

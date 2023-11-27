@@ -18,7 +18,7 @@ class HomeListItem extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 3),
       margin: EdgeInsets.symmetric(
-          horizontal: getSize(context) * 0.01, vertical: getSize(context) * 0.01),
+          horizontal: getSize(context) * 0.01, vertical: getSize(context) * 0.015),
       // width: getSize(context)*0.4,
       // height: getSize(context)/4,
       decoration:

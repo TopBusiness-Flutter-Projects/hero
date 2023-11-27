@@ -9,6 +9,7 @@ class CheckBoxState extends LoginState {}
 class FailureLoginState extends LoginState {}
 class SuccessLoginState extends LoginState {}
 class LoadingLoginStatus extends LoginState {}
+class PhoneBlockedtState extends LoginState {}
 class PhoneNotExistState extends LoginState {}
 class PhoneExistState extends LoginState {}
 class CheckCodeInvalidCode extends LoginState {}

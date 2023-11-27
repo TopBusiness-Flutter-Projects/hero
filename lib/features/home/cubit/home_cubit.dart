@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:bloc/bloc.dart';
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:easy_localization/easy_localization.dart' as oo;
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hero/core/models/create_trip_model.dart';
@@ -15,13 +15,12 @@ import 'package:hero/core/models/notification_model.dart';
 import 'package:hero/core/models/settings_model.dart';
 import 'package:hero/core/preferences/preferences.dart';
 import 'package:hero/core/utils/dialogs.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:maps_toolkit/maps_toolkit.dart' as mp;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hero/core/remote/service.dart';
 import 'package:hero/core/utils/assets_manager.dart';
-import 'package:meta/meta.dart';
-import 'package:flutter/material.dart';
 import 'package:google_maps_webservice/geocoding.dart'as geocoding;
 import 'package:location/location.dart'as loc;
 import 'package:permission_handler/permission_handler.dart';
@@ -373,18 +372,7 @@ void setflag(int flag){
     );
   }
 
-  // getAddress() async {
-  //   print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-  //   final response = await api.getGeoData(
-  //       currentLocation!.latitude.toString() + "," + currentLocation!.longitude.toString());
-  //   response.fold((l) => null, (r) {
-  //     address = r.results[0].formattedAddress;
-  //
-  //     print(address);
-  //     print(response);
-  //     emit(GettingAddressState());
-  //   });
-  // }
+
 
   Uint8List? icon;
   Future<void> updateLocation() async {
@@ -474,13 +462,10 @@ void setflag(int flag){
 
 
     if(datePicked != null && datePicked != date) {
-     // print('Date selected: ${date.toString()}');
-     // setState((){
-        date = datePicked;
 
+        date = datePicked;
         dateFormatted = dateFormatter.format(datePicked!);
         emit(DateUpdateState());
-     // });
     }
   }
 
@@ -490,7 +475,7 @@ void setflag(int flag){
       initialTime: time,
     );
 
-    if(timePicked != null && timePicked != time) {
+    if(timePicked != null) {
 
       //setState((){
         time = timePicked!;
@@ -518,8 +503,10 @@ void setflag(int flag){
                   Text("sure_about_date").tr(),
                   Text(" $dateFormatted $timeFormatted",textDirection: TextDirection.ltr,),
                   //Text("time: $timeFormatted"),
-                  ElevatedButton(onPressed: ()  {
+                  ElevatedButton(
+                      onPressed: ()  {
                     Navigator.pop(context);
+
                      createScheduleTrip(tripType: flag==1?"with":"without", context: context);
 
 
@@ -530,7 +517,7 @@ void setflag(int flag){
               InkWell(
                 onTap: () async {
 
-                 await selectDateAndTime(context);
+              //   await selectDateAndTime(context);
                  Navigator.pop(context);
                 },
                   child: SvgPicture.asset("assets/icons/close.svg"))
@@ -590,7 +577,7 @@ void setflag(int flag){
 
   DeleteModel? deleteModel;
   logout(BuildContext context)async{
-    print("55555555555555555555555555555555555555");
+
     emit(LoadingToLogOutState());
     loadingDialog();
     String? token = await _getId();
@@ -708,8 +695,7 @@ bool isLoadingSettings = true;
 
 //todo=>add favourite location
   addFavourite({required String address,required String lat ,required String  long, required BuildContext context})async{
-    print("####################################");
-    print(favouriteModel);
+
     emit(LoadingAddToFavourite());
     loadingDialog();
 
@@ -726,7 +712,7 @@ bool isLoadingSettings = true;
     }
   }
 
-  //  print("Address not found in existing addresses, proceeding with API call.");
+
     final response = await api.addFavourite(address: address,lat: lat,long:long );
     response.fold((l) {
       Navigator.pop(context);
@@ -807,7 +793,7 @@ bool isLoadingSettings = true;
      // }
     }
     else{
-      ErrorWidget("some required field is null we can't make the request");
+      errorGetBar("some required field is null we can't make the request");
     }
 
   }
@@ -816,49 +802,47 @@ bool isLoadingSettings = true;
   createScheduleTrip({required String tripType, required BuildContext context}) async {
 
     if (address != null && currentLocation != null && date != null && time != null) {
+
       emit(LoadingCreateScheduelTripState());
       loadingDialog();
 
-      // Convert TimeOfDay to a DateTime object with the current date
-      DateTime dateTime = DateTime(
-        date!.year,
-        date!.month,
-        date!.day,
-        time.hour,
-        time.minute,
-      );
-      String formattedDateTime = oo.DateFormat('yyyy-MM-dd HH:mm:ss').format(dateTime);
+
+      String formattedDate  =intl. DateFormat('yyyy-M-d').format(date!);
+      // DateTime dateTime = DateTime(0, 1, 1, time.hour, time.minute, 0);
+      String formattedTime  = '${time.hour}:${time.minute}:00';
+      //
 
       try {
+
         final response = await api.createScheduleTrip(
           tripType: tripType,
           fromAddress: address!,
-          fromLng: currentLocation!.longitude!,
-          fromLat: currentLocation!.latitude!,
+          fromLng: currentLocation!.longitude!.toString(),
+          fromLat: currentLocation!.latitude!.toString(),
           toAddress: tripType == "with" ? location_control.text : null,
-          toLat: tripType == "with" ? destination.latitude : null,
-          toLng: tripType == "with" ? destination.longitude : null,
-          // date: formattedDateTime.substring(0, 10),
-          // time: formattedDateTime.substring(11, 19),
-          date: "1-1-2026",
-          time: "01:01:01"
+          toLat: tripType == "with" ? destination.latitude.toString() : null,
+          toLng: tripType == "with" ? destination.longitude .toString(): null,
+
+          date: formattedDate ,
+          time: formattedTime
         );
 
         response.fold((l) {
            Navigator.pop(context);
-          // Navigator.pop(context);
+
           emit(FailureCreateSchedualTrip());
           errorGetBar("failed to create schedule trip");
         }, (r) {
+
           if (r.code == 200 || r.code == 201) {
-            Navigator.pop(context);
+
+
+
             successGetBar("the trip created successfully");
+
             emit(SuccessCreateSchedualTripState());
-            createScedualTripModel = r;
            // bottomContainerLoadingState = true;
 
-             Navigator.pop(context); // Ensure Navigator.pop is called here
-            // Navigator.pop(context);
           } else {
              Navigator.pop(context);
             // Navigator.pop(context);
@@ -867,100 +851,23 @@ bool isLoadingSettings = true;
           }
         });
       } catch (e) {
-        print("Exception*****: $e");
+
         emit(FailureCreateSchedualTrip());
-      //  errorGetBar(e.toString()??"something wrong");
+        errorGetBar(e.toString()??"something wrong");
 
 
 
       }
-    } else {
+    }
+
+    else {
       Navigator.pop(context);
       errorGetBar("Some required field is null. We can't make the request.");
 
     }
   }
 
-  // createScheduleTrip({required String tripType , required BuildContext context})async{
-  //
-  //   if(address!=null && currentLocation!=null&&date!=null&&time!=null){
-  //
-  //     emit(LoadingCreateScheduelTripState());
-  //     loadingDialog();
-  //     // Convert TimeOfDay to a DateTime object with the current date
-  //     DateTime dateTime = DateTime(
-  //       date!.year,
-  //       date!.month,
-  //       date!.day,
-  //       time.hour,
-  //       time.minute,
-  //     );
-  //     String formattedDateTime = oo.DateFormat('yyyy-MM-dd hh:mm:ss').format(dateTime);
-  //    print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-  //     final response = await  api.createScheduleTrip(
-  //         tripType: tripType, fromAddress: address!,
-  //         fromLng: currentLocation!.longitude!,
-  //         fromLat: currentLocation!.latitude!,
-  //         toAddress:tripType=="with"?
-  //         location_control.text :null,
-  //         toLat:tripType=="with"?
-  //         destination.latitude:null,
-  //         toLng:tripType=="with"?
-  //         destination.longitude:null,
-  //         date: formattedDateTime.substring(0,10),
-  //         time: formattedDateTime.substring(11,19)
-  //
-  //     );
-  //     print("********************************************************************");
-  //
-  //     response.fold((l) {
-  //       Navigator.pop(context);
-  //       emit(FailureCreateSchedualTrip());
-  //
-  //     }, (r) {
-  //       if(r.code==200||r.code==201){
-  //         Navigator.pop(context);
-  //         Navigator.pop(context);
-  //         createScedualTripModel = r;
-  //         bottomContainerLoadingState = true;
-  //         emit(SuccessCreateSchedualTripState());
-  //
-  //       }
-  //       // else if(r.code == 202 ){
-  //       //   emit(AlreadyInTrip());
-  //       //   Navigator.pop(context);
-  //       //   ErrorWidget(r.message!);
-  //       // }
-  //       else{
-  //         Navigator.pop(context);
-  //         ErrorWidget(r.message!);
-  //         emit(FailureCreateSchedualTrip());
-  //
-  //       }
-  //     });
-  //
-  //
-  //
-  //
-  //     //  // with destination
-  //     // if(flag==1){
-  //     //   final response = await  api.createTrip(
-  //     //       tripType: "with", fromAddress: address!, fromLng: currentLocation!.longitude!,
-  //     //       fromLat: currentLocation!.latitude!,toAddress:location_control.text ,
-  //     //       toLat: destination.latitude,toLng:destination.longitude );
-  //     // }
-  //     // //without
-  //     // else{
-  //     //   final response = await  api.createTrip(
-  //     //       tripType: "without", fromAddress: address!, fromLng: currentLocation!.longitude!,
-  //     //       fromLat: currentLocation!.latitude!);
-  //     // }
-  //   }
-  //   else{
-  //     ErrorWidget("some required field is null we can't make the request");
-  //   }
-  //
-  // }
+
 
 cancelTrip(
   //  {required int tripId}

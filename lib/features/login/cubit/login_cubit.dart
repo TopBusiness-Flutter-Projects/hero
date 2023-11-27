@@ -5,6 +5,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hero/core/models/login_model.dart';
 import 'package:hero/core/models/signup_response_model.dart';
 import 'package:hero/core/preferences/preferences.dart';
@@ -45,31 +46,55 @@ class LoginCubit extends Cubit<LoginState> {
     response.fold((l) {
       emit(FailureCheckPhoneState());
       Navigator.pop(context);
-    }, (r) async {
+    },
+            (r) async {
       loginModel = r;
-      if (r.code == 406 || r.code == 500) {
+      // case1:new user
+      if (r.code == 406 ) {
         //new user=> go to register
         isNewUser = true;
         print("is new User = $isNewUser");
         emit(PhoneNotExistState());
+        //emit(SuccessCheckPhoneState());
+        Navigator.pop(context);
+        //otp request
+        //todo=> firebase auth stopped for test
+        verification_Id = await verifyPhoneNumber(context);
+
+        //
+        Navigator.pushNamedAndRemoveUntil(
+            context, Routes.verificationScreenRoute, (route) => false);
       }
-      // else if (r.code==500){
-      //   ErrorWidget("this number is blocked");
-      //   emit(PhoneNotExistState());
-      // }
+      //case2: blocked
+      else if (r.code==500){
+        Navigator.pop(context);
+    errorGetBar("this number is blocked");
+        emit(PhoneBlockedtState());
+        return ;
+      }
+      //case3:old user
       else if (r.code == 200) {
         isNewUser = false;
         //old user=>go to home
         emit(PhoneExistState());
-      }
-      emit(SuccessCheckPhoneState());
-      Navigator.pop(context);
-      //otp request
-      //todo=> firebase auth stopped for test
-     // verification_Id = await verifyPhoneNumber(context);
+        //emit(SuccessCheckPhoneState());
+        Navigator.pop(context);
+        //otp request
+        //todo=> firebase auth stopped for test
+        verification_Id = await verifyPhoneNumber(context);
 
-      Navigator.pushNamedAndRemoveUntil(
-          context, Routes.verificationScreenRoute, (route) => false);
+        //
+        Navigator.pushNamedAndRemoveUntil(
+            context, Routes.verificationScreenRoute, (route) => false);
+      }
+      // emit(SuccessCheckPhoneState());
+      // Navigator.pop(context);
+      // //otp request
+      // //todo=> firebase auth stopped for test
+      // verification_Id = await verifyPhoneNumber(context);
+     //
+     //  Navigator.pushNamedAndRemoveUntil(
+     //      context, Routes.verificationScreenRoute, (route) => false);
     });
   }
 
@@ -125,9 +150,11 @@ class LoginCubit extends Cubit<LoginState> {
 
   Future<String> verifyPhoneNumber(BuildContext context) async {
     Completer<String> completer = Completer();
+
     await FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: AppStrings.countryCode + phoneController.text,
       forceResendingToken: resendToken,
+      timeout: Duration(seconds: 20),
       verificationCompleted: (PhoneAuthCredential credential) {
         //Automatic handling of the SMS code on Android devices.
         smsCode = credential.smsCode!;
@@ -150,10 +177,12 @@ class LoginCubit extends Cubit<LoginState> {
         this.resendToken = resendToken;
         this.verification_Id = verificationId;
         completer.complete(verificationId);
+
       },
       codeAutoRetrievalTimeout: (String verificationId) {
         //Handle a timeout of when automatic SMS code handling fails.
-        errorGetBar("timeout ");
+        Fluttertoast.showToast(msg:"timeout" );
+       // errorGetBar("timeout ");
       },
     );
 
@@ -177,39 +206,21 @@ class LoginCubit extends Cubit<LoginState> {
     await FirebaseAuth.instance
         .signInWithCredential(credential)
         .then((value) async {
-      // var model= await Preferences.instance.getUserModel();
-      //  Get.offAndToNamed(Routes.resetPasswordRoute);
-
       emit(CheckCodeSuccessfully());
-
-      //  if(model.data==null){
-      //    print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-      //    print(model.data);
-      //    emit(ModelDoesNotExist());
-      //
-      //  }else{
-      //    print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-      //    print(model.data!.user!.name);
-      //    emit(ModelExistState());
-      //    Get.offAndToNamed(Routes.homeRoute);
-      //
-      // }
-
       if (isNewUser) {
-        // Navigator.pop(context);
+         Navigator.pop(context);
         emit(NewUserAuthinticatedState());
         Navigator.pushNamedAndRemoveUntil(
             context, Routes.registerScreenRoute, (route) => false);
       } else {
-        // Navigator.pop(context);
+         Navigator.pop(context);
         emit(OldUserAuthinticatedState());
         //todo => login api request to save user data in shared preferences
-
         deviceType = Platform.isAndroid ? 'Android' : 'iOS';
         login(context);
       }
 
-      Navigator.pop(context);
+     // Navigator.pop(context);
     }).catchError((error) {
       Navigator.pop(context);
       errorGetBar(error.toString());
