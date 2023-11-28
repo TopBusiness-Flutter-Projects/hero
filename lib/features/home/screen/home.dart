@@ -2,11 +2,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:hero/core/utils/app_colors.dart';
 import 'package:hero/core/utils/getsize.dart';
 import 'package:hero/features/home/screen/home_tab.dart';
-import 'package:hero/features/home/screen/without_destination_tab.dart';
 import '../../../core/utils/assets_manager.dart';
 import '../../../core/widgets/close_widget.dart';
 import '../../about_hero/screens/about_hero_screen.dart';
@@ -77,9 +75,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   _scaffoldKey.currentState?.openDrawer();
                 },
                     child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Container(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                     children: [
+                      Container(
                         //  margin: EdgeInsets.only(left: 10, top: 10),
                         padding: EdgeInsets.all(8),
                         decoration: BoxDecoration(
@@ -110,6 +108,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             SizedBox(
               height: getSize(context) * 0.1,
             ),
+
+
             ListTile(
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -129,11 +129,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
               leading:
               context.read<HomeCubit>().signUpModel?.data?.image==null?
               CircleAvatar(
-                radius: getSize(context) * 0.1,
+                radius: getSize(context)/8,
                 backgroundImage: AssetImage(ImageAssets.person),
-              ):ClipRRect(
-                borderRadius: BorderRadius.circular(30),
-                  child: Image.network(context.read<HomeCubit>().signUpModel!.data?.image ?? '')),
+              ):CircleAvatar(
+                radius: getSize(context)/8,
+                  backgroundImage: NetworkImage(context.read<HomeCubit>().signUpModel!.data?.image ?? '')),
               subtitle: Text(
                 "${context.read<HomeCubit>().signUpModel?.data?.email}",
                 style: TextStyle(
@@ -142,6 +142,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                     color: AppColors.black2),
               ),
             ),
+
+
             Expanded(
                 child: ListView.separated(
                     itemBuilder: (context, index) {
@@ -183,12 +185,16 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                             Navigator.pop(context);
                           }
                           else if(index == 11){
-                          //log out
+                            //log out
+
                             context.read<HomeCubit>().logout(context);
                           }
                           else if(index == 10){
                             //delete
                             context.read<HomeCubit>().deleteUser(context);
+                          }
+                          else if(index == 5){
+                           context.read<HomeCubit>().launchPhoneDialer("+201011827324");
                           }
                         },
                         child: DrawerListItem(

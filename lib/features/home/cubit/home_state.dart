@@ -53,6 +53,8 @@ class FailureFavouriteState extends HomeState {}
 class SuccessFavouriteState extends HomeState {}
 class FailureDeletingFavourite extends HomeState {}
 class SuccessDeletingFavourite extends HomeState {}
+class LoadingIndicatorState extends HomeState {}
+class changingStatus extends HomeState {}
 class NoAdressFound extends HomeState {}
 class LoadingAddToFavourite extends HomeState {}
 class SuccessAddingFavourite extends HomeState {}

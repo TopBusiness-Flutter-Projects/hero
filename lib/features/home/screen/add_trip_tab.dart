@@ -15,6 +15,10 @@ import '../../../core/utils/assets_manager.dart';
 import '../../../core/utils/getsize.dart';
 import '../../../core/widgets/back_button.dart';
 import '../../../core/widgets/custom_textfield.dart';
+import '../components/default_widget.dart';
+import '../components/failure_widget.dart';
+import '../components/loading_widget.dart';
+import '../components/success_widget.dart';
 import '../cubit/home_cubit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -36,7 +40,7 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
   @override
   void dispose() {
     _customInfoWindowController.dispose();
-   _timer.cancel();
+   //_timer.cancel();
     super.dispose();
   }
 
@@ -51,25 +55,7 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
 
 
   }
-  double _progressValue = 0.0;
-  late Timer _timer;
-  final Duration _duration = const Duration(minutes: 1);
-  void startTimer() {
-    const oneSecond = const Duration(seconds: 1);
-    _timer = Timer.periodic(oneSecond, (Timer timer) {
-      setState(() {
-        if (_progressValue < 1.0) {
-          _progressValue += 1.0 / (_duration.inSeconds);
-        } else {
-          _timer.cancel();
-          context.read<HomeCubit>().bottomContainerLoadingState = false;
-          context.read<HomeCubit>().bottomContainerFailureState = true;
 
-
-        }
-      });
-    });
-  }
 
 
   @override
@@ -167,311 +153,18 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
                           ),
                         },
                       ),
-                  // default case
-                Visibility(
-                  visible: cubit.bottomContainerInitialState,
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                        height: getSize(context) * 0.8,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                  color: AppColors.black.withOpacity(0.25),
-                                  blurRadius: 10,
-                                  spreadRadius: 10,
-                                  offset: Offset(4, 4))
-                            ],
-                            borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(30),
-                                topLeft: Radius.circular(30))),
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              height: getSize(context) * 0.1,
-                            ),
-                            //search field
-                            Visibility(
-                              visible: context.read<HomeCubit>().flag == 1,
-                              child: SizedBox(
-                                width: getSize(context)*0.9,
-                              //  height: getSize(context)/4,
-                                child: CustomTextField(
-                                  suffixIcon: IconButton(icon:Icon(Icons.favorite_border),onPressed: () {
-                                    if(cubit.location_control.text != "" &&cubit.destination!=LatLng(0, 0)){
-
-                                      cubit.addFavourite(address: cubit.location_control.text!, lat: cubit.destination.latitude.toString(), long: cubit.destination.longitude.toString(), context: context);
-                                    }
-                                    else{
-                                      errorGetBar("the location is empty ");
-                                    }
-                                  },),
-                                  title: 'search_location'.tr(),
-                                  backgroundColor: AppColors.white,
-                                  prefixWidget: SizedBox(
-                                    height: 10,
-                                    width: 10,
-                                    child:
-                                      Icon(Icons.pin_drop_outlined,size: 25,)
-                                    // MySvgWidget(
-                                    //   path: ImageAssets.mapIcon,
-                                    //   imageColor: AppColors.black,
-                                    //   size: 5,
-                                    // ),
-                                  ),
-                                  validatorMessage: 'loaction_msg'.tr(),
-                                  horizontalPadding: 2,
-                                  textInputType: TextInputType.text,
-                                  onchange: (p0) {
-                                    cubit.search(p0);
-                                  },
-                                  controller: cubit.location_control,
-                                ),
-                              ),
-
-                            ),
-                            SizedBox(
-                              height: 15,
-                            ),
-                            //payment_method
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width: 20,
-                                ),
-                                Text("payment_method").tr(),
-                              ],
-                            ),
-                            //cash
-                            RadioListTile(
-                              title: Text("cash").tr(),
-                              value: cubit.payment,
-                              contentPadding:
-                                  EdgeInsets.symmetric(horizontal: 10),
-                              tileColor: AppColors.black1,
-                              activeColor: AppColors.primary,
-                              selected: true,
-                              groupValue: cubit.payment,
-                              onChanged: (value) {
-                                cubit.changeRadioButton(value);
-                              },
-                            ),
-                            //SizedBox(height: 5,),
-
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                //ride_later
-                                CustomButton(
-                                  text: "ride_later".tr(),
-                                  color: AppColors.primary,
-                                  borderRadius: 16,
-                                  onClick: () async {
-                                    print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-                                    await cubit.selectDateAndTime(context);
-                                  },
-                                  width: getSize(context) / 2,
-                                ),
-                                //  ride_now"
-                                Container(
-                                  //   padding: EdgeInsets.symmetric(horizontal: 1),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(16),
-                                      border: Border.all(
-                                          width: 3, color: AppColors.primary)),
-                                  child: CustomButton(
-                                    borderRadius: 16,
-                                    text: "ride_now".tr(),
-                                    color: AppColors.white,
-                                    textcolor: AppColors.primary,
-                                    onClick: () async {
-                                      print("cubit.flag = ${cubit.flag}");
-                                      startTimer();
-                                      await  cubit.createTrip(tripType: cubit.flag==1?"with":"without",context: context);
-                                     // cubit.changeToRideNowState();
-                                    },
-                                    width: getSize(context) / 3,
-                                  ),
-                                )
-                              ],
-                            )
-                          ],
-                        )),
-                  ),
-                ),
+                
+                    cubit.chooseWidget(cubit.currentEnumStatus),
+                
+                
+                //   // default case
+                // DefaultWidget(),
                 // // loading state
-                // Visibility(
-                //   visible: cubit.bottomContainerLoadingState,
-                //   //visible: false,
-                //   child: Align(
-                //       alignment: Alignment.bottomCenter,
-                //       child: Container(
-                //         height: getSize(context) * 0.8,
-                //         decoration: BoxDecoration(
-                //           color: Colors.white,
-                //           borderRadius: BorderRadius.only(
-                //             topRight: Radius.circular(30),
-                //             topLeft: Radius.circular(30),
-                //           ),
-                //         ),
-                //         child: Column(
-                //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                //           children: [
-                //             Image.asset(
-                //               ImageAssets.search,
-                //               width: getSize(context) / 4,
-                //             ),
-                //             //progress indicator
-                //             Padding(
-                //               padding:
-                //                   const EdgeInsets.symmetric(horizontal: 10.0),
-                //               child: LinearProgressIndicator(
-                //                 borderRadius: BorderRadius.circular(20),
-                //                 value: _progressValue,
-                //                 color: AppColors.primary, //<-- SEE HERE
-                //                 backgroundColor: AppColors.grey1, //<-- SEE HERE
-                //               ),
-                //             ),
-                //             //rich text
-                //             Padding(
-                //               padding:
-                //                   const EdgeInsets.symmetric(horizontal: 12.0),
-                //               child: RichText(
-                //                   textDirection: TextDirection.rtl,
-                //                   text: TextSpan(
-                //                       text: "search_for_drivers".tr(),
-                //                       style: TextStyle(
-                //                         color: AppColors.black2,
-                //                         fontWeight: FontWeight.w700,
-                //                         fontSize: getSize(context) * 0.04,
-                //                       ),
-                //                       children: [
-                //                         TextSpan(
-                //                           text: "appreciate_your_patience".tr(),
-                //                           style: TextStyle(
-                //                             color: AppColors.primary,
-                //                             fontWeight: FontWeight.w700,
-                //                             fontSize: getSize(context) * 0.04,
-                //                           ),
-                //                         )
-                //                       ])),
-                //             ),
-                //             //button
-                //             CustomButton(
-                //               text: "cancel".tr(),
-                //               color: AppColors.red,
-                //               onClick: () {
-                //                 cubit.tabsController.animateTo(0);
-                //                 cubit.bottomContainerLoadingState = false;
-                //                 cubit.bottomContainerInitialState = true;
-                //                 cubit.cancelTrip();
-                //               },
-                //               width: getSize(context) * 0.9,
-                //               borderRadius: 16,
-                //             )
-                //           ],
-                //         ),
-                //       )),
-                // ),
-                // //success state
-                // Visibility(
-                //   visible: cubit.bottomContainerSuccessState,
-                //   //visible: false,
-                //   child: Align(
-                //       alignment: Alignment.bottomCenter,
-                //       child: Container(
-                //         height: getSize(context) * 0.6,
-                //         decoration: BoxDecoration(
-                //           color: Colors.white,
-                //           borderRadius: BorderRadius.only(
-                //             topRight: Radius.circular(30),
-                //             topLeft: Radius.circular(30),
-                //           ),
-                //         ),
-                //         child: Column(
-                //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                //           children: [
-                //             Image.asset(
-                //               ImageAssets.success,
-                //               width: getSize(context) / 4,
-                //             ),
-                //
-                //             //rich text
-                //             Padding(
-                //                 padding: const EdgeInsets.symmetric(
-                //                     horizontal: 12.0),
-                //                 child: Text("confirm_driver".tr())),
-                //             Row(
-                //               mainAxisAlignment: MainAxisAlignment.start,
-                //               children: [
-                //                 SizedBox(
-                //                   width: 10,
-                //                 ),
-                //                 Icon(
-                //                   Icons.person,
-                //                   color: Colors.grey,
-                //                 ),
-                //                 SizedBox(
-                //                   width: 10,
-                //                 ),
-                //                 Text(
-                //                   "محمد محمود",
-                //                   style: TextStyle(color: AppColors.black3),
-                //                 )
-                //               ],
-                //             )
-                //           ],
-                //         ),
-                //       )),
-                // ),
-                // //failure state
-                // Visibility(
-                //   visible: cubit.bottomContainerFailureState,
-                //   //visible: false,
-                //   child: Align(
-                //       alignment: Alignment.bottomCenter,
-                //       child: Container(
-                //         height: getSize(context) * 0.55,
-                //         width: double.infinity,
-                //         decoration: BoxDecoration(
-                //           color: Colors.white,
-                //           borderRadius: BorderRadius.only(
-                //             topRight: Radius.circular(30),
-                //             topLeft: Radius.circular(30),
-                //           ),
-                //         ),
-                //         child: Column(
-                //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                //           children: [
-                //             Image.asset(
-                //               ImageAssets.failure,
-                //               width: getSize(context) / 4,
-                //             ),
-                //
-                //             //rich text
-                //             Padding(
-                //                 padding: const EdgeInsets.symmetric(
-                //                     horizontal: 12.0),
-                //                 child: Text("no_drivers".tr())),
-                //             //button
-                //             CustomButton(
-                //               text: "try_again".tr(),
-                //               color: AppColors.red,
-                //               onClick: () {
-                //                 cubit.tabsController.animateTo(0);
-                //                 cubit.bottomContainerLoadingState = false;
-                //                 cubit.bottomContainerFailureState = false;
-                //                 cubit.bottomContainerSuccessState = false;
-                //                 cubit.bottomContainerInitialState = true;
-                //               },
-                //               width: getSize(context) * 0.9,
-                //               borderRadius: 16,
-                //             )
-                //           ],
-                //         ),
-                //       )),
-                // ),
+                // LoadingWidget(),
+                // // //success state
+                // SuccessWidget(),
+                // // //failure state
+                // FailureWidget(),
 
                 //back button
                 Positioned(

@@ -7,6 +7,11 @@
 
 <key>NSLocationWhenInUseUsageDescription</key>
 <string>Your location is required to show nearby places.</string>
+<key>LSApplicationQueriesSchemes</key>
+<array>
+  <string>sms</string>
+  <string>tel</string>
+</array>
 <key>NSLocationAlwaysUsageDescription</key>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>

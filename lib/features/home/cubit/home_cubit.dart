@@ -15,13 +15,17 @@ import 'package:hero/core/models/notification_model.dart';
 import 'package:hero/core/models/settings_model.dart';
 import 'package:hero/core/preferences/preferences.dart';
 import 'package:hero/core/utils/dialogs.dart';
+import 'package:hero/features/home/components/default_widget.dart';
+import 'package:hero/features/home/components/failure_widget.dart';
+import 'package:hero/features/home/components/loading_widget.dart';
+import 'package:hero/features/home/components/success_widget.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:maps_toolkit/maps_toolkit.dart' as mp;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hero/core/remote/service.dart';
 import 'package:hero/core/utils/assets_manager.dart';
-import 'package:google_maps_webservice/geocoding.dart'as geocoding;
+import 'package:url_launcher/url_launcher.dart';
 import 'package:location/location.dart'as loc;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:widget_to_marker/widget_to_marker.dart';
@@ -32,12 +36,23 @@ import '../../../core/models/signup_response_model.dart';
 import '../../../core/utils/custom_marker.dart';
 part 'home_state.dart';
 
+
+enum MyEnum {
+  success,
+  defaultState,
+  load,
+  failure,
+}
+
+
 class HomeCubit extends Cubit<HomeState> {
+  MyEnum currentEnumStatus = MyEnum.defaultState;
   int? flag;
   Set<Marker> markers = {};
   BitmapDescriptor? bitmapDescriptorto;
   BitmapDescriptor? bitmapDescriptorfrom;
   SignUpModel? signUpModel ;
+
   HomeCubit(this.api) : super(HomeInitial()){
    getUserData();
    getSettings();
@@ -61,15 +76,11 @@ class HomeCubit extends Cubit<HomeState> {
    LatLng sourceLocation = LatLng(31.2693, 30.7873);
   //  LatLng destination = LatLng(30.4301, 31.0364);
  // TextEditingController locationControl = TextEditingController();
-    bool bottomContainerInitialState = true;
-    bool bottomContainerLoadingState = false;
-    bool bottomContainerFailureState = false;
-    bool bottomContainerSuccessState = false;
-    //ride now variables
-  bool bottomContainerInitialState1 = true;
-  bool bottomContainerLoadingState1 = false;
-  bool bottomContainerFailureState1 = false;
-  bool bottomContainerSuccessState1 = false;
+ //    bool bottomContainerInitialState = true;
+ //    bool bottomContainerLoadingState = false;
+ //    bool bottomContainerFailureState = false;
+ //    bool bottomContainerSuccessState = false;
+
    DateTime? datePicked;
    TimeOfDay? timePicked;
  // DateTime date = new DateTime.now();
@@ -241,15 +252,15 @@ void setflag(int flag){
   // }
 
 
-  changeToRideNowState(){
-    bottomContainerInitialState = false;
-    bottomContainerLoadingState = true;
-   // latLngList = [];
-    // Marker marker = markers.firstWhere((marker) => marker.markerId.value == "destination",);
-    // markers.remove(marker);
-    emit(ChangeToRideNowState());
-
-  }
+  // changeToRideNowState(){
+  //   bottomContainerInitialState = false;
+  //   bottomContainerLoadingState = true;
+  //  // latLngList = [];
+  //   // Marker marker = markers.firstWhere((marker) => marker.markerId.value == "destination",);
+  //   // markers.remove(marker);
+  //   emit(ChangeToRideNowState());
+  //
+  // }
 
   //step 1 get the location permission
   Future<void> checkAndRequestLocationPermission() async {
@@ -638,6 +649,17 @@ bool isLoadingSettings = true;
   });
   }
 
+  void launchPhoneDialer(String phoneNumber) async {
+    String url = 'tel:$phoneNumber';
+
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url));
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+
   NotificationModel? notificationModel;
   getNotification()async{
     emit(LoadingNotificationState());
@@ -736,10 +758,11 @@ bool isLoadingSettings = true;
   CreateTripModel? createTripModel;
 
   createTrip({required String tripType , required BuildContext context})async{
-
+print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     if(address!=null && currentLocation!=null){
        emit(LoadingCreateTripState());
-      loadingDialog();
+     // loadingDialog();
+
       final response = await  api.createTrip(
           tripType: tripType, fromAddress: address!, fromLng: currentLocation!.longitude!,
           fromLat: currentLocation!.latitude!,
@@ -751,25 +774,28 @@ bool isLoadingSettings = true;
           destination.longitude:null);
           response.fold((l) {
            emit(FailureCreateTrip());
-           Navigator.pop(context);
+         //  Navigator.pop(context);
            errorGetBar("couldn't create trip");
           }, (r) {
-      if(r==200){
+      if(r.code==200 || r.code ==201){
         createTripModel = r;
+
+        print(createTripModel);
        // bottomContainerLoadingState = true;
-        Navigator.pop(context);
-        successGetBar("yeeeeeeeeeeeeeeeees");
-        bottomContainerLoadingState = true;
+        currentEnumStatus = MyEnum.load;
+       // Navigator.pop(context);
+
+        currentEnumStatus = MyEnum.load;
         emit(SuccessCreateTripState());
       }
 
       else if(r.code==502|| r.code==202){
-        Navigator.pop(context);
+       // Navigator.pop(context);
         emit(AlreadyInTrip());
         errorGetBar(r.message??"Already in trip");
       }
       else{
-        Navigator.pop(context);
+      //  Navigator.pop(context);
         emit(FailureCreateTrip());
         errorGetBar(r.message??"something wrong");
       }
@@ -835,9 +861,6 @@ bool isLoadingSettings = true;
         }, (r) {
 
           if (r.code == 200 || r.code == 201) {
-
-
-
             successGetBar("the trip created successfully");
 
             emit(SuccessCreateSchedualTripState());
@@ -869,7 +892,7 @@ bool isLoadingSettings = true;
 
 
 
-cancelTrip(
+     cancelTrip(
   //  {required int tripId}
     )async{
    if(createTripModel!=null){
@@ -910,4 +933,49 @@ cancelTrip(
   //
   //   });
   // }
+
+  double progressValue = 0.0;
+  late Timer _timer;
+  final Duration _duration = const Duration(minutes: 1);
+  void startTimer(BuildContext context) {
+    const oneSecond = const Duration(seconds: 1);
+    _timer = Timer.periodic(oneSecond, (Timer timer) {
+
+        if (progressValue < 1.0) {
+          progressValue += 1.0 / (_duration.inSeconds);
+        } else {
+          _timer.cancel();
+          //currentEnumStatus = MyEnum.failure;
+
+
+        }
+      });
+  emit(LoadingIndicatorState());
+  }
+
+  Widget chooseWidget(MyEnum state){
+    switch(state){
+      case MyEnum.defaultState:
+        emit(changingStatus());
+        return DefaultWidget();
+
+      case MyEnum.load:
+        emit(changingStatus());
+        return LoadingWidget();
+
+      case MyEnum.success:
+        emit(changingStatus());
+        return SuccessWidget();
+
+      case MyEnum.failure:
+        emit(changingStatus());
+        return FailureWidget();
+
+      default:
+        emit(changingStatus());
+        return DefaultWidget();
+    }
+
+ }
+
 }

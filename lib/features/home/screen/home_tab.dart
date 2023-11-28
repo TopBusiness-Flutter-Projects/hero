@@ -73,15 +73,20 @@ class _HomeTabState extends State<HomeTab> {
                             Icon(
                               CupertinoIcons.person_circle_fill,
                               color: Colors.grey,
-                            ):ClipRRect(
-                        borderRadius: BorderRadius.circular(30),
-                        child: Image.network(context.read<HomeCubit>().signUpModel!.data?.image ?? '',width: getSize(context)*0.1,)),
-                            Text(
-                              'welcome'.tr() + "${cubit.signUpModel?.data?.name??""}",
-                              style: TextStyle(
-                                  fontSize: getSize(context) / 24,
-                                  fontWeight: FontWeight.normal,
-                                  color: AppColors.black),
+                            ):CircleAvatar(
+                              radius: getSize(context)/17,
+                             backgroundImage: NetworkImage(context.read<HomeCubit>().signUpModel!.data?.image ?? '',
+                              // width: getSize(context)*0.1,
+                             )),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'welcome'.tr() + "${cubit.signUpModel?.data?.name??""}",
+                                style: TextStyle(
+                                    fontSize: getSize(context) / 24,
+                                    fontWeight: FontWeight.normal,
+                                    color: AppColors.black),
+                              ),
                             ),
                             Spacer(),
                           ],
@@ -166,8 +171,8 @@ class _HomeTabState extends State<HomeTab> {
                                   //todo=>
                                   if(cubit.homeModel?.data?.newTrips?[index].type=="new"){
 
-                                 //   context.read<HomeCubit>().tabsController.animateTo(10);
-                                 //   Navigator.pushNamed(context, Routes.homeRoute);
+                                   context.read<HomeCubit>().tabsController.animateTo(1);
+                                  //  Navigator.pushNamed(context, Routes.homeRoute);
                                   }
                                 },
                                   child: HomeListItem(trip: cubit.homeModel?.data?.newTrips?[index],));
