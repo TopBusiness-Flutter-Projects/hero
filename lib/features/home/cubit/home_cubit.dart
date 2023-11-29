@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 import 'dart:ui' as ui;
 import 'package:bloc/bloc.dart';
 import 'package:carousel_slider/carousel_controller.dart';
@@ -137,91 +138,6 @@ void setflag(int flag){
   TextEditingController location_control = TextEditingController();
 
 
-// handle the on tab user event on map
-  getLocation(LatLng argument, String title) async {
-    //location_control.text  = "";
-    final response = await api.getGeoData(
-        argument.latitude.toString() + "," + argument.longitude.toString());
-
-    response.fold(
-          (l) => emit(ErrorLocationSearchStat()),
-          (r) async {
-          address =  r.results
-              .elementAt(0)
-              .formattedAddress
-              .replaceAll("Unnamed Road,", "");
-
-            if(title=="to"){
-              destination = argument;
-              location_control.text = r.results
-                  .elementAt(0)
-                  .formattedAddress
-                  .replaceAll("Unnamed Road,", "");
-              bitmapDescriptorto = await CustomeMarker(
-                title: title.tr(),
-                location: r.results
-                    .elementAt(0)
-                    .formattedAddress
-                    .replaceAll("Unnamed Road,", ""),
-              ).toBitmapDescriptor().then((value) {
-                bitmapDescriptorto=value;
-                setMarkers(
-                  Marker(
-                    markerId: const MarkerId("currentLocation"),
-                    icon:bitmapDescriptorfrom!,
-
-                    position: LatLng(currentLocation?.latitude??0,
-                        currentLocation?.longitude??0),
-                  ),
-                  Marker(
-                    markerId: MarkerId("destination"),
-
-                    icon:value,
-                    position:destination,
-                  ),
-                );
-              });
-
-
-            }
-
-            else{
-              bitmapDescriptorfrom = await CustomeMarker(
-                title: title.tr(),
-                location: r.results
-                    .elementAt(0)
-                    .formattedAddress
-                    .replaceAll("Unnamed Road,", ""),
-              ).toBitmapDescriptor().then((value) {
-                bitmapDescriptorfrom=value;
-
-                setMarkers(
-                  Marker(
-                    markerId: const MarkerId("currentLocation"),
-                    icon:value,
-
-                    position: LatLng(currentLocation?.latitude??0,
-                        currentLocation?.longitude??0),
-                  ),
-                  Marker(
-                    markerId: MarkerId("destination"),
-
-                    icon:bitmapDescriptorto!=null?bitmapDescriptorto!:currentLocationIcon,
-                    position:destination,
-                  ),
-                );
-              });
-
-            }
-
-        getDirection(
-            LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
-            destination);
-
-        emit(UpdateDesitnationLocationStat());
-      },
-    );
-  }
 
   setMarkers(Marker source , Marker? destination){
     markers.clear();
@@ -341,6 +257,101 @@ void setflag(int flag){
 
   LatLng strartlocation = LatLng(0, 0);
 
+double distance = 0;
+double paymentMoney = 0;
+
+// handle the on tab user event on map
+  getLocation(LatLng argument, String title) async {
+    //location_control.text  = "";
+    final response = await api.getGeoData(
+        argument.latitude.toString() + "," + argument.longitude.toString());
+
+    response.fold(
+          (l) => emit(ErrorLocationSearchStat()),
+          (r) async {
+        address =  r.results
+            .elementAt(0)
+            .formattedAddress
+            .replaceAll("Unnamed Road,", "");
+
+        if(title=="to"){
+          destination = argument;
+          location_control.text = r.results
+              .elementAt(0)
+              .formattedAddress
+              .replaceAll("Unnamed Road,", "");
+          bitmapDescriptorto = await CustomeMarker(
+            title: title.tr(),
+            location: r.results
+                .elementAt(0)
+                .formattedAddress
+                .replaceAll("Unnamed Road,", ""),
+          ).toBitmapDescriptor().then((value) {
+            bitmapDescriptorto=value;
+            setMarkers(
+              Marker(
+                markerId: const MarkerId("currentLocation"),
+                icon:bitmapDescriptorfrom!,
+
+                position: LatLng(currentLocation?.latitude??0,
+                    currentLocation?.longitude??0),
+              ),
+              Marker(
+                markerId: MarkerId("destination"),
+
+                icon:value,
+                position:destination,
+              ),
+            );
+          });
+
+
+        }
+
+        else{
+          bitmapDescriptorfrom = await CustomeMarker(
+            title: title.tr(),
+            location: r.results
+                .elementAt(0)
+                .formattedAddress
+                .replaceAll("Unnamed Road,", ""),
+          ).toBitmapDescriptor().then((value) {
+            bitmapDescriptorfrom=value;
+
+            setMarkers(
+              Marker(
+                markerId: const MarkerId("currentLocation"),
+                icon:value,
+
+                position: LatLng(currentLocation?.latitude??0,
+                    currentLocation?.longitude??0),
+              ),
+              Marker(
+                markerId: MarkerId("destination"),
+
+                icon:bitmapDescriptorto!=null?bitmapDescriptorto!:currentLocationIcon,
+                position:destination,
+              ),
+            );
+          });
+
+        }
+
+        if(destination.longitude!=0&&destination.latitude!=0){
+          distance =  calculateDistance(LatLng(currentLocation!.latitude!, currentLocation!.longitude!),destination);
+          paymentMoney = distance * settingsModel!.data!.km!;
+        }
+
+        getDirection(
+            LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
+            destination);
+
+        emit(UpdateDesitnationLocationStat());
+      },
+    );
+  }
+
+
   void getCurrentLocation() async {
 
     loc.Location location = loc.Location();
@@ -415,7 +426,11 @@ void setflag(int flag){
           (l) => emit(FailureSearchState()),
           (r) async {
             destination = LatLng(r.candidates.elementAt(0).geometry.location.lat, r.candidates.elementAt(0).geometry.location.lng);
-
+            //todo => calculate the distance and price
+            if(destination.longitude!=0&&destination.latitude!=0){
+              distance =  calculateDistance(LatLng(currentLocation!.latitude!, currentLocation!.longitude!),destination);
+              paymentMoney = distance * settingsModel!.data!.km!;
+            }
             bitmapDescriptorto = await CustomeMarker(
               title: 'to'.tr(),
               location: location_control.text,
@@ -715,7 +730,7 @@ bool isLoadingSettings = true;
   }
 
 
-//todo=>add favourite location
+
   addFavourite({required String address,required String lat ,required String  long, required BuildContext context})async{
 
     emit(LoadingAddToFavourite());
@@ -977,5 +992,28 @@ print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     }
 
  }
+
+  double calculateDistance(LatLng point1, LatLng point2) {
+    const double earthRadius = 6371.0; // Earth radius in kilometers
+
+    // Convert latitude and longitude from degrees to radians
+    double lat1 = radians(point1.latitude);
+    double lon1 = radians(point1.longitude);
+    double lat2 = radians(point2.latitude);
+    double lon2 = radians(point2.longitude);
+
+    // Haversine formula
+    double dlat = lat2 - lat1;
+    double dlon = lon2 - lon1;
+    double a = sin(dlat / 2) * sin(dlat / 2) +
+        cos(lat1) * cos(lat2) * sin(dlon / 2) * sin(dlon / 2);
+    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+    double distance = earthRadius * c;
+    return distance;
+  }
+
+  double radians(double degrees) {
+    return degrees * (pi / 180);
+  }
 
 }

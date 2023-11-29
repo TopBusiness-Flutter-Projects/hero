@@ -17,6 +17,16 @@ class DefaultWidget extends StatefulWidget {
 }
 
 class _DefaultWidgetState extends State<DefaultWidget> {
+
+  @override
+  void initState() {
+    context.read<HomeCubit>().paymentMoney = 0;
+    context.read<HomeCubit>().distance = 0;
+    super.initState();
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return  BlocConsumer<HomeCubit, HomeState>(
@@ -95,26 +105,47 @@ class _DefaultWidgetState extends State<DefaultWidget> {
                 ),
                 //payment_method
                 Row(
+                //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     SizedBox(
                       width: 20,
                     ),
                     Text("payment_method").tr(),
+                    Spacer(),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Text("payment_quantity").tr(),
+                    ),
                   ],
                 ),
                 //cash
-                RadioListTile(
-                  title: Text("cash").tr(),
-                  value: cubit.payment,
-                  contentPadding:
-                  EdgeInsets.symmetric(horizontal: 10),
-                  tileColor: AppColors.black1,
-                  activeColor: AppColors.primary,
-                  selected: true,
-                  groupValue: cubit.payment,
-                  onChanged: (value) {
-                    cubit.changeRadioButton(value);
-                  },
+                Row(
+                 // mainAxisSize: MainAxisSize.min,
+                  children: [
+
+                    SizedBox(
+                      width: getSize(context)/3,
+                      height: getSize(context)/6.5,
+                      child: RadioListTile(
+                        title: Text("cash").tr(),
+                        value: cubit.payment,
+                        contentPadding:
+                        EdgeInsets.symmetric(horizontal: 10),
+                        tileColor: AppColors.black1,
+                        activeColor: AppColors.primary,
+                        selected: true,
+                        groupValue: cubit.payment,
+                        onChanged: (value) {
+                          cubit.changeRadioButton(value);
+                        },
+                      ),
+                    ),
+                    Spacer(),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                      child: Text("${cubit.paymentMoney.toStringAsFixed(1)}"),
+                    ),
+                  ],
                 ),
                 //SizedBox(height: 5,),
 

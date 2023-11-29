@@ -111,7 +111,7 @@ dependencies:
   flutter_google_places_hoc081098: ^1.0.0-nullsafety.5
   google_api_headers: ^1.1.1
   google_maps_webservice: ^0.0.20-nullsafety.5
-  flutter_gif: ^0.0.4
+#  flutter_gif: ^0.0.4
   lite_rolling_switch: ^1.0.1
   custom_map_markers: ^0.0.1
   google_maps_utils: ^2.0.0+1

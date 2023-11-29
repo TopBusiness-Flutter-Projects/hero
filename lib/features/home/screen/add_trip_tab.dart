@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gif/flutter_gif.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hero/core/utils/dialogs.dart';
 import 'package:hero/core/widgets/custom_button.dart';
@@ -35,7 +34,7 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
   CustomInfoWindowController _customInfoWindowController =
       CustomInfoWindowController();
 
-  late FlutterGifController gifController;
+  // late FlutterGifController gifController;
 
   @override
   void dispose() {
@@ -50,7 +49,7 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
     context.read<HomeCubit>().destination=LatLng(0, 0);
     context.read<HomeCubit>().location_control.text = "";
     context.read<HomeCubit>().getCurrentLocation();
-    gifController = FlutterGifController(vsync: this);
+    // gifController = FlutterGifController(vsync: this);
     context.read<HomeCubit>().checkAndRequestLocationPermission();
 
 

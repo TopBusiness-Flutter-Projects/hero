@@ -81,9 +81,11 @@ class _HeroAppState extends State<HeroApp> {
       child: GetMaterialApp(
         supportedLocales: context.supportedLocales,
         locale: context.locale,
-        theme: appTheme(),
+        theme: appTheme(
+        ),
         themeMode: ThemeMode.light,
         darkTheme: ThemeData.light(),
+
         // standard dark theme
         localizationsDelegates: context.localizationDelegates,
         debugShowCheckedModeBanner: false,

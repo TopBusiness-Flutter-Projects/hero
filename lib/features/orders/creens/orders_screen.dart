@@ -42,7 +42,8 @@ class _OrdersScreenState extends State<OrdersScreen>
       builder: (context, state) {
         OrdersCubit cubit = context.read<OrdersCubit>();
         return Scaffold(
-          body: ListView(
+          body: Column(
+
             children: [
               SizedBox(
                 height: 10,
@@ -91,21 +92,23 @@ class _OrdersScreenState extends State<OrdersScreen>
                 ],
               ),
               SizedBox(
-                height: 10,
+                height: getSize(context)*0.03,
               ),
               TabBar(
                   indicatorSize: TabBarIndicatorSize.tab,
                   indicatorColor: AppColors.primary,
                   labelColor: AppColors.primary,
-                  unselectedLabelColor: AppColors.black,
+                 physics: BouncingScrollPhysics(),
+                 dividerHeight: 0,
+                 // unselectedLabelColor: AppColors.black,
                   controller: cubit.tabController,
-                  indicatorWeight: 1,
+                //  indicatorWeight: 1,
                   indicatorPadding: EdgeInsets.zero,
                   padding: EdgeInsets.zero,
                   isScrollable: true,
                   onTap: (int value) {
                     if(value == 0 ){
-                      print("___________________________________");
+
                       cubit.getAllTrips("new");
                     }
                     if(value == 1 ){
@@ -121,15 +124,19 @@ class _OrdersScreenState extends State<OrdersScreen>
                     Text("cancelled_orders".tr()),
                   ]),
               SizedBox(
-                height: getSize(context) * 1.9,
+                height: getSize(context)*0.03,
+              ),
+              Flexible(
                 child: TabBarView(
-                    physics: NeverScrollableScrollPhysics(),
+                   // physics: NeverScrollableScrollPhysics(),
                     controller: cubit.tabController,
                     children: [
                       // new orders
                       state is LoadingGettingAllTripsState?
                       Center(child: CircularProgressIndicator(color: AppColors.primary,)):
                       ListView.builder(
+                        shrinkWrap: true,
+                        physics: BouncingScrollPhysics(),
                         itemBuilder: (context, index) {
                           return Padding(
                             padding:
@@ -143,6 +150,8 @@ class _OrdersScreenState extends State<OrdersScreen>
                       Center(child: CircularProgressIndicator(color: AppColors.primary,)):
                       //completed orders
                       ListView.builder(
+                        shrinkWrap: true,
+                        physics: BouncingScrollPhysics(),
                         itemBuilder: (context, index) {
                           return InkWell(
                             onTap: () {
@@ -162,6 +171,8 @@ class _OrdersScreenState extends State<OrdersScreen>
                       state is LoadingGettingAllTripsState?
                       Center(child: CircularProgressIndicator(color: AppColors.primary,)):
                       ListView.builder(
+                        shrinkWrap: true,
+                        physics: BouncingScrollPhysics(),
                         itemBuilder: (context, index) {
                           return Padding(
                             padding:

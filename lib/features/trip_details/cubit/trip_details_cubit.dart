@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bloc/bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
@@ -30,6 +32,13 @@ class TripDetailsCubit extends Cubit<TripDetailsState> {
       errorGetBar("something wrong");
     }, (r) {
       if(r.code==200 || r.code ==201){
+
+        Navigator.pop(context);
+        rateTripModel = r ;
+        emit(RatingSuccessState());
+        successGetBar(r.message);
+      }
+      else if(r.code==500){
         Navigator.pop(context);
         rateTripModel = r ;
         emit(RatingSuccessState());
@@ -81,5 +90,28 @@ class TripDetailsCubit extends Cubit<TripDetailsState> {
     });
   }
 
+  double calculateDistance(LatLng point1, LatLng point2) {
+    const double earthRadius = 6371.0; // Earth radius in kilometers
+
+    // Convert latitude and longitude from degrees to radians
+    double lat1 = radians(point1.latitude);
+    double lon1 = radians(point1.longitude);
+    double lat2 = radians(point2.latitude);
+    double lon2 = radians(point2.longitude);
+
+    // Haversine formula
+    double dlat = lat2 - lat1;
+    double dlon = lon2 - lon1;
+    double a = sin(dlat / 2) * sin(dlat / 2) +
+        cos(lat1) * cos(lat2) * sin(dlon / 2) * sin(dlon / 2);
+    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+    double distance = earthRadius * c;
+
+    return distance;
+  }
+
+  double radians(double degrees) {
+    return degrees * (pi / 180);
+  }
 
 }

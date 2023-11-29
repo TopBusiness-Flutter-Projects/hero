@@ -321,6 +321,8 @@ class ServiceApi {
   }
 
   Future<Either<Failure, RateTripModel>> giveRate({required int tripId ,required double rate , String? description}) async {
+    print("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+    print("tripId = $tripId rate = $rate");
     SignUpModel signUpModel = await Preferences.instance.getUserModel();
     try {
       final response = await dio.post(

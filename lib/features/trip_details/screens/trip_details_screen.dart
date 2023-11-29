@@ -50,7 +50,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                         borderRadius: BorderRadius.only(
                             bottomLeft: Radius.circular(20),
                             bottomRight: Radius.circular(20))),
-                    height: getSize(context) * 1.2,
+                    // height: getSize(context) * 1.2,
                     child: GoogleMap(
                       initialCameraPosition: CameraPosition(
                         target:LatLng(double.parse(widget.trip.fromLat??"31.1234"),double.parse(widget.trip.fromLong??"31.098765")),
@@ -210,12 +210,14 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                       SizedBox(
                         width: 3,
                       ),
-                      Text(
-                        " ${widget.trip.fromAddress}",
-                        style: TextStyle(
-                            color: AppColors.gray,
-                            fontSize: getSize(context) * 0.04,
-                            fontWeight: FontWeight.w400),
+                      Flexible(
+                        child: Text(
+                          " ${widget.trip.fromAddress}",
+                          style: TextStyle(
+                              color: AppColors.gray,
+                              fontSize: getSize(context) * 0.04,
+                              fontWeight: FontWeight.w400),
+                        ),
                       ),
                     ]),
                     //to
@@ -243,12 +245,19 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                         SizedBox(
                           width: getSize(context) * 0.03,
                         ),
-                        Text(
-                          "${widget.trip.toAddress}",
-                          style: TextStyle(
-                              color: AppColors.gray,
-                              fontSize: getSize(context) * 0.04,
-                              fontWeight: FontWeight.w400),
+                        Flexible(
+
+                          child: Text(
+                            maxLines: 2,
+
+                            "${widget.trip.toAddress}",
+                            style: TextStyle(
+                              overflow:TextOverflow.ellipsis ,
+                                color: AppColors.gray,
+                                fontSize: getSize(context) * 0.04,
+                                fontWeight: FontWeight.w400,
+                            ),
+                          ),
                         ),
                       ],
                     ),

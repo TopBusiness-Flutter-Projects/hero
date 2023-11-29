@@ -8,7 +8,7 @@ ThemeData appTheme() {
   return ThemeData(
     primaryColor: AppColors.primary,
     hintColor: AppColors.hint,
-
+    useMaterial3: true,
     brightness: Brightness.light,
     // scaffoldBackgroundColor: AppColors.scaffoldBackground,
     fontFamily: AppStrings.fontFamily,
