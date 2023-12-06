@@ -344,6 +344,8 @@ class ServiceApi {
 
   Future<Either<Failure, SignUpModel>> login(String phone, String phoneCode,String deviceType,String token) async {
     try {
+      print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+      print(phoneCode+phone);
       final response = await dio.post(
         EndPoints.loginUrl,
         body: {
@@ -354,6 +356,8 @@ class ServiceApi {
           "token":token
         },
       );
+      print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+      print(response);
       return Right(SignUpModel.fromJson(response));
     } on ServerException {
       return Left(ServerFailure());

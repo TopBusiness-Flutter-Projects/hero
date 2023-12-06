@@ -70,9 +70,11 @@ class _LoginState extends State<Login> {
                     backgroundColor: AppColors.white,
                     validatorMessage: 'phone_msg'.tr(),
                     horizontalPadding: 0,
-                    prefixWidget: Container(
-                      width: getSize(context)/6,
+                    prefixWidget:
+                    Container(
+                     // width: getSize(context)/6,
                       child: Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           Padding(
                             padding: const EdgeInsets.symmetric(
@@ -152,11 +154,13 @@ class _LoginState extends State<Login> {
                       if(cubit.checked==false){
                         errorGetBar("agree_terms".tr());
                       }
+                   // else  if (cubit.phoneController.text.length<9||cubit.phoneController.text.length>10){
                     else  if (cubit.phoneController.text.length<10||cubit.phoneController.text.length>11){
                         errorGetBar("invalid number");
                       }
                     else{
-                        await cubit.checkPhone(context);
+                    //   await cubit.checkPhone(context);
+                        await cubit.login(context);
                       }
                     },
                   )

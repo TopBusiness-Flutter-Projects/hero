@@ -15,7 +15,7 @@ dependencies:
   flutter_bloc: ^8.1.2
   get_it: ^7.2.0
   dartz: ^0.10.1
-  cached_video_player: ^2.0.4
+#  cached_video_player: ^2.0.4
   audio_waveforms: ^1.0.4
   just_waveform: ^0.0.5
   http_client: ^1.5.2

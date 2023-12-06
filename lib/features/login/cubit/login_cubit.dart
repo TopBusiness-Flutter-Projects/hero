@@ -59,11 +59,12 @@ class LoginCubit extends Cubit<LoginState> {
         Navigator.pop(context);
         //otp request
         //todo=> firebase auth stopped for test
-        verification_Id = await verifyPhoneNumber(context);
+       // verification_Id = await verifyPhoneNumber(context);
 
         //
-        Navigator.pushNamedAndRemoveUntil(
-            context, Routes.verificationScreenRoute, (route) => false);
+        // Navigator.pushNamedAndRemoveUntil(
+        //     context, Routes.verificationScreenRoute, (route) => false);
+        Navigator.pushNamedAndRemoveUntil(context, Routes.registerScreenRoute, (route) => false);
       }
       //case2: blocked
       else if (r.code==500){
@@ -81,11 +82,12 @@ class LoginCubit extends Cubit<LoginState> {
         Navigator.pop(context);
         //otp request
         //todo=> firebase auth stopped for test
-        verification_Id = await verifyPhoneNumber(context);
-
+        // verification_Id = await verifyPhoneNumber(context);
         //
-        Navigator.pushNamedAndRemoveUntil(
-            context, Routes.verificationScreenRoute, (route) => false);
+        // //
+        // Navigator.pushNamedAndRemoveUntil(
+        //     context, Routes.verificationScreenRoute, (route) => false);
+    await login(context);
       }
       // emit(SuccessCheckPhoneState());
       // Navigator.pop(context);
@@ -113,12 +115,15 @@ class LoginCubit extends Cubit<LoginState> {
   SignUpModel? signUpModel;
 
   login(BuildContext context) async {
+    if (phoneController.text.startsWith('0')) {
+      phoneController.text = phoneController.text.substring(1);
+    }
     emit(LoadingLoginStatus());
+    deviceType = Platform.isAndroid ? 'Android' : 'iOS';
     String? token = await _getId();
     AppWidget.createProgressDialog(context, 'wait'.tr());
     //todo=> country code may be change to be iraq code
-    final response = await api.login(
-        phoneController.text, AppStrings.countryCode, deviceType, token!);
+    final response = await api.login(phoneController.text, AppStrings.countryCode, deviceType, token!);
 
     response.fold((l) {
       emit(FailureLoginState());
@@ -131,6 +136,15 @@ class LoginCubit extends Cubit<LoginState> {
         Navigator.pop(context);
         emit(PhoneNotExistState());
         ErrorWidget(r.message.toString());
+      }
+      else if (r.code == 422) {
+        //new user=> go to register
+         isNewUser = true;
+        Navigator.pop(context);
+        emit(PhoneNotExistState());
+       // ErrorWidget(r.message.toString());
+         Navigator.pushNamedAndRemoveUntil(
+             context, Routes.registerScreenRoute, (route) => false);
       } else if (r.code == 200) {
         emit(SuccessLoginState());
         Navigator.pop(context);
