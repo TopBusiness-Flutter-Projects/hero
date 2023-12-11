@@ -16,7 +16,6 @@ import '../../../config/routes/app_routes.dart';
 import '../../../core/utils/app_strings.dart';
 import '../../../core/utils/appwidget.dart';
 
-
 part 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
@@ -34,23 +33,30 @@ class LoginCubit extends Cubit<LoginState> {
   }
 
   checkPhone(BuildContext context) async {
-    if (phoneController.text.startsWith('0')) {
-      phoneController.text = phoneController.text.substring(1);
-    }
+    // if (phoneController.text.startsWith('0')) {
+    //   phoneController.text = phoneController.text.substring(1);
+    //
+    // }else
+
     emit(LoadingCheckPhoneStatus());
     AppWidget.createProgressDialog(context, 'wait'.tr());
+    if (phoneController.text.startsWith("964")) {
+      print("Before: ${phoneController.text}");
+      phoneController.text = phoneController.text.substring(3);
+      print("After: ${phoneController.text}");
+    }
+
     //todo=> country code may be change to be iraq code
     final response =
-        await api.checkPhone(phoneController.text, AppStrings.countryCode);
+        await api.checkPhone(phoneController.text );
 
     response.fold((l) {
       emit(FailureCheckPhoneState());
       Navigator.pop(context);
-    },
-            (r) async {
+    }, (r) async {
       loginModel = r;
       // case1:new user
-      if (r.code == 406 ) {
+      if (r.code == 406) {
         //new user=> go to register
         isNewUser = true;
         print("is new User = $isNewUser");
@@ -59,19 +65,20 @@ class LoginCubit extends Cubit<LoginState> {
         Navigator.pop(context);
         //otp request
         //todo=> firebase auth stopped for test
-       // verification_Id = await verifyPhoneNumber(context);
+        // verification_Id = await verifyPhoneNumber(context);
 
         //
         // Navigator.pushNamedAndRemoveUntil(
         //     context, Routes.verificationScreenRoute, (route) => false);
-        Navigator.pushNamedAndRemoveUntil(context, Routes.registerScreenRoute, (route) => false);
+        Navigator.pushNamedAndRemoveUntil(
+            context, Routes.registerScreenRoute, (route) => false);
       }
       //case2: blocked
-      else if (r.code==500){
+      else if (r.code == 500) {
         Navigator.pop(context);
-    errorGetBar("this number is blocked");
+        errorGetBar("this number is blocked");
         emit(PhoneBlockedtState());
-        return ;
+        return;
       }
       //case3:old user
       else if (r.code == 200) {
@@ -87,16 +94,16 @@ class LoginCubit extends Cubit<LoginState> {
         // //
         // Navigator.pushNamedAndRemoveUntil(
         //     context, Routes.verificationScreenRoute, (route) => false);
-    await login(context);
+        await login(context);
       }
       // emit(SuccessCheckPhoneState());
       // Navigator.pop(context);
       // //otp request
       // //todo=> firebase auth stopped for test
       // verification_Id = await verifyPhoneNumber(context);
-     //
-     //  Navigator.pushNamedAndRemoveUntil(
-     //      context, Routes.verificationScreenRoute, (route) => false);
+      //
+      //  Navigator.pushNamedAndRemoveUntil(
+      //      context, Routes.verificationScreenRoute, (route) => false);
     });
   }
 
@@ -115,45 +122,47 @@ class LoginCubit extends Cubit<LoginState> {
   SignUpModel? signUpModel;
 
   login(BuildContext context) async {
-    if (phoneController.text.startsWith('0')) {
-      phoneController.text = phoneController.text.substring(1);
-    }
+    // if (phoneController.text.startsWith('0')) {
+    //   phoneController.text = phoneController.text.substring(1);
+    // }
     emit(LoadingLoginStatus());
     deviceType = Platform.isAndroid ? 'Android' : 'iOS';
     String? token = await _getId();
     AppWidget.createProgressDialog(context, 'wait'.tr());
     //todo=> country code may be change to be iraq code
-    final response = await api.login(phoneController.text, AppStrings.countryCode, deviceType, token!);
+    final response = await api.login(
+        phoneController.text, deviceType, token!);
 
     response.fold((l) {
-      emit(FailureLoginState());
       Navigator.pop(context);
+      errorGetBar("login failed");
+      emit(FailureLoginState());
     }, (r) {
       signUpModel = r;
-      if (r.code == 406) {
-        //new user=> go to register
-        // isNewUser = true;
-        Navigator.pop(context);
-        emit(PhoneNotExistState());
-        ErrorWidget(r.message.toString());
-      }
-      else if (r.code == 422) {
-        //new user=> go to register
-         isNewUser = true;
-        Navigator.pop(context);
-        emit(PhoneNotExistState());
-       // ErrorWidget(r.message.toString());
-         Navigator.pushNamedAndRemoveUntil(
-             context, Routes.registerScreenRoute, (route) => false);
-      } else if (r.code == 200) {
+      // if (r.code == 406) {
+      //   //new user=> go to register
+      //   // isNewUser = true;
+      //   Navigator.pop(context);
+      //   emit(PhoneNotExistState());
+      //   errorGetBar(r.message.toString());
+      // } else
+      if (r.code == 200) {
         emit(SuccessLoginState());
         Navigator.pop(context);
         Preferences.instance.setUser(r);
         Navigator.pushNamedAndRemoveUntil(
             context, Routes.homeRoute, (route) => false);
-      } else {
+      }  else  if (r.code == 422) {
+        //new user=> go to register
+        isNewUser = true;
         Navigator.pop(context);
-        ErrorWidget(r.message.toString());
+        emit(PhoneNotExistState());
+        // ErrorWidget(r.message.toString());
+        Navigator.pushNamedAndRemoveUntil(
+            context, Routes.registerScreenRoute, (route) => false);
+      }  else {
+        errorGetBar(r.message.toString());
+        Navigator.pop(context);
       }
     });
   }
@@ -191,12 +200,11 @@ class LoginCubit extends Cubit<LoginState> {
         this.resendToken = resendToken;
         this.verification_Id = verificationId;
         completer.complete(verificationId);
-
       },
       codeAutoRetrievalTimeout: (String verificationId) {
         //Handle a timeout of when automatic SMS code handling fails.
-        Fluttertoast.showToast(msg:"timeout" );
-       // errorGetBar("timeout ");
+        Fluttertoast.showToast(msg: "timeout");
+        // errorGetBar("timeout ");
       },
     );
 
@@ -210,8 +218,8 @@ class LoginCubit extends Cubit<LoginState> {
     print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     print(verification_Id);
     loadingDialog();
-   print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-   print(verification_Id);
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    print(verification_Id);
     PhoneAuthCredential credential = PhoneAuthProvider.credential(
       verificationId: verification_Id!,
       smsCode: smsCode,
@@ -222,19 +230,19 @@ class LoginCubit extends Cubit<LoginState> {
         .then((value) async {
       emit(CheckCodeSuccessfully());
       if (isNewUser) {
-         Navigator.pop(context);
+        Navigator.pop(context);
         emit(NewUserAuthinticatedState());
         Navigator.pushNamedAndRemoveUntil(
             context, Routes.registerScreenRoute, (route) => false);
       } else {
-         Navigator.pop(context);
+        Navigator.pop(context);
         emit(OldUserAuthinticatedState());
         //todo => login api request to save user data in shared preferences
         deviceType = Platform.isAndroid ? 'Android' : 'iOS';
         login(context);
       }
 
-     // Navigator.pop(context);
+      // Navigator.pop(context);
     }).catchError((error) {
       Navigator.pop(context);
       errorGetBar(error.toString());

@@ -103,7 +103,7 @@ class _LoginState extends State<Login> {
                     // controller: controller.phoneNumberController,
                   ),
                   SizedBox(
-                    height: getSize(context) / 20,
+                    height: getSize(context) / 20
                   ),
                   Row(
                     children: [
@@ -155,9 +155,9 @@ class _LoginState extends State<Login> {
                         errorGetBar("agree_terms".tr());
                       }
                    // else  if (cubit.phoneController.text.length<9||cubit.phoneController.text.length>10){
-                    else  if (cubit.phoneController.text.length<10||cubit.phoneController.text.length>11){
-                        errorGetBar("invalid number");
-                      }
+                   //  else  if (cubit.phoneController.text.length!=11){
+                   //      errorGetBar("الرقم غير صالح");
+                   //    }
                     else{
                     //   await cubit.checkPhone(context);
                         await cubit.login(context);

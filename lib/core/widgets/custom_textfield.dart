@@ -6,7 +6,6 @@ import 'package:hero/core/utils/getsize.dart';
 import '../utils/app_colors.dart';
 
 class CustomTextField extends StatelessWidget {
-
   const CustomTextField({
     Key? key,
     this.prefixWidget,
@@ -37,96 +36,94 @@ class CustomTextField extends StatelessWidget {
   final bool isPassword;
   final bool? isEnable;
   final Function(String)? onchange;
- final void Function()? onTap;
+  final void Function()? onTap;
   final TextInputType textInputType;
   final TextEditingController? controller;
   final double horizontalPadding;
   final bool isAdd;
   final double? fontSize;
   final int? maxLengthOfCharacter;
+
   @override
   Widget build(BuildContext context) {
     return Container(
       // height: getSize(context) / 7,
       padding: EdgeInsets.symmetric(vertical: 0, horizontal: horizontalPadding),
       child: TextFormField(
-        inputFormatters: [
-          new LengthLimitingTextInputFormatter(maxLengthOfCharacter),
+          inputFormatters: [
+            new LengthLimitingTextInputFormatter(maxLengthOfCharacter),
 
-          /// here char limit is 5
-        ],
-        textAlignVertical: TextAlignVertical.center,
-        controller: controller,
-        keyboardType: textInputType,
-        obscureText: isPassword,
-        enabled: isEnable,
-        textAlign: TextAlign.start,
-        style: TextStyle(
-          fontSize: fontSize,
-          fontWeight: FontWeight.w400,
-          fontFamily: 'Cairo',
-        ),
-        autofocus: true,
-        decoration: InputDecoration(
-
-          contentPadding: const EdgeInsets.all(1),
-          labelStyle: TextStyle(
-            color: AppColors.black,
+            /// here char limit is 5
+          ],
+          textAlignVertical: TextAlignVertical.center,
+          controller: controller,
+          keyboardType: textInputType,
+          obscureText: isPassword,
+          enabled: isEnable,
+          textAlign: TextAlign.start,
+          style: TextStyle(
+            fontSize: fontSize,
             fontWeight: FontWeight.w400,
+            fontFamily: 'Cairo',
           ),
-          hintStyle: TextStyle(
-            color: AppColors.gray6,
-            fontWeight: FontWeight.w400,
+          autofocus: true,
+          decoration: InputDecoration(
+            contentPadding: const EdgeInsets.all(1),
+            labelStyle: TextStyle(
+              color: AppColors.black,
+              fontWeight: FontWeight.w400,
+            ),
+            hintStyle: TextStyle(
+              color: AppColors.gray6,
+              fontWeight: FontWeight.w400,
+            ),
+            hintText: title,
+            isDense: true,
+            border:
+                // textInputType != TextInputType.phone
+                //     ?
+                OutlineInputBorder(
+              borderRadius: BorderRadius.circular(getSize(context) / 44),
+              borderSide:
+                  BorderSide(color: isAdd ? AppColors.white : AppColors.white),
+            ),
+            // : InputBorder.none,
+            // enabledBorder: textInputType != TextInputType.phone
+            //     ? OutlineInputBorder(
+            //         borderRadius: BorderRadius.circular(getSize(context) / 44),
+            //         borderSide: BorderSide(
+            //             color: isAdd ? AppColors.white : AppColors.white),
+            //       )
+            //     : InputBorder.none,
+            // focusedBorder: textInputType != TextInputType.phone
+            //     ? OutlineInputBorder(
+            //         borderRadius: BorderRadius.circular(getSize(context) / 44),
+            //         borderSide: BorderSide(
+            //             color: isAdd ? AppColors.white : AppColors.white),
+            //       )
+            //     : InputBorder.none,
+            prefixIcon: prefixWidget,
+            // textInputType != TextInputType.phone ? prefixWidget : null,
+            suffixIcon: suffixIcon,
+            suffixIconColor: AppColors.buttonColor,
+            prefixIconColor: AppColors.buttonColor,
+            fillColor: backgroundColor,
+            filled: true,
           ),
-          hintText: title,
-          isDense: true,
-          border:
-          // textInputType != TextInputType.phone
-          //     ?
-          OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(getSize(context) / 44),
-
-                  borderSide: BorderSide(
-                      color: isAdd ? AppColors.white : AppColors.white),
-                ),
-              // : InputBorder.none,
-          // enabledBorder: textInputType != TextInputType.phone
-          //     ? OutlineInputBorder(
-          //         borderRadius: BorderRadius.circular(getSize(context) / 44),
-          //         borderSide: BorderSide(
-          //             color: isAdd ? AppColors.white : AppColors.white),
-          //       )
-          //     : InputBorder.none,
-          // focusedBorder: textInputType != TextInputType.phone
-          //     ? OutlineInputBorder(
-          //         borderRadius: BorderRadius.circular(getSize(context) / 44),
-          //         borderSide: BorderSide(
-          //             color: isAdd ? AppColors.white : AppColors.white),
-          //       )
-          //     : InputBorder.none,
-          prefixIcon:prefixWidget,
-               // textInputType != TextInputType.phone ? prefixWidget : null,
-          suffixIcon: suffixIcon,
-          suffixIconColor: AppColors.buttonColor,
-          prefixIconColor: AppColors.buttonColor,
-          fillColor: backgroundColor,
-          filled: true,
-        ),
-        onChanged: onchange,
-        onTap:onTap ,
-        maxLines: 1,
-
-        minLines: minLine,
-        validator: (value) {
-          if(validatorMessage=='email_msg'.tr()){
-            return null;
-          }else{  if (value == null || value.isEmpty) {
-         return validatorMessage;
-        }
-             return null;
-               }}
-
-      ),
+          onChanged: onchange,
+          onTap: onTap,
+          maxLines: 1,
+          minLines: minLine,
+          validator: (value) {
+            if (validatorMessage == 'email_msg'.tr()) {
+              return null;
+            } else {
+              if (value == null || value.isEmpty) {
+                return validatorMessage;
+              }
+              return null;
+            }
+          }),
     );
   }
 }

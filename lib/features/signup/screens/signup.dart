@@ -205,7 +205,6 @@ class _SignUpState extends State<SignUp> {
                         controller: cubit.phoneController,
                         textInputType: TextInputType.phone,
                         backgroundColor: AppColors.white,
-
                         validatorMessage: 'phone_msg'.tr(),
                         horizontalPadding: 0,
 
@@ -249,7 +248,6 @@ class _SignUpState extends State<SignUp> {
                               lastDate: DateTime.now(),
                             );
                             if (picked != null && picked != cubit.selectedDate) {
-
                                 cubit.selectedDate = picked;
                                 cubit.dateOfBirthController.text =DateFormat('yyyy-MM-dd').format(picked);
 

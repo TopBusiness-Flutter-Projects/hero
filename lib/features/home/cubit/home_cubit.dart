@@ -573,6 +573,7 @@ double paymentMoney = 0;
     response.fold((l) {
       emit(FailedDeleteUser());
       Navigator.pop(context);
+      errorGetBar("failed to delete user");
       } ,
             (r) {
          if(r.code==200){
@@ -607,26 +608,27 @@ double paymentMoney = 0;
     emit(LoadingToLogOutState());
     loadingDialog();
     String? token = await _getId();
-    if(token!=null){
-      final response = await api.logout(token);
-      response.fold((l) {
-        Navigator.pop(context);
-        emit(FailureToLogOutState());
-      }, (r) {
+    Preferences.instance.clearShared();
+    Navigator.pop(context);
+    emit(SuccessToLogOutState());
+    Navigator.pushNamedAndRemoveUntil(context,
+        Routes.initialRoute, (route) => false);
+    // if(token!=null){
+    //   final response = await api.logout(token);
+    //   response.fold((l) {
+    //     Navigator.pop(context);
+    //     emit(FailureToLogOutState());
+    //   }, (r) {
+    //
+    //     deleteModel = r;
+    //
+    //   });
 
-        deleteModel = r;
-        Preferences.instance.clearShared();
-        Navigator.pop(context);
-        emit(SuccessToLogOutState());
-        Navigator.pushNamedAndRemoveUntil(context,
-            Routes.loginRoute, (route) => false);
-      });
-
-    }
-    else{
-      Navigator.pop(context);
-      ErrorWidget("token is null");
-    }
+    // }
+    // else{
+    //   Navigator.pop(context);
+    //   ErrorWidget("token is null");
+    // }
   }
 
   HomeModel? homeModel;

@@ -56,7 +56,6 @@
   "toktok_type": "TokTok Type",
   "toktok_model": "TokTok Model",
   "toktok_color": "TokTok Color",
-
   "no_drivers": "There are no drivers near you, try later!",
   "name": "Name",
   "email": "Email",
@@ -71,6 +70,7 @@
   "appreciate": "We appreciate your waiting!",
   "update_tiktok_data": "Update Tiktok data ",
   "update_documents": "Update documents ",
+  "wait": "wait",
   "wallet": "Wallet",
   "orders": "Orders",
   "profit": "Profits",
@@ -85,15 +85,16 @@
   "cancelled_orders": "Cancelled Orders",
   "rate_trip": "Rate Trip",
   "write_comment": "Write Comment",
-  "follow":"follow",
+  "follow": "follow",
   "continue": "Continue",
   "pick_img": "Please Pick up an image",
   "date_of_birth_msg": "Please Enter your Birthdate",
   "date_of_birth": "Date of birth",
   "phone_msg": "Please enter phone number",
   "email_msg": "Please enter an email",
-  "name_msg": "Please enter your name"
-
-
-
+  "name_msg": "Please enter your name",
+  "search_location": "search for location",
+  "select_image": "Select Image Source",
+  "camera": "Camera",
+  "gallery": "Gallery"
 }
