@@ -43,7 +43,6 @@ class _OrdersScreenState extends State<OrdersScreen>
         OrdersCubit cubit = context.read<OrdersCubit>();
         return Scaffold(
           body: Column(
-
             children: [
               SizedBox(
                 height: 10,
@@ -60,7 +59,8 @@ class _OrdersScreenState extends State<OrdersScreen>
                     color: Colors.grey,
                   ),
                   Text(
-                    'welcome'.tr() + "${context.read<HomeCubit>().homeModel?.data?.user?.name}",
+                    'welcome'.tr() +
+                        "${context.read<HomeCubit>().homeModel?.data?.user?.name}",
                     style: TextStyle(
                         fontSize: getSize(context) / 24,
                         fontWeight: FontWeight.normal,
@@ -92,29 +92,28 @@ class _OrdersScreenState extends State<OrdersScreen>
                 ],
               ),
               SizedBox(
-                height: getSize(context)*0.03,
+                height: getSize(context) * 0.03,
               ),
               TabBar(
                   indicatorSize: TabBarIndicatorSize.tab,
                   indicatorColor: AppColors.primary,
                   labelColor: AppColors.primary,
-                 physics: BouncingScrollPhysics(),
-                 dividerHeight: 0,
-                 // unselectedLabelColor: AppColors.black,
+                  physics: BouncingScrollPhysics(),
+                  //  dividerHeight: 0,
+                  // unselectedLabelColor: AppColors.black,
                   controller: cubit.tabController,
-                //  indicatorWeight: 1,
+                  //  indicatorWeight: 1,
                   indicatorPadding: EdgeInsets.zero,
                   padding: EdgeInsets.zero,
                   isScrollable: true,
                   onTap: (int value) {
-                    if(value == 0 ){
-
+                    if (value == 0) {
                       cubit.getAllTrips("new");
                     }
-                    if(value == 1 ){
+                    if (value == 1) {
                       cubit.getAllTrips("complete");
                     }
-                    if(value == 2 ){
+                    if (value == 2) {
                       cubit.getAllTrips("reject");
                     }
                   },
@@ -124,64 +123,82 @@ class _OrdersScreenState extends State<OrdersScreen>
                     Text("cancelled_orders".tr()),
                   ]),
               SizedBox(
-                height: getSize(context)*0.03,
+                height: getSize(context) * 0.03,
               ),
               Flexible(
                 child: TabBarView(
-                   // physics: NeverScrollableScrollPhysics(),
+                    // physics: NeverScrollableScrollPhysics(),
                     controller: cubit.tabController,
                     children: [
                       // new orders
-                      state is LoadingGettingAllTripsState?
-                      Center(child: CircularProgressIndicator(color: AppColors.primary,)):
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: BouncingScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: HomeListItem(isHome: false,trip: cubit.newTrips![index]),
-                          );
-                        },
-                        itemCount: cubit.newTrips?.length??0,
-                      ),
-                      state is LoadingGettingAllTripsState?
-                      Center(child: CircularProgressIndicator(color: AppColors.primary,)):
-                      //completed orders
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: BouncingScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          return InkWell(
-                            onTap: () {
-                              Navigator.pushNamed(
-                                  context, Routes.tripDetailsRoute,arguments: cubit.completeTrips![index]);
-                            },
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8.0),
-                              child: HomeListItem(isHome: false,trip:cubit.completeTrips![index] ,),
+                      state is LoadingGettingAllTripsState
+                          ? Center(
+                              child: CircularProgressIndicator(
+                              color: AppColors.primary,
+                            ))
+                          : ListView.builder(
+                              shrinkWrap: true,
+                              physics: BouncingScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: HomeListItem(
+                                      isHome: false,
+                                      trip: cubit.newTrips![index]),
+                                );
+                              },
+                              itemCount: cubit.newTrips?.length ?? 0,
                             ),
-                          );
-                        },
-                        itemCount: cubit.completeTrips?.length??0,
-                      ),
+                      state is LoadingGettingAllTripsState
+                          ? Center(
+                              child: CircularProgressIndicator(
+                              color: AppColors.primary,
+                            ))
+                          :
+                          //completed orders
+                          ListView.builder(
+                              shrinkWrap: true,
+                              physics: BouncingScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                return InkWell(
+                                  onTap: () {
+                                    Navigator.pushNamed(
+                                        context, Routes.tripDetailsRoute,
+                                        arguments: cubit.completeTrips![index]);
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
+                                    child: HomeListItem(
+                                      isHome: false,
+                                      trip: cubit.completeTrips![index],
+                                    ),
+                                  ),
+                                );
+                              },
+                              itemCount: cubit.completeTrips?.length ?? 0,
+                            ),
                       // rejected orders
-                      state is LoadingGettingAllTripsState?
-                      Center(child: CircularProgressIndicator(color: AppColors.primary,)):
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: BouncingScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: HomeListItem(isHome: false,trip: cubit.rejectedTrips![index]),
-                          );
-                        },
-                        itemCount:  cubit.rejectedTrips?.length??0,
-                      ),
+                      state is LoadingGettingAllTripsState
+                          ? Center(
+                              child: CircularProgressIndicator(
+                              color: AppColors.primary,
+                            ))
+                          : ListView.builder(
+                              shrinkWrap: true,
+                              physics: BouncingScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: HomeListItem(
+                                      isHome: false,
+                                      trip: cubit.rejectedTrips![index]),
+                                );
+                              },
+                              itemCount: cubit.rejectedTrips?.length ?? 0,
+                            ),
                     ]),
               )
             ],

@@ -25,8 +25,6 @@ void main() async {
       saveLocale: true,
       startLocale: const Locale('ar', ''),
       fallbackLocale: const Locale('ar', ''),
-
-
       child: HotRestartController(child: const HeroApp()),
     ),
   );
