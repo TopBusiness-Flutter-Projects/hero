@@ -133,8 +133,8 @@ flutter_icons:
   android: true
   ios: true
   remove_alpha_ios: true
-  image_path: "assets/images/app.png"
-  adaptive_icon_foreground: "assets/images/app.png"
+  image_path: "assets/images/requestlocation.png"
+  adaptive_icon_foreground: "assets/images/requestlocation.png"
 
 
 
