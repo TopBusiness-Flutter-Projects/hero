@@ -13,6 +13,7 @@ import 'package:hero/core/remote/service.dart';
 import 'package:hero/core/utils/dialogs.dart';
 import 'package:meta/meta.dart';
 import '../../../config/routes/app_routes.dart';
+import '../../../core/models/check_document_model.dart';
 import '../../../core/utils/app_strings.dart';
 import '../../../core/utils/appwidget.dart';
 
@@ -150,8 +151,19 @@ class LoginCubit extends Cubit<LoginState> {
         emit(SuccessLoginState());
         Navigator.pop(context);
         Preferences.instance.setUser(r);
-        Navigator.pushNamedAndRemoveUntil(
-            context, Routes.homeRoute, (route) => false);
+
+        if (r.data!.type == 'driver'){
+
+          /// Check documents
+          checkDocuments(context);
+        }
+        else{
+          Navigator.pushNamedAndRemoveUntil(
+              context, Routes.homeRoute, (route) => false);
+        }
+
+
+
       }  else  if (r.code == 422) {
         //new user=> go to register
         isNewUser = true;
@@ -164,6 +176,32 @@ class LoginCubit extends Cubit<LoginState> {
         errorGetBar(r.message.toString());
         Navigator.pop(context);
       }
+    });
+  }
+  // checkDocuments
+  CheckDocumentsModel checkDocumentsModel=  CheckDocumentsModel ();
+
+  checkDocuments(BuildContext context) async {
+    emit(LoadingCheckDocumentsStatus());
+    final response = await api.checkDocuments();
+    response.fold((l) {
+      emit(FailureCheckDocumentsState());
+    }, (r) {
+      checkDocumentsModel = r;
+      if( r.data!.driverDetails == 1 && r.data!.driverDocuments ==1){
+        Navigator.pushNamedAndRemoveUntil(
+            context, Routes.homedriverRoute, (route) => false);
+      }
+      else if(r.data!.driverDetails == 0){
+
+        Navigator.pushNamedAndRemoveUntil(
+            context, Routes.driversignupRoute, (route) => false );
+      }
+      else if(r.data!.driverDocuments == 0){
+        Navigator.pushNamedAndRemoveUntil(
+            context, Routes.uploadDocumentsScreenRoute, (route) => false );
+      }
+      emit(SuccessCheckDocumentsState());
     });
   }
 

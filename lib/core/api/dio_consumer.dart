@@ -22,24 +22,21 @@ class DioConsumer implements BaseApiConsumer {
           (X509Certificate cert, String host, int port) => true;
       return client;
     };
-
     client.options
       ..baseUrl = EndPoints.baseUrl
       ..responseType = ResponseType.plain
       ..followRedirects = false
-      ..receiveTimeout = 1000 * 60
-      ..connectTimeout = 1000 * 60
-      ..sendTimeout = 1000 * 60
+      ..receiveTimeout = 1000 * 80
+      ..connectTimeout = 1000 * 80
+      ..sendTimeout = 1000 * 80
       ..validateStatus = (status) {
         return status! < StatusCode.internalServerError;
       };
-
     client.interceptors.add(injector.serviceLocator<AppInterceptors>());
     if (kDebugMode) {
       client.interceptors.add(injector.serviceLocator<LogInterceptor>());
     }
   }
-
   @override
   Future get(String path,
       {Map<String, dynamic>? queryParameters, Options? options}) async {

@@ -1,8 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:hero/core/api/end_points.dart';
+import 'package:hero/core/models/cities_model.dart';
 import 'package:hero/core/models/home_model.dart';
 import 'package:hero/core/models/notification_model.dart';
 import 'package:hero/core/models/settings_model.dart';
+import 'package:hero/features/documents/screens/upload_documents.dart';
 import 'package:hero/features/signup/models/register_model.dart';
 import '../api/base_api_consumer.dart';
 import '../error/exceptions.dart';
@@ -10,16 +12,20 @@ import '../error/failures.dart';
 import 'package:dartz/dartz.dart';
 import '../models/add_favourite_model.dart';
 import '../models/all_trips_model.dart';
+import '../models/check_document_model.dart';
 import '../models/create_schedual_trip_model.dart';
 import '../models/create_trip_model.dart';
 import '../models/delete_user_model.dart';
 import '../models/direction.dart';
 import '../models/favourite_model.dart';
 import '../models/login_model.dart';
+import '../models/my_wallet_model.dart';
 import '../models/place_details.dart';
 import '../models/place_geocode.dart';
 import '../models/rate_trip_model.dart';
 import '../models/signup_response_model.dart';
+import '../models/store_bike_details_model.dart';
+import '../models/store_driver_data_model.dart';
 import '../preferences/preferences.dart';
 import '../utils/app_strings.dart';
 
@@ -47,6 +53,7 @@ class ServiceApi {
 //
   Future<Either<Failure, SignUpModel>> postRegister(
       RegisterModel registerModel, bool isSignUp) async {
+
     try {
       if (registerModel.phone.startsWith("964")) {
         print("Before: ${registerModel.phone}");
@@ -74,6 +81,38 @@ class ServiceApi {
         },
       );
       return Right(SignUpModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+// upload documents
+  Future<Either<Failure, StoreBikeDetailsModel>> uploadDocuments(
+  {
+    required String agencyNumber,
+    required String bikeLicense,
+    required String idCard,
+    required String houseCard,
+    required String bikeImage,
+}   ) async {
+    SignUpModel signUpModel = await Preferences.instance.getUserModel();
+
+    try {
+      var response = await dio.post(
+        EndPoints.storeDriverDocument ,
+
+        formDataIsEnabled: true,
+        options: Options(
+          headers: {'Authorization': signUpModel.data?.token},
+        ),
+        body: {
+          'agency_number':await MultipartFile.fromFile(agencyNumber),
+          'bike_license':await MultipartFile.fromFile(bikeLicense),
+          "id_card":await MultipartFile.fromFile(idCard),
+          "house_card": await MultipartFile.fromFile(houseCard),
+          "bike_image":await MultipartFile.fromFile(bikeImage),
+        },
+      );
+      return Right(StoreBikeDetailsModel.fromJson(response));
     } on ServerException {
       return Left(ServerFailure());
     }
@@ -249,6 +288,41 @@ class ServiceApi {
         ),
       );
       return Right(DeleteModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+//// check documents
+
+  Future<Either<Failure, CheckDocumentsModel>> checkDocuments() async {
+
+    SignUpModel signUpModel = await Preferences.instance.getUserModel();
+    try {
+      final response = await dio.post(
+        EndPoints.checkDocument,
+        options: Options(
+          headers: {'Authorization': signUpModel.data?.token},
+        ),
+      );
+      return Right(CheckDocumentsModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
+//// check documents
+
+  Future<Either<Failure, MyWalletModel>> getWallet() async {
+
+    SignUpModel signUpModel = await Preferences.instance.getUserModel();
+    try {
+      final response = await dio.get(
+        EndPoints.driverWallet,
+        options: Options(
+          headers: {'Authorization': signUpModel.data?.token},
+        ),
+      );
+      return Right(MyWalletModel.fromJson(response));
     } on ServerException {
       return Left(ServerFailure());
     }
@@ -701,7 +775,50 @@ class ServiceApi {
       return Left(ServerFailure());
     }
   }
-//
+/// USER
+
+// get cities
+  Future<Either<Failure, CitiesModel>> getCities() async {
+    try {
+      final response = await dio.get(EndPoints.citiesUrl);
+      return Right(CitiesModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
+
+
+
+  Future<Either<Failure, StoreDriverDetailsModel>> addDriverDetails(
+      {required String bikeType,
+        required String bikeModel,
+        required String bikeColor,
+        required String areaId}) async {
+    SignUpModel signUpModel = await Preferences.instance.getUserModel();
+    try {
+      final response = await dio.post(EndPoints.storeDriverDetails,
+          options: Options(
+            headers: {'Authorization': signUpModel.data?.token},
+          ),
+          body: {"bike_type": bikeType,
+            "bike_model": bikeModel,
+            "bike_color": bikeColor,
+            "area_id": areaId,
+          });
+      return Right(StoreDriverDetailsModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
+
+
+
+
+
+
+
 //   Future<Either<Failure, FavoriteModel>>getFavoriteSearchData(searchKey) async {
 //
 //     LoginModel loginModel = await Preferences.instance.getUserModel();

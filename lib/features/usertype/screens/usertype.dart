@@ -18,7 +18,6 @@ class ChooseType extends StatefulWidget {
   @override
   State<ChooseType> createState() => _ChooseTypeState();
 }
-
 class _ChooseTypeState extends State<ChooseType> {
   @override
   Widget build(BuildContext context) {
@@ -111,7 +110,7 @@ class _ChooseTypeState extends State<ChooseType> {
                 color: AppColors.primary,
                 onClick: ()  {
                   context.read<SignupCubit>().signUp("user", context, true);
-                  // Navigator.pushNamedAndRemoveUntil(context, Routes.requestlocationScreenRoute, (route) => false,arguments: "client");
+                 //  Navigator.pushNamedAndRemoveUntil(context, Routes.requestlocationScreenRoute, (route) => false,arguments: "client");
                 },
               ),
               SizedBox(
@@ -138,8 +137,10 @@ class _ChooseTypeState extends State<ChooseType> {
                   color: AppColors.white,
                   textcolor: AppColors.primary,
                   borderRadius: getSize(context) / 24,
-                  onClick: () async {
-                    await  context.read<SignupCubit>().signUp("driver", context, true);
+                  onClick: ()  {
+                    context.read<SignupCubit>().signUp("driver", context, true);
+
+
                    // Navigator.pushNamedAndRemoveUntil(context, Routes.requestlocationScreenRoute, (route) => false,arguments: "driver");
 
                   },

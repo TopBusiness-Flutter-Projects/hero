@@ -23,3 +23,21 @@ class MySvgWidget extends StatelessWidget {
     );
   }
 }
+
+class MyCustomSvgWidget extends StatelessWidget {
+  const MyCustomSvgWidget({Key? key, required this.path, this.width, this.height, })
+      : super(key: key);
+
+  final String path;
+ final double? width;
+ final double? height;
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset(
+      path,
+      width: width,
+      height: height,
+    );
+  }
+}

@@ -66,7 +66,7 @@ class CustomTextField extends StatelessWidget {
             fontWeight: FontWeight.w400,
             fontFamily: 'Cairo',
           ),
-          autofocus: true,
+          autofocus: false,
           decoration: InputDecoration(
             contentPadding: const EdgeInsets.all(1),
             labelStyle: TextStyle(

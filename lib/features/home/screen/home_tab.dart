@@ -137,7 +137,8 @@ class _HomeTabState extends State<HomeTab> {
                 ),
                 InkWell(
                   onTap: () {
-                    context.read<HomeCubit>().tabsController.animateTo(10);
+                    Navigator.pushNamed(
+                        context, Routes.OrdersScreen);
                   },
                   child: Text(
                     'all'.tr(),

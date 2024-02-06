@@ -70,6 +70,8 @@ class SignupCubit extends Cubit<SignupState> {
               context, Routes.requestlocationScreenRoute, (route) => false,
               arguments: "client");
         } else {
+
+
           Navigator.pushNamedAndRemoveUntil(
               context, Routes.requestlocationScreenRoute, (route) => false,
               arguments: "driver");
@@ -96,10 +98,15 @@ class SignupCubit extends Cubit<SignupState> {
   getUserData() async {
     sharedUserData = await Preferences.instance.getUserModel();
     if (sharedUserData != null) {
+
       nameController.text = sharedUserData!.data!.name!;
       emailController.text = (sharedUserData!.data!.email != null
           ? sharedUserData!.data!.email
           : "")!;
+
+      if (sharedUserData!.data!.phone!.contains('+964'))
+        phoneController.text = sharedUserData!.data!.phone!.replaceAll("+964", "");
+      else
       phoneController.text = sharedUserData!.data!.phone!;
       dateOfBirthController.text =
           sharedUserData!.data!.birth!.toString().substring(0, 10);
@@ -219,8 +226,8 @@ class SignupCubit extends Cubit<SignupState> {
               arguments: "client");
         } else {
           Navigator.pushNamedAndRemoveUntil(
-              context, Routes.requestlocationScreenRoute, (route) => false,
-              arguments: "driver");
+            context, Routes.homedriverRoute, (route) => false,
+          );
         }
         // Navigator.of(context).pushNamedAndRemoveUntil(
         //     Routes.homeRoute, (route) => false);

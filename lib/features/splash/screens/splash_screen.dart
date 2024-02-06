@@ -1,10 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../config/routes/app_routes.dart';
+import '../../../core/models/signup_response_model.dart';
+import '../../../core/preferences/preferences.dart';
 import '../../../core/utils/assets_manager.dart';
+import '../../login/cubit/login_cubit.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -30,12 +34,21 @@ class _SplashScreenState extends State<SplashScreen>     with TickerProviderStat
   }
 
   Future<void> _getStoreUser() async {
+    SignUpModel signUpModel = await Preferences.instance.getUserModel();
+    String userType = signUpModel.data!.type!;
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
       if (prefs.getString('user') != null) {
 
+        if (userType =='driver'){
+          context.read<LoginCubit>().checkDocuments(context);
+
+        }else{
           Navigator.pushReplacementNamed(context, Routes.homeRoute);
+        }
+
+
 
       }
       else {

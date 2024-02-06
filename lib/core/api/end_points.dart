@@ -27,6 +27,10 @@ class EndPoints {
  // static const String searchUrl = '${baseUrl}search';
   static const String notificationUrl = '${baseUrl}notifications';
   static const String registerUrl = '${baseUrl}auth/register';
+  static const String storeDriverDetails = '${baseUrl}storeDriverDetails';
+  static const String storeDriverDocument = '${baseUrl}storeDriverDocument';
+  static const String checkDocument = '${baseUrl}checkDocument';
+  static const String driverWallet = '${baseUrl}driverWallet';
 
 
   //************************ Google  ****************************************************

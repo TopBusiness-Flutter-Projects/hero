@@ -6,6 +6,7 @@ import 'package:hero/features/home/cubit/home_cubit.dart';
 import 'package:hero/features/signup/cubit/signup_cubit.dart';
 import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/app_strings.dart';
+import '../../../core/utils/assets_manager.dart';
 import '../../../core/utils/dialogs.dart';
 import '../../../core/utils/getsize.dart';
 import '../../../core/widgets/back_button.dart';
@@ -13,8 +14,9 @@ import '../../../core/widgets/custom_button.dart';
 import '../../../core/widgets/custom_textfield.dart';
 
 class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({super.key,});
+  const EditProfileScreen({super.key, required this.type,});
 
+  final String type;
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
@@ -22,7 +24,7 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   var formKey = GlobalKey<FormState>(debugLabel: "editprofile");
-   String? type;
+
 
    @override
   void initState() {
@@ -59,9 +61,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         children: [
                           //welcome mohammed
                           Row(
-
                             children: [
-                              CustomBackButton(),
+                              InkWell(
+                                onTap: () {
+                                 Navigator.pop(context);
+                                },
+                                child: Image.asset(
+                                  ImageAssets.backImage,
+                                  color: AppColors.grey3,
+                                  height: getSize(context) / 15,
+                                  width: getSize(context) / 15,
+
+                                ),
+                              ),
                               SizedBox(width: 5,),
                               Icon(
                                 CupertinoIcons.person_circle_fill,
@@ -348,8 +360,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   //   errorGetBar("pick_img".tr());
                                   // }
                                  // else{
-
-                                    await cubit.editProfile("user",context);
+                                  await cubit.editProfile(widget.type,context);
                                  // }
                                 }
                                 // Navigator.of(context).pushNamedAndRemoveUntil(

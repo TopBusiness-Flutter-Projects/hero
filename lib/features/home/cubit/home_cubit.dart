@@ -26,6 +26,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hero/core/remote/service.dart';
 import 'package:hero/core/utils/assets_manager.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:location/location.dart'as loc;
 import 'package:permission_handler/permission_handler.dart';
@@ -67,6 +68,7 @@ class HomeCubit extends Cubit<HomeState> {
   }
   getUserData() async {
     signUpModel = await Preferences.instance.getUserModel();
+
     emit(GettingUserData());
   }
   ServiceApi api;
@@ -675,7 +677,21 @@ bool isLoadingSettings = true;
       throw 'Could not launch $url';
     }
   }
+  rateApp() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    String url = '';
+    String packageName = packageInfo.packageName;
 
+    if (Platform.isAndroid) {
+      url = "https://play.google.com/store/apps/details?id=${packageName}";
+    } else if (Platform.isIOS) {
+      url = 'https://apps.apple.com/us/app/${packageName}';
+    }
+    if (!await launchUrl(Uri.parse(url),
+        mode: LaunchMode.externalApplication)) {
+      throw Exception('Could not launch $url');
+    }
+  }
 
   NotificationModel? notificationModel;
   getNotification()async{

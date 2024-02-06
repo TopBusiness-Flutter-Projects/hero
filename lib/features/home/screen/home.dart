@@ -1,10 +1,10 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hero/core/utils/app_colors.dart';
 import 'package:hero/core/utils/getsize.dart';
 import 'package:hero/features/home/screen/home_tab.dart';
+import '../../../config/routes/app_routes.dart';
 import '../../../core/utils/assets_manager.dart';
 import '../../../core/widgets/close_widget.dart';
 import '../../about_hero/screens/about_hero_screen.dart';
@@ -42,178 +42,193 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeCubit, HomeState>(
-  builder: (context, state) {
-    return Scaffold(
-      key: _scaffoldKey,
-      body: SafeArea(
-        child: Stack(
-          children: [
-            TabBarView(
-              physics: NeverScrollableScrollPhysics(),
-              controller: context.read<HomeCubit>().tabsController,
+    return BlocConsumer<HomeCubit, HomeState>(
+      listener: (context, state) {
+
+      },
+      builder: (context, state) {
+        return Scaffold(
+          key: _scaffoldKey,
+          body: SafeArea(
+            child: Stack(
               children: [
-                HomeTab(),
-                AddTripTab(),
-                NotificationScreen(),
-                FavouriteLocationsScreen(),
-                EditProfileScreen(),
-                TripInsuranceService(),
-                MyRewardsScreen(),
-                AboutHeroScreen(),
-                SafetyRulesScreen(),
-                HeroTripPolicyScreen(),
-                OrdersScreen(),
-              ],
-            ),
-            Positioned(
-              top: 10,
-              left: 10,
-              child: //drawer
-                  InkWell(
-                onTap: () {
-                  _scaffoldKey.currentState?.openDrawer();
-                },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                     children: [
-                      Container(
-                        //  margin: EdgeInsets.only(left: 10, top: 10),
-                        padding: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                  color: AppColors.black.withOpacity(0.25),
-                                  blurRadius: 1,
-                                  spreadRadius: 1)
-                            ],
-                            borderRadius: BorderRadius.all(
-                                Radius.circular(getSize(context) / 80)),
-                            color: AppColors.white),
-                        child: Icon(
-                          Icons.menu,
-                          size: 20,
-                        )),
+                TabBarView(
+                  physics: NeverScrollableScrollPhysics(),
+                  controller: context.read<HomeCubit>().tabsController,
+                  children: [
+                    HomeTab(),
+                    AddTripTab(),
+                    NotificationScreen(),
+                    FavouriteLocationsScreen(),
+                    FavouriteLocationsScreen(),
+                    TripInsuranceService(),
+                    MyRewardsScreen(),
+                    AboutHeroScreen(),
+                    SafetyRulesScreen(),
+                    HeroTripPolicyScreen(),
+                    OrdersScreen(),
                   ],
                 ),
-              ),
-            )
-          ],
-        ),
-      ),
-      drawer: Drawer(
-        child: Column(
-          // padding: EdgeInsets.zero,
-          children: <Widget>[
-            SizedBox(
-              height: getSize(context) * 0.1,
+                Positioned(
+                  top: 10,
+                  left: 10,
+                  child: //drawer
+                      InkWell(
+                    onTap: () {
+                      _scaffoldKey.currentState?.openDrawer();
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Container(
+                            //  margin: EdgeInsets.only(left: 10, top: 10),
+                            padding: EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: AppColors.black.withOpacity(0.25),
+                                      blurRadius: 1,
+                                      spreadRadius: 1)
+                                ],
+                                borderRadius: BorderRadius.all(
+                                    Radius.circular(getSize(context) / 80)),
+                                color: AppColors.white),
+                            child: Icon(
+                              Icons.menu,
+                              size: 20,
+                            )),
+                      ],
+                    ),
+                  ),
+                )
+              ],
             ),
-
-
-            ListTile(
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "${context.read<HomeCubit>().signUpModel?.data?.name}",
+          ),
+          drawer: Drawer(
+            child: Column(
+              // padding: EdgeInsets.zero,
+              children: <Widget>[
+                SizedBox(
+                  height: getSize(context) * 0.1,
+                ),
+                ListTile(
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "${context.read<HomeCubit>().signUpModel?.data?.name}",
+                        style: TextStyle(
+                            fontSize: getSize(context) * 0.03,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.black2),
+                      ),
+                      CloseWidget(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  ),
+                  leading:
+                      context.read<HomeCubit>().signUpModel?.data?.image == null
+                          ? CircleAvatar(
+                              radius: getSize(context) / 8,
+                              backgroundImage: AssetImage(ImageAssets.person),
+                            )
+                          : CircleAvatar(
+                              radius: getSize(context) / 8,
+                              backgroundImage: NetworkImage(context
+                                      .read<HomeCubit>()
+                                      .signUpModel!
+                                      .data
+                                      ?.image ??
+                                  '')),
+                  subtitle: Text(
+                    "${context.read<HomeCubit>().signUpModel?.data?.email}",
                     style: TextStyle(
-                        fontSize: getSize(context) * 0.03,
+                        fontSize: getSize(context) * 0.0295,
                         fontWeight: FontWeight.w400,
                         color: AppColors.black2),
                   ),
-                  CloseWidget(onTap:  () {
-                    Navigator.of(context).pop();
-                  },),
-                ],
-              ),
-              leading:
-              context.read<HomeCubit>().signUpModel?.data?.image==null?
-              CircleAvatar(
-                radius: getSize(context)/8,
-                backgroundImage: AssetImage(ImageAssets.person),
-              ):CircleAvatar(
-                radius: getSize(context)/8,
-                  backgroundImage: NetworkImage(context.read<HomeCubit>().signUpModel!.data?.image ?? '')),
-              subtitle: Text(
-                "${context.read<HomeCubit>().signUpModel?.data?.email}",
-                style: TextStyle(
-                    fontSize: getSize(context) * 0.0295,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.black2),
-              ),
-            ),
-
-
-            Expanded(
-                child: ListView.separated(
-                    itemBuilder: (context, index) {
-                      return InkWell(
-                        onTap: () {
-                          //notification screen
-                          if (index == 2) {
-
-                            context.read<HomeCubit>().tabsController.animateTo(2);
-                            Navigator.pop(context);
-
-                          }
-                          else if(index == 3){
-                            context.read<HomeCubit>().tabsController.animateTo(3);
-                            Navigator.pop(context);
-                          }
-                          else if(index == 9){
-                            context.read<HomeCubit>().tabsController.animateTo(4);
-                            Navigator.pop(context);
-                          }
-                          else if(index == 0){
-                            context.read<HomeCubit>().tabsController.animateTo(5);
-                            Navigator.pop(context);
-                          }
-                          else if(index == 1){
-                            context.read<HomeCubit>().tabsController.animateTo(6);
-                            Navigator.pop(context);
-                          }
-                          else if(index == 4){
-                            context.read<HomeCubit>().tabsController.animateTo(7);
-                            Navigator.pop(context);
-                          }
-                          else if(index == 6){
-                            context.read<HomeCubit>().tabsController.animateTo(8);
-                            Navigator.pop(context);
-                          }
-                          else if(index == 7){
-                            context.read<HomeCubit>().tabsController.animateTo(9);
-                            Navigator.pop(context);
-                          }
-                          else if(index == 11){
-                            //log out
-
-                            context.read<HomeCubit>().logout(context);
-                          }
-                          else if(index == 10){
-                            //delete
-                            context.read<HomeCubit>().deleteUser(context);
-                          }
-                          else if(index == 5){
-                           context.read<HomeCubit>().launchPhoneDialer("+201011827324");
-                          }
+                ),
+                Expanded(
+                    child: ListView.separated(
+                        itemBuilder: (context, index) {
+                          return InkWell(
+                            onTap: () {
+                              if (index == 0) {
+                                /// TRIP SERVICE
+                                Navigator.pop(context);
+                                Navigator.pushNamed(
+                                    context, Routes.tripInsuranceService);
+                              } else if (index == 1) {
+                                /// MY REWARDS
+                                Navigator.pop(context);
+                                Navigator.pushNamed(
+                                    context, Routes.myRewardsScreen);
+                              } else if (index == 2) {
+                                /// NOTIFICATION
+                                Navigator.pop(context);
+                                Navigator.pushNamed(
+                                    context, Routes.notificationRoute);
+                              } else if (index == 3) {
+                                /// FAVOURITES
+                                Navigator.pop(context);
+                                Navigator.pushNamed(
+                                    context, Routes.favoriteRoute);
+                              } else if (index == 4) {
+                                /// ABOUT HERO
+                                Navigator.pop(context);
+                                Navigator.pushNamed(
+                                    context, Routes.aboutHeroScreen);
+                              } else if (index == 5) {
+                                /// CALL SUPPORT
+                                context
+                                    .read<HomeCubit>()
+                                    .launchPhoneDialer("+201011827324");
+                              } else if (index == 6) {
+                                /// SAFETY RULES
+                                Navigator.pop(context);
+                                Navigator.pushNamed(
+                                    context, Routes.safetyRulesScreen);
+                              } else if (index == 7) {
+                                /// HERO POLICY
+                                Navigator.pop(context);
+                                Navigator.pushNamed(
+                                    context, Routes.heroTripPolicyScreen);
+                              } else if (index == 8) {
+                                ///  RATE APP
+                                context.read<HomeCubit>().rateApp();
+                              } else if (index == 9) {
+                                ///EDIT PROFILE
+                                Navigator.pop(context);
+                                Navigator.pushNamed(
+                                    context, Routes.editProfileRoute, arguments: "user");
+                              } else if (index == 10) {
+                                /// DELETE ACCOUNT
+                                context.read<HomeCubit>().deleteUser(context);
+                              } else if (index == 11) {
+                                ///LOGOUT
+                                context.read<HomeCubit>().logout(context);
+                              }
+                            },
+                            child: DrawerListItem(
+                              drawerItemModel: drawerItems[index],
+                              textColor: index != drawerItems.length - 1
+                                  ? AppColors.black1
+                                  : AppColors.red,
+                            ),
+                          );
                         },
-                        child: DrawerListItem(
-                          drawerItemModel: drawerItems[index],
-                          textColor: index != drawerItems.length - 1
-                              ? AppColors.black1
-                              : AppColors.red,
-                        ),
-                      );
-                    },
-                    separatorBuilder: (context, index) {
-                      return Divider();
-                    },
-                    itemCount: drawerItems.length)),
-          ],
-        ),
-      ),
+                        separatorBuilder: (context, index) {
+                          return Divider();
+                        },
+                        itemCount: drawerItems.length)),
+              ],
+            ),
+          ),
+        );
+      },
     );
-  },
-);
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../../../config/routes/app_routes.dart';
 import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/assets_manager.dart';
 import '../../../core/utils/getsize.dart';
@@ -19,14 +20,12 @@ class NotificationScreen extends StatefulWidget {
 
 class _NotificationScreenState extends State<NotificationScreen> {
   bool isLoading = true;
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     context.read<HomeCubit>().getNotification();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +48,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 SizedBox(
                   height: 10,
                 ),
-
                 Row(
                   children: [
                     SizedBox(
@@ -62,7 +60,19 @@ class _NotificationScreenState extends State<NotificationScreen> {
                             Row(
 
                               children: [
-                                CustomBackButton(),
+                                GestureDetector(
+                                  onTap :(){
+                                    Navigator.pop(context);
+                                    },
+
+                                  child: Image.asset(
+                                    ImageAssets.backImage,
+                                    color: AppColors.grey3,
+                                    height: getSize(context) / 15,
+                                    width: getSize(context) / 15,
+
+                                  ),
+                                ),
                                 SizedBox(width: 5,),
                                 Icon(
                                   CupertinoIcons.person_circle_fill,

@@ -23,8 +23,6 @@ class RequestLocation extends StatefulWidget {
 
 class _RequestLocationState extends State<RequestLocation> {
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,7 +39,10 @@ class _RequestLocationState extends State<RequestLocation> {
               ),
               InkWell(
                 onTap: () {
+
+
                   Navigator.pushNamed(context,Routes.usertypeScreenRoute);
+
                 },
                 child: Image.asset(
                   ImageAssets.backImage,
@@ -110,7 +111,9 @@ class _RequestLocationState extends State<RequestLocation> {
                 borderRadius: getSize(context) / 24,
                 color: AppColors.primary,
                 onClick: () {
+                  widget.type=="driver"?
                 //  Navigator.of(context).pushNamedAndRemoveUntil(Routes.registerScreenRoute, (route) => false,arguments: widget.type);
+                  Navigator.of(context).pushNamed(Routes.driversignupRoute,arguments: widget.type):
                   Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeRoute, (route) => false,arguments: widget.type);
                 },
               ),
