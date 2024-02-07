@@ -12,6 +12,7 @@ import '../../../core/utils/getsize.dart';
 import '../../../core/widgets/back_button.dart';
 import '../../../core/widgets/custom_button.dart';
 import '../../../core/widgets/custom_textfield.dart';
+import '../../../core/widgets/network_image.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key, required this.type,});
@@ -132,13 +133,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   FileImage(cubit.image!)
 
 
-                               ):CircleAvatar(
-                                   radius: 45,
-                                   backgroundColor: AppColors.gray.withOpacity(0.3),
-                                   backgroundImage: NetworkImage(context.read<HomeCubit>().signUpModel?.data?.image??"https://ps.w.org/one-user-avatar/assets/icon-256x256.png?rev=2536829")
-                                   //AssetImage("assets/images/logo.png")
+                               ):
+                               ClipRRect(
+                                 borderRadius: BorderRadius.circular(getSize(context) / 8),
+                                 child: ManageNetworkImage(
+                                   imageUrl:
+                                   context
+                                       .read<HomeCubit>()
+                                       .signUpModel!
+                                       .data
+                                   !.image! ,
+                                   boxFit: BoxFit.cover,
+                                   height:85 ,
+                                   width: 85,
 
-                               ),
+                                 ),
+                               )
+                               ,
                                Positioned(
                                    top: getSize(context) * 0.12,
                                    // right: -5,

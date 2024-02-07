@@ -113,7 +113,7 @@ class _RequestLocationState extends State<RequestLocation> {
                 onClick: () {
                   widget.type=="driver"?
                 //  Navigator.of(context).pushNamedAndRemoveUntil(Routes.registerScreenRoute, (route) => false,arguments: widget.type);
-                  Navigator.of(context).pushNamed(Routes.driversignupRoute,arguments: widget.type):
+                  Navigator.of(context).pushNamed(Routes.bikeDetailsRoute,arguments: false):
                   Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeRoute, (route) => false,arguments: widget.type);
                 },
               ),

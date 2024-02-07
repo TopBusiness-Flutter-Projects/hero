@@ -21,23 +21,20 @@ class ManageNetworkImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(borderRadius),
-      child: CachedNetworkImage(
-        imageUrl: imageUrl,
-        fit:boxFit ,
-        height: height != 0 ? height : null,
-        width: width != 0 ? width : null,
+    return CachedNetworkImage(
+      imageUrl: imageUrl,
+      fit:boxFit ,
+      height: height != 0 ? height : null,
+      width: width != 0 ? width : null,
 
-        placeholder: (context, url) => Center(
-          child: CircularProgressIndicator(
-            color: AppColors.primary,
-          ),
+      placeholder: (context, url) => Center(
+        child: CircularProgressIndicator(
+          color: AppColors.primary,
         ),
-        errorWidget: (context, url, error) {
-          return Image.asset("assets/images/logo.png",color: AppColors.primary,);
-        },
       ),
+      errorWidget: (context, url, error) {
+        return Image.asset("assets/images/logo.png",color: AppColors.primary,);
+      },
     );
   }
 }

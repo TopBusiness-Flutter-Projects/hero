@@ -4,13 +4,15 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/assets_manager.dart';
+import '../../../../core/widgets/network_image.dart';
 import '../../../../core/utils/getsize.dart';
 
 class CustomDocumentWidget extends StatelessWidget {
   const CustomDocumentWidget({
-    super.key, this.img, required this.text,
+    super.key, this.img, required this.text, this.networkImg,
   });
 final File? img;
+final String? networkImg;
 final String text;
   @override
   Widget build(BuildContext context) {
@@ -23,7 +25,17 @@ final String text;
             width: getSize(context) / 2.5,
             fit: BoxFit.contain,
           )    :
+networkImg != null ?
 
+ManageNetworkImage(imageUrl: networkImg!,
+  height: getSize(context) / 2.5,
+    width: getSize(context) / 2.5,
+    boxFit: BoxFit.contain,
+
+)
+
+
+    :
           Image.asset(
 
             ImageAssets.uploadImage,

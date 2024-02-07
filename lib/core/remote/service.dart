@@ -1,8 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:hero/core/api/end_points.dart';
 import 'package:hero/core/models/cities_model.dart';
+import 'package:hero/core/models/driver_data_model.dart';
 import 'package:hero/core/models/home_model.dart';
 import 'package:hero/core/models/notification_model.dart';
+import 'package:hero/core/models/profit_model.dart';
 import 'package:hero/core/models/settings_model.dart';
 import 'package:hero/features/documents/screens/upload_documents.dart';
 import 'package:hero/features/signup/models/register_model.dart';
@@ -88,16 +90,17 @@ class ServiceApi {
 // upload documents
   Future<Either<Failure, StoreBikeDetailsModel>> uploadDocuments(
   {
-    required String agencyNumber,
-    required String bikeLicense,
-    required String idCard,
-    required String houseCard,
-    required String bikeImage,
+     String? agencyNumber,
+    String? bikeLicense,
+    String? idCard,
+    String? houseCard,
+    String? bikeImage,
+    bool isUpdate =false
 }   ) async {
     SignUpModel signUpModel = await Preferences.instance.getUserModel();
 
     try {
-      var response = await dio.post(
+      var response = await dio.post(isUpdate?EndPoints.updateDriverDocument:
         EndPoints.storeDriverDocument ,
 
         formDataIsEnabled: true,
@@ -105,11 +108,11 @@ class ServiceApi {
           headers: {'Authorization': signUpModel.data?.token},
         ),
         body: {
-          'agency_number':await MultipartFile.fromFile(agencyNumber),
-          'bike_license':await MultipartFile.fromFile(bikeLicense),
-          "id_card":await MultipartFile.fromFile(idCard),
-          "house_card": await MultipartFile.fromFile(houseCard),
-          "bike_image":await MultipartFile.fromFile(bikeImage),
+          'agency_number':agencyNumber != null ?await MultipartFile.fromFile(agencyNumber):null,
+          'bike_license':bikeLicense != null ?await MultipartFile.fromFile(bikeLicense):null,
+          "id_card":idCard!= null ?await MultipartFile.fromFile(idCard):null,
+          "house_card":houseCard!= null ? await MultipartFile.fromFile(houseCard):null,
+          "bike_image":bikeImage!= null ?await MultipartFile.fromFile(bikeImage):null,
         },
       );
       return Right(StoreBikeDetailsModel.fromJson(response));
@@ -292,6 +295,42 @@ class ServiceApi {
       return Left(ServerFailure());
     }
   }
+  // get cities
+  Future<Either<Failure, CitiesModel>> getCities() async {
+    try {
+      final response = await dio.get(EndPoints.citiesUrl);
+      return Right(CitiesModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
+
+// driver details
+
+  Future<Either<Failure, StoreDriverDetailsModel>> addDriverDetails(
+      {required String bikeType,
+        required String bikeModel,
+        required String bikeColor,
+        required String areaId,bool isUpdate =false
+
+      }) async {
+    SignUpModel signUpModel = await Preferences.instance.getUserModel();
+    try {
+      final response = await dio.post(isUpdate?EndPoints.updateDriverDetails:EndPoints.storeDriverDetails,
+          options: Options(
+            headers: {'Authorization': signUpModel.data?.token},
+          ),
+          body: {"bike_type": bikeType,
+            "bike_model": bikeModel,
+            "bike_color": bikeColor,
+            "area_id": areaId,
+          });
+      return Right(StoreDriverDetailsModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
 //// check documents
 
   Future<Either<Failure, CheckDocumentsModel>> checkDocuments() async {
@@ -348,6 +387,42 @@ class ServiceApi {
           queryParameters: {"type": type});
 
       return Right(AllTripsModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+ // driverProfit
+  Future<Either<Failure, ProfitsModel>> getDriverProfit(
+      {required String type, String? from, String? to,
+      }) async {
+    SignUpModel signUpModel = await Preferences.instance.getUserModel();
+    try {
+      final response = await dio.get(EndPoints.driverProfit,
+          options: Options(
+            headers: {'Authorization': signUpModel.data?.token},
+          ),
+          queryParameters: {
+            "type": type,
+            "to": to,
+            "from": from,
+          });
+
+      return Right(ProfitsModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+ // driver data
+  Future<Either<Failure, DriverDataModel>> getDriverData() async {
+    SignUpModel signUpModel = await Preferences.instance.getUserModel();
+    try {
+      final response = await dio.get(EndPoints.getInfoDriver,
+          options: Options(
+            headers: {'Authorization': signUpModel.data?.token},
+          ),
+          );
+
+      return Right(DriverDataModel.fromJson(response));
     } on ServerException {
       return Left(ServerFailure());
     }
@@ -777,40 +852,7 @@ class ServiceApi {
   }
 /// USER
 
-// get cities
-  Future<Either<Failure, CitiesModel>> getCities() async {
-    try {
-      final response = await dio.get(EndPoints.citiesUrl);
-      return Right(CitiesModel.fromJson(response));
-    } on ServerException {
-      return Left(ServerFailure());
-    }
-  }
 
-
-
-
-  Future<Either<Failure, StoreDriverDetailsModel>> addDriverDetails(
-      {required String bikeType,
-        required String bikeModel,
-        required String bikeColor,
-        required String areaId}) async {
-    SignUpModel signUpModel = await Preferences.instance.getUserModel();
-    try {
-      final response = await dio.post(EndPoints.storeDriverDetails,
-          options: Options(
-            headers: {'Authorization': signUpModel.data?.token},
-          ),
-          body: {"bike_type": bikeType,
-            "bike_model": bikeModel,
-            "bike_color": bikeColor,
-            "area_id": areaId,
-          });
-      return Right(StoreDriverDetailsModel.fromJson(response));
-    } on ServerException {
-      return Left(ServerFailure());
-    }
-  }
 
 
 

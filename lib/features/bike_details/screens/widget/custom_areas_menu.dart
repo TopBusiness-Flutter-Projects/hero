@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hero/features/driver_signup/cubit/driver_sign_up_cubit.dart';
 import '../../../../core/utils/getsize.dart';
 import '../../../../core/widgets/custom_drop_down_menu.dart';
+import '../../cubit/bike_details_cubit.dart';
 
 class CustomAreasMenu extends StatefulWidget {
   const CustomAreasMenu({
@@ -24,9 +24,9 @@ class _CustomAreasMenuState extends State<CustomAreasMenu> {
 
   @override
   Widget build(BuildContext context) {
-    DriverSignUpCubit cubit = context.read<DriverSignUpCubit>();
+    BikeDetailsCubit cubit = context.read<BikeDetailsCubit>();
 
-    return  BlocConsumer<DriverSignUpCubit, DriverSignUpStates>(
+    return  BlocConsumer<BikeDetailsCubit, BikeDetailsStates>(
       listener: (context, state) {
 
       },

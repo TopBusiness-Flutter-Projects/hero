@@ -1,30 +1,30 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hero/core/utils/assets_manager.dart';
-import 'package:hero/core/utils/dialogs.dart';
 import 'package:hero/core/utils/getsize.dart';
 import 'package:hero/core/widgets/custom_button.dart';
-import 'package:hero/core/widgets/my_svg_widget.dart';
 import 'package:hero/features/documents/cubit/upload_documents_cubit.dart';
-import 'package:pin_code_fields/pin_code_fields.dart';
 
-import '../../../config/routes/app_routes.dart';
 import '../../../core/utils/app_colors.dart';
-import '../../../core/widgets/custom_textfield.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
-
 import 'widgets/custom_document_widget.dart';
 
 class UploadDocuments extends StatefulWidget {
-  const UploadDocuments({super.key});
+  const UploadDocuments({super.key, this.isUpdate= false});
+  final bool isUpdate;
 
   @override
   State<UploadDocuments> createState() => _UploadDocumentsState();
 }
 
 class _UploadDocumentsState extends State<UploadDocuments> {
+  @override
+  void initState() {
+
+    if (widget.isUpdate ==true)
+      context.read<UploadDocumentsCubit>().getDriverData();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     UploadDocumentsCubit cubit = context.read<UploadDocumentsCubit>();
@@ -87,6 +87,7 @@ class _UploadDocumentsState extends State<UploadDocuments> {
                           cubit.showImageSourceDialog(context,BikeDocuments.number );
                         },
                         child: CustomDocumentWidget(
+                          networkImg: cubit.numberImageNetwork,
                                     img: cubit.numberImage,
                           text: "agency_number".tr(),
                         ),
@@ -104,6 +105,7 @@ class _UploadDocumentsState extends State<UploadDocuments> {
                               cubit.showImageSourceDialog(context,BikeDocuments.anniversary );
                             },
                             child: CustomDocumentWidget(
+                              networkImg: cubit.anniversaryImageNetwork,
                               img: cubit.anniversaryImage,
                               text: "annual_tuktuk".tr(),
                             ),
@@ -112,6 +114,7 @@ class _UploadDocumentsState extends State<UploadDocuments> {
                               cubit.showImageSourceDialog(context,BikeDocuments.idCard );
                             },
                             child: CustomDocumentWidget(
+                              networkImg: cubit.idCardImageNetwork,
                               img: cubit.idCardImage,
                               text: "id_card".tr(),
                             ),
@@ -133,6 +136,7 @@ class _UploadDocumentsState extends State<UploadDocuments> {
                               cubit.showImageSourceDialog(context,BikeDocuments.residenceCard );
                             },
                             child: CustomDocumentWidget(
+                              networkImg: cubit.residenceCardImageNetwork,
                               img: cubit.residenceCardImage,
                               text: "residence_card".tr(),
                             ),
@@ -141,6 +145,7 @@ class _UploadDocumentsState extends State<UploadDocuments> {
                               cubit.showImageSourceDialog(context,BikeDocuments.photo );
                             },
                             child: CustomDocumentWidget(
+                              networkImg: cubit.photoImageNetwork,
                               img: cubit.photoImage,
                               text: "tuktuk_photo".tr(),
                             ),
@@ -156,10 +161,13 @@ class _UploadDocumentsState extends State<UploadDocuments> {
                 )),
                 CustomButton(
                   width: getSize(context),
-                  text: "continue".tr(),
+                  text:widget.isUpdate?"update".tr(): "continue".tr(),
                   borderRadius: getSize(context) / 24,
                   color: AppColors.primary,
                   onClick: () {
+                    widget.isUpdate?
+                    cubit.updateBikerDetails(context)
+                        :
                     cubit.storeBikerDetails(context);
                     },
                 ),

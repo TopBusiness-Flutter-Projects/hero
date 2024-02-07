@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 import '../../../config/routes/app_routes.dart';
+import '../../../core/models/driver_data_model.dart';
 import '../../../core/models/store_bike_details_model.dart';
 import '../../../core/models/store_driver_data_model.dart';
 import '../../../core/remote/service.dart';
@@ -115,38 +116,7 @@ class UploadDocumentsCubit extends Cubit<UploadDocumentsStates> {
     Navigator.pop(context); // Close the dialog after selecting an image
   }
 
-  CitiesModel citiesModel = CitiesModel();
 
-  getCities() async {
-    emit(LoadingGEtCitiesState());
-    final response = await api.getCities();
-    response.fold((l) {
-      emit(FailureGEtCitiesState());
-    }, (r) {
-      citiesModel = r;
-      emit(SuccessGEtCitiesState());
-    });
-  }
-
-  StoreDriverDetailsModel storeDriverDetailsModel = StoreDriverDetailsModel();
-
-  storeDriverDetails(
-      {required String bikeModel,
-      required String bikeColor,
-      required String bikeType}) async {
-    emit(LoadingStoreDriverDataState());
-    final response = await api.addDriverDetails(
-        bikeType: bikeType,
-        bikeModel: bikeModel,
-        bikeColor: bikeColor,
-        areaId: currentArea);
-    response.fold((l) {
-      emit(FailureStoreDriverDataState());
-    }, (r) {
-      storeDriverDetailsModel = r;
-      emit(SuccessStoreDriverDataState());
-    });
-  }
 
   StoreBikeDetailsModel storeBikeDetailsModel = StoreBikeDetailsModel();
 
@@ -175,33 +145,58 @@ class UploadDocumentsCubit extends Cubit<UploadDocumentsStates> {
       emit(SuccessStoreBikeDataState());
     });
   }
+  // update
 
-  String currentCity = '0';
+  StoreBikeDetailsModel storeBikeDetailsModelUpdate = StoreBikeDetailsModel();
 
-  void changeCity(String value) {
-    currentCity = value;
-    emit(ChangeCityState());
+  updateBikerDetails(BuildContext context) async {
+    emit(LoadingUpdateBikeDataState());
+    AppWidget.createProgressDialog(context, "wait".tr());
+
+    final response = await api.uploadDocuments(isUpdate: true,
+        agencyNumber:numberImage != null? numberImage!.path: null,
+        bikeLicense: anniversaryImage != null? anniversaryImage!.path: null,
+        idCard: idCardImage != null? idCardImage!.path: null,
+        houseCard: residenceCardImage != null? residenceCardImage!.path: null,
+        bikeImage: photoImage != null? photoImage!.path: null,);
+
+    response.fold((l) {
+      Navigator.pop(context);
+      errorGetBar("error".tr());
+      emit(FailureUpdateBikeDataState());
+    }, (r) {
+      storeBikeDetailsModel = r;
+
+      Navigator.pop(context);
+      successGetBar(r.message);
+
+
+      emit(SuccessUpdateBikeDataState());
+      Navigator.pop(context);
+    });
   }
 
-  String currentArea = '0';
+String? numberImageNetwork;
+String? anniversaryImageNetwork;
+String? idCardImageNetwork;
+String? residenceCardImageNetwork;
+String? photoImageNetwork;
+  DriverDataModel driverDataModel=  DriverDataModel ();
 
-  void changeArea(String value) {
-    currentArea = value;
-    print(currentArea);
-    emit(ChangeAreaState());
+  getDriverData() async {
+    emit(LoadingGEtDriverDataState());
+    final response = await api.getDriverData();
+    response.fold((l) {
+      emit(FailureGEtDriverDataState());
+    }, (r) {
+      driverDataModel = r;
+      numberImageNetwork =r.data!.driverDocuments![0].agencyNumber!;
+      anniversaryImageNetwork =r.data!.driverDocuments![0].bikeLicense!;
+      idCardImageNetwork =r.data!.driverDocuments![0].idCard!;
+      residenceCardImageNetwork =r.data!.driverDocuments![0].houseCard!;
+      photoImageNetwork =r.data!.driverDocuments![0].bikeImage!;
+      emit(SuccessGEtDriverDataState());
+    });
   }
 
-  int? cityIndex;
-
-  void changeCurrentCityId({required int cityId}) {
-    cityIndex = cityId - 1;
-    emit(ChangeCurrentCityIdState());
-  }
-
-  void setCityIndex() {
-    cityIndex = null;
-    emit(ChangeCurrentCityIdState());
-  }
-
-  String? dropdownAreaValue;
 }

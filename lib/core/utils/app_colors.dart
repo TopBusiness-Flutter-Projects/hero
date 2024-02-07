@@ -4,6 +4,9 @@ import 'hex_color.dart';
 
 class AppColors {
   static Color primary = HexColor('#FEC200');
+  static Color primaryOpacity = HexColor('#FEC200').withOpacity(.3);
+  static Color primaryOpacity2 =Color.fromRGBO(254, 194, 0, 0.3) ;
+
   static Color secondPrimary = HexColor('#F4E07D');
   static Color orangeThirdPrimary = HexColor('#FF9201');
   static Color blueLiteColor = HexColor('#00B3DC');
@@ -13,6 +16,7 @@ class AppColors {
   static Color unStarColor = HexColor('#E9E9EE');
   static Color scaffoldColor = HexColor('#F5F5F5');
   static Color avatarColor = HexColor('#96B2B5');
+  static Color numberColor = HexColor('#555555');
   static Color black1 = HexColor('#110101');
   static Color black2 = HexColor('#605F5F');
   static Color black3 = HexColor('#373737');
@@ -39,11 +43,15 @@ class AppColors {
   static Color gray3 = HexColor('#424242');
   static Color gray4 = HexColor('#767676');
   static Color gray5 = HexColor('#37474F');
+  static Color dateColor = HexColor('#666565');
+  static Color weekColor = HexColor('#F7F3F3');
+  static Color weekNumberColor = HexColor('#009541');
   static Color buttonColor = HexColor('#4C4C6D');
 
   static Color gray6 = HexColor('#A7A7A7');
   // static Color gray7 = HexColor('#A0A1A0');
   static Color red = HexColor('#FF0000');
+  static Color totalProfitsColor = HexColor('#009541');
   static Color blue3 = Color(0xff3646ff);
   static Color bink = HexColor('#FF9F9F');
   static Color purple1 = HexColor('#854AA4');

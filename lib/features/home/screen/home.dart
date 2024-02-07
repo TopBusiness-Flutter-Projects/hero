@@ -7,6 +7,7 @@ import 'package:hero/features/home/screen/home_tab.dart';
 import '../../../config/routes/app_routes.dart';
 import '../../../core/utils/assets_manager.dart';
 import '../../../core/widgets/close_widget.dart';
+import '../../../core/widgets/network_image.dart';
 import '../../about_hero/screens/about_hero_screen.dart';
 import '../../edit_profile/screens/edit_profile_screen.dart';
 import '../../favourite_locations/screens/favourite_locations_screen.dart';
@@ -135,14 +136,21 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                               radius: getSize(context) / 8,
                               backgroundImage: AssetImage(ImageAssets.person),
                             )
-                          : CircleAvatar(
-                              radius: getSize(context) / 8,
-                              backgroundImage: NetworkImage(context
-                                      .read<HomeCubit>()
-                                      .signUpModel!
-                                      .data
-                                      ?.image ??
-                                  '')),
+                          : ClipRRect(
+                        borderRadius: BorderRadius.circular(getSize(context) / 8),
+                        child: ManageNetworkImage(
+                          imageUrl:
+                          context
+                              .read<HomeCubit>()
+                              .signUpModel!
+                              .data
+                          !.image! ,
+                          boxFit: BoxFit.cover,
+                          height:60 ,
+                          width: 60,
+
+                        ),
+                      ),
                   subtitle: Text(
                     "${context.read<HomeCubit>().signUpModel?.data?.email}",
                     style: TextStyle(

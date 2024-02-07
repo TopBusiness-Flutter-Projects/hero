@@ -10,7 +10,7 @@ import 'package:hero/features/splash/screens/splash_screen.dart';
 import 'package:hero/features/trip_details/screens/trip_details_screen.dart';
 import '../../core/utils/app_strings.dart';
 import '../../features/about_hero/screens/about_hero_screen.dart';
-import '../../features/driver_signup/screens/driversignup.dart';
+import '../../features/bike_details/screens/bike_details.dart';
 import '../../features/driver_waiting/screens/driver_waiting.dart';
 import '../../features/edit_profile/screens/edit_profile_screen.dart';
 import '../../features/favourite_locations/screens/favourite_locations_screen.dart';
@@ -19,6 +19,7 @@ import '../../features/homedriver/screen/home_driver.dart';
 import '../../features/my_rewards/screens/my_rewards_screen.dart';
 import '../../features/my_wallet/screens/my_wallet_screen.dart';
 import '../../features/orders/creens/orders_screen.dart';
+import '../../features/profits/screens/profits_screen.dart';
 import '../../features/requestlocation/screens/requestlocation.dart';
 import '../../features/signup/screens/signup.dart';
 import '../../features/trip_service/screens/trip_insurance_service_screen.dart';
@@ -47,7 +48,7 @@ class Routes {
   static const String detailsRoute = '/details';
   static const String contactUsRoute = '/contact_us';
   static const String googleMapDetailsRoute = '/google_map_details_screen';
-  static const String driversignupRoute = '/driversignup';
+  static const String bikeDetailsRoute = '/driversignup';
   static const String notificationRoute = '/notification_screen';
   static const String tripDetailsRoute = '/trip_details_screen';
   static const String termsConditionsRoute = '/terms_conditions_screen';
@@ -58,6 +59,7 @@ class Routes {
   static const String myRewardsScreen = '/MyRewardsScreen';
   static const String OrdersScreen = '/OrdersScreen';
   static const String MyWalletScreen = '/MyWalletScreen';
+  static const String ProfitsScreen = '/ProfitsScreen';
 
 }
 
@@ -104,6 +106,11 @@ case Routes.MyWalletScreen:
           builder: (context) => const FavouriteLocationsScreen(),
         );
 
+ case Routes.ProfitsScreen:
+        return MaterialPageRoute(
+          builder: (context) => const ProfitsScreen(),
+        );
+
 
  case Routes.tripInsuranceService:
         return MaterialPageRoute(
@@ -144,17 +151,19 @@ case Routes.MyWalletScreen:
         return MaterialPageRoute(
           builder: (context) =>  HomeDriver(),
         );
-      case Routes.driversignupRoute:
+      case Routes.bikeDetailsRoute:
+        bool isUpdate=settings.arguments as bool;
         return MaterialPageRoute(
-          builder: (context) =>  DriverSignUp(),
+          builder: (context) =>  BikeDetails(isUpdate: isUpdate),
         );
         case Routes.notificationRoute:
         return MaterialPageRoute(
           builder: (context) =>  NotificationScreen(),
         );
  case Routes.uploadDocumentsScreenRoute:
+   bool isUpdate=settings.arguments as bool;
         return MaterialPageRoute(
-          builder: (context) =>  UploadDocuments(),
+          builder: (context) =>  UploadDocuments(isUpdate: isUpdate),
         );
         case Routes.driverwaitScreenRoute:
         return MaterialPageRoute(

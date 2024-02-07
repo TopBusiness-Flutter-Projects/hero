@@ -1,5 +1,6 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hero/core/utils/app_fonts.dart';
@@ -8,9 +9,6 @@ import 'package:hero/core/utils/getsize.dart';
 import 'package:hero/core/widgets/custom_button.dart';
 import 'package:hero/core/widgets/custom_text_form_field.dart';
 import 'package:hero/core/widgets/my_svg_widget.dart';
-import 'package:hero/features/driver_signup/cubit/driver_sign_up_cubit.dart';
-import 'package:hero/features/driver_signup/screens/widget/custom_areas_menu.dart';
-import 'package:hero/features/driver_signup/screens/widget/custom_cities_menu.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 import '../../../config/routes/app_routes.dart';
@@ -18,19 +16,20 @@ import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/app_strings.dart';
 import '../../../core/utils/dialogs.dart';
 import '../../../core/widgets/custom_textfield.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
-
 import '../../../core/widgets/show_loading_indicator.dart';
+import '../cubit/bike_details_cubit.dart';
+import 'widget/custom_areas_menu.dart';
+import 'widget/custom_cities_menu.dart';
 import 'widget/custom_text.dart';
 
-class DriverSignUp extends StatefulWidget {
-  const DriverSignUp({super.key});
-
+class BikeDetails extends StatefulWidget {
+  const BikeDetails({super.key,  this.isUpdate= false});
+final bool isUpdate ;
   @override
-  State<DriverSignUp> createState() => _DriverSignUpState();
+  State<BikeDetails> createState() => _BikeDetailsState();
 }
 
-class _DriverSignUpState extends State<DriverSignUp> {
+class _BikeDetailsState extends State<BikeDetails> {
   var bikeTypeController = TextEditingController();
   var bikeModelController = TextEditingController();
   var bikeColorController = TextEditingController();
@@ -38,22 +37,33 @@ class _DriverSignUpState extends State<DriverSignUp> {
 
   @override
   void initState() {
-    context.read<DriverSignUpCubit>().getCities();
+    context.read<BikeDetailsCubit>().getCities();
+    if (widget.isUpdate ==true)
+      context.read<BikeDetailsCubit>().getDriverData();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    DriverSignUpCubit cubit = context.read<DriverSignUpCubit>();
+    BikeDetailsCubit cubit = context.read<BikeDetailsCubit>();
     return Scaffold(
       backgroundColor: AppColors.white,
       body: SingleChildScrollView(
-        child: BlocConsumer<DriverSignUpCubit, DriverSignUpStates>(
+        child: BlocConsumer<BikeDetailsCubit, BikeDetailsStates>(
             listener: (context, state) {
               if (state is SuccessStoreDriverDataState){
                  Navigator.of(context).pushNamed(
                    Routes.uploadDocumentsScreenRoute,
                  );
+              } if (state is SuccessUpdateDriverDataState){
+                 Navigator.pop(context);
+              }
+
+              if (state is SuccessGEtDriverDataState){
+                bikeTypeController.text =cubit.driverDataModel.data!.driverDetails!.bikeType??'';
+                bikeModelController.text =cubit.driverDataModel.data!.driverDetails!.bikeModel??'';
+                bikeColorController.text =cubit.driverDataModel.data!.driverDetails!.bikeColor??'';
+                cubit.currentArea =cubit.driverDataModel.data!.driverDetails!.areaId.toString();
               }
             },
             builder: (context, state) {
@@ -123,14 +133,21 @@ class _DriverSignUpState extends State<DriverSignUp> {
                         ),
                         CustomButton(
                           width: getSize(context),
-                          text: "continue".tr(),
+                          text:widget.isUpdate ?"update".tr(): "continue".tr(),
                           borderRadius: getSize(context) / 24,
                           color: AppColors.primary,
                           onClick: () {
                             if (formKey.currentState!.validate() &&
                                 cubit.currentArea != '0'
                                 ) {
-                              cubit.storeDriverDetails(
+                              widget.isUpdate ?cubit.updateDriverDetails(context: context,
+                                bikeType: bikeTypeController.text,
+                                bikeModel: bikeModelController.text,
+                                bikeColor: bikeColorController.text,
+                              )
+                                  :
+                              
+                              cubit.storeDriverDetails(context: context,
                                 bikeType: bikeTypeController.text,
                                 bikeModel: bikeModelController.text,
                                 bikeColor: bikeColorController.text,

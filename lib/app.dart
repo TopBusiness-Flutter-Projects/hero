@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:hero/features/driver_signup/cubit/driver_sign_up_cubit.dart';
 import 'package:hero/features/login/cubit/login_cubit.dart';
 import 'package:hero/features/my_wallet/cubit/my_wallet_cubit.dart';
 import 'package:hero/features/notification/cubit/cubit/orders_cubit.dart';
@@ -15,10 +14,12 @@ import 'config/themes/app_theme.dart';
 import 'core/utils/app_strings.dart';
 import 'package:hero/injector.dart' as injector;
 
+import 'features/bike_details/cubit/bike_details_cubit.dart';
 import 'features/documents/cubit/upload_documents_cubit.dart';
 import 'features/edit_profile/cubit/edit_profile_cubit.dart';
 import 'features/home/cubit/home_cubit.dart';
 import 'features/homedriver/screen/pages/home_map_driver/cubit/home_driver_cubit.dart';
+import 'features/profits/cubit/profits_cubit.dart';
 import 'features/trip_details/cubit/trip_details_cubit.dart';
 
 class HeroApp extends StatefulWidget {
@@ -77,13 +78,16 @@ class _HeroAppState extends State<HeroApp> {
           create: (_) => injector.serviceLocator<TripDetailsCubit>(),
         ),
      BlocProvider(
-          create: (_) => injector.serviceLocator<DriverSignUpCubit>(),
+          create: (_) => injector.serviceLocator<BikeDetailsCubit>(),
         ),
  BlocProvider(
           create: (_) => injector.serviceLocator<UploadDocumentsCubit>(),
         ),
  BlocProvider(
           create: (_) => injector.serviceLocator<MyWalletCubit>(),
+        ),
+ BlocProvider(
+          create: (_) => injector.serviceLocator<ProfitsCubit>(),
         ),
 
     //

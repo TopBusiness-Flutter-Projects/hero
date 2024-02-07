@@ -9,6 +9,7 @@ import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/assets_manager.dart';
 import '../../../core/utils/getsize.dart';
 import '../../../core/widgets/close_widget.dart';
+import '../../../core/widgets/network_image.dart';
 import '../../home/components/drawer_list_item.dart';
 import '../../home/cubit/home_cubit.dart';
 import '../components/drawer_list_item.dart';
@@ -124,14 +125,21 @@ class _HomeDriverState extends State<HomeDriver> with TickerProviderStateMixin {
                   radius: getSize(context) / 8,
                   backgroundImage: AssetImage(ImageAssets.person),
                 )
-                    : CircleAvatar(
-                    radius: getSize(context) / 8,
-                    backgroundImage: NetworkImage(context
-                        .read<HomeCubit>()
-                        .signUpModel!
-                        .data
-                        ?.image ??
-                        '')),
+                    : ClipRRect(
+                      borderRadius: BorderRadius.circular(getSize(context) / 8),
+                      child: ManageNetworkImage(
+                        imageUrl:
+                        context
+                            .read<HomeCubit>()
+                            .signUpModel!
+                            .data
+                        !.image! ,
+                        boxFit: BoxFit.cover,
+                        height:60 ,
+                        width: 60,
+
+                      ),
+                    ),
                 subtitle: Text(
                   "${context.read<HomeCubit>().signUpModel?.data?.email}",
                   style: TextStyle(
@@ -148,7 +156,7 @@ class _HomeDriverState extends State<HomeDriver> with TickerProviderStateMixin {
                       onTap: () {
                         {
                           if (index == 0) {
-                            /// TODO MY WALLET
+                            ///  MY WALLET
                             Navigator.pop(context);
                             Navigator.pushNamed(
                                 context, Routes.MyWalletScreen);
@@ -158,18 +166,23 @@ class _HomeDriverState extends State<HomeDriver> with TickerProviderStateMixin {
                             Navigator.pushNamed(
                                 context, Routes.OrdersScreen);
                           } else if (index == 2) {
-                            /// TODO PROFITS
+                            ///  PROFITS
                             Navigator.pop(context);
+                            Navigator.pushNamed(
+                                context, Routes.ProfitsScreen);
                           } else if (index == 3) {
                             /// NOTIFICATION
                             Navigator.pop(context);
                             Navigator.pushNamed(
                                 context, Routes.notificationRoute);
                           } else if (index == 4) {
-                            /// TODO BIKE INFORMATION
+                            ///  BIKE INFORMATION
                             Navigator.pop(context);
+                            Navigator.of(context).pushNamed(Routes.bikeDetailsRoute,arguments: true);
                           } else if (index == 5) {
-                            /// TODO BIKE DOCUMENTS
+                            ///  BIKE DOCUMENTS
+                            Navigator.pop(context);
+                            Navigator.of(context).pushNamed(Routes.uploadDocumentsScreenRoute,arguments: true);
                           } else if (index == 6) {
                             /// TRIP SERVICE
                             Navigator.pop(context);

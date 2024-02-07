@@ -195,7 +195,7 @@ class LoginCubit extends Cubit<LoginState> {
       else if(r.data!.driverDetails == 0){
 
         Navigator.pushNamedAndRemoveUntil(
-            context, Routes.driversignupRoute, (route) => false );
+            context, Routes.bikeDetailsRoute,arguments: false ,(route) => false );
       }
       else if(r.data!.driverDocuments == 0){
         Navigator.pushNamedAndRemoveUntil(

@@ -143,104 +143,107 @@ class _MyWalletScreenState extends State<MyWalletScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Container(
-                                          width: double.maxFinite,
-                                          margin: const EdgeInsets.symmetric(
-                                              vertical: 10),
-                                          decoration: BoxDecoration(
-                                            boxShadow: const [
-                                              BoxShadow(
-                                                color: Color.fromRGBO(
-                                                    0, 0, 0, 0.1),
-                                                blurRadius: 20,
-                                                offset: Offset(
-                                                    0, 0), // Shadow position
-                                              ),
-                                              BoxShadow(
-                                                color: Color.fromRGBO(
-                                                    0, 0, 0, 0.1),
-                                                blurRadius: 10,
-                                                offset: Offset(
-                                                    0, 0), // Shadow position
-                                              ),
-                                            ],
-                                            color: AppColors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 10.0, horizontal: 15),
-                                            child: Column(
-                                              children: [
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Text(
-                                                      "wallet".tr(),
-                                                      style: getRegularStyle(
-                                                          fontSize: 18),
-                                                    ),
-                                                    GestureDetector(
-                                                      onTap: () {},
-                                                      child: Container(
-                                                        decoration: BoxDecoration(
-                                                            color: AppColors
-                                                                .primary,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        20)),
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .symmetric(
-                                                                  horizontal:
-                                                                      25,
-                                                                  vertical: 10),
-                                                          child: Text(
-                                                            "pay".tr(),
-                                                            style: getRegularStyle(
-                                                                fontSize: 18,
-                                                                color: AppColors
-                                                                    .white),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 8.0,horizontal: 20),
+                                        child: Container(
+                                            width: double.maxFinite,
+                                            margin: const EdgeInsets.symmetric(
+                                                vertical: 10),
+                                            decoration: BoxDecoration(
+                                              boxShadow: const [
+                                                BoxShadow(
+                                                  color: Color.fromRGBO(
+                                                      0, 0, 0, 0.1),
+                                                  blurRadius: 20,
+                                                  offset: Offset(
+                                                      0, 0), // Shadow position
+                                                ),
+                                                BoxShadow(
+                                                  color: Color.fromRGBO(
+                                                      0, 0, 0, 0.1),
+                                                  blurRadius: 10,
+                                                  offset: Offset(
+                                                      0, 0), // Shadow position
+                                                ),
+                                              ],
+                                              color: AppColors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsets.symmetric(
+                                                  vertical: 10.0, horizontal: 15),
+                                              child: Column(
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Text(
+                                                        "wallet".tr(),
+                                                        style: getRegularStyle(
+                                                            fontSize: 18),
+                                                      ),
+                                                      GestureDetector(
+                                                        onTap: () {},
+                                                        child: Container(
+                                                          decoration: BoxDecoration(
+                                                              color: AppColors
+                                                                  .primary,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          20)),
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .symmetric(
+                                                                    horizontal:
+                                                                        25,
+                                                                    vertical: 10),
+                                                            child: Text(
+                                                              "pay".tr(),
+                                                              style: getRegularStyle(
+                                                                  fontSize: 18,
+                                                                  color: AppColors
+                                                                      .white),
+                                                            ),
                                                           ),
                                                         ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      MyCustomSvgWidget(
+                                                        path:
+                                                            ImageAssets.myWallet,
                                                       ),
-                                                    )
-                                                  ],
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    MyCustomSvgWidget(
-                                                      path:
-                                                          ImageAssets.myWallet,
-                                                    ),
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              8.0),
-                                                      child: Text(
-                                                        cubit.myWalletModel
-                                                            .data!.vatTotal!,
-                                                        style: getBoldStyle(
-                                                            fontSize: 30),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets.all(
+                                                                8.0),
+                                                        child: Text(
+                                                          cubit.myWalletModel
+                                                              .data!.vatTotal!,
+                                                          style: getBoldStyle(
+                                                              fontSize: 30),
+                                                        ),
                                                       ),
-                                                    ),
-                                                    Text(
-                                                      'currency'.tr(),
-                                                      style: getRegularStyle(
-                                                          color: AppColors
-                                                              .currencyColor,
-                                                          fontSize: 14),
-                                                    ),
-                                                  ],
-                                                )
-                                              ],
-                                            ),
-                                          )),
+                                                      Text(
+                                                        'currency'.tr(),
+                                                        style: getRegularStyle(
+                                                            color: AppColors
+                                                                .currencyColor,
+                                                            fontSize: 14),
+                                                      ),
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                            )),
+                                      ),
                                       Text(
                                         "latestTransfers".tr(),
                                         style: getBoldStyle(

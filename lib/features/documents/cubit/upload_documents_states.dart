@@ -14,10 +14,15 @@ class SuccessStoreDriverDataState extends UploadDocumentsStates {}
 class LoadingStoreBikeDataState extends UploadDocumentsStates {}
 class FailureStoreBikeDataState extends UploadDocumentsStates {}
 class SuccessStoreBikeDataState extends UploadDocumentsStates {}
+class LoadingUpdateBikeDataState extends UploadDocumentsStates {}
+class FailureUpdateBikeDataState extends UploadDocumentsStates {}
+class SuccessUpdateBikeDataState extends UploadDocumentsStates {}
 class ChangeCityState extends UploadDocumentsStates {}
 class ChangeAreaState extends UploadDocumentsStates {}
 class ChangeCurrentCityIdState extends UploadDocumentsStates {}
-
+class LoadingGEtDriverDataState extends UploadDocumentsStates {}
+class FailureGEtDriverDataState extends UploadDocumentsStates {}
+class SuccessGEtDriverDataState extends UploadDocumentsStates {}
 
 
 
