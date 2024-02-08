@@ -26,6 +26,7 @@ import '../models/place_details.dart';
 import '../models/place_geocode.dart';
 import '../models/rate_trip_model.dart';
 import '../models/signup_response_model.dart';
+import '../models/status_model.dart';
 import '../models/store_bike_details_model.dart';
 import '../models/store_driver_data_model.dart';
 import '../preferences/preferences.dart';
@@ -332,6 +333,23 @@ class ServiceApi {
     }
   }
 //// check documents
+
+  Future<Either<Failure, CheckStatusModel>> changeDriverStatus() async {
+
+    SignUpModel signUpModel = await Preferences.instance.getUserModel();
+    try {
+      final response = await dio.post(
+        EndPoints.changeDriverStatus,
+        options: Options(
+          headers: {'Authorization': signUpModel.data?.token},
+        ),
+      );
+      return Right(CheckStatusModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+  //// check documents
 
   Future<Either<Failure, CheckDocumentsModel>> checkDocuments() async {
 

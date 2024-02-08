@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hero/core/utils/app_fonts.dart';
 import 'package:hero/core/utils/assets_manager.dart';
 import 'package:hero/core/utils/getsize.dart';
 import 'package:hero/core/widgets/custom_button.dart';
@@ -60,44 +61,19 @@ class _DriverWaitingState extends State<DriverWaiting> {
                   SizedBox(
                     height: getSize(context) / 30,
                   ),
-                  Center(
-                    child: SizedBox(
-                      /// height: getSize(context) / 24,
-                      ///width: getSize(context),
-                      child: Center(
-                        child: Text("request_still_pending".tr(),
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: AppColors.gray3,
-                              fontSize: getSize(context) / 24,
-                            )),
-                      ),
+                  RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
+                      text: "request_still_pending".tr()+"can_use".tr(),
+                      style:
+                      getRegularStyle(fontSize: 20,color: AppColors.gray3),
+                      children: <TextSpan>[
+                        TextSpan(
+                            text: 'appreciate'.tr(),
+                            style: getRegularStyle(fontSize: 20,color: AppColors.primary)),
+                      ],
                     ),
                   ),
-                  Center(
-                      child: SizedBox(
-                    /// height: getSize(context) / 24,
-                    ///width: getSize(context),
-                    child: Center(
-                      child: RichText(
-                        text: TextSpan(
-                          text: "can_use".tr(),
-                          style: TextStyle(
-                            color: AppColors.gray3,
-                            fontSize: getSize(context) / 24,
-                          ),
-                          children: <TextSpan>[
-                            TextSpan(
-                                text: 'appreciate'.tr(),
-                                style: TextStyle(
-                                  color: AppColors.primary,
-                                  fontSize: getSize(context) / 24,
-                                )),
-                          ],
-                        ),
-                      ),
-                    ),
-                  )),
                   SizedBox(
                     height: getSize(context) / 8,
                   ),
@@ -106,12 +82,11 @@ class _DriverWaitingState extends State<DriverWaiting> {
             )),
             CustomButton(
               width: getSize(context),
-              text: "continuation".tr(),
+              text: "update_documents".tr(),
               borderRadius: getSize(context) / 24,
               color: AppColors.primary,
               onClick: () {
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                    Routes.homedriverRoute, (route) => false);
+                Navigator.of(context).pushNamed(Routes.uploadDocumentsScreenRoute,arguments: true);
               },
             ),
           ],

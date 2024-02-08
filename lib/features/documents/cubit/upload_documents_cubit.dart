@@ -172,7 +172,8 @@ class UploadDocumentsCubit extends Cubit<UploadDocumentsStates> {
 
 
       emit(SuccessUpdateBikeDataState());
-      Navigator.pop(context);
+      Navigator.of(context).pushNamedAndRemoveUntil(
+          Routes.driverwaitScreenRoute, (route) => false);
     });
   }
 
@@ -190,11 +191,11 @@ String? photoImageNetwork;
       emit(FailureGEtDriverDataState());
     }, (r) {
       driverDataModel = r;
-      numberImageNetwork =r.data!.driverDocuments![0].agencyNumber!;
-      anniversaryImageNetwork =r.data!.driverDocuments![0].bikeLicense!;
-      idCardImageNetwork =r.data!.driverDocuments![0].idCard!;
-      residenceCardImageNetwork =r.data!.driverDocuments![0].houseCard!;
-      photoImageNetwork =r.data!.driverDocuments![0].bikeImage!;
+      numberImageNetwork =r.data!.driverDocuments!.agencyNumber!;
+      anniversaryImageNetwork =r.data!.driverDocuments!.bikeLicense!;
+      idCardImageNetwork =r.data!.driverDocuments!.idCard!;
+      residenceCardImageNetwork =r.data!.driverDocuments!.houseCard!;
+      photoImageNetwork =r.data!.driverDocuments!.bikeImage!;
       emit(SuccessGEtDriverDataState());
     });
   }

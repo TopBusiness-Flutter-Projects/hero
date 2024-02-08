@@ -189,8 +189,14 @@ class LoginCubit extends Cubit<LoginState> {
     }, (r) {
       checkDocumentsModel = r;
       if( r.data!.driverDetails == 1 && r.data!.driverDocuments ==1){
-        Navigator.pushNamedAndRemoveUntil(
-            context, Routes.homedriverRoute, (route) => false);
+        if ( r.data!.status ==0)
+          Navigator.of(context).pushNamedAndRemoveUntil(
+              Routes.driverwaitScreenRoute, (route) => false);
+        else
+          Navigator.pushNamedAndRemoveUntil(
+              context, Routes.homedriverRoute, (route) => false);
+
+
       }
       else if(r.data!.driverDetails == 0){
 
@@ -199,7 +205,7 @@ class LoginCubit extends Cubit<LoginState> {
       }
       else if(r.data!.driverDocuments == 0){
         Navigator.pushNamedAndRemoveUntil(
-            context, Routes.uploadDocumentsScreenRoute, (route) => false );
+            context, Routes.uploadDocumentsScreenRoute,arguments: false, (route) => false );
       }
       emit(SuccessCheckDocumentsState());
     });

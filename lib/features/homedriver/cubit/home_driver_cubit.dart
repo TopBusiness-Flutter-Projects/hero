@@ -11,13 +11,17 @@ import 'package:location/location.dart' as loc;
 import 'package:maps_toolkit/maps_toolkit.dart' as mp;
 import 'package:widget_to_marker/widget_to_marker.dart';
 
+import '../../../../../../core/models/driver_data_model.dart';
+import '../../../../../../core/models/status_model.dart';
 import '../../../../../../core/remote/service.dart';
+import '../../../../../../core/utils/appwidget.dart';
 import '../../../../../../core/utils/custom_marker.dart';
+import '../../../../../../core/utils/dialogs.dart';
 
 part 'home_driver_state.dart';
 
 class HomeDriverCubit extends Cubit<HomeDriverState> {
-  bool inService = true;
+  bool inService = false;
   LatLng destinaion = LatLng(0, 0);
   LatLng strartlocation = LatLng(0, 0);
   loc.LocationData? currentLocation;
@@ -39,12 +43,60 @@ class HomeDriverCubit extends Cubit<HomeDriverState> {
     latLngList = [];
     getmarker();
     checkAndRequestLocationPermission();
+    getDriverData();
   }
 
-  void switchInservice(bool state) {
+
+
+
+
+  void switchInService(bool state,BuildContext context) {
+changeDriverStatus(context);
+
     inService = state;
     emit(HomeDriverInService());
   }
+  ////////
+
+  DriverDataModel driverDataModel=  DriverDataModel ();
+
+  getDriverData() async {
+    emit(LoadingGEtDriverDataState());
+    final response = await api.getDriverData();
+    response.fold((l) {
+      emit(FailureGEtDriverDataState());
+    }, (r) {
+      driverDataModel = r;
+
+      if( r.data!.driverStatus != null)
+      inService = r.data!.driverStatus ==1 ;
+      emit(SuccessGEtDriverDataState());
+    });
+  }
+
+
+  CheckStatusModel checkStatusModel = CheckStatusModel();
+
+  void changeDriverStatus(BuildContext context) async {
+    emit(LoadingChangeDriverStatusState());
+    AppWidget.createProgressDialog(context, "wait".tr());
+
+    final response = await api.changeDriverStatus();
+
+    response.fold((l) {
+      Navigator.pop(context);
+      errorGetBar("error".tr());
+      emit(FailureChangeDriverStatusState());
+    }, (r) {
+      checkStatusModel = r;
+      successGetBar(r.message);
+
+      Navigator.pop(context);
+      emit(SuccessChangeDriverStatusState());
+
+    });
+  }
+
 
 //********************************************************************************//
   getmarker() async {

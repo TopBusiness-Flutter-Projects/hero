@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hero/core/utils/app_fonts.dart';
 import 'package:hero/core/utils/dialogs.dart';
 import 'package:hero/core/widgets/custom_textfield.dart';
 import 'package:hero/features/profits/cubit/profits_cubit.dart';
@@ -25,7 +26,12 @@ class CustomReportWidget extends StatelessWidget {
       builder: (context, state) {
         ProfitsCubit cubit = context.read<ProfitsCubit>();
         return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12.0),
+            child: Text('from'.tr(),style: getBoldStyle(fontSize: 18)),
+          ),
           CustomTextField(
             prefixWidget:Icon(CupertinoIcons.calendar_today,size: 20,),
             title: 'enterDate'.tr(),
@@ -54,7 +60,11 @@ class CustomReportWidget extends StatelessWidget {
 
           SizedBox(
             height: getSize(context) / 13,
-          ),CustomTextField(
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12.0),            child: Text('to'.tr(),style: getBoldStyle(fontSize: 18)),
+          ),
+          CustomTextField(
             prefixWidget:Icon(CupertinoIcons.calendar_today,size: 20,),
             title: 'enterDate'.tr(),
             controller: cubit.toController,
@@ -92,6 +102,7 @@ class CustomReportWidget extends StatelessWidget {
 
 
               if (cubit.toSelectedDate.isAfter(cubit.fromSelectedDate)) {
+                cubit.getProfits('custom');
 
                 print('okkaaaay');
               } else {

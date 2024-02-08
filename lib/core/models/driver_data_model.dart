@@ -34,25 +34,29 @@ class DriverDataModel {
 
 class Data {
   int? driverStatus;
+  int? cityId;
   DriverDetails? driverDetails;
-  List<DriverDocument>? driverDocuments;
+  DriverDocuments? driverDocuments;
 
   Data({
     this.driverStatus,
+    this.cityId,
     this.driverDetails,
     this.driverDocuments,
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
     driverStatus: json["driver_status"],
+    cityId: json["city_id"],
     driverDetails: json["driver_details"] == null ? null : DriverDetails.fromJson(json["driver_details"]),
-    driverDocuments: json["driver_documents"] == null ? [] : List<DriverDocument>.from(json["driver_documents"]!.map((x) => DriverDocument.fromJson(x))),
+    driverDocuments: json["driver_documents"] == null ? null : DriverDocuments.fromJson(json["driver_documents"]),
   );
 
   Map<String, dynamic> toJson() => {
     "driver_status": driverStatus,
+    "city_id": cityId,
     "driver_details": driverDetails?.toJson(),
-    "driver_documents": driverDocuments == null ? [] : List<dynamic>.from(driverDocuments!.map((x) => x.toJson())),
+    "driver_documents": driverDocuments?.toJson(),
   };
 }
 
@@ -88,16 +92,14 @@ class DriverDetails {
   };
 }
 
-class DriverDocument {
-  int? id;
+class DriverDocuments {
   String? agencyNumber;
   String? bikeLicense;
   String? idCard;
   String? houseCard;
   String? bikeImage;
 
-  DriverDocument({
-    this.id,
+  DriverDocuments({
     this.agencyNumber,
     this.bikeLicense,
     this.idCard,
@@ -105,8 +107,7 @@ class DriverDocument {
     this.bikeImage,
   });
 
-  factory DriverDocument.fromJson(Map<String, dynamic> json) => DriverDocument(
-    id: json["id"],
+  factory DriverDocuments.fromJson(Map<String, dynamic> json) => DriverDocuments(
     agencyNumber: json["agency_number"],
     bikeLicense: json["bike_license"],
     idCard: json["id_card"],
@@ -115,7 +116,6 @@ class DriverDocument {
   );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
     "agency_number": agencyNumber,
     "bike_license": bikeLicense,
     "id_card": idCard,

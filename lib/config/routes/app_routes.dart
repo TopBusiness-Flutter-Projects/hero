@@ -16,6 +16,7 @@ import '../../features/edit_profile/screens/edit_profile_screen.dart';
 import '../../features/favourite_locations/screens/favourite_locations_screen.dart';
 import '../../features/hero_trip_policy/screens/hero_trip_policy_screen.dart';
 import '../../features/homedriver/screen/home_driver.dart';
+import '../../features/homedriver/screen/pages/home_map_driver/screens/immediate_trip_driver.dart';
 import '../../features/my_rewards/screens/my_rewards_screen.dart';
 import '../../features/my_wallet/screens/my_wallet_screen.dart';
 import '../../features/orders/creens/orders_screen.dart';
@@ -60,6 +61,7 @@ class Routes {
   static const String OrdersScreen = '/OrdersScreen';
   static const String MyWalletScreen = '/MyWalletScreen';
   static const String ProfitsScreen = '/ProfitsScreen';
+  static const String ImmediateTripDriver = '/ImmediateTripDriver';
 
 }
 
@@ -99,6 +101,10 @@ class AppRoutes {
 case Routes.MyWalletScreen:
         return MaterialPageRoute(
           builder: (context) => const MyWalletScreen(),
+        );
+case Routes.ImmediateTripDriver:
+        return MaterialPageRoute(
+          builder: (context) => const ImmediateTripDriver(),
         );
 
  case Routes.favoriteRoute:

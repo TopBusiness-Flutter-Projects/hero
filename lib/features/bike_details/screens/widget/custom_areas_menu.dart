@@ -28,7 +28,10 @@ class _CustomAreasMenuState extends State<CustomAreasMenu> {
 
     return  BlocConsumer<BikeDetailsCubit, BikeDetailsStates>(
       listener: (context, state) {
+        if (state is SuccessGEtDriverDataState){
+          cubit.dropdownAreaValue =cubit.driverDataModel.data!.driverDetails!.areaId.toString();
 
+        }
       },
       builder: (context, state) {
         return cubit.citiesModel.data != null && cubit.cityIndex != null

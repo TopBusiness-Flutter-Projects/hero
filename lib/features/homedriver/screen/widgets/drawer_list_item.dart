@@ -4,8 +4,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:hero/core/utils/app_colors.dart';
 import 'package:hero/core/utils/getsize.dart';
 
-import '../../../core/utils/assets_manager.dart';
-import '../../home/components/drawer_list_item.dart';
+import '../../../../core/utils/assets_manager.dart';
+
+
 
 class DriverDrawerListItem extends StatelessWidget {
  final DriverDrawerItemModel drawerItemModel;

@@ -1,3 +1,4 @@
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,8 +8,9 @@ import 'package:hero/core/utils/app_colors.dart';
 import 'package:hero/core/utils/getsize.dart';
 import 'package:lite_rolling_switch/lite_rolling_switch.dart';
 
+import '../../../../../../config/routes/app_routes.dart';
 import '../../../../../../core/widgets/custom_button.dart';
-import '../cubit/home_driver_cubit.dart';
+import '../../../../cubit/home_driver_cubit.dart';
 
 class HomeMapDriver extends StatefulWidget {
   const HomeMapDriver({super.key});
@@ -26,7 +28,6 @@ class _HomeMapDriverState extends State<HomeMapDriver> {
 
     return BlocBuilder<HomeDriverCubit, HomeDriverState>(
       builder: (context, state) {
-
         return Scaffold(
           body: Stack(
             alignment: Alignment.center,
@@ -116,27 +117,34 @@ class _HomeMapDriverState extends State<HomeMapDriver> {
                       ),
                     ),
                   )),
-              Positioned(
-                bottom: 20,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: LiteRollingSwitch(
-                    value: true,
-                    width: 150,
-                    textOn: 'in_service'.tr(),
-                    textOff: 'out_service'.tr(),
-                    textOffColor: AppColors.white,
-                    textOnColor: AppColors.white,
-                    colorOn: AppColors.success,
-                    colorOff: AppColors.grey2,
-                    iconOff: Icons.power_settings_new,
-                    animationDuration: const Duration(milliseconds: 300),
-                    onChanged: (bool state) {
-                      cubit!.switchInservice(state);
-                    },
-                    onDoubleTap: () {},
-                    onSwipe: () {},
-                    onTap: () {},
+              ConditionalBuilder(
+                condition: cubit!.driverDataModel.data != null,
+                fallback: (context) => SizedBox(height: 10,),
+                builder: (context) =>
+                 Positioned(
+                  bottom: 20,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: LiteRollingSwitch(
+                      value: cubit!.inService,
+                      width: 150,
+                      textOn: 'in_service'.tr(),
+                      textOff: 'out_service'.tr(),
+                      textOffColor: AppColors.white,
+                      textOnColor: AppColors.white,
+                      colorOn: AppColors.success,
+                      colorOff: AppColors.grey2,
+                      iconOff: Icons.power_settings_new,
+                      animationDuration: const Duration(milliseconds: 300),
+                      onChanged: (bool state) {
+                        cubit!.switchInService(state,context);
+                      },
+                      onDoubleTap: () {},
+                      onSwipe: () {},
+                      onTap: () {
+
+                      },
+                    ),
                   ),
                 ),
               )
@@ -144,13 +152,14 @@ class _HomeMapDriverState extends State<HomeMapDriver> {
           ),
           floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
           floatingActionButton: Padding(
-            padding: EdgeInsets.only(bottom: getSize(context) / 7.5),
+            padding: EdgeInsets.only(bottom: getSize(context) / 5),
             child: CustomButton(
               width: getSize(context) / 3,
               text: 'immediate_trip'.tr(),
               color: AppColors.primary,
               onClick: () {
-                context.read<HomeDriverCubit>().tabsController!.index=1;
+                Navigator.pushNamed(
+                    context, Routes.ImmediateTripDriver);
               },
             ),
           ),

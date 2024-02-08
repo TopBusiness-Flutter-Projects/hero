@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hero/core/remote/service.dart';
 import 'package:meta/meta.dart';
@@ -42,7 +43,7 @@ class ProfitsCubit extends Cubit<ProfitsState> {
 
   getProfits(String type) async {
     emit(LoadingGetDriverDataStatus());
-    final response = await api.getDriverProfit(type: type,from: '',to: '');
+    final response = await api.getDriverProfit(type: type,from: fromController.text,to: toController.text);
     response.fold((l) {
       emit(FailureGetDriverDataState());
     }, (r) {
@@ -55,4 +56,31 @@ class ProfitsCubit extends Cubit<ProfitsState> {
     });
   }
 
+  String changeDateFormat(String date){
+
+
+    String formattedDate = DateFormat('d\'${getDaySuffix(DateTime.parse(date).day)}\' MMM yyyy').format(DateTime.parse(date));
+
+return formattedDate;
+  }
+
+  String todayDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+
+
+
+}
+String getDaySuffix(int day) {
+  if (day >= 11 && day <= 13) {
+    return 'th';
+  }
+  switch (day % 10) {
+    case 1:
+      return 'st';
+    case 2:
+      return 'nd';
+    case 3:
+      return 'rd';
+    default:
+      return 'th';
+  }
 }

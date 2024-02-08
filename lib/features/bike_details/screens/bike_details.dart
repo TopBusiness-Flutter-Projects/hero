@@ -53,7 +53,7 @@ class _BikeDetailsState extends State<BikeDetails> {
             listener: (context, state) {
               if (state is SuccessStoreDriverDataState){
                  Navigator.of(context).pushNamed(
-                   Routes.uploadDocumentsScreenRoute,
+                   Routes.uploadDocumentsScreenRoute,arguments: false
                  );
               } if (state is SuccessUpdateDriverDataState){
                  Navigator.pop(context);
@@ -63,7 +63,8 @@ class _BikeDetailsState extends State<BikeDetails> {
                 bikeTypeController.text =cubit.driverDataModel.data!.driverDetails!.bikeType??'';
                 bikeModelController.text =cubit.driverDataModel.data!.driverDetails!.bikeModel??'';
                 bikeColorController.text =cubit.driverDataModel.data!.driverDetails!.bikeColor??'';
-                cubit.currentArea =cubit.driverDataModel.data!.driverDetails!.areaId.toString();
+                cubit.changeCity(cubit.driverDataModel.data!.cityId.toString());
+                cubit.changeArea(cubit   .driverDataModel.data!.driverDetails!.areaId.toString()) ;
               }
             },
             builder: (context, state) {

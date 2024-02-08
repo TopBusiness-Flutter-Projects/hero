@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hero/core/utils/assets_manager.dart';
+import 'package:hero/core/utils/dialogs.dart';
 import 'package:hero/core/utils/getsize.dart';
 import 'package:hero/core/widgets/custom_button.dart';
 import 'package:hero/features/documents/cubit/upload_documents_cubit.dart';
@@ -165,10 +166,14 @@ class _UploadDocumentsState extends State<UploadDocuments> {
                   borderRadius: getSize(context) / 24,
                   color: AppColors.primary,
                   onClick: () {
-                    widget.isUpdate?
+                   ! widget.isUpdate?
+                   cubit.storeBikerDetails(context) :
+                       cubit.idCardImage == null && cubit.photoImage == null &&cubit.anniversaryImage == null&& cubit.residenceCardImage == null &&cubit.numberImage == null ?
+                           errorGetBar('لا يوجد تعديلات')
+                           :
                     cubit.updateBikerDetails(context)
-                        :
-                    cubit.storeBikerDetails(context);
+
+                    ;
                     },
                 ),
               ],

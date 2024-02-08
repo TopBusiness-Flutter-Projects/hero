@@ -31,23 +31,26 @@ class CheckDocumentsModel {
     "code": code,
   };
 }
-
 class Data {
   int? driverDetails;
   int? driverDocuments;
+  int? status;
 
   Data({
     this.driverDetails,
     this.driverDocuments,
+    this.status,
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
     driverDetails: json["driver_details"],
     driverDocuments: json["driver_documents"],
+    status: json["status"],
   );
 
   Map<String, dynamic> toJson() => {
     "driver_details": driverDetails,
     "driver_documents": driverDocuments,
+    "status": status,
   };
 }

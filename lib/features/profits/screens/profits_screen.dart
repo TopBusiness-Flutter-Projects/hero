@@ -37,6 +37,7 @@ class _ProfitsScreenState extends State<ProfitsScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    context.read<ProfitsCubit>().getProfits('day');
     //  context.read<MyWalletCubit>().getWallet();
   }
 
@@ -44,21 +45,14 @@ class _ProfitsScreenState extends State<ProfitsScreen> {
   Widget build(BuildContext context) {
     return BlocConsumer<ProfitsCubit, ProfitsState>(
       listener: (context, state) {
-        //  if (state is LoadingNotificationState) {
-        //    isLoading = true;
-        //  } else {
-        //    isLoading = false;
-        //    if (state is SuccessGetWalletState) {
-        //      isEmpty = false;
-        //    }
-        //  }
+
       },
       builder: (context, state) {
         ProfitsCubit cubit = context.read<ProfitsCubit>();
         HomeCubit homeCubit = context.read<HomeCubit>();
         return Scaffold(
           body: Padding(
-            padding: const EdgeInsets.all(10.0),
+            padding: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 18),
             child: ListView(
               children: [
                 SizedBox(
@@ -78,6 +72,7 @@ class _ProfitsScreenState extends State<ProfitsScreen> {
                             GestureDetector(
                               onTap: () {
                                 Navigator.pop(context);
+                                cubit.todaySelect();
                               },
                               child: Image.asset(
                                 ImageAssets.backImage,
@@ -159,6 +154,7 @@ class _ProfitsScreenState extends State<ProfitsScreen> {
                                                 isSelected: cubit.selected == 0,
                                                 onTap: () {
                                                   cubit.todaySelect();
+                                                  cubit.getProfits('day');
                                                 },
                                               ),
                                               CustomChoiceText(
@@ -166,6 +162,7 @@ class _ProfitsScreenState extends State<ProfitsScreen> {
                                                 isSelected: cubit.selected == 1,
                                                 onTap: () {
                                                   cubit.weekSelect();
+                                                  cubit.getProfits('week');
                                                 },
                                               ),
                                               CustomChoiceText(
@@ -173,6 +170,7 @@ class _ProfitsScreenState extends State<ProfitsScreen> {
                                                 isSelected: cubit.selected == 2,
                                                 onTap: () {
                                                   cubit.reportSelect();
+
                                                 },
                                               ),
                                             ]),
@@ -181,23 +179,20 @@ class _ProfitsScreenState extends State<ProfitsScreen> {
                                         CustomReportWidget(),
                                       CustomDateText(
                                         isToday: cubit.selected == 0,
-                                        from: '4th Oct 2023',
-                                        to: '4th Nov 2023',
-                                      ),
+                                        ),
                                       CustomTripsPriceContainer(
-                                        trips: '2',
-                                        price: '23',
                                       ),
                                       if (cubit.selected == 1)
                                         CustomWeekDetails(
-                                          saturdayValue: '7',
-                                          sundayValue: '5',
-                                          mondayValue: '4',
-                                          tuesdayValue: '0',
-                                          wednesdayValue: '8',
-                                          thursdayValue: '8',
-                                          fridayValue: '9',
+                                        // saturdayValue: '7',
+                                        // sundayValue: '5',
+                                        // mondayValue: '4',
+                                        // tuesdayValue: '0',
+                                        // wednesdayValue: '8',
+                                        // thursdayValue: '8',
+                                        // fridayValue: '9',
                                         ),
+
                                       CustomProfitsDetails(
                                         tripsDistance: '5',
                                         kiloPrice: '5',

@@ -34,14 +34,14 @@ class ProfitsModel {
 
 class Data {
   int? tripsCount;
-  int? totalTripsPrice;
-  int? tripsDistance;
-  int? kmPrice;
-  int? total;
-  String? vatTotal;
-  double? netTotal;
-  DateTime? from;
-  DateTime? to;
+  dynamic? totalTripsPrice;
+  dynamic? tripsDistance;
+  dynamic? kmPrice;
+  dynamic? total;
+  dynamic? vatTotal;
+  dynamic? netTotal;
+  String? from;
+  String? to;
   List<Trip>? trips;
 
   Data({
@@ -65,8 +65,11 @@ class Data {
     total: json["total"],
     vatTotal: json["vat_total"],
     netTotal: json["net_total"]?.toDouble(),
-    from: json["from"] == null ? null : DateTime.parse(json["from"]),
-    to: json["to"] == null ? null : DateTime.parse(json["to"]),
+      from:json["from"],
+      to: json["to"],
+
+   //from: json["from"] == null ? null : DateTime.parse(json["from"]),
+   //to: json["to"] == null ? null : DateTime.parse(json["to"]),
     trips: json["trips"] == null ? [] : List<Trip>.from(json["trips"]!.map((x) => Trip.fromJson(x))),
   );
 
@@ -78,14 +81,15 @@ class Data {
     "total": total,
     "vat_total": vatTotal,
     "net_total": netTotal,
-    "from": "${from!.year.toString().padLeft(4, '0')}-${from!.month.toString().padLeft(2, '0')}-${from!.day.toString().padLeft(2, '0')}",
-    "to": "${to!.year.toString().padLeft(4, '0')}-${to!.month.toString().padLeft(2, '0')}-${to!.day.toString().padLeft(2, '0')}",
+  "from":from,
+  "to":to,
+  // "from": "${from!.year.toString().padLeft(4, '0')}-${from!.month.toString().padLeft(2, '0')}-${from!.day.toString().padLeft(2, '0')}",
+   // "to": "${to!.year.toString().padLeft(4, '0')}-${to!.month.toString().padLeft(2, '0')}-${to!.day.toString().padLeft(2, '0')}",
     "trips": trips == null ? [] : List<dynamic>.from(trips!.map((x) => x.toJson())),
   };
 }
-
 class Trip {
-  String? price;
+  dynamic? price;
   DateTime? day;
   String? dayName;
 

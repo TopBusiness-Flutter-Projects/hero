@@ -35,6 +35,7 @@ class EndPoints {
   static const String getInfoDriver = '${baseUrl}getInfoDriver';
   static const String updateDriverDocument = '${baseUrl}updateDriverDocument';
   static const String updateDriverDetails = '${baseUrl}updateDriverDetails';
+  static const String changeDriverStatus = '${baseUrl}changeStatus';
 
 
   //************************ Google  ****************************************************

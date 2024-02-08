@@ -1,37 +1,82 @@
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hero/core/utils/app_colors.dart';
 import 'package:hero/core/utils/app_fonts.dart';
 
+import '../../cubit/profits_cubit.dart';
+
 class CustomTripsPriceContainer extends StatelessWidget {
   const CustomTripsPriceContainer({
-    super.key, required this.trips, required this.price,
+    super.key,
   });
-final String trips;
-final String price;
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 15.0,horizontal: 20),
-      child: Container(
-        color: AppColors.primaryOpacity2,
-        child: Padding(
-          padding: const EdgeInsets.all(14),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              CustomColumn(text: "trips".tr(),value: trips,isPrice: false,),
-              SizedBox(
-                  height: 40,
-                  child: VerticalDivider(
-                      color: AppColors.black, thickness: 1, width: 1)),
-              CustomColumn(text: "price".tr(),value: price,isPrice: true,)
-            ],
-          ),
-        ),
+    ProfitsCubit cubit = context.read<ProfitsCubit>();
+    return BlocConsumer<ProfitsCubit,ProfitsState>(
+        listener: (context, state) {
 
+        },
+        builder:  (context, state) {
+          return cubit.selected == 0 ?
 
-      ),
+          ConditionalBuilder(
+            condition: cubit.profitsModelDay.data != null,
+            fallback: (context) => SizedBox(height: 50),
+            builder: (context) => CustomContainer(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  CustomColumn(text: "trips".tr(),value: "${cubit.profitsModelDay.data!.tripsCount??0}",isPrice: false,),
+                  SizedBox(
+                      height: 40,
+                      child: VerticalDivider(
+                          color: AppColors.black, thickness: 1, width: 1)),
+                  CustomColumn(text: "price".tr(),value:  "${cubit.profitsModelDay.data!.totalTripsPrice??0}",isPrice: true,)
+                ],
+              ),
+            ),
+          ):cubit.selected ==1 ?
+
+          ConditionalBuilder(
+            condition: cubit.profitsModelWeek.data != null,
+            fallback: (context) => SizedBox(height: 50),
+            builder: (context) => CustomContainer(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  CustomColumn(text: "trips".tr(),value: "${cubit.profitsModelWeek.data!.tripsCount??0}",isPrice: false,),
+                  SizedBox(
+                      height: 40,
+                      child: VerticalDivider(
+                          color: AppColors.black, thickness: 1, width: 1)),
+                  CustomColumn(text: "price".tr(),value:  "${cubit.profitsModelWeek.data!.totalTripsPrice??0}",isPrice: true,)
+                ],
+              ),
+            ),
+          )
+          :
+
+          ConditionalBuilder(
+            condition: cubit.profitsModelCustom.data != null,
+            fallback: (context) => SizedBox(height: 50),
+            builder: (context) => CustomContainer(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  CustomColumn(text: "trips".tr(),value: "${cubit.profitsModelCustom.data!.tripsCount??0}",isPrice: false,),
+                  SizedBox(
+                      height: 40,
+                      child: VerticalDivider(
+                          color: AppColors.black, thickness: 1, width: 1)),
+                  CustomColumn(text: "price".tr(),value:  "${cubit.profitsModelCustom.data!.totalTripsPrice??0}",isPrice: true,)
+                ],
+              ),
+            ),
+          );
+      }
     );
   }
 }
@@ -51,5 +96,21 @@ final bool isPrice;
       Text(isPrice ?"$value "+"currency".tr():value,style:isPrice?getRegularStyle(fontSize: 14,color: AppColors.numberColor): getBoldStyle(fontSize: 14,color: AppColors.numberColor),),
 
     ],);
+  }
+}
+class CustomContainer extends StatelessWidget {
+  const CustomContainer({
+    super.key, required this.child,
+  });
+final Widget child;
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 30.0,horizontal: 20),
+    child: Container(
+    color: AppColors.primaryOpacity2,
+    child: Padding(
+    padding: const EdgeInsets.all(14),
+    child: child)));
   }
 }

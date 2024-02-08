@@ -28,7 +28,10 @@ class _CustomCitiesMenuState extends State<CustomCitiesMenu> {
 
     return BlocConsumer<BikeDetailsCubit, BikeDetailsStates>(
       listener: (context, state) {
-
+        if (state is SuccessGEtDriverDataState){
+          dropdownValue =cubit.driverDataModel.data!.cityId.toString();
+          cubit.changeCurrentCityId(cityId: cubit.driverDataModel.data!.cityId!);
+        }
       },
       builder: (context, state) {
         return cubit.citiesModel.data != null
