@@ -23,6 +23,7 @@ class ImageAssets {
   static const String failure = '$imagePath/failure.png';
   static const String marker = '$imagePath/marker.png';
   static const String marker2 = '$imagePath/toktomap.png';
+  static const String finishTripBike = '$imagePath/finishTripBike.png';
   static const String tuktukWallet = '$imagePath/tuktukWallet.png';
 
   // icons
@@ -62,6 +63,10 @@ class ImageAssets {
   static const String update = '$iconsPath/update.svg';
   static const String mapIcon = '$iconsPath/map.svg';
   static const String myWallet = '$iconsPath/myWallet.svg';
+
+  static const String finishTripMap = '$iconsPath/finishTripMap.svg';
+  static const String finishTripMoney = '$iconsPath/finishTripMoney.svg';
+  static const String finishTripTime = '$iconsPath/finishTripTime.svg';
 
 
   //Lottie

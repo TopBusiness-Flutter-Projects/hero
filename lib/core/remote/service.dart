@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:hero/core/api/end_points.dart';
 import 'package:hero/core/models/cities_model.dart';
 import 'package:hero/core/models/driver_data_model.dart';
+import 'package:hero/core/models/end_quick_trip_model.dart';
 import 'package:hero/core/models/home_model.dart';
 import 'package:hero/core/models/notification_model.dart';
 import 'package:hero/core/models/profit_model.dart';
@@ -19,6 +20,7 @@ import '../models/create_schedual_trip_model.dart';
 import '../models/create_trip_model.dart';
 import '../models/delete_user_model.dart';
 import '../models/direction.dart';
+import '../models/driver_trips_model.dart';
 import '../models/favourite_model.dart';
 import '../models/login_model.dart';
 import '../models/my_wallet_model.dart';
@@ -26,6 +28,7 @@ import '../models/place_details.dart';
 import '../models/place_geocode.dart';
 import '../models/rate_trip_model.dart';
 import '../models/signup_response_model.dart';
+import '../models/start_new_trip_model.dart';
 import '../models/status_model.dart';
 import '../models/store_bike_details_model.dart';
 import '../models/store_driver_data_model.dart';
@@ -56,7 +59,6 @@ class ServiceApi {
 //
   Future<Either<Failure, SignUpModel>> postRegister(
       RegisterModel registerModel, bool isSignUp) async {
-
     try {
       if (registerModel.phone.startsWith("964")) {
         print("Before: ${registerModel.phone}");
@@ -88,32 +90,186 @@ class ServiceApi {
       return Left(ServerFailure());
     }
   }
+
+  /////// Driver trips //////////////
+
+  // start quick trip
+  Future<Either<Failure, StartQuickTripModel>> startQuickTrip({
+    required String fromAddress,
+    required String fromLong,
+    required String fromLat,
+    required String toAddress,
+    required String toLong,
+    required String toLat,
+    required String phone,
+    required String name,
+  }) async {
+    SignUpModel signUpModel = await Preferences.instance.getUserModel();
+    try {
+      final response = await dio.post(EndPoints.startQuickTrip,
+          options: Options(
+            headers: {'Authorization': signUpModel.data?.token},
+          ),
+          body: {
+            "from_address": fromAddress,
+            "from_long": fromLong,
+            "from_lat": fromLat,
+            "to_address": toAddress,
+            "to_long": toLong,
+            "to_lat": toLat,
+            "phone": phone,
+            "name": name,
+          });
+      return Right(StartQuickTripModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
+  // end quick trip
+  Future<Either<Failure, EndQuickTripModel>> endQuickTrip({
+    required String distance,
+    required String time,
+    required String phone,
+  }) async {
+    SignUpModel signUpModel = await Preferences.instance.getUserModel();
+    try {
+      final response = await dio.post(EndPoints.endQuickTrip,
+          options: Options(
+            headers: {'Authorization': signUpModel.data?.token},
+          ),
+          body: {
+            //"distance": distance,
+            //"time": time,
+            //"phone": phone,
+            "distance": '3',
+            "time": '30',
+            "phone": phone,
+          });
+      return Right(EndQuickTripModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
+  //////////// Trips //////
+  //// Accept trip
+  Future<Either<Failure, DriverTripsModel>> acceptTrip({
+    required tripId,
+  }) async {
+    SignUpModel signUpModel = await Preferences.instance.getUserModel();
+    try {
+      final response = await dio.post(EndPoints.acceptTrip,
+          options: Options(
+            headers: {'Authorization': signUpModel.data?.token},
+          ),
+          body: {
+            "trip_id": tripId,
+          });
+      return Right(DriverTripsModel.fromJson(response));
+    } on ServerException {
+      print(ServerFailure());
+      return Left(ServerFailure());
+    }
+  }
+
+  //// Start trip
+  Future<Either<Failure, DriverTripsModel>> startTrip({
+    required String tripId,
+  }) async {
+    SignUpModel signUpModel = await Preferences.instance.getUserModel();
+    try {
+      final response = await dio.post(EndPoints.startTrip,
+          options: Options(
+            headers: {'Authorization': signUpModel.data?.token},
+          ),
+          body: {
+            "trip_id": tripId,
+          });
+      return Right(DriverTripsModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
+  //// Cancel trip
+  Future<Either<Failure, DriverTripsModel>> cancelTrip({
+    required String tripId,
+  }) async {
+    SignUpModel signUpModel = await Preferences.instance.getUserModel();
+    try {
+      final response = await dio.post(EndPoints.cancelTrip,
+          options: Options(
+            headers: {'Authorization': signUpModel.data?.token},
+          ),
+          body: {
+            "trip_id": tripId,
+          });
+      return Right(DriverTripsModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
+  //// End trip
+  Future<Either<Failure, DriverTripsModel>> endTrip({
+    required String distance,
+    required String time,
+    required String tripId,
+  }) async {
+    SignUpModel signUpModel = await Preferences.instance.getUserModel();
+    try {
+      final response = await dio.post(EndPoints.endTrip,
+          options: Options(
+            headers: {'Authorization': signUpModel.data?.token},
+          ),
+          body: {
+            "distance": distance,
+            "time": time,
+            "trip_id": tripId,
+          });
+      return Right(DriverTripsModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
+////////////////////////////////////////////////
+
 // upload documents
   Future<Either<Failure, StoreBikeDetailsModel>> uploadDocuments(
-  {
-     String? agencyNumber,
-    String? bikeLicense,
-    String? idCard,
-    String? houseCard,
-    String? bikeImage,
-    bool isUpdate =false
-}   ) async {
+      {String? agencyNumber,
+      String? bikeLicense,
+      String? idCard,
+      String? houseCard,
+      String? bikeImage,
+      bool isUpdate = false}) async {
     SignUpModel signUpModel = await Preferences.instance.getUserModel();
 
     try {
-      var response = await dio.post(isUpdate?EndPoints.updateDriverDocument:
-        EndPoints.storeDriverDocument ,
-
+      var response = await dio.post(
+        isUpdate
+            ? EndPoints.updateDriverDocument
+            : EndPoints.storeDriverDocument,
         formDataIsEnabled: true,
         options: Options(
           headers: {'Authorization': signUpModel.data?.token},
         ),
         body: {
-          'agency_number':agencyNumber != null ?await MultipartFile.fromFile(agencyNumber):null,
-          'bike_license':bikeLicense != null ?await MultipartFile.fromFile(bikeLicense):null,
-          "id_card":idCard!= null ?await MultipartFile.fromFile(idCard):null,
-          "house_card":houseCard!= null ? await MultipartFile.fromFile(houseCard):null,
-          "bike_image":bikeImage!= null ?await MultipartFile.fromFile(bikeImage):null,
+          'agency_number': agencyNumber != null
+              ? await MultipartFile.fromFile(agencyNumber)
+              : null,
+          'bike_license': bikeLicense != null
+              ? await MultipartFile.fromFile(bikeLicense)
+              : null,
+          "id_card":
+              idCard != null ? await MultipartFile.fromFile(idCard) : null,
+          "house_card": houseCard != null
+              ? await MultipartFile.fromFile(houseCard)
+              : null,
+          "bike_image": bikeImage != null
+              ? await MultipartFile.fromFile(bikeImage)
+              : null,
         },
       );
       return Right(StoreBikeDetailsModel.fromJson(response));
@@ -296,6 +452,7 @@ class ServiceApi {
       return Left(ServerFailure());
     }
   }
+
   // get cities
   Future<Either<Failure, CitiesModel>> getCities() async {
     try {
@@ -306,23 +463,25 @@ class ServiceApi {
     }
   }
 
-
 // driver details
 
   Future<Either<Failure, StoreDriverDetailsModel>> addDriverDetails(
       {required String bikeType,
-        required String bikeModel,
-        required String bikeColor,
-        required String areaId,bool isUpdate =false
-
-      }) async {
+      required String bikeModel,
+      required String bikeColor,
+      required String areaId,
+      bool isUpdate = false}) async {
     SignUpModel signUpModel = await Preferences.instance.getUserModel();
     try {
-      final response = await dio.post(isUpdate?EndPoints.updateDriverDetails:EndPoints.storeDriverDetails,
+      final response = await dio.post(
+          isUpdate
+              ? EndPoints.updateDriverDetails
+              : EndPoints.storeDriverDetails,
           options: Options(
             headers: {'Authorization': signUpModel.data?.token},
           ),
-          body: {"bike_type": bikeType,
+          body: {
+            "bike_type": bikeType,
             "bike_model": bikeModel,
             "bike_color": bikeColor,
             "area_id": areaId,
@@ -332,10 +491,10 @@ class ServiceApi {
       return Left(ServerFailure());
     }
   }
+
 //// check documents
 
   Future<Either<Failure, CheckStatusModel>> changeDriverStatus() async {
-
     SignUpModel signUpModel = await Preferences.instance.getUserModel();
     try {
       final response = await dio.post(
@@ -349,10 +508,10 @@ class ServiceApi {
       return Left(ServerFailure());
     }
   }
+
   //// check documents
 
   Future<Either<Failure, CheckDocumentsModel>> checkDocuments() async {
-
     SignUpModel signUpModel = await Preferences.instance.getUserModel();
     try {
       final response = await dio.post(
@@ -370,7 +529,6 @@ class ServiceApi {
 //// check documents
 
   Future<Either<Failure, MyWalletModel>> getWallet() async {
-
     SignUpModel signUpModel = await Preferences.instance.getUserModel();
     try {
       final response = await dio.get(
@@ -395,24 +553,28 @@ class ServiceApi {
   }
 
   Future<Either<Failure, AllTripsModel>> getAllTrips(
-      {required String type}) async {
+      {required String type, required bool isUser}) async {
     SignUpModel signUpModel = await Preferences.instance.getUserModel();
     try {
-      final response = await dio.get(EndPoints.allTripsUrl,
-          options: Options(
-            headers: {'Authorization': signUpModel.data?.token},
-          ),
-          queryParameters: {"type": type});
+      final response = await dio
+          .get(isUser ? EndPoints.allUserTripsUrl : EndPoints.allDriverTripsUrl,
+              options: Options(
+                headers: {'Authorization': signUpModel.data?.token},
+              ),
+              queryParameters: {"type": type});
 
       return Right(AllTripsModel.fromJson(response));
     } on ServerException {
       return Left(ServerFailure());
     }
   }
- // driverProfit
-  Future<Either<Failure, ProfitsModel>> getDriverProfit(
-      {required String type, String? from, String? to,
-      }) async {
+
+  // driverProfit
+  Future<Either<Failure, ProfitsModel>> getDriverProfit({
+    required String type,
+    String? from,
+    String? to,
+  }) async {
     SignUpModel signUpModel = await Preferences.instance.getUserModel();
     try {
       final response = await dio.get(EndPoints.driverProfit,
@@ -430,15 +592,17 @@ class ServiceApi {
       return Left(ServerFailure());
     }
   }
- // driver data
+
+  // driver data
   Future<Either<Failure, DriverDataModel>> getDriverData() async {
     SignUpModel signUpModel = await Preferences.instance.getUserModel();
     try {
-      final response = await dio.get(EndPoints.getInfoDriver,
-          options: Options(
-            headers: {'Authorization': signUpModel.data?.token},
-          ),
-          );
+      final response = await dio.get(
+        EndPoints.getInfoDriver,
+        options: Options(
+          headers: {'Authorization': signUpModel.data?.token},
+        ),
+      );
 
       return Right(DriverDataModel.fromJson(response));
     } on ServerException {
@@ -478,9 +642,7 @@ class ServiceApi {
 
       final response = await dio.post(
         EndPoints.checkPhoneUrl,
-        body: {
-          'phone': AppStrings.countryCode + phone,
-        },
+
       );
       return Right(LoginModel.fromJson(response));
     } on ServerException {
@@ -488,8 +650,43 @@ class ServiceApi {
     }
   }
 
-  Future<Either<Failure, RateTripModel>> giveRate(
-      {required int tripId, required double rate, String? description}) async {
+  Future<Either<Failure, RateModel>> rateUser({
+    required String to,
+    required String rate,
+    required String description,
+    required String tripId,
+}) async {
+    SignUpModel signUpModel = await Preferences.instance.getUserModel();
+    try {
+
+      final response = await dio.post(
+        EndPoints.giveRateUrl,
+        body: {
+          'to': to,
+          'rate': rate,
+          'trip_id': tripId,
+          'description': description,
+        },
+        options: Options(
+          headers: {'Authorization': signUpModel.data?.token},
+        ),
+
+      );
+      return Right(RateModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
+
+
+
+  Future<Either<Failure, RateModel>> giveRate(
+      {
+        required int tripId,
+        required int to,
+        required double rate,
+        String? description}) async {
     print("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
     print("tripId = $tripId rate = $rate");
     SignUpModel signUpModel = await Preferences.instance.getUserModel();
@@ -499,9 +696,13 @@ class ServiceApi {
         options: Options(
           headers: {'Authorization': signUpModel.data?.token},
         ),
-        body: {'trip_id': tripId, 'rate': rate, 'description': description},
+        body: {
+          'trip_id': "240",
+          'rate': "2.5",
+          'to': "143",
+          'description': 'description'},
       );
-      return Right(RateTripModel.fromJson(response));
+      return Right(RateModel.fromJson(response));
     } on ServerException {
       return Left(ServerFailure());
     }
@@ -641,7 +842,7 @@ class ServiceApi {
     }
   }
 
-  Future<Either<Failure, LoginModel>> cancelTrip({
+  Future<Either<Failure, LoginModel>> cancelUserTrip({
     required int tripId,
   }) async {
     SignUpModel signUpModel = await Preferences.instance.getUserModel();
@@ -845,6 +1046,7 @@ class ServiceApi {
         "language": "ar",
         "key": AppStrings.mapKey
       });
+
       return Right(GeoCodeModel.fromJson(response));
     } on ServerException {
       return Left(ServerFailure());
@@ -868,16 +1070,8 @@ class ServiceApi {
       return Left(ServerFailure());
     }
   }
-/// USER
 
-
-
-
-
-
-
-
-
+  /// USER
 
 //   Future<Either<Failure, FavoriteModel>>getFavoriteSearchData(searchKey) async {
 //

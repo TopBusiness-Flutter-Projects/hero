@@ -8,15 +8,18 @@ import 'package:hero/features/notification/screens/notification_screen.dart';
 import 'package:hero/features/safety_rules/screens/safety_rules_screen.dart';
 import 'package:hero/features/splash/screens/splash_screen.dart';
 import 'package:hero/features/trip_details/screens/trip_details_screen.dart';
+import '../../core/models/start_new_trip_model.dart';
 import '../../core/utils/app_strings.dart';
 import '../../features/about_hero/screens/about_hero_screen.dart';
 import '../../features/bike_details/screens/bike_details.dart';
+import '../../features/driver_trip/screens/driver_trip_screen.dart';
 import '../../features/driver_waiting/screens/driver_waiting.dart';
 import '../../features/edit_profile/screens/edit_profile_screen.dart';
 import '../../features/favourite_locations/screens/favourite_locations_screen.dart';
 import '../../features/hero_trip_policy/screens/hero_trip_policy_screen.dart';
 import '../../features/homedriver/screen/home_driver.dart';
 import '../../features/homedriver/screen/pages/home_map_driver/screens/immediate_trip_driver.dart';
+import '../../features/homedriver/screen/pages/home_map_driver/screens/quick_trip_progress.dart';
 import '../../features/my_rewards/screens/my_rewards_screen.dart';
 import '../../features/my_wallet/screens/my_wallet_screen.dart';
 import '../../features/orders/creens/orders_screen.dart';
@@ -62,6 +65,8 @@ class Routes {
   static const String MyWalletScreen = '/MyWalletScreen';
   static const String ProfitsScreen = '/ProfitsScreen';
   static const String ImmediateTripDriver = '/ImmediateTripDriver';
+  static const String DriverTripScreen = '/DriverTripScreen';
+  static const String QuickTripScreen = '/QuickTripScreen';
 
 }
 
@@ -95,8 +100,9 @@ class AppRoutes {
         return MaterialPageRoute(
           builder: (context) => const HeroTripPolicyScreen(),
         ); case Routes.OrdersScreen:
+      bool isUser=settings.arguments as bool;
         return MaterialPageRoute(
-          builder: (context) => const OrdersScreen(),
+          builder: (context) =>  OrdersScreen(isUser: isUser),
         );
 case Routes.MyWalletScreen:
         return MaterialPageRoute(
@@ -182,6 +188,18 @@ case Routes.ImmediateTripDriver:
         case Routes.safetyRulesScreen:
         return MaterialPageRoute(
           builder: (context) =>  SafetyRulesScreen(),
+        );
+   case Routes.DriverTripScreen:
+     final trip = settings.arguments as NewTrip;
+        return MaterialPageRoute(
+
+          builder: (context) =>  DriverTripScreen(trip: trip),
+        );
+  case Routes.QuickTripScreen:
+     final trip = settings.arguments as StartNewTripData;
+        return MaterialPageRoute(
+
+          builder: (context) =>  QuickTripScreen(trip: trip),
         );
 
       case Routes.tripDetailsRoute:

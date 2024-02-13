@@ -310,7 +310,7 @@ class NewTrip {
   final dynamic name;
   final dynamic phone;
   final User? user;
-  final dynamic driver;
+  final Driver? driver;
   final String? createdAt;
   final String? updatedAt;
 
@@ -355,7 +355,7 @@ class NewTrip {
     name: json["name"],
     phone: json["phone"],
     user: json["user"] == null ? null : User.fromJson(json["user"]),
-    driver: json["driver"],
+    driver: json["driver"] == null ? null :Driver.fromJson(json["driver"]),
     createdAt: json["created_at"],
     updatedAt: json["updated_at"],
   );
@@ -439,7 +439,61 @@ class User {
     "updated_at": "${updatedAt!.year.toString().padLeft(4, '0')}-${updatedAt!.month.toString().padLeft(2, '0')}-${updatedAt!.day.toString().padLeft(2, '0')}",
   };
 }
+class Driver {
+  int? id;
+  String? name;
+  String? email;
+  String? phone;
+  String? image;
+  dynamic birth;
+  String? type;
+  String? status;
+  String? token;
+  dynamic createdAt;
+  dynamic updatedAt;
 
+  Driver({
+    this.id,
+    this.name,
+    this.email,
+    this.phone,
+    this.image,
+    this.birth,
+    this.type,
+    this.status,
+    this.token,
+    this.createdAt,
+    this.updatedAt,
+  });
+
+  factory Driver.fromJson(Map<String, dynamic> json) => Driver(
+    id: json["id"],
+    name: json["name"],
+    email: json["email"],
+    phone: json["phone"],
+    image: json["image"],
+    birth: json["birth"] == null ? null : json["birth"],
+    type: json["type"],
+    status: json["status"],
+    token: json["token"],
+    createdAt: json["created_at"] == null ? null :json["created_at"],
+    updatedAt: json["updated_at"] == null ? null :json["updated_at"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "name": name,
+    "email": email,
+    "phone": phone,
+    "image": image,
+    "birth": "${birth!.year.toString().padLeft(4, '0')}-${birth!.month.toString().padLeft(2, '0')}-${birth!.day.toString().padLeft(2, '0')}",
+    "type": type,
+    "status": status,
+    "token": token,
+    "created_at": "${createdAt!.year.toString().padLeft(4, '0')}-${createdAt!.month.toString().padLeft(2, '0')}-${createdAt!.day.toString().padLeft(2, '0')}",
+    "updated_at": "${updatedAt!.year.toString().padLeft(4, '0')}-${updatedAt!.month.toString().padLeft(2, '0')}-${updatedAt!.day.toString().padLeft(2, '0')}",
+  };
+}
 class SliderModel {
   final String? image;
   final String? link;

@@ -163,8 +163,9 @@ class _HomeDriverState extends State<HomeDriver> with TickerProviderStateMixin {
                           } else if (index == 1) {
                             /// MY ORDERS
                             Navigator.pop(context);
-                            Navigator.pushNamed(
-                                context, Routes.OrdersScreen);
+
+                            Navigator.of(context).pushNamed(Routes.OrdersScreen,arguments: false);
+
                           } else if (index == 2) {
                             ///  PROFITS
                             Navigator.pop(context);

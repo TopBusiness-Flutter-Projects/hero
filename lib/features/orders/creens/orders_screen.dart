@@ -2,18 +2,23 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hero/features/driver_trip/cubit/driver_trip_cubit.dart';
 import 'package:hero/features/home/cubit/home_cubit.dart';
+import 'package:hero/features/homedriver/cubit/home_driver_cubit.dart';
 
 import '../../../config/routes/app_routes.dart';
 import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/assets_manager.dart';
+import '../../../core/utils/dialogs.dart';
 import '../../../core/utils/getsize.dart';
 import '../../../core/widgets/back_button.dart';
 import '../../home/components/home_list_item.dart';
-import '../../notification/cubit/cubit/orders_cubit.dart';
+import '../cubit/cubit/orders_cubit.dart';
 
 class OrdersScreen extends StatefulWidget {
-  const OrdersScreen({super.key});
+  const OrdersScreen({super.key, required this.isUser});
+
+  final bool isUser;
 
   @override
   State<OrdersScreen> createState() => _OrdersScreenState();
@@ -28,9 +33,9 @@ class _OrdersScreenState extends State<OrdersScreen>
         // length: widget.allCategoriesModel!.count! + 1, vsync: this);
         length: 3,
         vsync: this);
-    context.read<OrdersCubit>().getAllTrips("new");
-    context.read<OrdersCubit>().getAllTrips("reject");
-    context.read<OrdersCubit>().getAllTrips("complete");
+    context.read<OrdersCubit>().getAllTrips("new", widget.isUser);
+    context.read<OrdersCubit>().getAllTrips("reject", widget.isUser);
+    context.read<OrdersCubit>().getAllTrips("complete", widget.isUser);
     super.initState();
   }
 
@@ -54,8 +59,7 @@ class _OrdersScreenState extends State<OrdersScreen>
                   listener: (context, state) {
                     // TODO: implement listener
                   },
-                  builder: (context, state) =>
-                 Row(
+                  builder: (context, state) => Row(
                     children: [
                       InkWell(
                         onTap: () {
@@ -66,7 +70,6 @@ class _OrdersScreenState extends State<OrdersScreen>
                           color: AppColors.grey3,
                           height: getSize(context) / 15,
                           width: getSize(context) / 15,
-
                         ),
                       ),
                       SizedBox(
@@ -127,13 +130,13 @@ class _OrdersScreenState extends State<OrdersScreen>
                     isScrollable: true,
                     onTap: (int value) {
                       if (value == 0) {
-                        cubit.getAllTrips("new");
+                        cubit.getAllTrips("new", widget.isUser);
                       }
                       if (value == 1) {
-                        cubit.getAllTrips("complete");
+                        cubit.getAllTrips("complete", widget.isUser);
                       }
                       if (value == 2) {
-                        cubit.getAllTrips("reject");
+                        cubit.getAllTrips("reject", widget.isUser);
                       }
                     },
                     tabs: [
@@ -159,12 +162,43 @@ class _OrdersScreenState extends State<OrdersScreen>
                                 shrinkWrap: true,
                                 physics: BouncingScrollPhysics(),
                                 itemBuilder: (context, index) {
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0),
-                                    child: HomeListItem(
-                                        isHome: false,
-                                        trip: cubit.newTrips![index]),
+                                  return BlocBuilder<HomeDriverCubit,HomeDriverState>(
+                                    builder: (context,state) {
+                                      return InkWell(
+                                        onTap: () {
+                                          if (!widget.isUser) {
+                                            if (context
+                                                    .read<HomeDriverCubit>()
+                                                    .driverDataModel
+                                                    .data !=
+                                                null) {
+                                              context
+                                                  .read<DriverTripCubit>()
+                                                  .getAcceptStage();
+                                              if (context
+                                                      .read<HomeDriverCubit>()
+                                                      .driverDataModel
+                                                      .data!
+                                                      .driverStatus ==
+                                                  0)
+                                                errorGetBar('أنت خارج الخدمة الآن');
+                                              else
+                                                Navigator.pushNamed(context,
+                                                    Routes.DriverTripScreen,
+                                                    arguments:
+                                                        cubit.newTrips![index]);
+                                            }
+                                          }
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 8.0),
+                                          child: HomeListItem(
+                                              isHome: false,
+                                              trip: cubit.newTrips![index]),
+                                        ),
+                                      );
+                                    }
                                   );
                                 },
                                 itemCount: cubit.newTrips?.length ?? 0,
@@ -184,7 +218,8 @@ class _OrdersScreenState extends State<OrdersScreen>
                                     onTap: () {
                                       Navigator.pushNamed(
                                           context, Routes.tripDetailsRoute,
-                                          arguments: cubit.completeTrips![index]);
+                                          arguments:
+                                              cubit.completeTrips![index]);
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(

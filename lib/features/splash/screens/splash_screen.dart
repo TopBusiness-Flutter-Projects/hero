@@ -35,11 +35,12 @@ class _SplashScreenState extends State<SplashScreen>     with TickerProviderStat
 
   Future<void> _getStoreUser() async {
     SignUpModel signUpModel = await Preferences.instance.getUserModel();
-    String userType = signUpModel.data!.type!;
+
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
       if (prefs.getString('user') != null) {
+        String userType = signUpModel.data!.type!;
 
         if (userType =='driver'){
           context.read<LoginCubit>().checkDocuments(context);
@@ -47,7 +48,6 @@ class _SplashScreenState extends State<SplashScreen>     with TickerProviderStat
         }else{
           Navigator.pushReplacementNamed(context, Routes.homeRoute);
         }
-
 
 
       }

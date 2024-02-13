@@ -650,7 +650,7 @@ double paymentMoney = 0;
   }
   CarouselController carouselController = CarouselController();
 
-  SettingsModel? settingsModel;
+  SettingsModel settingsModel=SettingsModel();
 bool isLoadingSettings = true;
   getSettings()async{
     emit(LoadingSettings());
@@ -669,7 +669,9 @@ bool isLoadingSettings = true;
   }
 
   void launchPhoneDialer(String phoneNumber) async {
-    String url = 'tel:$phoneNumber';
+
+
+    String url = 'tel:${settingsModel!.data!.phone}';
 
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(Uri.parse(url));
@@ -930,7 +932,7 @@ print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     )async{
    if(createTripModel!=null){
      emit(CancelTripLoading());
-     final response = await api.cancelTrip(tripId: createTripModel!.data!.id!);
+     final response = await api.cancelUserTrip(tripId: createTripModel!.data!.id!);
      response.fold((l) {
        errorGetBar("something wrong");
        emit(CancelTripFailure());

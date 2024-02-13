@@ -18,7 +18,8 @@ class EndPoints {
   static const String myServicesUrl = '${baseUrl}services/my_services';
   static const String updateProfileUrl = '${baseUrl}client/auth/update-profile';
   static const String settingsUrl = '${baseUrl}settings';
-  static const String allTripsUrl = '${baseUrl}userAllTrip';
+  static const String allUserTripsUrl = '${baseUrl}userAllTrip';
+  static const String allDriverTripsUrl = '${baseUrl}driverAllTrip';
   static const String serviceStoreUrl = '${baseUrl}services/store';
   static const String categoriesUrl = '${baseUrl}categories';
   static const String logoutUrl = '${baseUrl}logout';
@@ -36,6 +37,12 @@ class EndPoints {
   static const String updateDriverDocument = '${baseUrl}updateDriverDocument';
   static const String updateDriverDetails = '${baseUrl}updateDriverDetails';
   static const String changeDriverStatus = '${baseUrl}changeStatus';
+  static const String startQuickTrip = '${baseUrl}startQuickTrip';
+  static const String endQuickTrip = '${baseUrl}endQuickTrip';
+  static const String acceptTrip = '${baseUrl}acceptTrip';
+  static const String cancelTrip = '${baseUrl}cancelTrip';
+  static const String startTrip = '${baseUrl}startTrip';
+  static const String endTrip = '${baseUrl}endTrip';
 
 
   //************************ Google  ****************************************************

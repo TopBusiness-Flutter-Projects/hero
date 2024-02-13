@@ -4,7 +4,6 @@ import 'package:hero/core/remote/service.dart';
 
 import 'package:hero/features/login/cubit/login_cubit.dart';
 import 'package:hero/features/my_wallet/cubit/my_wallet_cubit.dart';
-import 'package:hero/features/notification/cubit/cubit/orders_cubit.dart';
 import 'package:hero/features/profits/cubit/profits_cubit.dart';
 import 'package:hero/features/requestlocation/cubit/request_location_cubit.dart';
 import 'package:hero/features/signup/cubit/signup_cubit.dart';
@@ -14,9 +13,11 @@ import 'core/api/base_api_consumer.dart';
 import 'core/api/dio_consumer.dart';
 import 'features/bike_details/cubit/bike_details_cubit.dart';
 import 'features/documents/cubit/upload_documents_cubit.dart';
+import 'features/driver_trip/cubit/driver_trip_cubit.dart';
 import 'features/edit_profile/cubit/edit_profile_cubit.dart';
 import 'features/home/cubit/home_cubit.dart';
 import 'features/homedriver/cubit/home_driver_cubit.dart';
+import 'features/orders/cubit/cubit/orders_cubit.dart';
 import 'features/trip_details/cubit/trip_details_cubit.dart';
 
 // import 'features/downloads_videos/cubit/downloads_videos_cubit.dart';
@@ -90,6 +91,12 @@ Future<void> setup() async {
     ),
    );serviceLocator.registerFactory(
     () => ProfitsCubit(
+      serviceLocator(),
+    ),
+   );
+
+serviceLocator.registerFactory(
+    () => DriverTripCubit(
       serviceLocator(),
     ),
    );

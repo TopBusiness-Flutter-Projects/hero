@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:math';
 import 'dart:ui' as ui;
 import 'package:bloc/bloc.dart';
 import 'package:easy_localization/easy_localization.dart' as easy;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:hero/core/models/end_quick_trip_model.dart';
 import 'package:hero/core/utils/assets_manager.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:location/location.dart' as loc;
@@ -17,6 +19,9 @@ import '../../../../../../core/remote/service.dart';
 import '../../../../../../core/utils/appwidget.dart';
 import '../../../../../../core/utils/custom_marker.dart';
 import '../../../../../../core/utils/dialogs.dart';
+import '../../../core/models/start_new_trip_model.dart';
+import '../../../core/utils/show_bottom_sheet.dart';
+import '../screen/widgets/enter_client_info_sheet.dart';
 
 part 'home_driver_state.dart';
 
@@ -45,11 +50,6 @@ class HomeDriverCubit extends Cubit<HomeDriverState> {
     checkAndRequestLocationPermission();
     getDriverData();
   }
-
-
-
-
-
   void switchInService(bool state,BuildContext context) {
 changeDriverStatus(context);
 
@@ -57,6 +57,14 @@ changeDriverStatus(context);
     emit(HomeDriverInService());
   }
   ////////
+
+  void setInitial(){
+    destinaion = LatLng(0, 0);
+    location_control = TextEditingController();
+   origin = "";
+    dest = "";
+    emit(SetInitialState());
+  }
 
   DriverDataModel driverDataModel=  DriverDataModel ();
 
@@ -67,14 +75,13 @@ changeDriverStatus(context);
       emit(FailureGEtDriverDataState());
     }, (r) {
       driverDataModel = r;
-
       if( r.data!.driverStatus != null)
       inService = r.data!.driverStatus ==1 ;
       emit(SuccessGEtDriverDataState());
     });
   }
 
-
+// Change driver status
   CheckStatusModel checkStatusModel = CheckStatusModel();
 
   void changeDriverStatus(BuildContext context) async {
@@ -96,7 +103,110 @@ changeDriverStatus(context);
 
     });
   }
+  // start quick trip
 
+  DateTime? startTime ;
+  String formattedTime = '${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}';
+
+
+  StartQuickTripModel startQuickTripModel = StartQuickTripModel();
+
+  void startQuickTrip(String name,phone,BuildContext context) async {
+    emit(LoadingStartQuickTripState());
+    AppWidget.createProgressDialog(context, "wait".tr());
+print(destinaion.latitude);
+print(destinaion.longitude);
+print(strartlocation.latitude);
+print(strartlocation.longitude);
+    final response = await api.startQuickTrip(
+        fromAddress: fromAddress,
+        fromLong: strartlocation.longitude.toString(),
+        fromLat: strartlocation.latitude.toString(),
+        toAddress: toAddress,
+        toLong: destinaion.longitude.toString(),
+        toLat: destinaion.latitude.toString(),
+        phone: phone,
+        name: name);
+
+    response.fold((l) {
+      Navigator.pop(context);
+      errorGetBar("error".tr());
+      emit(FailureStartQuickTripState());
+    }, (r) {
+      startQuickTripModel = r;
+      startTime = DateTime.now();
+      Navigator.pop(context);
+      successGetBar(r.message);
+      getEndStage();
+
+      emit(SuccessStartQuickTripState());
+
+    });
+  }
+  double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+    const double earthRadius = 6371; // Radius of the earth in kilometers
+    double dLat = _degreesToRadians(lat2 - lat1);
+    double dLon = _degreesToRadians(lon2 - lon1);
+    double a = sin(dLat / 2) * sin(dLat / 2) +
+        cos(_degreesToRadians(lat1)) *
+            cos(_degreesToRadians(lat2)) *
+            sin(dLon / 2) *
+            sin(dLon / 2);
+    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+    double distance = earthRadius * c; // Distance in kilometers
+    return distance;
+  }
+
+// Helper function to convert degrees to radians
+  double _degreesToRadians(double degrees) {
+    return degrees * pi / 180;
+  }
+
+
+
+  EndQuickTripModel endQuickTripModel = EndQuickTripModel();
+
+  String tripDistance='';
+
+  String tripTime='';
+  DateTime?  arrivalTime;
+  void endQuickTrip(BuildContext context) async {
+    arrivalTime= DateTime.now();
+
+
+   tripTime = arrivalTime!.difference(startTime!).inMinutes.toString();
+    print ('lllllllllllllllll ${startQuickTripModel.data!.phone!}');
+    double distance =calculateDistance(strartlocation.latitude, strartlocation.longitude, destinaion.latitude, destinaion.longitude);
+
+   tripDistance=distance. toStringAsFixed(2).toString();
+   emit(LoadingEndQuickTripState());
+    AppWidget.createProgressDialog(context, "wait".tr());
+print(destinaion.latitude);
+print(destinaion.longitude);
+print(strartlocation.latitude);
+print(strartlocation.longitude);
+    final response = await api.endQuickTrip(
+
+       phone: startQuickTripModel.data!.phone!,
+
+      distance: distance.toString(),
+      time: tripTime,
+        );
+
+    response.fold((l) {
+      Navigator.pop(context);
+      errorGetBar("error".tr());
+      emit(FailureEndQuickTripState());
+    }, (r) {
+      endQuickTripModel = r;
+      Navigator.pop(context);
+      successGetBar(r.message);
+
+      getSureStage();
+      emit(SuccessEndQuickTripState());
+
+    });
+  }
 
 //********************************************************************************//
   getmarker() async {
@@ -178,7 +288,8 @@ changeDriverStatus(context);
       },
     );
   }
-
+  String fromAddress ='';
+  String toAddress ='';
 
 // handle the on tab on map ( set the destination marker and draw the route , get the address)
   getLocation(LatLng argument, String title) async {
@@ -195,7 +306,10 @@ changeDriverStatus(context);
               .elementAt(0)
               .formattedAddress
               .replaceAll("Unnamed Road,", "");
-
+toAddress =r.results
+    .elementAt(0)
+    .formattedAddress
+    .replaceAll("Unnamed Road,", "");
           bitmapDescriptorto = await CustomeMarker(
             title: title.tr(),
             location: r.results
@@ -203,15 +317,21 @@ changeDriverStatus(context);
                 .formattedAddress
                 .replaceAll("Unnamed Road,", ""),
           ).toBitmapDescriptor();
+
               }
          else{
           bitmapDescriptorfrom = await CustomeMarker(
             title: title.tr(),
             location: r.results
-                .elementAt(0)
+             .elementAt(0)
+            // .addressComponents[0].shortName
                 .formattedAddress
                 .replaceAll("Unnamed Road,", ""),
           ).toBitmapDescriptor();
+          fromAddress =r.results
+              .elementAt(0)
+              .formattedAddress
+              .replaceAll("Unnamed Road,", "");
         }
        // draw the route
         getDirection(
@@ -224,10 +344,10 @@ changeDriverStatus(context);
     );
   }
 
-
+  String origin = "", dest = "";
 // draw the route ant it called twice search & get location
   getDirection(LatLng startPosition, LatLng endPosition) async {
-    String origin = "", dest = "";
+
     origin = startPosition.latitude.toString() +
         "," +
         startPosition.longitude.toString();
@@ -320,5 +440,19 @@ changeDriverStatus(context);
       // Location permission is not granted, handle accordingly (show a message, disable functionality, etc.)
       // ...
     }
+  }
+
+
+  //0 for end , 1 for sure
+
+  int tripStages =0;
+
+  getSureStage(){
+    tripStages =1;
+    emit(ChangeTripStageUIState());
+  }
+  getEndStage(){
+    tripStages =0;
+    emit(ChangeTripStageUIState());
   }
 }

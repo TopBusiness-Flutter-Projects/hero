@@ -22,6 +22,7 @@ class CustomTextField extends StatelessWidget {
     this.maxLengthOfCharacter,
     this.isAdd = false,
     this.isEnable = true,
+    this.onFieldSubmitted,
     this.fontSize,
     this.onchange,
     this.onTap,
@@ -43,6 +44,7 @@ class CustomTextField extends StatelessWidget {
   final bool isAdd;
   final double? fontSize;
   final int? maxLengthOfCharacter;
+  final void Function(String)? onFieldSubmitted;
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +68,7 @@ class CustomTextField extends StatelessWidget {
             fontWeight: FontWeight.w400,
             fontFamily: 'Cairo',
           ),
+          onFieldSubmitted: onFieldSubmitted,
           autofocus: false,
           decoration: InputDecoration(
             contentPadding: const EdgeInsets.all(1),

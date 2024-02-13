@@ -9,8 +9,10 @@ import 'package:hero/core/utils/getsize.dart';
 import 'package:hero/core/widgets/my_svg_widget.dart';
 import 'package:lite_rolling_switch/lite_rolling_switch.dart';
 
+import '../../../../../../core/utils/show_bottom_sheet.dart';
 import '../../../../../../core/widgets/custom_textfield.dart';
 import '../../../../cubit/home_driver_cubit.dart';
+import '../../../widgets/enter_client_info_sheet.dart';
 
 class ImmediateTripDriver extends StatefulWidget {
   const ImmediateTripDriver({super.key});
@@ -18,10 +20,8 @@ class ImmediateTripDriver extends StatefulWidget {
   @override
   State<ImmediateTripDriver> createState() => _ImmediateTripDriverState();
 }
-
 class _ImmediateTripDriverState extends State<ImmediateTripDriver> {
   HomeDriverCubit? cubit;
-
   @override
   Widget build(BuildContext context) {
     cubit = context.read<HomeDriverCubit>();
@@ -75,11 +75,11 @@ class _ImmediateTripDriverState extends State<ImmediateTripDriver> {
                       },
                       onMapCreated: (GoogleMapController controller) {
                         cubit!.mapController =
-                            controller;
-                        // Store the GoogleMapController
+                            controller;// Store the GoogleMapController
                       },
                       onTap: (argument) {
                         cubit!.getLocation(argument, "to");
+                        showMyBottomSheet(EnterClientInfo(), context);
                         // _customInfoWindowController.hideInfoWindow!();
                       },
                       onCameraMove: (position) {
@@ -123,6 +123,7 @@ class _ImmediateTripDriverState extends State<ImmediateTripDriver> {
                         validatorMessage: 'loaction_msg'.tr(),
                         horizontalPadding: 2,
                         textInputType: TextInputType.text,
+                        onFieldSubmitted: (p0) =>   showMyBottomSheet(EnterClientInfo(), context),
                         onchange: (p0) {
                           cubit!.search(p0);
                         },

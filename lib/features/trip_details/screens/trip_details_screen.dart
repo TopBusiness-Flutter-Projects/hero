@@ -89,8 +89,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                         ),
                         InkWell(
                           onTap: () {
-                            // context.read<HomeCubit>().tabsController.animateTo(0);
-                            Navigator.pushNamed(context, Routes.homeRoute);
+                           Navigator.pop(context);
                           },
                           child: Image.asset(
                             ImageAssets.backImage,
@@ -429,7 +428,10 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                             ElevatedButton(
                               onPressed: () async {
 
-                               cubit.giveRate(tripId: widget.trip.id!,description: cubit.commentController.text,context: context);
+                               cubit.giveRate(tripId: widget.trip.id!,
+
+                                   toId: widget.trip.driver!.id!,
+                                   description: cubit.commentController.text,context: context);
                              // Navigator.pop(context);
 
                               },

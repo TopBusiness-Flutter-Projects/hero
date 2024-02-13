@@ -37,7 +37,7 @@ final String vat;
         ],
         color: AppColors.white,
         borderRadius:
-        BorderRadius.circular(10),
+        BorderRadius.circular(16),
       ),
       child: Padding(
         padding: const EdgeInsets.all(13),

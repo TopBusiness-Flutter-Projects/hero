@@ -22,10 +22,13 @@ class TripDetailsCubit extends Cubit<TripDetailsState> {
   TextEditingController commentController = TextEditingController();
 
 
-  RateTripModel? rateTripModel;
-  giveRate({required int tripId , String? description , required BuildContext context })async{
+  RateModel? rateTripModel;
+  giveRate({required int tripId ,required int toId , String? description , required BuildContext context })async{
     emit(LoadingRatingState());
-    final response = await api.giveRate(tripId: tripId, rate: rate,description:description );
+    final response = await api.giveRate(tripId: tripId,
+        to: toId,
+
+        rate: rate,description:description );
     response.fold((l) {
       emit(RatingFailedState());
       Navigator.pop(context);
@@ -50,6 +53,7 @@ class TripDetailsCubit extends Cubit<TripDetailsState> {
       }
     });
   }
+
   Set<Marker> markers = {};
 
   setMarkers(Marker source , Marker? destination){

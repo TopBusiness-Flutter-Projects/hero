@@ -67,7 +67,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                     AboutHeroScreen(),
                     SafetyRulesScreen(),
                     HeroTripPolicyScreen(),
-                    OrdersScreen(),
+                    OrdersScreen(isUser: true),
                   ],
                 ),
                 Positioned(

@@ -138,7 +138,7 @@ class _HomeTabState extends State<HomeTab> {
                 InkWell(
                   onTap: () {
                     Navigator.pushNamed(
-                        context, Routes.OrdersScreen);
+                        context, Routes.OrdersScreen,arguments: true);
                   },
                   child: Text(
                     'all'.tr(),

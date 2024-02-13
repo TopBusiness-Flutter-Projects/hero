@@ -252,8 +252,13 @@ class _MyWalletScreenState extends State<MyWalletScreen> {
                                       ListView.separated(
                                         shrinkWrap: true,
                                           itemBuilder: (context, index) {
-                                            return CustomMyWalletWidget(time: cubit.myWalletModel.data!.trips![index].timeArrive!.toString(),
-                                            vat: cubit.myWalletModel.data!.trips![index].vat.toString(),);
+                                            return Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                              child: CustomMyWalletWidget(time:DateFormat('d\'${cubit.getDaySuffix(DateTime
+                                                  .parse(cubit.myWalletModel.data!.trips![index].timeArrive!.toString())
+                                                  .day)}\' MMM yyyy hh:mm a').format(DateTime.parse(cubit.myWalletModel.data!.trips![index].timeArrive!.toString())) ,
+                                              vat: cubit.myWalletModel.data!.trips![index].vat.toString(),),
+                                            );
                                           },
                                           separatorBuilder: (context, index) {
                                             return Divider(

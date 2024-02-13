@@ -18,15 +18,16 @@ class OrdersCubit extends Cubit<OrdersState> {
    List<NewTrip>? rejectedTrips;
 
 
-  getAllTrips(String type)async{
+  getAllTrips(String type,bool isUser)async{
     emit(LoadingGettingAllTripsState());
-    final response = await api.getAllTrips(type: type);
-
+    final response = await api.getAllTrips(type: type,isUser: isUser);
     response.fold((l) {
        emit(FailedGettingAllTripsState());
     }, (r) {
       if(r.code==200){
         if(type=="new"){
+          print('....${r.data.toString()}');
+          //completedTripsModel=r;
           newTrips = r.data;
           emit(SuccessGettingAllTripsState());
         }
@@ -35,8 +36,7 @@ class OrdersCubit extends Cubit<OrdersState> {
           emit(SuccessGettingAllTripsState());
         }
         else if (type == "complete"){
-          completeTrips = r.data;
-
+          completeTrips = r.data;  print('....${r.data.toString()}');
           emit(SuccessGettingAllTripsState());
         }
 

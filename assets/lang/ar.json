@@ -19,6 +19,8 @@
   "cancel": "الغاء",
   "from": "من",
   "to": "الى",
+  "startTrip": "بداية الرحلة",
+  "endTrip": "نهاية الرحلة",
   "Saturday": "السبت",
   "Sunday": "الأحد",
   "Monday": "الإثنين",
@@ -29,6 +31,7 @@
   "enterDate": "ادخل التاريخ",
   "errorDate": "تاريخ البدء يجب أن يكون قبل الانتهاء",
   "error": "حدث خطأ",
+
   "toktok_documents": "بيانات التوكتوك",
   "book_toktok_app": "تطبيق حجز التوكتوك الاكثر ثقة",
   "to_join": "للاستمتاع برحلتك الرجاء السماح لنا بمعرفة \n موقعك لحجز التوكتوك المناسب لك",
@@ -64,6 +67,7 @@
   "try_again": "حاول مرة اخرى",
   "current_governate": "المحافظة الحالية",
   "current_state": "المنطقة الحالية",
+  "acceptTrip": "تأكيد الرحلة",
 
   "toktok_type": "نوع التوكتوك",
   "toktok_model": "موديل التوكتوك",
@@ -106,6 +110,9 @@
   "email_msg": "من فضلك ادخل ايميل",
   "name_msg": "من فضلك ادخل اسمك",
   "search_location": "ابحث عن موقع الوجهة",
+  "arrivalTime": "وقت الوصول",
+  "rideTime": "وقت الركوب",
+
 
   "latestTransfers": "التحويلات الاخيرة",
   "tripPrices": "أجور الرحلة",
@@ -121,7 +128,9 @@
   "theWallet": "المحفظة",
   "totalProfits": "الارباح الكلية",
   "currency": "دع",
-
+  "enterClientInfo": "قم بادخال بيانات العميل ؟",
+  "enterName": "ادخل الاسم",
+  "enterPhone": "ادخل رقم التليفون",
   "wait": "انتظر",
   "select_image": "اختر صورة",
   "gallery": "المعرض",

@@ -107,7 +107,8 @@
   "email_msg": "Please enter an email",
   "name_msg": "Please enter your name",
   "search_location": "search for location",
-
+  "acceptTrip": "Confirm trip",
+  "startTrip": "Start trip",
   "latestTransfers": "Latest Transfers",
   "tripPrices": "Trip prices",
   "pay": "Pay",
@@ -122,6 +123,12 @@
   "theWallet": "The wallet",
   "totalProfits": "Total profits",
   "currency":  "I D",
+  "endTrip": "End trip",
+  "arrivalTime": "Arrival time",
+  "rideTime": "Ride time",
+  "enterClientInfo": "Enter client information",
+  "enterName": "Enter name",
+  "enterPhone": "Enter phone",
 
   "select_image": "Select Image Source",
   "camera": "Camera",

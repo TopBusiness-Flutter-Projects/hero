@@ -14,21 +14,22 @@ class CustomeMarker extends StatelessWidget {
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Material(
-        borderRadius: BorderRadius.all(Radius.circular(getSize(context)/16)),
+        borderRadius: BorderRadius.all(Radius.circular(15)),
         color: AppColors.white,
         child: Container(
-   height: 90,
-          width: 300,
+   height: 80,
+          width: 200,
           decoration: BoxDecoration(
               color: AppColors.white,
               borderRadius:
-                  BorderRadius.all(Radius.circular(getSize(context) / 16))),
+                  BorderRadius.all(Radius.circular(15))),
           child: Center(
             child: Row(
               children: [
                 Image.asset(ImageAssets.marker2),
                 Flexible(
                   child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -42,7 +43,7 @@ class CustomeMarker extends StatelessWidget {
                       Flexible(
                         child: Text(
                           location,
-                          maxLines: 3,
+                          maxLines: 2,
                           softWrap: true,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(

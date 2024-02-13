@@ -5,10 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hero/core/utils/app_colors.dart';
+import 'package:hero/core/utils/dialogs.dart';
 import 'package:hero/core/utils/getsize.dart';
+import 'package:hero/features/homedriver/screen/widgets/enter_client_info_sheet.dart';
 import 'package:lite_rolling_switch/lite_rolling_switch.dart';
 
 import '../../../../../../config/routes/app_routes.dart';
+import '../../../../../../core/utils/show_bottom_sheet.dart';
 import '../../../../../../core/widgets/custom_button.dart';
 import '../../../../cubit/home_driver_cubit.dart';
 
@@ -153,15 +156,25 @@ class _HomeMapDriverState extends State<HomeMapDriver> {
           floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
           floatingActionButton: Padding(
             padding: EdgeInsets.only(bottom: getSize(context) / 5),
-            child: CustomButton(
+            child:
+            cubit!.driverDataModel.data != null ?
+
+
+
+            CustomButton(
               width: getSize(context) / 3,
               text: 'immediate_trip'.tr(),
               color: AppColors.primary,
               onClick: () {
-                Navigator.pushNamed(
-                    context, Routes.ImmediateTripDriver);
+                if (cubit!.driverDataModel.data!.driverStatus == 0)
+                  errorGetBar('أنت خارج الخدمة الآن');
+                else
+               Navigator.pushNamed(
+                   context, Routes.ImmediateTripDriver);
               },
-            ),
+            ):
+            Container(child: null,)
+            ,
           ),
         );
       },

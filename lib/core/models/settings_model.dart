@@ -39,12 +39,14 @@ class Data {
   final String? support;
   final String? safetyRoles;
   final String? polices;
+  final String? phone;
+
   final int? km;
   final int? vat;
 
-  Data({
+  Data( {
     this.tripInsurance,
-    this.rewards,
+    this.rewards,this.phone,
     this.about,
     this.support,
     this.safetyRoles,
@@ -58,6 +60,7 @@ class Data {
     rewards: json["rewards"],
     about: json["about"],
     support: json["support"],
+    phone: json["phone"],
     safetyRoles: json["safety_roles"],
     polices: json["polices"],
     km: json["km"],
@@ -69,6 +72,7 @@ class Data {
     "rewards": rewards,
     "about": about,
     "support": support,
+    "phone": phone,
     "safety_roles": safetyRoles,
     "polices": polices,
     "km": km,
