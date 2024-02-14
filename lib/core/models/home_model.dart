@@ -392,7 +392,7 @@ class User {
   final String? image;
   final DateTime? birth;
   final String? type;
-  final String? status;
+  final dynamic status;
   final String? token;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -447,7 +447,7 @@ class Driver {
   String? image;
   dynamic birth;
   String? type;
-  String? status;
+  dynamic status;
   String? token;
   dynamic createdAt;
   dynamic updatedAt;

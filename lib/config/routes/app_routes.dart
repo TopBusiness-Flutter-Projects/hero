@@ -17,6 +17,7 @@ import '../../features/driver_waiting/screens/driver_waiting.dart';
 import '../../features/edit_profile/screens/edit_profile_screen.dart';
 import '../../features/favourite_locations/screens/favourite_locations_screen.dart';
 import '../../features/hero_trip_policy/screens/hero_trip_policy_screen.dart';
+import '../../features/home/screen/add_trip_tab.dart';
 import '../../features/homedriver/screen/home_driver.dart';
 import '../../features/homedriver/screen/pages/home_map_driver/screens/immediate_trip_driver.dart';
 import '../../features/homedriver/screen/pages/home_map_driver/screens/quick_trip_progress.dart';
@@ -27,6 +28,7 @@ import '../../features/profits/screens/profits_screen.dart';
 import '../../features/requestlocation/screens/requestlocation.dart';
 import '../../features/signup/screens/signup.dart';
 import '../../features/trip_service/screens/trip_insurance_service_screen.dart';
+import '../../features/user_trip/screens/user_in_trip_screen.dart';
 import '../../features/usertype/screens/usertype.dart';
 import '../../features/verfication/verification.dart';
 
@@ -66,7 +68,9 @@ class Routes {
   static const String ProfitsScreen = '/ProfitsScreen';
   static const String ImmediateTripDriver = '/ImmediateTripDriver';
   static const String DriverTripScreen = '/DriverTripScreen';
+  static const String UserTripScreen = '/UserTripScreen';
   static const String QuickTripScreen = '/QuickTripScreen';
+  static const String AddTripTab = '/AddTripTab';
 
 }
 
@@ -86,6 +90,10 @@ class AppRoutes {
    case Routes.verificationScreenRoute:
         return MaterialPageRoute(
           builder: (context) => const Verification(),
+        ); case Routes.AddTripTab:
+      bool isInTrip=settings.arguments as bool;
+        return MaterialPageRoute(
+          builder: (context) =>  AddTripTab(isInTrip:isInTrip),
         );
  case Routes.editProfileRoute:
    String type=settings.arguments as String;
@@ -194,6 +202,11 @@ case Routes.ImmediateTripDriver:
         return MaterialPageRoute(
 
           builder: (context) =>  DriverTripScreen(trip: trip),
+        ); case Routes.UserTripScreen:
+     final trip = settings.arguments as NewTrip;
+        return MaterialPageRoute(
+
+          builder: (context) =>  UserTripScreen(trip: trip),
         );
   case Routes.QuickTripScreen:
      final trip = settings.arguments as StartNewTripData;

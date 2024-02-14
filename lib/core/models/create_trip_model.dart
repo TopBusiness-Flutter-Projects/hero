@@ -189,12 +189,14 @@
 
 import 'dart:convert';
 
+import 'home_model.dart';
+
 CreateTripModel createTripModelFromJson(String str) => CreateTripModel.fromJson(json.decode(str));
 
 String createTripModelToJson(CreateTripModel data) => json.encode(data.toJson());
 
 class CreateTripModel {
-  final Data? data;
+  final NewTrip? data;
   final String? message;
   final int? code;
 
@@ -205,7 +207,7 @@ class CreateTripModel {
   });
 
   factory CreateTripModel.fromJson(Map<String, dynamic> json) => CreateTripModel(
-    data: json["data"] == null ? null : Data.fromJson(json["data"]),
+    data: json["data"] == null ? null : NewTrip.fromJson(json["data"]),
     message: json["message"],
     code: json["code"],
   );

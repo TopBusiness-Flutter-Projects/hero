@@ -58,7 +58,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   controller: context.read<HomeCubit>().tabsController,
                   children: [
                     HomeTab(),
-                    AddTripTab(),
+                    HomeTab(),
                     NotificationScreen(),
                     FavouriteLocationsScreen(),
                     FavouriteLocationsScreen(),

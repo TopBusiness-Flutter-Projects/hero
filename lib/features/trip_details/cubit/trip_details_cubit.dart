@@ -80,7 +80,6 @@ class TripDetailsCubit extends Cubit<TripDetailsState> {
         Marker(
           markerId: const MarkerId("currentLocation"),
           icon:bitmapDescriptorfrom!,
-
           position: LatLng(currentLocation?.latitude??0,
               currentLocation?.longitude??0),
         ),
@@ -113,9 +112,7 @@ class TripDetailsCubit extends Cubit<TripDetailsState> {
 
     return distance;
   }
-
   double radians(double degrees) {
     return degrees * (pi / 180);
   }
-
 }

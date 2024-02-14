@@ -22,8 +22,8 @@ import '../cubit/home_cubit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class AddTripTab extends StatefulWidget {
-  AddTripTab({super.key});
-
+  AddTripTab({super.key, required this.isInTrip});
+final bool isInTrip;
   @override
   State<AddTripTab> createState() => _AddTripTabState();
 }
@@ -51,7 +51,16 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
     context.read<HomeCubit>().getCurrentLocation();
     // gifController = FlutterGifController(vsync: this);
     context.read<HomeCubit>().checkAndRequestLocationPermission();
+    if(widget.isInTrip){
+      if(context.read<HomeCubit>().checkTripStatusModel.data != null)
+      context.read<HomeCubit>().destination=LatLng(double.parse(context.read<HomeCubit>().checkTripStatusModel.data!.toLat!) , double.parse(context.read<HomeCubit>().checkTripStatusModel.data!.toLong!));
+else{
+  print('nulllllllll');
+      }
 
+ //context.read<HomeCubit>().getLocation(LatLng( double.parse(context.read<HomeCubit>().checkTripStatusModel.data!.fromLat!) , double.parse(context.read<HomeCubit>().checkTripStatusModel.data!.fromLong!)), "from");
+ //context.read<HomeCubit>().getLocation(LatLng( double.parse(context.read<HomeCubit>().checkTripStatusModel.data!.toLat!) , double.parse(context.read<HomeCubit>().checkTripStatusModel.data!.toLong!)), "to");
+}
 
   }
 
@@ -62,128 +71,136 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
     return WillPopScope(
       onWillPop: () async {
         context.read<HomeCubit>().latLngList = [];
-        context.read<HomeCubit>().tabsController.animateTo(0);
+        Navigator.pop(context);
         return true;
       },
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        //  key: scaffoldKey,
-        body: BlocConsumer<HomeCubit, HomeState>(
-          listener: (context, state) {
-         if(state is SuccessCreateSchedualTripState ){
-           Navigator.pop(context);
-
-         }
-          },
-          builder: (context, state) {
-            HomeCubit cubit = context.read<HomeCubit>();
-            return Stack(
-              children: [
-                cubit.currentLocation == null
-                    ? const Center(child: Text("Loading"))
-                    : GoogleMap(
-                        initialCameraPosition: CameraPosition(
-                          target: LatLng(
-                            cubit.currentLocation != null
-                                ? cubit.currentLocation!.latitude!
-                                : 0,
-                            cubit.currentLocation != null
-                                ? cubit.currentLocation!.longitude!
-                                : 0,
+      child: SafeArea(
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          //  key: scaffoldKey,
+          body: BlocConsumer<HomeCubit, HomeState>(
+            listener: (context, state) {
+           if(state is SuccessCreateSchedualTripState ){
+             Navigator.pop(context);
+           }
+            },
+            builder: (context, state) {
+              HomeCubit cubit = context.read<HomeCubit>();
+              return Stack(
+                children: [
+                  cubit.currentLocation == null
+                      ? const Center(child: Text("Loading"))
+                      : GoogleMap(
+                          initialCameraPosition: CameraPosition(
+                            target: LatLng(
+                              cubit.currentLocation != null
+                                  ? cubit.currentLocation!.latitude!
+                                  : 0,
+                              cubit.currentLocation != null
+                                  ? cubit.currentLocation!.longitude!
+                                  : 0,
+                            ),
+                            zoom: 13.5,
                           ),
-                          zoom: 13.5,
-                        ),
-                        markers: cubit.markers,
-                        //       {
-                        //         Marker(
-                        //           markerId: const MarkerId("currentLocation"),
-                        //           icon: cubit.currentLocationIcon,
-                        //
-                        //           position: LatLng(cubit.currentLocation!.latitude!,
-                        //               cubit.currentLocation!.longitude!),
-                        //         ),
-                        //         // Marker(
-                        //         //   markerId: const MarkerId("source"),
-                        //         //   infoWindow: InfoWindow(
-                        //         //     title: "from",
-                        //         //   ),
-                        //         //  // icon: customMarkerIcon,
-                        //         //   icon: cubit.sourceIcon,
-                        //         //   position: cubit.sourceLocation,
-                        //         // ),
-                        //         Marker(
-                        //           markerId: MarkerId("destination"),
-                        //           infoWindow: InfoWindow(
-                        //             title: "to",
-                        //           ),
-                        //           icon: cubit.destinationIcon,
-                        //           position: cubit.destinationH,
-                        //         ),
-                        //       //  markers.first
-                        //       },
-                        onMapCreated: (GoogleMapController mapController) {
-                          cubit.mapController = mapController;
-                        },
-                        onTap: (argument) {
+                          markers: cubit.markers,
+                          //       {
+                          //         Marker(
+                          //           markerId: const MarkerId("currentLocation"),
+                          //           icon: cubit.currentLocationIcon,
+                          //
+                          //           position: LatLng(cubit.currentLocation!.latitude!,
+                          //               cubit.currentLocation!.longitude!),
+                          //         ),
+                          //         // Marker(
+                          //         //   markerId: const MarkerId("source"),
+                          //         //   infoWindow: InfoWindow(
+                          //         //     title: "from",
+                          //         //   ),
+                          //         //  // icon: customMarkerIcon,
+                          //         //   icon: cubit.sourceIcon,
+                          //         //   position: cubit.sourceLocation,
+                          //         // ),
+                          //         Marker(
+                          //           markerId: MarkerId("destination"),
+                          //           infoWindow: InfoWindow(
+                          //             title: "to",
+                          //           ),
+                          //           icon: cubit.destinationIcon,
+                          //           position: cubit.destinationH,
+                          //         ),
+                          //       //  markers.first
+                          //       },
+                          onMapCreated: (GoogleMapController mapController) {
+                            cubit.mapController = mapController;
+                          },
+                          onTap: (argument) {
 
-                          if (context.read<HomeCubit>().flag == 1) {
-                            //   cubit.getLocation(argument);
                             cubit.getLocation(argument, "to");
-                          } else {}
+                          //  if(cubit.currentEnumStatus == MyEnum.defaultState){
+                            // if (context.read<HomeCubit>().flag == 1) {
+                            //   //   cubit.getLocation(argument);
+                            //
+                            // } else {}
+                         // // }
 
-                          //  _customInfoWindowController.hideInfoWindow!();
-                        },
-                        onCameraMove: (position) {
-                          if (cubit.strartlocation != position.target) {
-                           // print(cubit.strartlocation);
-                            cubit.strartlocation = position.target;
-                            cubit.getCurrentLocation();
-                          }
-                          // _customInfoWindowController.hideInfoWindow!();
 
-                          //  _customInfoWindowController.hideInfoWindow!();
-                        },
-                        polylines: {
-                          Polyline(
-                            polylineId: const PolylineId("route"),
-                            points: cubit.latLngList,
-                            color: const Color(0xFF7B61FF),
-                            width: 6,
-                          ),
-                        },
+
+
+
+                            //  _customInfoWindowController.hideInfoWindow!();
+                          },
+                          onCameraMove: (position) {
+                            if (cubit.strartlocation != position.target) {
+                             // print(cubit.strartlocation);
+                              cubit.strartlocation = position.target;
+                              cubit.getCurrentLocation();
+                            }
+                            // _customInfoWindowController.hideInfoWindow!();
+
+                            //  _customInfoWindowController.hideInfoWindow!();
+                          },
+                          polylines: {
+                            Polyline(
+                              polylineId: const PolylineId("route"),
+                              points: cubit.latLngList,
+                              color: const Color(0xFF7B61FF),
+                              width: 6,
+                            ),
+                          },
+                        ),
+                  DefaultWidget(),
+                     // cubit.chooseWidget(cubit.currentEnumStatus),
+
+
+                  //   // default case
+                  // DefaultWidget(),
+                  // // loading state
+                  // LoadingWidget(),
+                  // // //success state
+                  // SuccessWidget(),
+                  // // //failure state
+                  // FailureWidget(),
+
+                  //back button
+                  Positioned(
+                    top: getSize(context) * 0.01,
+                    right: 0,
+                    left: 0,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10.0, horizontal: 12),
+                      child: Row(
+                        children: [
+                          CustomBackButton(),
+                          Spacer(),
+                        ],
                       ),
-                
-                    cubit.chooseWidget(cubit.currentEnumStatus),
-                
-                
-                //   // default case
-                // DefaultWidget(),
-                // // loading state
-                // LoadingWidget(),
-                // // //success state
-                // SuccessWidget(),
-                // // //failure state
-                // FailureWidget(),
-
-                //back button
-                Positioned(
-                  top: getSize(context) * 0.01,
-                  right: 0,
-                  left: 0,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10.0, horizontal: 12),
-                    child: Row(
-                      children: [
-                        CustomBackButton(),
-                        Spacer(),
-                      ],
                     ),
                   ),
-                ),
-              ],
-            );
-          },
+                ],
+              );
+            },
+          ),
         ),
       ),
     );

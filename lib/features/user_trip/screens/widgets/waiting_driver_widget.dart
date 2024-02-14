@@ -3,27 +3,29 @@ import 'dart:async';
 import 'package:easy_localization/easy_localization.dart ' as easy;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hero/features/home/cubit/home_cubit.dart';
 
-import '../../../core/utils/app_colors.dart';
-import '../../../core/utils/assets_manager.dart';
-import '../../../core/utils/dialogs.dart';
-import '../../../core/utils/getsize.dart';
-import '../../../core/widgets/custom_button.dart';
-import '../cubit/home_cubit.dart';
+import '../../../../config/routes/app_routes.dart';
+import '../../../../core/utils/app_colors.dart';
+import '../../../../core/utils/assets_manager.dart';
+import '../../../../core/utils/getsize.dart';
+import '../../../../core/widgets/custom_button.dart';
 
-class LoadingWidget extends StatefulWidget {
 
-  const LoadingWidget({super.key});
+class WaitingDriverWidget extends StatefulWidget {
+
+  const WaitingDriverWidget({super.key});
+
   @override
-  State<LoadingWidget> createState() => _LoadingWidgetState();
+  State<WaitingDriverWidget> createState() => _WaitingDriverWidgetState();
 }
 
-class _LoadingWidgetState extends State<LoadingWidget> {
+class _WaitingDriverWidgetState extends State<WaitingDriverWidget> {
   @override
   void initState() {
 
     Timer.periodic(Duration(seconds: 10), (timer) {
-  //    context.read<HomeCubit>().getTripStatus();
+     // context.read<HomeCubit>().getTripStatus();
     });
     super.initState();
   }
@@ -32,12 +34,12 @@ class _LoadingWidgetState extends State<LoadingWidget> {
     return BlocConsumer<HomeCubit, HomeState>(
       listener: (context, state) {
         if (state is SuccessCheckTripStatusState){
-          if(context.read<HomeCubit>().checkTripStatusModel.data != null){
-            if (context.read<HomeCubit>().checkTripStatusModel.data!.type == 'accept'){
-              context.read<HomeCubit>().currentEnumStatus = MyEnum.success;
-              successGetBar("تم قبول رحلتك من قبل ${context.read<HomeCubit>().checkTripStatusModel.data!.driver!.name!}");
-            }
-          }
+        // if(context.read<HomeCubit>().checkTripStatusModel.data != null){
+        //   if (context.read<HomeCubit>().checkTripStatusModel.data!.type == 'accept'){
+        //     context.read<HomeCubit>().currentEnumStatus = MyEnum.success;
+        //     successGetBar("تم قبول رحلتك من قبل ${context.read<HomeCubit>().checkTripStatusModel.data!.driver!.name!}");
+        //   }
+        // }
         }
       },
       builder: (context, state) {
@@ -106,9 +108,10 @@ class _LoadingWidgetState extends State<LoadingWidget> {
                       onClick: () {
 
 
-                        cubit.tabsController.animateTo(0);
-                        cubit.currentEnumStatus = MyEnum.defaultState;
+                       // cubit.tabsController.animateTo(0);
+                       // cubit.currentEnumStatus = MyEnum.defaultState;
                         cubit.cancelTrip(context);
+
                       },
                       width: getSize(context) * 0.9,
                       borderRadius: 16,
@@ -116,7 +119,7 @@ class _LoadingWidgetState extends State<LoadingWidget> {
                   ],
                 ),
               ));
-       // );
+        // );
       },
     );
   }

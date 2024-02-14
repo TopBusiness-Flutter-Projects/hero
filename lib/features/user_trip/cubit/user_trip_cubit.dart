@@ -15,13 +15,12 @@ import '../../../core/remote/service.dart';
 import '../../../core/utils/appwidget.dart';
 import '../../../core/utils/custom_marker.dart';
 import '../../../core/utils/dialogs.dart';
-import '../../homedriver/cubit/home_driver_cubit.dart';
 import '../../orders/cubit/cubit/orders_cubit.dart';
 
-part 'driver_trip_state.dart';
+part 'user_trip_state.dart';
 
-class DriverTripCubit extends Cubit<DriverTripState> {
-  DriverTripCubit(this.api) : super(DriverTripInitial());
+class UserTripCubit extends Cubit<UserTripState> {
+  UserTripCubit(this.api) : super(DriverTripInitial());
   ServiceApi api;
 
   double rate = 0;
@@ -137,107 +136,88 @@ class DriverTripCubit extends Cubit<DriverTripState> {
     return degrees * (pi / 180);
   }
 
-  ///// Driver Trips ///////
-// accept trip
-  DriverTripsModel acceptTripModel = DriverTripsModel();
-
-  void acceptTrip(BuildContext context, String id) async {
-    print('dddddddddddddddddddddd');
-    print(context.read<HomeDriverCubit>().currentLocation!.latitude.toString());
-    emit(LoadingAcceptTripState());
-    AppWidget.createProgressDialog(context, "wait".tr());
-
-    final response = await api.acceptTrip(tripId: id,
-        lat: context.read<HomeDriverCubit>().currentLocation!.latitude.toString()??"0",
-        long: context.read<HomeDriverCubit>().currentLocation!.longitude.toString()??"0"
-    );
-    print('ssssssssssss ${response.toString()}');
-
-    response.fold((l) {
-      Navigator.pop(context);
-      errorGetBar("error".tr());
-      emit(FailureAcceptTripState());
-    }, (r) {
-      if (r.data != null){
-        acceptTripModel = r;
-      successGetBar(r.message);
-      Navigator.pop(context);
-      getStartStage();
-      emit(SuccessAcceptTripState());}
-      else{
-        Navigator.pop(context);
-        errorGetBar(r.message!);
-        emit(SuccessAcceptTripState());
-        Navigator.pop(context);
-        context.read<OrdersCubit>().getAllTrips("new",false);
-      }
-    });
-  }
-  // start trip
-  DriverTripsModel startTripModel = DriverTripsModel();
-  DateTime? startTime ;
-  void startTrip(BuildContext context, String id) async {
-    emit(LoadingStartTripState());
-    AppWidget.createProgressDialog(context, "wait".tr());
-
-    final response = await api.startTrip(tripId: id,
-    lat: context.read<HomeDriverCubit>().currentLocation!.latitude.toString()??"0",
-      long: context.read<HomeDriverCubit>().currentLocation!.longitude.toString()??"0"
-
-    );
-
-    response.fold((l) {
-      Navigator.pop(context);
-      errorGetBar("error".tr());
-      emit(FailureStartTripState());
-    }, (r) {
-      startTripModel = r;
-      startTime = DateTime.now();
-
-
-      if (r.data != null){
-        successGetBar(r.message);
-        getEndStage();
-        Navigator.pop(context);
-        emit(SuccessStartTripState());
-      }
-      else{
-        Navigator.pop(context);
-        errorGetBar(r.message!);
-      }
-
-
-    });
-  }
-
-  DriverTripsModel cancelTripModel = DriverTripsModel();
-
-  void cancelTrip(BuildContext context, String id) async {
-    emit(LoadingCancelTripState());
-    AppWidget.createProgressDialog(context, "wait".tr());
-
-    final response = await api.cancelTrip(tripId: id);
-
-    response.fold((l) {
-      Navigator.pop(context);
-      errorGetBar("error".tr());
-      emit(FailureCancelTripState());
-    }, (r) {
-      cancelTripModel = r;
-      successGetBar(r.message);
-
-      Navigator.pop(context);
-
-
-
-
-      Navigator.pushNamedAndRemoveUntil(
-          context, Routes.homedriverRoute, (route) => false);
-
-
-      emit(SuccessCancelTripState());
-    });
-  }
+//   ///// Driver Trips ///////
+// // accept trip
+//   DriverTripsModel acceptTripModel = DriverTripsModel();
+//
+//   void acceptTrip(BuildContext context, String id) async {
+//     emit(LoadingAcceptTripState());
+//     AppWidget.createProgressDialog(context, "wait".tr());
+//
+//     final response = await api.acceptTrip(tripId: id);
+//     print('ssssssssssss ${response.toString()}');
+//
+//     response.fold((l) {
+//       Navigator.pop(context);
+//       errorGetBar("error".tr());
+//       emit(FailureAcceptTripState());
+//     }, (r) {
+//       if (r.data != null){
+//         acceptTripModel = r;
+//       successGetBar(r.message);
+//       Navigator.pop(context);
+//       //getStartStage();
+//       emit(SuccessAcceptTripState());}
+//       else{
+//         Navigator.pop(context);
+//         errorGetBar(r.message!);
+//         emit(SuccessAcceptTripState());
+//         Navigator.pop(context);
+//         context.read<OrdersCubit>().getAllTrips("new",false);
+//       }
+//     });
+//   }
+//   // start trip
+//   DriverTripsModel startTripModel = DriverTripsModel();
+//   DateTime? startTime ;
+//   void startTrip(BuildContext context, String id) async {
+//     emit(LoadingStartTripState());
+//     AppWidget.createProgressDialog(context, "wait".tr());
+//
+//     final response = await api.startTrip(tripId: id);
+//
+//     response.fold((l) {
+//       Navigator.pop(context);
+//       errorGetBar("error".tr());
+//       emit(FailureStartTripState());
+//     }, (r) {
+//       startTripModel = r;
+//       startTime = DateTime.now();
+//       successGetBar(r.message);
+// //getEndStage();
+//       Navigator.pop(context);
+//       emit(SuccessStartTripState());
+//     });
+//   }
+//
+//   DriverTripsModel cancelTripModel = DriverTripsModel();
+//
+//   void cancelTrip(BuildContext context, String id) async {
+//     emit(LoadingCancelTripState());
+//     AppWidget.createProgressDialog(context, "wait".tr());
+//
+//     final response = await api.cancelTrip(tripId: id);
+//
+//     response.fold((l) {
+//       Navigator.pop(context);
+//       errorGetBar("error".tr());
+//       emit(FailureCancelTripState());
+//     }, (r) {
+//       cancelTripModel = r;
+//       successGetBar(r.message);
+//
+//       Navigator.pop(context);
+//
+//
+//
+//
+//       Navigator.pushNamedAndRemoveUntil(
+//           context, Routes.homedriverRoute, (route) => false);
+//
+//
+//       emit(SuccessCancelTripState());
+//     });
+//   }
 
   DriverTripsModel endTripModel = DriverTripsModel();
 
@@ -245,53 +225,58 @@ class DriverTripCubit extends Cubit<DriverTripState> {
 
   String tripTime='';
   DateTime?  arrivalTime;
-  void endTrip(BuildContext context, String id) async {
-    arrivalTime= DateTime.now();
+  // void endTrip(BuildContext context, String id) async {
+  //   arrivalTime= DateTime.now();
+  //
+  //
+  //   tripTime = arrivalTime!.difference(startTime!).inMinutes.toString();
+  //   double distance =calculateDistance(strartlocation, destinaion,);
+  //
+  //   tripDistance=distance. toStringAsFixed(2).toString();
+  //   emit(LoadingEndTripState());
+  //   AppWidget.createProgressDialog(context, "wait".tr());
+  //
+  //   final response = await api.endTrip(
+  //       time: tripTime,
+  //       distance: distance.toString(),
+  //       tripId: id);
+  //
+  //
+  //   response.fold((l) {
+  //     Navigator.pop(context);
+  //     errorGetBar("error".tr());
+  //     emit(FailureEndTripState());
+  //   }, (r) {
+  //     endTripModel = r;
+  //     successGetBar(r.message);
+  //
+  //     Navigator.pop(context);
+  //     emit(SuccessEndTripState());
+  //   });
+  // }
 
-
-    tripTime = arrivalTime!.difference(startTime!).inMinutes.toString();
-    double distance =calculateDistance(strartlocation, destinaion,);
-
-    tripDistance=distance. toStringAsFixed(2).toString();
-    emit(LoadingEndTripState());
-    AppWidget.createProgressDialog(context, "wait".tr());
-
-    final response = await api.endTrip(
-        time: tripTime,
-        distance: distance.toString(),
-        tripId: id);
-
-
-    response.fold((l) {
-      Navigator.pop(context);
-      errorGetBar("error".tr());
-      emit(FailureEndTripState());
-    }, (r) {
-      endTripModel = r;
-      successGetBar(r.message);
-
-      Navigator.pop(context);
-      emit(SuccessEndTripState());
-    });
-  }
-
-  //0 for accept , 1 for start , 2  for end
+  //0 for waitingDriver , 1 for driverAcceptTheTrip , 2  for driverStart the trip ,
+  //3 for completed
 int tripStages =0;
 
-  getStartStage(){
+  getDriverAcceptTripStage(){
     tripStages =1;
     emit(ChangeTripStageUIState());
   }
-  getEndStage(){
+  getDriverStartTripStage(){
     tripStages =2;
     emit(ChangeTripStageUIState());
-  } getAcceptStage(){
+  } getWaitingDriverStage(){
     tripStages =0;
     emit(ChangeTripStageUIState());
+  }getCompletedStage(){
+    tripStages =3;
+    emit(ChangeTripStageUIState());
   }
+
 //// rate trip
   RateModel rateModel = RateModel();
-  void rateUser(BuildContext context,String tripId,String rate,String to,String description) async {
+  void rateTrip(BuildContext context,String tripId,String rate,String to,String description) async {
     emit(LoadingRateTripState());
     AppWidget.createProgressDialog(context, "wait".tr());
 
@@ -307,7 +292,7 @@ int tripStages =0;
       successGetBar(r.message);
       Navigator.pop(context);
       Navigator.pushNamedAndRemoveUntil(
-          context, Routes.homedriverRoute, (route) => false);
+          context, Routes.homeRoute, (route) => false);
       commentController.clear();
       emit(SuccessRateTripState());
     });

@@ -1,28 +1,27 @@
 import 'package:easy_localization/easy_localization.dart%20';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../config/routes/app_routes.dart';
-import '../../../core/utils/app_colors.dart';
-import '../../../core/utils/assets_manager.dart';
-import '../../../core/utils/dialogs.dart';
-import '../../../core/utils/getsize.dart';
-import '../cubit/home_cubit.dart';
+import 'package:hero/config/routes/app_routes.dart';
+import 'package:hero/features/user_trip/cubit/user_trip_cubit.dart';
+import '../../../../core/utils/app_colors.dart';
+import '../../../../core/utils/assets_manager.dart';
+import '../../../../core/utils/dialogs.dart';
+import '../../../../core/utils/getsize.dart';
 import 'dart:async';
-
-class SuccessWidget extends StatefulWidget {
-  const SuccessWidget({super.key});
-
+import '../../../home/cubit/home_cubit.dart';
+class TripINProgressWidget extends StatefulWidget {
+  const TripINProgressWidget({super.key});
   @override
-  State<SuccessWidget> createState() => _SuccessWidgetState();
+  State<TripINProgressWidget> createState() => _TripINProgressWidgetState();
 }
 
-class _SuccessWidgetState extends State<SuccessWidget> {
+class _TripINProgressWidgetState extends State<TripINProgressWidget> {
   @override
   void initState() {
 
     Timer.periodic(Duration(seconds: 10), (timer) {
-      context.read<HomeCubit>().getTripStatus();
+
+      //   context.read<HomeCubit>().getTripStatus();
     });
     super.initState();
   }
@@ -34,13 +33,10 @@ class _SuccessWidgetState extends State<SuccessWidget> {
         if (state is SuccessCheckTripStatusState){
           if(context.read<HomeCubit>().checkTripStatusModel.data != null){
             if (context.read<HomeCubit>().checkTripStatusModel.data!.type == 'complete'){
-            //  context.read<HomeCubit>().currentEnumStatus = MyEnum.success;
+              //  context.read<HomeCubit>().currentEnumStatus = MyEnum.success;
 
-            //  Navigator.pushNamed(
-            //      context, Routes.tripDetailsRoute,
-            //      arguments:
-            //      context.read<HomeCubit>().checkTripStatusModel.data);
-              successGetBar(context.read<HomeCubit>().checkTripStatusModel.message!);
+            //  context.read<UserTripCubit>().getDriverStartTripStage();
+             // successGetBar(context.read<HomeCubit>().checkTripStatusModel.message!);
             }
           }
         }
@@ -75,7 +71,7 @@ class _SuccessWidgetState extends State<SuccessWidget> {
                     Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 12.0),
-                        child: Text("confirm_driver".tr())),
+                        child: Text("driverStartTrip".tr())),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -90,7 +86,7 @@ class _SuccessWidgetState extends State<SuccessWidget> {
                           width: 10,
                         ),
                         Text(
-                         cubit.checkTripStatusModel.data!.driver!.name!,
+                          cubit.checkTripStatusModel.data!.driver!.name!,
                           style: TextStyle(color: AppColors.black3),
                         )
                       ],
@@ -98,7 +94,7 @@ class _SuccessWidgetState extends State<SuccessWidget> {
                   ],
                 ),
               ));
-      //  );
+        //  );
       },
     );
 

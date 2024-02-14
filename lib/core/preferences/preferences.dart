@@ -25,6 +25,16 @@ class Preferences {
   //   return jsonData;
   // }
 
+  // Notification token
+  Future<String?> getNotificationToken() async{
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    return  preferences.getString('notificationToken');
+  }
+
+  Future<dynamic> setNotificationToken({required String value}) async{
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    return   preferences.setString('notificationToken', value);
+  }
   Future<void> setUser(SignUpModel signUpModel) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setString(

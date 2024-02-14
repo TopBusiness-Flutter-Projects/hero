@@ -112,6 +112,10 @@
   "latestTransfers": "Latest Transfers",
   "tripPrices": "Trip prices",
   "pay": "Pay",
+  "loaction_msg": "",
+  "driverStartTrip": "The driver start the trip",
+  "goHome": "Back to home",
+
   "today": "Today",
   "week": "Week",
   "report": "Report",

@@ -2,13 +2,14 @@ import 'package:easy_localization/easy_localization.dart ' as easy;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:hero/features/user_trip/cubit/user_trip_cubit.dart';
 import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/dialogs.dart';
 import '../../../core/utils/getsize.dart';
 import '../../../core/widgets/custom_button.dart';
 import '../../../core/widgets/custom_textfield.dart';
 import '../cubit/home_cubit.dart';
-
+import 'dart:async';
 class DefaultWidget extends StatefulWidget {
   const DefaultWidget({super.key});
 
@@ -22,6 +23,7 @@ class _DefaultWidgetState extends State<DefaultWidget> {
   void initState() {
     context.read<HomeCubit>().paymentMoney = 0;
     context.read<HomeCubit>().distance = 0;
+
     super.initState();
   }
 
@@ -31,14 +33,12 @@ class _DefaultWidgetState extends State<DefaultWidget> {
   Widget build(BuildContext context) {
     return  BlocConsumer<HomeCubit, HomeState>(
   listener: (context, state) {
-    // TODO: implement listener
+
   },
   builder: (context, state) {
     HomeCubit cubit = context.read<HomeCubit>();
     return
-    // Visibility(
-    //   visible: cubit.bottomContainerInitialState,
-    //   child:
+
       Align(
         alignment: Alignment.bottomCenter,
         child: Container(
@@ -180,6 +180,7 @@ class _DefaultWidgetState extends State<DefaultWidget> {
                           // cubit.bottomContainerLoadingState = true;
 
                           cubit.startTimer(context);
+                          context.read<UserTripCubit>().getWaitingDriverStage();
                           await  cubit.createTrip(tripType: cubit.flag==1?"with":"without",context: context);
                           // cubit.changeToRideNowState();
                         },

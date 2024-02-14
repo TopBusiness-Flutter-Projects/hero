@@ -32,6 +32,7 @@ import 'package:location/location.dart'as loc;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:widget_to_marker/widget_to_marker.dart';
 import '../../../config/routes/app_routes.dart';
+import '../../../core/models/check_trip_status_model.dart';
 import '../../../core/models/create_schedual_trip_model.dart';
 import '../../../core/models/favourite_model.dart';
 import '../../../core/models/signup_response_model.dart';
@@ -46,7 +47,6 @@ enum MyEnum {
   failure,
 }
 
-
 class HomeCubit extends Cubit<HomeState> {
   MyEnum currentEnumStatus = MyEnum.defaultState;
   int? flag;
@@ -58,6 +58,7 @@ class HomeCubit extends Cubit<HomeState> {
   HomeCubit(this.api) : super(HomeInitial()){
    getUserData();
    getSettings();
+   getTripStatus();
     latLngList = [];
     getmarker();
     checkAndRequestLocationPermission();
@@ -102,9 +103,6 @@ void setflag(int flag){
   this.flag=flag;
   emit(HomeInitial());
 }
-
-
-
   List<LatLng> latLngList = [];
   List<mp.LatLng> point=[];
 
@@ -263,6 +261,9 @@ double distance = 0;
 double paymentMoney = 0;
 
 // handle the on tab user event on map
+
+
+
   getLocation(LatLng argument, String title) async {
     //location_control.text  = "";
     final response = await api.getGeoData(
@@ -293,7 +294,7 @@ double paymentMoney = 0;
             setMarkers(
               Marker(
                 markerId: const MarkerId("currentLocation"),
-                icon:bitmapDescriptorfrom!,
+              icon:bitmapDescriptorfrom!,
 
                 position: LatLng(currentLocation?.latitude??0,
                     currentLocation?.longitude??0),
@@ -668,6 +669,20 @@ bool isLoadingSettings = true;
   });
   }
 
+  CheckTripStatusModel checkTripStatusModel=CheckTripStatusModel();
+
+  getTripStatus()async{
+    emit(LoadingCheckTripStatusState());
+
+  final response = await  api.checkTripStatus();
+  response.fold((l) {
+    emit(FailureCheckTripStatusState());
+  }, (r) {
+           checkTripStatusModel = r;
+       emit(SuccessCheckTripStatusState());
+  });
+  }
+
   void launchPhoneDialer(String phoneNumber) async {
 
 
@@ -817,11 +832,21 @@ print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
         print(createTripModel);
        // bottomContainerLoadingState = true;
-        currentEnumStatus = MyEnum.load;
-       // Navigator.pop(context);
+        if (r.data == null)
+        {
+          errorGetBar(r.message!);
+        }else{
 
-        currentEnumStatus = MyEnum.load;
-        emit(SuccessCreateTripState());
+          Navigator.pushNamed(context,
+              Routes.UserTripScreen,
+              arguments:
+             r.data);
+         // currentEnumStatus = MyEnum.load;
+          emit(SuccessCreateTripState());
+          successGetBar(r.message!);
+        }
+
+
       }
 
       else if(r.code==502|| r.code==202){
@@ -896,7 +921,7 @@ print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         }, (r) {
 
           if (r.code == 200 || r.code == 201) {
-            successGetBar("the trip created successfully");
+            successGetBar(r.message);
 
             emit(SuccessCreateSchedualTripState());
            // bottomContainerLoadingState = true;
@@ -909,12 +934,8 @@ print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
           }
         });
       } catch (e) {
-
         emit(FailureCreateSchedualTrip());
         errorGetBar(e.toString()??"something wrong");
-
-
-
       }
     }
 
@@ -927,7 +948,7 @@ print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
 
 
-     cancelTrip(
+     cancelTrip(BuildContext context
   //  {required int tripId}
     )async{
    if(createTripModel!=null){
@@ -937,20 +958,27 @@ print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
        errorGetBar("something wrong");
        emit(CancelTripFailure());
      }, (r) {
-       if(r.code==200){
+
          emit(CancelTripSuccess());
+
+
+
+
+         if(r.data!= null){
+
+           Navigator.pushNamedAndRemoveUntil(
+               context, Routes.homeRoute, (route) => false);
+         }
          successGetBar(r.message);
-       }
-       else if(r.code==500){
-         emit(CancelTripFailure());
-         errorGetBar(r.message??"something wrong");
-       }
+
+
      });
    }
    else{
      errorGetBar("there is no trip to cancel it");
    }
 }
+
   //
   // double progressValue = 0.0;
   // late Timer timer;
@@ -968,6 +996,11 @@ print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
   //
   //   });
   // }
+
+
+
+
+
 
   double progressValue = 0.0;
   late Timer _timer;
@@ -990,27 +1023,23 @@ print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
   Widget chooseWidget(MyEnum state){
     switch(state){
+
       case MyEnum.defaultState:
         emit(changingStatus());
         return DefaultWidget();
-
       case MyEnum.load:
         emit(changingStatus());
         return LoadingWidget();
-
       case MyEnum.success:
         emit(changingStatus());
         return SuccessWidget();
-
       case MyEnum.failure:
         emit(changingStatus());
         return FailureWidget();
-
       default:
         emit(changingStatus());
         return DefaultWidget();
     }
-
  }
 
   double calculateDistance(LatLng point1, LatLng point2) {

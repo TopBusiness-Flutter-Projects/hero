@@ -32,8 +32,6 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
        LatLng(double.parse(widget.trip.toLat??"31.98354"), double.parse(widget.trip.toLong??"31.1234065")));
     super.initState();
   }
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -121,229 +119,234 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                   //     color: AppColors.primary, width: 2),
                   ),
               child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 10,
-                    ),
-                    // Row(
-                    //   children: [
-                    //     Icon(
-                    //       Icons.calendar_month_outlined,
-                    //       color: AppColors.primary,
-                    //     ),
-                    //     SizedBox(
-                    //       width: getSize(context) * 0.03,
-                    //     ),
-                    //     Text(
-                    //       "01/10/2023",
-                    //       style: TextStyle(
-                    //           color: AppColors.black1,
-                    //           fontSize: getSize(context) * 0.04,
-                    //           fontWeight: FontWeight.w400),
-                    //     ),
-                    //     SizedBox(
-                    //       width: getSize(context) * 0.1,
-                    //     ),
-                    //     Icon(
-                    //       Icons.watch_later_outlined,
-                    //       color: AppColors.primary,
-                    //     ),
-                    //     SizedBox(
-                    //       width: getSize(context) * 0.03,
-                    //     ),
-                    //     Text(
-                    //       "pm ",
-                    //       style: TextStyle(
-                    //           color: AppColors.gray,
-                    //           fontSize: getSize(context) * 0.04,
-                    //           fontWeight: FontWeight.w400),
-                    //     ),
-                    //     Text(
-                    //       "03:23 ",
-                    //       style: TextStyle(
-                    //           color: AppColors.black1,
-                    //           fontSize: getSize(context) * 0.04,
-                    //           fontWeight: FontWeight.w400),
-                    //     ),
-                    //     Spacer(),
-                    //
-                    //   ],
-                    // ),
-                    // SizedBox(
-                    //   height: 5,
-                    // ),
-                    //from
-                    //from
-                    Row(
-                      children: [
-                        SvgPicture.asset(ImageAssets.fromToIcon),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          "from".tr(),
-                          style: TextStyle(
-                              color: AppColors.black1,
-                              fontSize: getSize(context) * 0.04,
-                              fontWeight: FontWeight.w400),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    //dash
-                    Row(children: [
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                  child: Column(
+                    children: [
                       SizedBox(
-                        width: getSize(context) * 0.03,
+                        height: 10,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Dash(
-                            direction: Axis.vertical,
-                            length: 40,
-                            dashLength: 4,
-                            dashColor: Colors.black),
+                      // Row(
+                      //   children: [
+                      //     Icon(
+                      //       Icons.calendar_month_outlined,
+                      //       color: AppColors.primary,
+                      //     ),
+                      //     SizedBox(
+                      //       width: getSize(context) * 0.03,
+                      //     ),
+                      //     Text(
+                      //       "01/10/2023",
+                      //       style: TextStyle(
+                      //           color: AppColors.black1,
+                      //           fontSize: getSize(context) * 0.04,
+                      //           fontWeight: FontWeight.w400),
+                      //     ),
+                      //     SizedBox(
+                      //       width: getSize(context) * 0.1,
+                      //     ),
+                      //     Icon(
+                      //       Icons.watch_later_outlined,
+                      //       color: AppColors.primary,
+                      //     ),
+                      //     SizedBox(
+                      //       width: getSize(context) * 0.03,
+                      //     ),
+                      //     Text(
+                      //       "pm ",
+                      //       style: TextStyle(
+                      //           color: AppColors.gray,
+                      //           fontSize: getSize(context) * 0.04,
+                      //           fontWeight: FontWeight.w400),
+                      //     ),
+                      //     Text(
+                      //       "03:23 ",
+                      //       style: TextStyle(
+                      //           color: AppColors.black1,
+                      //           fontSize: getSize(context) * 0.04,
+                      //           fontWeight: FontWeight.w400),
+                      //     ),
+                      //     Spacer(),
+                      //
+                      //   ],
+                      // ),
+                      // SizedBox(
+                      //   height: 5,
+                      // ),
+                      //from
+                      //from
+                      Row(
+                        children: [
+                          SvgPicture.asset(ImageAssets.fromToIcon),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            "from".tr(),
+                            style: TextStyle(
+                                color: AppColors.black1,
+                                fontSize: getSize(context) * 0.04,
+                                fontWeight: FontWeight.w400),
+                          ),
+                        ],
                       ),
                       SizedBox(
-                        width: 3,
+                        width: 5,
                       ),
-                      Flexible(
-                        child: Text(
-                          " ${widget.trip.fromAddress}",
-                          style: TextStyle(
-                              color: AppColors.gray,
-                              fontSize: getSize(context) * 0.04,
-                              fontWeight: FontWeight.w400),
-                        ),
-                      ),
-                    ]),
-                    //to
-                    Row(
-                      children: [
-                        SvgPicture.asset(ImageAssets.toIcon),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          "to".tr(),
-                          style: TextStyle(
-                              color: AppColors.black1,
-                              fontSize: getSize(context) * 0.04,
-                              fontWeight: FontWeight.w400),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 3,
-                    ),
-                    //معهد الكبد القومى
-                    Row(
-                      children: [
+                      //dash
+                      Row(children: [
                         SizedBox(
                           width: getSize(context) * 0.03,
                         ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Dash(
+                              direction: Axis.vertical,
+                              length: 40,
+                              dashLength: 4,
+                              dashColor: Colors.black),
+                        ),
+                        SizedBox(
+                          width: 3,
+                        ),
                         Flexible(
-
                           child: Text(
-                            maxLines: 2,
-
-                            "${widget.trip.toAddress}",
+                            " ${widget.trip.fromAddress}",
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
                             style: TextStyle(
-                              overflow:TextOverflow.ellipsis ,
                                 color: AppColors.gray,
                                 fontSize: getSize(context) * 0.04,
-                                fontWeight: FontWeight.w400,
-                            ),
+                                fontWeight: FontWeight.w400),
                           ),
                         ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Column(
-                          children: [
-                            Text(
-                              "وقت الركوب",
+                      ]),
+                      //to
+                      Row(
+                        children: [
+                          SvgPicture.asset(ImageAssets.toIcon),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            "to".tr(),
+                            style: TextStyle(
+                                color: AppColors.black1,
+                                fontSize: getSize(context) * 0.04,
+                                fontWeight: FontWeight.w400),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 3,
+                      ),
+                      //معهد الكبد القومى
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: getSize(context) * 0.03,
+                          ),
+                          Flexible(
+
+                            child: Text(
+                              maxLines: 1,
+
+                              "${widget.trip.toAddress}",
                               style: TextStyle(
-                                  color: AppColors.black,
-                                  fontSize: getSize(context) * 0.04),
+                                overflow:TextOverflow.ellipsis ,
+                                  color: AppColors.gray,
+                                  fontSize: getSize(context) * 0.04,
+                                  fontWeight: FontWeight.w400,
+                              ),
                             ),
-                            Text(
-                              "${widget.trip.timeRide}",
-                              style: TextStyle(
-                                  color: AppColors.primary,
-                                  fontSize: getSize(context) * 0.04),
-                            )
-                          ],
-                        ),
-                        Container(
-                            child: Image.asset(
-                          "assets/images/mini_car.png",
-                          width: getSize(context) * 0.13,
-                        )),
-                        Column(
-                          children: [
-                            Text(
-                              "وقت الوصول",
-                              style: TextStyle(
-                                  color: AppColors.black,
-                                  fontSize: getSize(context) * 0.04),
-                            ),
-                            Text(
-                              "${widget.trip.timeArrive}",
-                              style: TextStyle(
-                                  color: AppColors.primary,
-                                  fontSize: getSize(context) * 0.04),
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Icon(Icons.location_on_outlined),
-                        Text(
-                          "${widget.trip.distance}km",
-                          style: TextStyle(fontSize: getSize(context) * 0.04),
-                        ),
-                        SizedBox(
-                          width: getSize(context) * 0.15,
-                        ),
-                        Image.asset(
-                          "assets/images/clock.png",
-                          height: getSize(context) * 0.05,
-                        ),
-                        //  Icon(Icons.watch_later_outlined,),
-                        SizedBox(
-                          width: getSize(context) * 0.02,
-                        ),
-                        Text(
-                          "${widget.trip.time} min",
-                          style: TextStyle(fontSize: getSize(context) * 0.04),
-                        ),
-                        SizedBox(
-                          width: getSize(context) * 0.15,
-                        ),
-                        Image.asset(
-                          "assets/images/money.png",
-                          height: getSize(context) * 0.05,
-                        ),
-                        SizedBox(
-                          width: getSize(context) * 0.02,
-                        ),
-                        Text(
-                          "${widget.trip.price} د.ع",
-                          style: TextStyle(fontSize: getSize(context) * 0.04),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 10,
-                    )
-                  ],
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Column(
+                            children: [
+                              Text(
+                                "وقت الركوب",
+                                style: TextStyle(
+                                    color: AppColors.black,
+                                    fontSize: getSize(context) * 0.04),
+                              ),
+                              Text(
+                                "${widget.trip.timeRide}",
+                                style: TextStyle(
+                                    color: AppColors.primary,
+                                    fontSize: getSize(context) * 0.04),
+                              )
+                            ],
+                          ),
+                          Container(
+                              child: Image.asset(
+                            "assets/images/mini_car.png",
+                            width: getSize(context) * 0.13,
+                          )),
+                          Column(
+                            children: [
+                              Text(
+                                "وقت الوصول",
+                                style: TextStyle(
+                                    color: AppColors.black,
+                                    fontSize: getSize(context) * 0.04),
+                              ),
+                              Text(
+                                "${widget.trip.timeArrive}",
+                                style: TextStyle(
+                                    color: AppColors.primary,
+                                    fontSize: getSize(context) * 0.04),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Icon(Icons.location_on_outlined),
+                          Text(
+                            "${widget.trip.distance}km",
+                            style: TextStyle(fontSize: getSize(context) * 0.04),
+                          ),
+                          SizedBox(
+                            width: getSize(context) * 0.15,
+                          ),
+                          Image.asset(
+                            "assets/images/clock.png",
+                            height: getSize(context) * 0.05,
+                          ),
+                          //  Icon(Icons.watch_later_outlined,),
+                          SizedBox(
+                            width: getSize(context) * 0.02,
+                          ),
+                          Text(
+                            "${widget.trip.time} min",
+                            style: TextStyle(fontSize: getSize(context) * 0.04),
+                          ),
+                          SizedBox(
+                            width: getSize(context) * 0.15,
+                          ),
+                          Image.asset(
+                            "assets/images/money.png",
+                            height: getSize(context) * 0.05,
+                          ),
+                          SizedBox(
+                            width: getSize(context) * 0.02,
+                          ),
+                          Text(
+                            "${widget.trip.price} د.ع",
+                            style: TextStyle(fontSize: getSize(context) * 0.04),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 10,
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),

@@ -33,6 +33,9 @@ class LoadingHomeDataState extends HomeState {}
 class LoadingToLogOutState extends HomeState {}
 class FailureToLogOutState extends HomeState {}
 class SuccessToLogOutState extends HomeState {}
+class LoadingCheckTripStatusState extends HomeState {}
+class FailureCheckTripStatusState extends HomeState {}
+class SuccessCheckTripStatusState extends HomeState {}
 class LoadingSettings extends HomeState {}
 class FailureSettings extends HomeState {}
 class SuccessSettings extends HomeState {}

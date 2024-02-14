@@ -16,6 +16,7 @@ import 'package:dartz/dartz.dart';
 import '../models/add_favourite_model.dart';
 import '../models/all_trips_model.dart';
 import '../models/check_document_model.dart';
+import '../models/check_trip_status_model.dart';
 import '../models/create_schedual_trip_model.dart';
 import '../models/create_trip_model.dart';
 import '../models/delete_user_model.dart';
@@ -139,11 +140,11 @@ class ServiceApi {
             headers: {'Authorization': signUpModel.data?.token},
           ),
           body: {
-            //"distance": distance,
+            "distance": distance,
             //"time": time,
             //"phone": phone,
-            "distance": '3',
-            "time": '30',
+           // "distance": '3',
+            //"time": '30',
             "phone": phone,
           });
       return Right(EndQuickTripModel.fromJson(response));
@@ -156,6 +157,8 @@ class ServiceApi {
   //// Accept trip
   Future<Either<Failure, DriverTripsModel>> acceptTrip({
     required tripId,
+    required lat,
+    required long,
   }) async {
     SignUpModel signUpModel = await Preferences.instance.getUserModel();
     try {
@@ -165,6 +168,8 @@ class ServiceApi {
           ),
           body: {
             "trip_id": tripId,
+            "lat": lat,
+            "long": long,
           });
       return Right(DriverTripsModel.fromJson(response));
     } on ServerException {
@@ -175,7 +180,8 @@ class ServiceApi {
 
   //// Start trip
   Future<Either<Failure, DriverTripsModel>> startTrip({
-    required String tripId,
+    required String tripId, required String lat,
+    required String long,
   }) async {
     SignUpModel signUpModel = await Preferences.instance.getUserModel();
     try {
@@ -185,6 +191,8 @@ class ServiceApi {
           ),
           body: {
             "trip_id": tripId,
+            "lat": lat,
+            "long": long,
           });
       return Right(DriverTripsModel.fromJson(response));
     } on ServerException {
@@ -225,7 +233,7 @@ class ServiceApi {
           ),
           body: {
             "distance": distance,
-            "time": time,
+           // "time": time,
             "trip_id": tripId,
           });
       return Right(DriverTripsModel.fromJson(response));
@@ -547,6 +555,19 @@ class ServiceApi {
     try {
       final response = await dio.get(EndPoints.settingsUrl);
       return Right(SettingsModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
+  Future<Either<Failure, CheckTripStatusModel>> checkTripStatus() async {
+    SignUpModel signUpModel = await Preferences.instance.getUserModel();
+
+    try {
+      final response = await dio.get(EndPoints.getTripStatus,options: Options(
+        headers: {'Authorization': signUpModel.data?.token},
+      ),);
+      return Right(CheckTripStatusModel.fromJson(response));
     } on ServerException {
       return Left(ServerFailure());
     }

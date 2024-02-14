@@ -18,6 +18,7 @@ class EndPoints {
   static const String myServicesUrl = '${baseUrl}services/my_services';
   static const String updateProfileUrl = '${baseUrl}client/auth/update-profile';
   static const String settingsUrl = '${baseUrl}settings';
+  static const String getTripStatus = '${baseUrl}getTripStatus';
   static const String allUserTripsUrl = '${baseUrl}userAllTrip';
   static const String allDriverTripsUrl = '${baseUrl}driverAllTrip';
   static const String serviceStoreUrl = '${baseUrl}services/store';
