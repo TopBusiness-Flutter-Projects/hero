@@ -44,6 +44,7 @@ class Data {
   String? toLat;
   String? timeRide;
   dynamic? timeArrive;
+  dynamic? startTime;
   dynamic? distance;
   dynamic? time;
   dynamic price;
@@ -56,7 +57,7 @@ class Data {
 
   Data({
     this.id,
-    this.type,
+    this.type,this.startTime,
     this.tripType,
     this.fromAddress,
     this.fromLong,
@@ -89,6 +90,7 @@ class Data {
     toLat: json["to_lat"],
     timeRide: json["time_ride"],
     timeArrive: json["time_arrive"] == null ? null : DateTime.parse(json["time_arrive"]),
+    startTime: json["start_time"] == null ? null : DateTime.parse(json["start_time"]),
     distance: json["distance"],
     time: json["time"],
     price: json["price"],
@@ -112,6 +114,7 @@ class Data {
     "to_lat": toLat,
     "time_ride": timeRide,
     "time_arrive": timeArrive?.toIso8601String(),
+    "start_time": startTime?.toIso8601String(),
     "distance": distance,
     "time": time,
     "price": price,

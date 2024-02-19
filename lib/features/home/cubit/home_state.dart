@@ -66,3 +66,6 @@ class CancelTripSuccess extends HomeState {}
 class CancelTripFailure extends HomeState {}
 class CancelTripLoading extends HomeState {}
 class AddressAlreadyExists extends HomeState {}
+class FailureCheckDocumentsState extends HomeState {}
+class SuccessCheckDocumentsState extends HomeState {}
+class LoadingCheckDocumentsStatus extends HomeState {}

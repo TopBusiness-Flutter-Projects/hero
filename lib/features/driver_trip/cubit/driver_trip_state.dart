@@ -26,3 +26,7 @@ class LoadingRateTripState extends DriverTripState {}
 class FailureRateTripState extends DriverTripState {}
 class SuccessRateTripState extends DriverTripState {}
 class ChangeTripStageUIState extends DriverTripState {}
+class UpdateDesitnationLocationState extends DriverTripState {}
+class ErrorLocationSearch extends DriverTripState {}
+class UpdateCameraPosition extends DriverTripState {}
+class UpdateCurrentLocationState2 extends DriverTripState {}

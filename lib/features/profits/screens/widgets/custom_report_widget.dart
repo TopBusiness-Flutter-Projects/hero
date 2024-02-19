@@ -18,114 +18,108 @@ class CustomReportWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<ProfitsCubit,ProfitsState>(
-
-      listener: (context, state) {
-
-      },
+    return BlocConsumer<ProfitsCubit, ProfitsState>(
+      listener: (context, state) {},
       builder: (context, state) {
         ProfitsCubit cubit = context.read<ProfitsCubit>();
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 12.0),
-            child: Text('from'.tr(),style: getBoldStyle(fontSize: 18)),
-          ),
-          CustomTextField(
-            prefixWidget:Icon(CupertinoIcons.calendar_today,size: 20,),
-            title: 'enterDate'.tr(),
-            controller: cubit.fromController,
-            textInputType: TextInputType.none,
-            backgroundColor: AppColors.white,
-            //isEnable: false,
-            validatorMessage: 'enterDate'.tr(),
-            horizontalPadding: 2,
-            onTap: () async {
-              final DateTime? picked = await showDatePicker(
-                context: context,
-                initialDate: DateTime(2000),
-                firstDate: DateTime(1900),
-                lastDate: DateTime.now(),
-              );
-              if (picked != null && picked != cubit.fromSelectedDate) {
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12.0),
+              child: Text('from'.tr(), style: getBoldStyle(fontSize: 18)),
+            ),
+            CustomTextField(
+              prefixWidget: Icon(
+                CupertinoIcons.calendar_today,
+                size: 20,
+              ),
+              title: 'enterDate'.tr(),
+              controller: cubit.fromController,
+              textInputType: TextInputType.none,
+              backgroundColor: AppColors.white,
+              //isEnable: false,
+              validatorMessage: 'enterDate'.tr(),
+              horizontalPadding: 2,
+              onTap: () async {
+                final DateTime? picked = await showDatePicker(
+                  context: context,
+                  initialDate: DateTime(2000),
+                  firstDate: DateTime(1900),
+                  lastDate: DateTime.now(),
+                );
+                if (picked != null && picked != cubit.fromSelectedDate) {
+                  cubit.fromSelectedDate = picked;
+                  cubit.fromController.text =
+                      DateFormat('yyyy-MM-dd').format(picked);
+                }
+              },
+              // controller: controller.phoneNumberController,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12.0),
+              child: Text('to'.tr(), style: getBoldStyle(fontSize: 18)),
+            ),
+            CustomTextField(
+              prefixWidget: Icon(
+                CupertinoIcons.calendar_today,
+                size: 20,
+              ),
+              title: 'enterDate'.tr(),
+              controller: cubit.toController,
+              textInputType: TextInputType.none,
+              backgroundColor: AppColors.white,
+              //isEnable: false,
+              validatorMessage: 'enterDate'.tr(),
+              horizontalPadding: 2,
+              onTap: () async {
+                final DateTime? picked = await showDatePicker(
+                  context: context,
+                  initialDate: DateTime(2000),
+                  firstDate: DateTime(1900),
+                  lastDate: DateTime.now(),
+                );
+                if (picked != null && picked != cubit.toSelectedDate) {
+                  cubit.toSelectedDate = picked;
+                  cubit.toController.text =
+                      DateFormat('yyyy-MM-dd').format(picked);
+                }
+              },
+              // controller: controller.phoneNumberController,
+            ),
+            SizedBox(
+              height: getSize(context) / 13,
+            ),
+            CustomButton(
+              width: getSize(context),
+              text: "confirm".tr(),
+              borderRadius: getSize(context) / 24,
+              color: AppColors.primary,
+              onClick: () async {
+                if (cubit.toSelectedDate.isAfter(cubit.fromSelectedDate)) {
+                  cubit.getProfits('custom');
 
-                cubit.fromSelectedDate = picked;
-                cubit.fromController.text =DateFormat('yyyy-MM-dd').format(picked);
+                  print('okkaaaay');
+                } else {
+                  errorGetBar('errorDate'.tr());
+                  // call api
+                }
 
-              }
-            },
-            // controller: controller.phoneNumberController,
-          ),
-
-          SizedBox(
-            height: getSize(context) / 13,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 12.0),            child: Text('to'.tr(),style: getBoldStyle(fontSize: 18)),
-          ),
-          CustomTextField(
-            prefixWidget:Icon(CupertinoIcons.calendar_today,size: 20,),
-            title: 'enterDate'.tr(),
-            controller: cubit.toController,
-            textInputType: TextInputType.none,
-            backgroundColor: AppColors.white,
-            //isEnable: false,
-            validatorMessage: 'enterDate'.tr(),
-            horizontalPadding: 2,
-            onTap: () async {
-              final DateTime? picked = await showDatePicker(
-                context: context,
-                initialDate: DateTime(2000),
-                firstDate: DateTime(1900),
-                lastDate: DateTime.now(),
-              );
-              if (picked != null && picked != cubit.toSelectedDate) {
-
-                cubit.toSelectedDate = picked;
-                cubit.toController.text =DateFormat('yyyy-MM-dd').format(picked);
-
-              }
-            },
-            // controller: controller.phoneNumberController,
-          ),
-
-          SizedBox(
-            height: getSize(context) / 13,
-          ),
-          CustomButton(
-            width: getSize(context),
-            text: "confirm".tr(),
-            borderRadius: getSize(context) / 24,
-            color: AppColors.primary,
-            onClick: () async {
-
-
-              if (cubit.toSelectedDate.isAfter(cubit.fromSelectedDate)) {
-                cubit.getProfits('custom');
-
-                print('okkaaaay');
-              } else {
-
- errorGetBar('errorDate'.tr());
-                // call api
-              }
-
-
-
-             // if(formKey.currentState!.validate()){
-             //
-             //   await cubit.editProfile(widget.type,context);
-             //
-             // }
-
-            },
-
-          ),SizedBox(
-            height: getSize(context) / 13,
-          ),
-        ],
-      );
+                // if(formKey.currentState!.validate()){
+                //
+                //   await cubit.editProfile(widget.type,context);
+                //
+                // }
+              },
+            ),
+            SizedBox(
+              height: getSize(context) / 13,
+            ),
+          ],
+        );
       },
     );
   }

@@ -61,7 +61,7 @@ class _LoadingWidgetState extends State<LoadingWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Image.asset(
-                      ImageAssets.search,
+                      ImageAssets.searchGif,
                       width: getSize(context) / 4,
                     ),
                     //progress indicator

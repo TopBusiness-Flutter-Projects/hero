@@ -17,141 +17,167 @@ import '../../../core/utils/assets_manager.dart';
 import '../../../core/widgets/back_button.dart';
 import '../../../core/widgets/custom_button.dart';
 import '../../home/cubit/home_cubit.dart';
+import '../../homedriver/cubit/home_driver_cubit.dart';
 
 class DriverTripScreen extends StatefulWidget {
-  const DriverTripScreen({super.key,required this.trip});
-  final NewTrip trip ;
+  const DriverTripScreen({super.key, required this.trip});
+
+  final NewTrip trip;
+
   @override
   State<DriverTripScreen> createState() => _DriverTripScreenState();
 }
 
 class _DriverTripScreenState extends State<DriverTripScreen> {
-
   @override
   void initState() {
-   context.read<DriverTripCubit>().setMarkerIcon(widget.trip.toAddress??" ", LatLng(double.parse(widget.trip.fromLat??"31.98354"), double.parse(widget.trip.fromLong??"31.1234065")),
-       LatLng(double.parse(widget.trip.toLat??"31.98354"), double.parse(widget.trip.toLong??"31.1234065")));
+    if (widget.trip.tripType != 'without') {
+      context.read<DriverTripCubit>().setMarkerIcon(
+          widget.trip.toAddress ,
+          LatLng(double.parse(widget.trip.fromLat ?? "31.98354"),
+              double.parse(widget.trip.fromLong ?? "31.1234065")),
+          LatLng(double.parse(widget.trip.toLat ?? "31.98354"),
+              double.parse(widget.trip.toLong ?? "31.1234065"))
+      ,
+          context,
+
+
+      widget.trip.fromAddress!);
+    } else
+      context.read<DriverTripCubit>().setMarkerIcon(
+          null,
+          LatLng(double.parse(widget.trip.fromLat ?? "31.98354"),
+              double.parse(widget.trip.fromLong ?? "31.1234065")),
+        null,context,
+
+
+          widget.trip.fromAddress!
+          );
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     DriverTripCubit cubit = context.read<DriverTripCubit>();
+    HomeDriverCubit homeDriverCubit = context.read<HomeDriverCubit>();
     return Scaffold(
       body: SafeArea(
-        child: BlocConsumer<DriverTripCubit,DriverTripState>(
+        child: BlocConsumer<DriverTripCubit, DriverTripState>(
           listener: (context, state) {
-if (state is SuccessEndTripState)
-  {
+            if (state is SuccessEndTripState) {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return Container(
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                    child: Dialog(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(
+                            height: getSize(context) * 0.05,
+                          ),
+                          //close
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              InkWell(
+                                  onTap: () {
+                                    Navigator.pushNamedAndRemoveUntil(
+                                        context,
+                                        Routes.homedriverRoute,
+                                        (route) => false);
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
+                                    child: SvgPicture.asset(ImageAssets.close),
+                                  )),
+                            ],
+                          ),
+                          SizedBox(
+                            height: getSize(context) * 0.03,
+                          ),
+                          RatingBar.builder(
+                            initialRating: 3,
+                            minRating: 1,
+                            direction: Axis.horizontal,
+                            allowHalfRating: true,
+                            itemCount: 5,
+                            itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                            itemBuilder: (context, _) => Icon(
+                              Icons.star,
+                              color: Colors.amber,
+                            ),
+                            onRatingUpdate: (double rating) {
+                              print(rating);
+                              cubit.rate = rating;
+                            },
+                          ),
+                          SizedBox(
+                            height: getSize(context) * 0.03,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextField(
+                              controller: cubit.commentController,
+                              maxLines: 3,
+                              decoration: InputDecoration(
+                                  hintText: "write_comment".tr(),
+                                  hintStyle: TextStyle(color: Colors.black),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  )),
+                            ),
+                          ),
+                          SizedBox(
+                            height: getSize(context) * 0.03,
+                          ),
+                          ElevatedButton(
+                            onPressed: () async {
+                              print('fffffffffffff');
+                              print(widget.trip.id!);
+                              print(widget.trip.user!.id!);
+                              print(cubit.rate);
+                              print(widget.trip.id!);
+                              print('fffffffffffff');
 
-    showDialog(
-      context: context,
-      builder: (context) {
-        return Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20)),
-          child: Dialog(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20)),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(
-                  height: getSize(context) * 0.05,
-                ),
-                //close
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    InkWell(
-                        onTap: () {
-                          Navigator.pushNamedAndRemoveUntil(
-                              context, Routes.homedriverRoute, (route) => false);
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8.0),
-                          child:
-                          SvgPicture.asset(ImageAssets.close),
-                        )),
-                  ],
-                ),
-                SizedBox(
-                  height: getSize(context) * 0.03,
-                ),
-                RatingBar.builder(
-                  initialRating: 3,
-                  minRating: 1,
-                  direction: Axis.horizontal,
-                  allowHalfRating: true,
-                  itemCount: 5,
-                  itemPadding:
-                  EdgeInsets.symmetric(horizontal: 4.0),
-                  itemBuilder: (context, _) => Icon(
-                    Icons.star,
-                    color: Colors.amber,
-                  ),
-                  onRatingUpdate: (double rating) {
-                    print(rating);
-                    cubit.rate = rating;
-                  },
-                ),
-                SizedBox(
-                  height: getSize(context) * 0.03,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextField(
-                    controller: cubit.commentController,
-                    maxLines: 3,
-                    decoration: InputDecoration(
-                        hintText: "write_comment".tr(),
-                        hintStyle: TextStyle(color: Colors.black),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                        )),
-                  ),
-                ),
-                SizedBox(
-                  height: getSize(context) * 0.03,
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-print('fffffffffffff');
-print(widget.trip.id!);
-print(widget.trip.user!.id!);
-print(cubit.rate);
-print(widget.trip.id!);
-print('fffffffffffff');
+                              cubit.rateUser(
+                                  context,
+                                  widget.trip.id.toString(),
+                                  cubit.rate.toString(),
+                                  widget.trip.user!.id.toString(),
+                                  cubit.commentController.text);
 
-cubit.rateUser(context,widget.trip.id.toString(),cubit.rate.toString(),widget.trip.user!.id.toString(),cubit.commentController.text);
-
-                // cubit.giveRate(tripId: widget.trip.id!,
-                //     toId: widget.trip.user!.id!,
+                              // cubit.giveRate(tripId: widget.trip.id!,
+                              //     toId: widget.trip.user!.id!,
 //
-                //     description: cubit.commentController.text,context: context);
-                //   Navigator.pop(context);
-
-                  },
-                  child: Text(
-                    "confirm".tr(),
-                    style: TextStyle(color: AppColors.green1),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.greenLight,
-                      minimumSize: Size(getSize(context) * 0.3,
-                          getSize(context) * 0.1)),
-                ),
-                SizedBox(
-                  height: getSize(context) * 0.03,
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }},
+                              //     description: cubit.commentController.text,context: context);
+                              //   Navigator.pop(context);
+                            },
+                            child: Text(
+                              "confirm".tr(),
+                              style: TextStyle(color: AppColors.green1),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.greenLight,
+                                minimumSize: Size(getSize(context) * 0.3,
+                                    getSize(context) * 0.1)),
+                          ),
+                          SizedBox(
+                            height: getSize(context) * 0.03,
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            }
+          },
           builder: (context, state) => Column(
             children: [
               Flexible(
@@ -165,33 +191,318 @@ cubit.rateUser(context,widget.trip.id.toString(),cubit.rate.toString(),widget.tr
                               bottomLeft: Radius.circular(20),
                               bottomRight: Radius.circular(20))),
                       // height: getSize(context) * 1.2,
-                      child: GoogleMap(
-                        initialCameraPosition: CameraPosition(
-                          target:LatLng(double.parse(widget.trip.fromLat??"31.1234"),double.parse(widget.trip.fromLong??"31.098765")),
-                              //LatLng(31.1234, 31.098765),
-                          zoom: 12,
-                        ),
-                        markers:
-                       // context.read<TripDetailsCubit>().markers,
-                           {
-                          Marker(markerId: MarkerId("from"),
-                              position: LatLng(double.parse(widget.trip.fromLat!),double.parse(widget.trip.fromLong!)),),
-                          Marker(markerId: MarkerId("to"),
-                            position: LatLng(double.parse(widget.trip.toLat!),double.parse(widget.trip.toLong!)),),
-                       }
-                       ,
-                        polylines: {
-                          Polyline(
-                            polylineId: const PolylineId("route"),
-                            points: [
-                              LatLng(double.parse(widget.trip.fromLat!), double.parse(widget.trip.fromLong!)),
-                              LatLng(double.parse(widget.trip.toLat!),double.parse(widget.trip.toLong!)),
-                            ],
-                            color: const Color(0xFF7B61FF),
-                            width: 6,
-                          ),
+                      child: BlocConsumer<HomeDriverCubit,HomeDriverState>(
+                        listener: (context, state) {
+
                         },
+                        builder: (context,state) {
+                          return GoogleMap(
+                            initialCameraPosition: CameraPosition(
+                              target: LatLng(
+                                homeDriverCubit.currentLocation != null ? homeDriverCubit.currentLocation!
+                                    .latitude! : 0,
+                                homeDriverCubit.currentLocation != null ? homeDriverCubit.currentLocation!
+                                    .longitude! : 0,
+                              ),
+                              zoom: 13.5,
+                            ),
+                            markers:  widget.trip.tripType != 'without' ?
+
+
+                                cubit.tripStages == 1?
+                                {
+                                  Marker(
+                                    markerId: const MarkerId("currentLocation"),
+                                    icon: homeDriverCubit.markerIcon != null
+                                        ? BitmapDescriptor.fromBytes(homeDriverCubit.markerIcon!)
+                                        : homeDriverCubit.currentLocationIcon,
+                                    position: LatLng(
+                                      homeDriverCubit.currentLocation != null ? homeDriverCubit
+                                          .currentLocation!.latitude! : 0,
+                                      homeDriverCubit.currentLocation != null ? homeDriverCubit
+                                          .currentLocation!.longitude! : 0,
+                                    ),
+                                  ),
+
+
+                                  Marker(
+                                    markerId: MarkerId("from"),
+                                    position: LatLng(double.parse(widget.trip.fromLat!),
+                                        double.parse(widget.trip.fromLong!)),
+                                  ),
+
+
+
+                                  // Rest of the markers...
+                                }
+                                    :
+                                cubit.tripStages == 2?
+                                {
+
+                                  Marker(
+                                    markerId: const MarkerId("currentLocation"),
+                                    icon: homeDriverCubit!.markerIcon != null
+                                        ? BitmapDescriptor.fromBytes(homeDriverCubit.markerIcon!)
+                                        : homeDriverCubit!.currentLocationIcon,
+                                    position: LatLng(
+                                      homeDriverCubit!.currentLocation != null ? homeDriverCubit!
+                                          .currentLocation!.latitude! : 0,
+                                      homeDriverCubit!.currentLocation != null ? homeDriverCubit!
+                                          .currentLocation!.longitude! : 0,
+                                    ),
+                                  ),
+
+                                  Marker(
+                                    markerId: MarkerId("to"),
+                                    position: LatLng(double.parse(widget.trip.toLat!),
+                                        double.parse(widget.trip.toLong!)),
+                                  ),
+
+
+
+                                  // Rest of the markers...
+                                }
+                                    :
+// on start screen
+                            {
+                              Marker(
+                                markerId: const MarkerId("currentLocation"),
+                                icon: homeDriverCubit!.markerIcon != null
+                                    ? BitmapDescriptor.fromBytes(homeDriverCubit.markerIcon!)
+                                    : homeDriverCubit!.currentLocationIcon,
+                                position: LatLng(
+                                  homeDriverCubit!.currentLocation != null ? homeDriverCubit!
+                                      .currentLocation!.latitude! : 0,
+                                  homeDriverCubit!.currentLocation != null ? homeDriverCubit!
+                                      .currentLocation!.longitude! : 0,
+                                ),
+                              ),
+// cubit.bitmapDescriptorfrom != null ?Marker(
+//   markerId: MarkerId("from"),
+//   icon:cubit.bitmapDescriptorfrom!,
+//   position: LatLng(double.parse(widget.trip.fromLat!),
+//       double.parse(widget.trip.fromLong!)),
+// ):
+                              Marker(
+                                markerId: MarkerId("from"),
+                               // icon:cubit.bitmapDescriptorfrom!,
+                                position: LatLng(double.parse(widget.trip.fromLat!),
+                                    double.parse(widget.trip.fromLong!)),
+                              ),
+
+                              Marker(
+                                markerId: MarkerId("to"),
+                               // icon:cubit.bitmapDescriptorto!,
+                                position: LatLng(double.parse(widget.trip.toLat!),
+                                    double.parse(widget.trip.toLong!)),
+                              ),
+
+                              // Rest of the markers...
+                            }
+
+                                :
+/// without trip
+                                cubit.tripStages ==1 ?
+                                {
+                                  Marker(
+                                    markerId: const MarkerId("currentLocation"),
+                                    icon: homeDriverCubit.markerIcon != null
+                                        ? BitmapDescriptor.fromBytes(homeDriverCubit.markerIcon!)
+                                        : homeDriverCubit.currentLocationIcon,
+                                    position: LatLng(
+                                      homeDriverCubit.currentLocation != null ? homeDriverCubit
+                                          .currentLocation!.latitude! : 0,
+                                      homeDriverCubit.currentLocation != null ? homeDriverCubit
+                                          .currentLocation!.longitude! : 0,
+                                    ),
+                                  ),
+                                  // Rest of the markers...
+                                }
+                                    :
+
+
+                                {
+                                  Marker(
+                                    markerId: const MarkerId("currentLocation"),
+                                    icon: homeDriverCubit.markerIcon != null
+                                        ? BitmapDescriptor.fromBytes(homeDriverCubit.markerIcon!)
+                                        : homeDriverCubit.currentLocationIcon,
+                                    position: LatLng(
+                                      homeDriverCubit.currentLocation != null ? homeDriverCubit
+                                          .currentLocation!.latitude! : 0,
+                                      homeDriverCubit.currentLocation != null ? homeDriverCubit
+                                          .currentLocation!.longitude! : 0,
+                                    ),
+                                  ),
+
+
+                                  Marker(
+                                    markerId: MarkerId("from"),
+                                    position: LatLng(double.parse(widget.trip.fromLat!),
+                                        double.parse(widget.trip.fromLong!)),
+                                  ),
+
+
+
+                                  // Rest of the markers...
+                                },
+                            onMapCreated: (GoogleMapController controller) {
+                              homeDriverCubit.mapController =
+                                  controller; // Store the GoogleMapController
+                            },
+                            onTap: (argument) {
+                              // _customInfoWindowController.hideInfoWindow!();
+                            },
+                              polylines: widget.trip.tripType != 'without'
+                                  ?
+
+                              cubit.tripStages ==1?
+                              {
+
+
+
+                                Polyline(
+                                  polylineId: const PolylineId("route"),
+                                  points: [
+                                    LatLng(
+                                      homeDriverCubit!.currentLocation != null ? homeDriverCubit!
+                                          .currentLocation!.latitude! : 0,
+                                      homeDriverCubit!.currentLocation != null ? homeDriverCubit!
+                                          .currentLocation!.longitude! : 0,
+                                    ),
+                                    LatLng(double.parse(widget.trip.fromLat!),
+                                        double.parse(widget.trip.fromLong!)),
+                                  ],
+                                  color: const Color(0xFF7B61FF),
+                                  width: 6,
+                                ),}
+
+
+
+                                  :
+                              cubit.tripStages ==2?
+                              {
+
+                                Polyline(
+                                  polylineId: const PolylineId("route"),
+                                  points: [
+                                    LatLng(
+                                      homeDriverCubit.currentLocation != null ? homeDriverCubit
+                                          .currentLocation!.latitude! : 0,
+                                      homeDriverCubit.currentLocation != null ? homeDriverCubit
+                                          .currentLocation!.longitude! : 0,
+                                    ),
+                                    LatLng(double.parse(widget.trip.toLat!),
+                                        double.parse(widget.trip.toLong!)),
+                                  ],
+                                  color: const Color(0xFF7B61FF),
+                                  width: 6,
+                                ),}
+                                  :
+
+                              {
+                             //  Polyline(
+                             //      polylineId: const PolylineId("route"),
+                             //      points: cubit.latLngList,
+                             //      color: AppColors.black,
+                             //      width: 5,visible: true
+
+                             //  ),
+
+
+                                Polyline(
+                                polylineId: const PolylineId("route"),
+                                points: [
+                                  LatLng(double.parse(widget.trip.fromLat!),
+                                      double.parse(widget.trip.fromLong!)),
+                                  LatLng(double.parse(widget.trip.toLat!),
+                                      double.parse(widget.trip.toLong!)),
+                                ],
+                                color: const Color(0xFF7B61FF),
+                                width: 6,
+                              ),}
+                                  :
+
+                              /// without trip
+                              {
+
+                                    },
+                            onCameraMove: (position) {
+
+                            //  if (homeDriverCubit.strartlocation!=position.target){
+                            //    print(homeDriverCubit.strartlocation);
+                            //    homeDriverCubit.strartlocation=position.target;
+                            //    homeDriverCubit.getCurrentLocation();}
+                              // _customInfoWindowController.hideInfoWindow!();
+                            },
+
+
+                          );
+                        }
                       ),
+                      // child: GoogleMap(
+                      //   initialCameraPosition: CameraPosition(
+                      //     target: LatLng(
+                      //         double.parse(widget.trip.fromLat ?? "31.1234"),
+                      //         double.parse(
+                      //             widget.trip.fromLong ?? "31.098765")),
+                      //     //LatLng(31.1234, 31.098765),
+                      //     zoom: 12,
+                      //   ),
+                      //   markers:
+                      //   widget.trip.tripType != 'without' ?
+                      //
+                      //   {
+                      //     Marker(
+                      //       markerId: MarkerId("from"),
+                      //       position: LatLng(double.parse(widget.trip.fromLat!),
+                      //           double.parse(widget.trip.fromLong!)),
+                      //     ),
+                      //
+                      //     Marker(
+                      //       markerId: MarkerId("to"),
+                      //       position: LatLng(double.parse(widget.trip.toLat!),
+                      //           double.parse(widget.trip.toLong!)),
+                      //     ),
+                      //   }
+                      //       :
+                      //
+                      //       // context.read<TripDetailsCubit>().markers,
+                      //       {
+                      //     Marker(
+                      //       markerId: MarkerId("from"),
+                      //       position: LatLng(double.parse(widget.trip.fromLat!),
+                      //           double.parse(widget.trip.fromLong!)),
+                      //     ),
+                      //
+                      //   },
+                      //
+                      //   polylines: widget.trip.tripType != 'without'
+                      //       ? {
+                      //  //  Polyline(
+                      //  //      polylineId: const PolylineId("route"),
+                      //  //      points: cubit.latLngList,
+                      //  //      color: AppColors.black,
+                      //  //      width: 5,visible: true
+                      //
+                      //  //  ),
+                      //
+                      //
+                      //     Polyline(
+                      //     polylineId: const PolylineId("route"),
+                      //     points: [
+                      //       LatLng(double.parse(widget.trip.fromLat!),
+                      //           double.parse(widget.trip.fromLong!)),
+                      //       LatLng(double.parse(widget.trip.toLat!),
+                      //           double.parse(widget.trip.toLong!)),
+                      //     ],
+                      //     color: const Color(0xFF7B61FF),
+                      //     width: 6,
+                      //   ),}
+                      //       : {
+                      //
+                      //         },
+                      // ),
                     ),
                     //  SizedBox(height: 10,),
                     Padding(
@@ -203,7 +514,7 @@ cubit.rateUser(context,widget.trip.id.toString(),cubit.rate.toString(),widget.tr
                           ),
                           InkWell(
                             onTap: () {
-                             Navigator.pop(context);
+                              Navigator.pop(context);
                             },
                             child: Image.asset(
                               ImageAssets.backImage,
@@ -226,15 +537,13 @@ cubit.rateUser(context,widget.trip.id.toString(),cubit.rate.toString(),widget.tr
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
                         children: [
-
                           Row(
                             children: [
                               Icon(
                                 CupertinoIcons.person_circle_fill,
                                 color: Colors.grey,
                                 size: 45,
-                              )
-                              ,
+                              ),
                               SizedBox(
                                 width: 5,
                               ),
@@ -246,21 +555,22 @@ cubit.rateUser(context,widget.trip.id.toString(),cubit.rate.toString(),widget.tr
                                     fontWeight: FontWeight.w400),
                               ),
                               Spacer(),
-                              if(cubit.tripStages ==1)
-                              InkWell(
-                                onTap: () {
+                              if (cubit.tripStages == 1)
 
 
-                                  cubit.cancelTrip(context, widget.trip.id.toString());
-                                },
-                                child: Text(
-                                  "cancel".tr(),
-                                  style: TextStyle(
-                                      color: AppColors.red,
-                                      fontSize: getSize(context) * 0.04,
-                                      fontWeight: FontWeight.w400),
+                                InkWell(
+                                  onTap: () {
+                                    cubit.cancelTrip(
+                                        context, widget.trip.id.toString());
+                                  },
+                                  child: Text(
+                                    "cancel".tr(),
+                                    style: TextStyle(
+                                        color: AppColors.red,
+                                        fontSize: getSize(context) * 0.04,
+                                        fontWeight: FontWeight.w400),
+                                  ),
                                 ),
-                              ),
                             ],
                           ),
                           SizedBox(
@@ -291,7 +601,8 @@ cubit.rateUser(context,widget.trip.id.toString(),cubit.rate.toString(),widget.tr
                               width: getSize(context) * 0.03,
                             ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8.0),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 8.0),
                               child: Dash(
                                   direction: Axis.vertical,
                                   length: 40,
@@ -304,6 +615,8 @@ cubit.rateUser(context,widget.trip.id.toString(),cubit.rate.toString(),widget.tr
                             Flexible(
                               child: Text(
                                 " ${widget.trip.fromAddress}",
+                                maxLines: 1,
+                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                     color: AppColors.gray,
                                     fontSize: getSize(context) * 0.04,
@@ -337,13 +650,11 @@ cubit.rateUser(context,widget.trip.id.toString(),cubit.rate.toString(),widget.tr
                                 width: getSize(context) * 0.03,
                               ),
                               Flexible(
-
                                 child: Text(
-                                  maxLines: 2,
-
-                                  "${widget.trip.toAddress}",
+                                  maxLines: 1,
+                                  "${widget.trip.toAddress??"بدون وجهة"}",
                                   style: TextStyle(
-                                    overflow:TextOverflow.ellipsis ,
+                                    overflow: TextOverflow.ellipsis,
                                     color: AppColors.gray,
                                     fontSize: getSize(context) * 0.04,
                                     fontWeight: FontWeight.w400,
@@ -361,45 +672,40 @@ cubit.rateUser(context,widget.trip.id.toString(),cubit.rate.toString(),widget.tr
                     ),
                   ),
                   SizedBox(height: getSize(context) * 0.02),
-                  if(cubit.tripStages ==0)
-                  // accept button
-                  CustomButton(
-                    text: 'acceptTrip'.tr(),
-                    color: AppColors.primary,
-                    onClick: () {
-
-                      cubit.acceptTrip(context,widget.trip.id.toString());
-                    },
-                    width: getSize(context) * 0.9,
-                    height: getSize(context) * 0.14,
-                  )
-                 else if(cubit.tripStages ==1)
-                  // start button
-                  CustomButton(
-                    text: 'startTrip'.tr(),
-                    color: AppColors.primary,
-                    onClick: () {
-
-
-
-                      cubit.startTrip(context,widget.trip.id.toString());
-                    },
-                    width: getSize(context) * 0.9,
-                    height: getSize(context) * 0.14,
-                  )
+                  if (cubit.tripStages == 0)
+                    // accept button
+                    CustomButton(
+                      text: 'acceptTrip'.tr(),
+                      color: AppColors.primary,
+                      onClick: () {
+                        cubit.acceptTrip(context, widget.trip.id.toString());
+                      },
+                      width: getSize(context) * 0.9,
+                      height: getSize(context) * 0.14,
+                    )
+                  else if (cubit.tripStages == 1)
+                    // start button
+                    CustomButton(
+                      text: 'startTrip'.tr(),
+                      color: AppColors.primary,
+                      onClick: () {
+                        cubit.startTrip(context, widget.trip.id.toString());
+                      },
+                      width: getSize(context) * 0.9,
+                      height: getSize(context) * 0.14,
+                    )
                   else
                     CustomButton(
                       text: 'endTrip'.tr(),
                       color: AppColors.green1,
                       onClick: () {
-                        cubit.endTrip(context,widget.trip.id.toString());
+                        cubit.endTrip(context, widget.trip.id.toString());
                       },
                       width: getSize(context) * 0.9,
                       height: getSize(context) * 0.14,
                     )
                 ],
               )
-
             ],
           ),
         ),

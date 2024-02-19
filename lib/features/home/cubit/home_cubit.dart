@@ -20,6 +20,7 @@ import 'package:hero/features/home/components/default_widget.dart';
 import 'package:hero/features/home/components/failure_widget.dart';
 import 'package:hero/features/home/components/loading_widget.dart';
 import 'package:hero/features/home/components/success_widget.dart';
+import 'package:hero/features/user_trip/cubit/user_trip_cubit.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:maps_toolkit/maps_toolkit.dart' as mp;
 import 'package:flutter_svg/flutter_svg.dart';
@@ -32,11 +33,14 @@ import 'package:location/location.dart'as loc;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:widget_to_marker/widget_to_marker.dart';
 import '../../../config/routes/app_routes.dart';
+import '../../../core/models/check_document_model.dart';
 import '../../../core/models/check_trip_status_model.dart';
 import '../../../core/models/create_schedual_trip_model.dart';
 import '../../../core/models/favourite_model.dart';
 import '../../../core/models/signup_response_model.dart';
 import '../../../core/utils/custom_marker.dart';
+import '../../driver_trip/cubit/driver_trip_cubit.dart';
+import '../../homedriver/cubit/home_driver_cubit.dart';
 part 'home_state.dart';
 
 
@@ -51,6 +55,7 @@ class HomeCubit extends Cubit<HomeState> {
   MyEnum currentEnumStatus = MyEnum.defaultState;
   int? flag;
   Set<Marker> markers = {};
+  Set<Marker> tripMarkers = {};
   BitmapDescriptor? bitmapDescriptorto;
   BitmapDescriptor? bitmapDescriptorfrom;
   SignUpModel? signUpModel ;
@@ -144,6 +149,15 @@ void setflag(int flag){
     markers.add(source);
     if(destination!=null){
       markers.add(destination);
+    }
+
+    emit(AddMarkersState());
+  }
+  setTripMarkers(Marker source , Marker? destination){
+    tripMarkers.clear();
+    tripMarkers.add(source);
+    if(destination!=null){
+      tripMarkers.add(destination);
     }
 
     emit(AddMarkersState());
@@ -262,7 +276,58 @@ double paymentMoney = 0;
 
 // handle the on tab user event on map
 
+setMyMarker(NewTrip trip)async{
 
+
+    bitmapDescriptorfrom = await CustomeMarker(
+      title: "from".tr(),
+      location: trip.fromAddress!,
+    ).toBitmapDescriptor().then((value) async{
+      bitmapDescriptorfrom=value;
+
+if (trip.toAddress != null)
+
+  {
+    bitmapDescriptorto = await CustomeMarker(
+      title: "to".tr(),
+      location: trip.toAddress!,
+    ).toBitmapDescriptor().then((value) {
+      bitmapDescriptorto=value;
+
+      setTripMarkers(
+        Marker(
+          markerId: const MarkerId("from"),
+          icon:bitmapDescriptorfrom!,
+          position: LatLng(double.parse(trip.fromLat!),
+              double.parse(trip.fromLong!)),
+        ),
+        Marker(
+          markerId: MarkerId("to"),
+
+          icon:bitmapDescriptorto!,
+          position:LatLng(double.parse(trip.toLat!),
+              double.parse(trip.toLong!)),
+        ),
+      );
+    });
+  }
+else{
+  setTripMarkers(
+    Marker(
+      markerId: const MarkerId("from"),
+      icon:bitmapDescriptorfrom!,
+      position: LatLng(double.parse(trip.fromLat!),
+          double.parse(trip.fromLong!)),
+    ),null
+  );
+}
+
+
+    });
+
+
+
+}
 
   getLocation(LatLng argument, String title) async {
     //location_control.text  = "";
@@ -295,7 +360,6 @@ double paymentMoney = 0;
               Marker(
                 markerId: const MarkerId("currentLocation"),
               icon:bitmapDescriptorfrom!,
-
                 position: LatLng(currentLocation?.latitude??0,
                     currentLocation?.longitude??0),
               ),
@@ -308,9 +372,7 @@ double paymentMoney = 0;
             );
           });
 
-
         }
-
         else{
           bitmapDescriptorfrom = await CustomeMarker(
             title: title.tr(),
@@ -683,10 +745,131 @@ bool isLoadingSettings = true;
   });
   }
 
+
+  CheckTripStatusModel checkTripStatusModelOfDriver=CheckTripStatusModel();
+
+  getDriverTripStatus(BuildContext context)async{
+    emit(LoadingCheckTripStatusState());
+
+  final response = await  api.checkTripStatus();
+  response.fold((l) {
+    emit(FailureCheckTripStatusState());
+  }, (r) {
+    checkTripStatusModelOfDriver = r;
+
+    print ('lllllllllllllllllllllll trip in progress');
+
+           if (r.data != null){
+             // رحلة فورية
+
+             if (r.data!.tripType == 'quick'){
+               if(r.data!.type =='progress'){
+                 context.read<HomeDriverCubit>().setDestination(r.data!.toLong!, r.data!.toLat!);
+                 context.read<HomeDriverCubit>().setStartLocation(r.data!.fromLong!, r.data!.fromLat!);
+                 context.read<HomeDriverCubit>().startQuickTripModel.data=r.data;
+                 Navigator.pushNamed(
+                     context, Routes.QuickTripScreen,
+                     arguments: r.data);
+               }
+             }
+             else{
+               // بوجهة
+              // if (r.data!.tripType == 'with'){
+                 if(r.data!.type =='progress'){
+                   context.read<DriverTripCubit>().tripStages =2;
+                 //  context.read<DriverTripCubit>().getEndStage();
+                   Navigator.pushNamed(context,
+                       Routes.DriverTripScreen,
+                       arguments:
+                      r.data);
+                 }else if(r.data!.type =='accept'){
+                 //  context.read<DriverTripCubit>().getStartStage;
+                   context.read<DriverTripCubit>().tripStages =1;
+                   print('gggggggggggggggggggg ${context.read<DriverTripCubit>().tripStages}');
+                   Navigator.pushNamed(context,
+                       Routes.DriverTripScreen,
+                       arguments:
+                       r.data);
+                 }
+
+
+             //  }
+               // بدون وجهة
+               // else{
+               //   if(r.data!.type =='progress'){
+               //
+               //
+               //   }else if(r.data!.type =='accept'){
+               //
+               //   }
+               //
+               // }
+
+
+
+
+
+
+             }
+
+           }
+       emit(SuccessCheckTripStatusState());
+  });
+  }
+  CheckTripStatusModel checkTripStatusModelOfUser=CheckTripStatusModel();
+
+  getUserTripStatus(BuildContext context)async{
+    emit(LoadingCheckTripStatusState());
+
+  final response = await  api.checkTripStatus();
+  response.fold((l) {
+    emit(FailureCheckTripStatusState());
+  }, (r) {
+    checkTripStatusModelOfUser = r;
+
+    print ('lllllllllllllllllllllll trip in progress');
+
+           if (r.data != null){
+//if(r.data!.tripType!= "schedule"){
+
+  if(r.data!.type =='progress'){
+    context.read<UserTripCubit>().tripStages =2;
+
+    Navigator.pushNamed(context,
+        Routes.UserTripScreen,
+        arguments:
+        r.data);
+  }else if(r.data!.type =='accept'){
+    //  context.read<DriverTripCubit>().getStartStage;
+    context.read<UserTripCubit>().tripStages =1;
+    Navigator.pushNamed(context,
+        Routes.UserTripScreen,
+        arguments:
+        r.data);
+  }else if(r.data!.type == 'new'){
+    context.read<UserTripCubit>().tripStages =0;
+    Navigator.pushNamed(context,
+        Routes.UserTripScreen,
+        arguments:
+        r.data);
+  }
+
+// }
+// else{
+//
+// }
+
+
+
+           }
+       emit(SuccessCheckTripStatusState());
+  });
+  }
+
   void launchPhoneDialer(String phoneNumber) async {
 
 
-    String url = 'tel:${settingsModel!.data!.phone}';
+    String url = 'tel:${settingsModel.data!.phone}';
 
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(Uri.parse(url));
@@ -694,6 +877,7 @@ bool isLoadingSettings = true;
       throw 'Could not launch $url';
     }
   }
+
   rateApp() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     String url = '';
@@ -949,34 +1133,66 @@ print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
 
      cancelTrip(BuildContext context
-  //  {required int tripId}
+  ,  { int? tripId}
     )async{
-   if(createTripModel!=null){
-     emit(CancelTripLoading());
-     final response = await api.cancelUserTrip(tripId: createTripModel!.data!.id!);
-     response.fold((l) {
-       errorGetBar("something wrong");
-       emit(CancelTripFailure());
-     }, (r) {
-
-         emit(CancelTripSuccess());
 
 
 
+    if(tripId != null){
 
-         if(r.data!= null){
+      emit(CancelTripLoading());
+      final response = await api.cancelUserTrip(tripId: tripId);
+      response.fold((l) {
+        errorGetBar("something wrong");
+        emit(CancelTripFailure());
+      }, (r) {
 
-           Navigator.pushNamedAndRemoveUntil(
-               context, Routes.homeRoute, (route) => false);
-         }
-         successGetBar(r.message);
+        emit(CancelTripSuccess());
 
 
-     });
-   }
-   else{
-     errorGetBar("there is no trip to cancel it");
-   }
+
+
+        if(r.data!= null){
+
+          Navigator.pushNamedAndRemoveUntil(
+              context, Routes.homeRoute, (route) => false);
+        }
+        successGetBar(r.message);
+
+
+      });
+
+    }else{
+
+
+      if(createTripModel!=null){
+        emit(CancelTripLoading());
+        final response = await api.cancelUserTrip(tripId: createTripModel!.data!.id!);
+        response.fold((l) {
+          errorGetBar("something wrong");
+          emit(CancelTripFailure());
+        }, (r) {
+
+          emit(CancelTripSuccess());
+
+
+
+
+          if(r.data!= null){
+
+            Navigator.pushNamedAndRemoveUntil(
+                context, Routes.homeRoute, (route) => false);
+          }
+          successGetBar(r.message);
+
+
+        });
+      }
+      else{
+        errorGetBar("there is no trip to cancel it");
+      }
+    }
+
 }
 
   //
@@ -1026,7 +1242,7 @@ print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
       case MyEnum.defaultState:
         emit(changingStatus());
-        return DefaultWidget();
+        return DefaultWidget(isATrip: false,);
       case MyEnum.load:
         emit(changingStatus());
         return LoadingWidget();
@@ -1038,7 +1254,7 @@ print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         return FailureWidget();
       default:
         emit(changingStatus());
-        return DefaultWidget();
+        return DefaultWidget(isATrip: false,);
     }
  }
 
@@ -1064,5 +1280,27 @@ print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
   double radians(double degrees) {
     return degrees * (pi / 180);
   }
+
+  // checkDocuments
+  CheckDocumentsModel checkDocumentsModel=  CheckDocumentsModel ();
+
+  checkDocuments(BuildContext context) async {
+    emit(LoadingCheckDocumentsStatus());
+    final response = await api.checkDocuments();
+    response.fold((l) {
+      emit(FailureCheckDocumentsState());
+    }, (r) {
+      checkDocumentsModel = r;
+      if( r.data!.driverDetails == 1 && r.data!.driverDocuments ==1){
+        if ( r.data!.status ==1){
+          Navigator.pushNamedAndRemoveUntil(
+              context, Routes.homedriverRoute, (route) => false);
+        }else
+          successGetBar('ما زال طلبك معلق');
+      }
+      emit(SuccessCheckDocumentsState());
+    });
+  }
+
 
 }

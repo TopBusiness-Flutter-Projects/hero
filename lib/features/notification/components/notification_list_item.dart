@@ -28,10 +28,11 @@ class _NotificationListItemState extends State<NotificationListItem> {
   Widget build(BuildContext context) {
     return Container(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              CircleAvatar(radius: 5,backgroundColor: Colors.green,),
+             // CircleAvatar(radius: 5,backgroundColor: Colors.green,),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: SvgPicture.asset(ImageAssets.notification),
@@ -58,7 +59,7 @@ class _NotificationListItemState extends State<NotificationListItem> {
               ),
             ],),
           Padding(
-            padding:  EdgeInsets.symmetric(horizontal: getSize(context)*0.035),
+            padding:  EdgeInsets.only(left: getSize(context)/15,right:  getSize(context)/15,top:  getSize(context)/30),
             child: Text("${widget.notificationData?.description}",
               maxLines: 2,
               style: TextStyle(
@@ -72,10 +73,8 @@ class _NotificationListItemState extends State<NotificationListItem> {
       ),
     );
   }
-
   calculateDuration(){
     Duration difference = DateTime.now().difference(widget.notificationData!.createdAt!);
-
     since = formatDuration(difference);
   }
   String formatDuration(Duration duration) {

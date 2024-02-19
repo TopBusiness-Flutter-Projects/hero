@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hero/config/routes/app_routes.dart';
 import 'package:hero/features/user_trip/cubit/user_trip_cubit.dart';
+import 'package:get/get_utils/src/platform/platform.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/assets_manager.dart';
@@ -78,21 +80,76 @@ class _DriverAcceptWidgetState extends State<DriverAcceptWidget> {
                             horizontal: 12.0),
                         child: Text("confirm_driver".tr())),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Icon(
-                          Icons.person,
-                          color: Colors.grey,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          cubit.checkTripStatusModel.data!.driver!.name!,
-                          style: TextStyle(color: AppColors.black3),
+                        Row(children: [
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Icon(
+                            Icons.person,
+                            color: Colors.grey,
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            cubit.checkTripStatusModel.data!.driver!.name!,
+                            style: TextStyle(color: AppColors.black3),
+                          ),
+                        ],),
+
+                        Row(
+                          children: [
+
+
+                            InkWell(
+                                onTap: () async{
+
+
+                                  String url = 'tel:${cubit.checkTripStatusModel.data!.driver!.phone!}';
+
+                                  if (await canLaunchUrl(Uri.parse(url))) {
+                                    await launchUrl(Uri.parse(url));
+                                  } else {
+                                    throw 'Could not launch $url';
+                                  }
+                                },
+                                child: Image.asset(ImageAssets.phone,width: 36,height: 36)),SizedBox(
+                              width: 10,
+                            ),
+                            InkWell(
+                                onTap: () async{
+
+
+
+
+
+                                  String number = cubit.checkTripStatusModel.data!.driver!.phone!;
+                                  var whatsappUrl = "whatsapp://send?phone=$number";
+
+                                  var whatsappUrlIos =
+                                      "https://api.whatsapp.com/send?phone=$number=";
+                                  final _url = Uri.parse(whatsappUrl);
+                                  final _urlIos = Uri.parse(whatsappUrlIos);
+
+                                  if (GetPlatform.isIOS) {
+                                    launchUrl(
+                                      _urlIos,
+                                      mode: LaunchMode.externalApplication,
+                                    );
+                                  } else {
+                                    launchUrl(
+                                      _url,
+                                      mode: LaunchMode.externalApplication,
+                                    );
+                                  }
+                                },
+                                child: Image.asset(ImageAssets.whats,width: 36,height: 36)),
+                            SizedBox(
+                              width: 10,
+                            ),
+                          ],
                         )
                       ],
                     )

@@ -11,8 +11,8 @@ import '../../../core/widgets/custom_textfield.dart';
 import '../cubit/home_cubit.dart';
 import 'dart:async';
 class DefaultWidget extends StatefulWidget {
-  const DefaultWidget({super.key});
-
+  const DefaultWidget({super.key, required this.isATrip});
+final bool isATrip;
   @override
   State<DefaultWidget> createState() => _DefaultWidgetState();
 }
@@ -119,10 +119,10 @@ class _DefaultWidgetState extends State<DefaultWidget> {
                   ],
                 ),
                 //cash
+
                 Row(
                  // mainAxisSize: MainAxisSize.min,
                   children: [
-
                     SizedBox(
                       width: getSize(context)/3,
                       height: getSize(context)/6.5,

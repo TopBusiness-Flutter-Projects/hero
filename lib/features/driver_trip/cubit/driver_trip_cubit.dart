@@ -13,6 +13,7 @@ import '../../../core/models/end_quick_trip_model.dart';
 import '../../../core/models/rate_trip_model.dart';
 import '../../../core/remote/service.dart';
 import '../../../core/utils/appwidget.dart';
+import '../../../core/utils/assets_manager.dart';
 import '../../../core/utils/custom_marker.dart';
 import '../../../core/utils/dialogs.dart';
 import '../../homedriver/cubit/home_driver_cubit.dart';
@@ -75,7 +76,7 @@ class DriverTripCubit extends Cubit<DriverTripState> {
 
   Set<Marker> markers = {};
 
-  setMarkers(Marker source, Marker? destination) {
+  setMarkers({required Marker source, Marker? destination}) {
     markers.clear();
     markers.add(source);
     if (destination != null) {
@@ -88,29 +89,138 @@ class DriverTripCubit extends Cubit<DriverTripState> {
   BitmapDescriptor? bitmapDescriptorto;
   BitmapDescriptor? bitmapDescriptorfrom;
 
-  setMarkerIcon(String to, LatLng currentLocation, LatLng destination) async {
+  setMarkerIcon(String? to, LatLng currentLocation, LatLng? destination,BuildContext context,String from) async {
+    bitmapDescriptorfrom= await CustomeMarker(
+      title: 'from'.tr(),
+      location: from!,
+    ).toBitmapDescriptor().then((value) {
+      bitmapDescriptorfrom = value;
+    //  strartlocation =currentLocation;
+    //  destinaion = destination!;
+      emit(RatingSuccessState());
+
+
+    }
+    );
+
+
+
+    if (to != null)
     bitmapDescriptorto = await CustomeMarker(
       title: 'to'.tr(),
       location: to,
     ).toBitmapDescriptor().then((value) {
       bitmapDescriptorto = value;
       strartlocation =currentLocation;
-      destinaion = destination;
+      destinaion = destination!;
       emit(RatingSuccessState());
+
       setMarkers(
+        source:
         Marker(
           markerId: const MarkerId("currentLocation"),
           icon: bitmapDescriptorfrom!,
           position: LatLng(
               currentLocation?.latitude ?? 0, currentLocation?.longitude ?? 0),
         ),
+        destination:
         Marker(
           markerId: MarkerId("destination"),
           icon: value,
           position: destination,
         ),
       );
-    });
+    }
+    );
+    else{
+      bitmapDescriptorfrom = await  Image.asset(ImageAssets.marker2).toBitmapDescriptor().then((value) {
+        strartlocation =currentLocation;
+        emit(RatingSuccessState());
+        setMarkers(
+          source:
+          Marker(
+            markerId: const MarkerId("currentLocation"),
+            icon: context.read<HomeDriverCubit>().markerIcon != null
+                ? BitmapDescriptor.fromBytes(context.read<HomeDriverCubit>().markerIcon!)
+                : context.read<HomeDriverCubit>().currentLocationIcon,
+            position: LatLng(
+                currentLocation?.latitude ?? 0, currentLocation?.longitude ?? 0),
+          ),
+
+        );
+      }
+
+
+      );
+
+
+
+
+
+    }
+
+    ;
+  }
+ setMarkerIcons(String? to,
+     LatLng currentLocation,
+     LatLng? destination,
+     BuildContext context) async {
+
+    if (to != null)
+    bitmapDescriptorto = await CustomeMarker(
+      title: 'to'.tr(),
+      location: to,
+    ).toBitmapDescriptor().then((value) {
+      bitmapDescriptorto = value;
+      strartlocation =currentLocation;
+      destinaion = destination!;
+      emit(RatingSuccessState());
+
+      setMarkers(
+        source:
+        Marker(
+          markerId: const MarkerId("currentLocation"),
+          icon: bitmapDescriptorfrom!,
+          position: LatLng(
+              currentLocation?.latitude ?? 0, currentLocation?.longitude ?? 0),
+        ),
+        destination:
+        Marker(
+          markerId: MarkerId("destination"),
+          icon: value,
+          position: destination,
+        ),
+      );
+    }
+    );
+    else{
+      bitmapDescriptorfrom = await  Image.asset(ImageAssets.marker2).toBitmapDescriptor().then((value) {
+        strartlocation =currentLocation;
+        emit(RatingSuccessState());
+        setMarkers(
+          source:
+          Marker(
+            markerId: const MarkerId("currentLocation"),
+            icon: context.read<HomeDriverCubit>().markerIcon != null
+                ? BitmapDescriptor.fromBytes(context.read<HomeDriverCubit>().markerIcon!)
+                : context.read<HomeDriverCubit>().currentLocationIcon,
+            position: LatLng(
+                currentLocation?.latitude ?? 0, currentLocation?.longitude ?? 0),
+          ),
+
+        );
+      }
+
+
+      );
+
+
+
+
+
+    }
+
+    ;
   }
 
   double calculateDistance(LatLng point1, LatLng point2) {
@@ -249,19 +359,15 @@ class DriverTripCubit extends Cubit<DriverTripState> {
     arrivalTime= DateTime.now();
 
 
-    tripTime = arrivalTime!.difference(startTime!).inMinutes.toString();
+   // tripTime = arrivalTime!.difference(startTime!).inMinutes.toString();
     double distance =calculateDistance(strartlocation, destinaion,);
-
     tripDistance=distance. toStringAsFixed(2).toString();
     emit(LoadingEndTripState());
     AppWidget.createProgressDialog(context, "wait".tr());
-
     final response = await api.endTrip(
-        time: tripTime,
+       // time: tripTime,
         distance: distance.toString(),
         tripId: id);
-
-
     response.fold((l) {
       Navigator.pop(context);
       errorGetBar("error".tr());
@@ -274,7 +380,6 @@ class DriverTripCubit extends Cubit<DriverTripState> {
       emit(SuccessEndTripState());
     });
   }
-
   //0 for accept , 1 for start , 2  for end
 int tripStages =0;
 

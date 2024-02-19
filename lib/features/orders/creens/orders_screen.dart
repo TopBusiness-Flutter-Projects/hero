@@ -1,3 +1,4 @@
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -158,51 +159,57 @@ class _OrdersScreenState extends State<OrdersScreen>
                                 child: CircularProgressIndicator(
                                 color: AppColors.primary,
                               ))
-                            : ListView.builder(
-                                shrinkWrap: true,
-                                physics: BouncingScrollPhysics(),
-                                itemBuilder: (context, index) {
-                                  return BlocBuilder<HomeDriverCubit,HomeDriverState>(
-                                    builder: (context,state) {
-                                      return InkWell(
-                                        onTap: () {
-                                          if (!widget.isUser) {
-                                            if (context
-                                                    .read<HomeDriverCubit>()
-                                                    .driverDataModel
-                                                    .data !=
-                                                null) {
-                                              context
-                                                  .read<DriverTripCubit>()
-                                                  .getAcceptStage();
+                            : ConditionalBuilder(
+                          condition: cubit.newTrips?.length != 0 ,
+                          fallback:(context) => Center(child: Text('لا يوجد طلبات حاليا')),
+                              builder: (context) =>
+
+                            ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: BouncingScrollPhysics(),
+                                  itemBuilder: (context, index) {
+                                    return BlocBuilder<HomeDriverCubit,HomeDriverState>(
+                                      builder: (context,state) {
+                                        return InkWell(
+                                          onTap: () {
+                                            if (!widget.isUser) {
                                               if (context
                                                       .read<HomeDriverCubit>()
                                                       .driverDataModel
-                                                      .data!
-                                                      .driverStatus ==
-                                                  0)
-                                                errorGetBar('أنت خارج الخدمة الآن');
-                                              else
-                                                Navigator.pushNamed(context,
-                                                    Routes.DriverTripScreen,
-                                                    arguments:
-                                                        cubit.newTrips![index]);
+                                                      .data !=
+                                                  null) {
+                                                context
+                                                    .read<DriverTripCubit>()
+                                                    .getAcceptStage();
+                                                if (context
+                                                        .read<HomeDriverCubit>()
+                                                        .driverDataModel
+                                                        .data!
+                                                        .driverStatus ==
+                                                    0)
+                                                  errorGetBar('أنت خارج الخدمة الآن');
+                                                else
+                                                  Navigator.pushNamed(context,
+                                                      Routes.DriverTripScreen,
+                                                      arguments:
+                                                          cubit.newTrips![index]);
+                                              }
                                             }
-                                          }
-                                        },
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 8.0),
-                                          child: HomeListItem(
-                                              isHome: false,
-                                              trip: cubit.newTrips![index]),
-                                        ),
-                                      );
-                                    }
-                                  );
-                                },
-                                itemCount: cubit.newTrips?.length ?? 0,
-                              ),
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 8.0),
+                                            child: HomeListItem(
+                                                isHome: false,
+                                                trip: cubit.newTrips![index]),
+                                          ),
+                                        );
+                                      }
+                                    );
+                                  },
+                                  itemCount: cubit.newTrips?.length ?? 0,
+                                ),
+                            ),
                         state is LoadingGettingAllTripsState
                             ? Center(
                                 child: CircularProgressIndicator(
@@ -210,49 +217,57 @@ class _OrdersScreenState extends State<OrdersScreen>
                               ))
                             :
                             //completed orders
-                            ListView.builder(
-                                shrinkWrap: true,
-                                physics: BouncingScrollPhysics(),
-                                itemBuilder: (context, index) {
-                                  return InkWell(
-                                    onTap: () {
-                                      Navigator.pushNamed(
-                                          context, Routes.tripDetailsRoute,
-                                          arguments:
-                                              cubit.completeTrips![index]);
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8.0),
-                                      child: HomeListItem(
-                                        isHome: false,
-                                        trip: cubit.completeTrips![index],
+                        ConditionalBuilder(
+                          condition: cubit.completeTrips?.length != 0 ,
+                          fallback:(context) => Center(child: Text('لا يوجد طلبات')),
+                          builder: (context) => ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: BouncingScrollPhysics(),
+                                  itemBuilder: (context, index) {
+                                    return InkWell(
+                                      onTap: () {
+                                        Navigator.pushNamed(
+                                            context, Routes.tripDetailsRoute,
+                                            arguments:
+                                                cubit.completeTrips![index]);
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8.0),
+                                        child: HomeListItem(
+                                          isHome: false,
+                                          trip: cubit.completeTrips![index],
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                },
-                                itemCount: cubit.completeTrips?.length ?? 0,
-                              ),
+                                    );
+                                  },
+                                  itemCount: cubit.completeTrips?.length ?? 0,
+                                ),
+                            ),
                         // rejected orders
                         state is LoadingGettingAllTripsState
                             ? Center(
                                 child: CircularProgressIndicator(
                                 color: AppColors.primary,
                               ))
-                            : ListView.builder(
-                                shrinkWrap: true,
-                                physics: BouncingScrollPhysics(),
-                                itemBuilder: (context, index) {
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0),
-                                    child: HomeListItem(
-                                        isHome: false,
-                                        trip: cubit.rejectedTrips![index]),
-                                  );
-                                },
-                                itemCount: cubit.rejectedTrips?.length ?? 0,
-                              ),
+                            : ConditionalBuilder(
+                          condition: cubit.rejectedTrips?.length != 0 ,
+                          fallback:(context) => Center(child: Text('لا يوجد طلبات ملغية')),
+                          builder: (context) => ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: BouncingScrollPhysics(),
+                                  itemBuilder: (context, index) {
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0),
+                                      child: HomeListItem(
+                                          isHome: false,
+                                          trip: cubit.rejectedTrips![index]),
+                                    );
+                                  },
+                                  itemCount: cubit.rejectedTrips?.length ?? 0,
+                                ),
+                            ),
                       ]),
                 )
               ],

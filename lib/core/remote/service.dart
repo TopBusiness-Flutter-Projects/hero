@@ -222,7 +222,7 @@ class ServiceApi {
   //// End trip
   Future<Either<Failure, DriverTripsModel>> endTrip({
     required String distance,
-    required String time,
+    //required String time,
     required String tripId,
   }) async {
     SignUpModel signUpModel = await Preferences.instance.getUserModel();

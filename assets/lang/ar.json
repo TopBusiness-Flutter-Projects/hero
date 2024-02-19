@@ -116,14 +116,12 @@
   "search_location": "ابحث عن موقع الوجهة",
   "arrivalTime": "وقت الوصول",
   "rideTime": "وقت الركوب",
-
-
   "latestTransfers": "التحويلات الاخيرة",
   "tripPrices": "أجور الرحلة",
   "pay": "ادفع",
   "today": "اليوم",
   "week": "الاسبوع",
-  "report": "التقرير",
+  "report": "تقرير\nالأرباح",
   "trips": "الرحلات",
   "price": "المبلغ",
   "tripsDistance": "مسافة الرحلات KM",

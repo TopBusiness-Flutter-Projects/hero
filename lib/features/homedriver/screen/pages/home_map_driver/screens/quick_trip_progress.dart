@@ -23,7 +23,7 @@ import '../../../../../../core/widgets/custom_button.dart';
 class QuickTripScreen extends StatefulWidget {
   const QuickTripScreen({super.key, required this.trip});
 
-  final StartNewTripData trip;
+  final NewTrip trip;
 
   @override
   State<QuickTripScreen> createState() => _QuickTripScreenState();
@@ -71,10 +71,12 @@ class _QuickTripScreenState extends State<QuickTripScreen> {
                         ),
                         markers:  {
                           Marker(
-                            markerId: const MarkerId("currentLocation"),
-                            icon: cubit.bitmapDescriptorfrom != null
-                                ? cubit.bitmapDescriptorfrom!
-                                : cubit.currentLocationIcon,
+                            markerId: const MarkerId("currentLocation"),icon: cubit!.markerIcon != null
+                              ? BitmapDescriptor.fromBytes(cubit!.markerIcon!)
+                              : cubit!.currentLocationIcon,
+                            // icon: cubit.bitmapDescriptorfrom != null
+                            //     ? cubit.bitmapDescriptorfrom!
+                            //     : cubit.currentLocationIcon,
                             position: LatLng(
                               cubit.currentLocation != null
                                   ? cubit.currentLocation!.latitude!
@@ -86,12 +88,20 @@ class _QuickTripScreenState extends State<QuickTripScreen> {
                           ),
                           Marker(
                             markerId: const MarkerId("destinationLocation"),
-                            icon: cubit.bitmapDescriptorto != null
-                                ? cubit.bitmapDescriptorto!
-                                : cubit.currentLocationIcon,
+                           // icon: cubit.bitmapDescriptorto != null
+                           //     ? cubit.bitmapDescriptorto!
+                           //     : cubit.currentLocationIcon,
                             position: LatLng(cubit.destinaion.latitude,
                                 cubit.destinaion.longitude),
                           ),
+                        // Marker(
+                        //   markerId: const MarkerId("destinationLocation"),
+                        //   icon: cubit.bitmapDescriptorto != null
+                        //       ? cubit.bitmapDescriptorto!
+                        //       : cubit.currentLocationIcon,
+                        //   position: LatLng(cubit.destinaion.latitude,
+                        //       cubit.destinaion.longitude),
+                        // ),
                           // Rest of the markers...
                         },
                         onMapCreated: (GoogleMapController controller) {
@@ -233,7 +243,8 @@ class _QuickTripScreenState extends State<QuickTripScreen> {
 
                                   ), FinishTripColumn(
                                     path: ImageAssets.finishTripMoney,
-                                    text: cubit.endQuickTripModel.data!.price!.toString(),
+                                      text:"${double.parse(double.parse(cubit.endQuickTripModel.data!.price!.toString()).toStringAsFixed(2))}"
+
 
                                   ),
                                 ],

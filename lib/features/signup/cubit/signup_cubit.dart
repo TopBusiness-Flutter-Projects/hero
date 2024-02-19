@@ -20,7 +20,6 @@ class SignupCubit extends Cubit<SignupState> {
   SignupCubit(this.api) : super(SignupInitial());
   ServiceApi api;
   var token;
-
   var deviceType;
   TextEditingController nameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
@@ -28,9 +27,7 @@ class SignupCubit extends Cubit<SignupState> {
   TextEditingController dateOfBirthController = TextEditingController();
   DateTime selectedDate = DateTime.now();
   SignUpModel? signUpModel;
-
   SignUpModel? sharedUserData;
-
   signUp(String userType, BuildContext context, bool isSignUp) async {
     String? deviceId = await _getId();
     SignUpModel? signUpModel = await Preferences.instance.getUserModel();
@@ -39,7 +36,6 @@ class SignupCubit extends Cubit<SignupState> {
     if (regExp.hasMatch(phoneController.text)) {
       phoneController.text = phoneController.text.replaceFirst(regExp, '');
     }
-
     RegisterModel registerModel = RegisterModel(
       name: nameController.text,
       email: emailController.text,

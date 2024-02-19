@@ -20,7 +20,6 @@ class HomeDriver extends StatefulWidget {
   @override
   State<HomeDriver> createState() => _HomeDriverState();
 }
-
 class _HomeDriverState extends State<HomeDriver> with TickerProviderStateMixin {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -28,12 +27,14 @@ class _HomeDriverState extends State<HomeDriver> with TickerProviderStateMixin {
     // TODO: implement initState
     super.initState();
     context.read<HomeCubit>().getUserData();
+    context.read<HomeCubit>().getDriverTripStatus(context);
     context.read<HomeDriverCubit>().tabsController =
         TabController(length: 2, vsync: this);
   }
 
   @override
   Widget build(BuildContext context) {
+    HomeCubit homeCubit=   context.read<HomeCubit>();
     return Scaffold(
       key: _scaffoldKey,
       body: BlocConsumer<HomeCubit,HomeState>(
@@ -141,7 +142,7 @@ class _HomeDriverState extends State<HomeDriver> with TickerProviderStateMixin {
                       ),
                     ),
                 subtitle: Text(
-                  "${context.read<HomeCubit>().signUpModel?.data?.email}",
+                  "${context.read<HomeCubit>().signUpModel?.data?.phone}",
                   style: TextStyle(
                       fontSize: getSize(context) * 0.0295,
                       fontWeight: FontWeight.w400,

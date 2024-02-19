@@ -1,6 +1,7 @@
 const String imagePath = 'assets/images';
 const String iconsPath = 'assets/icons';
 const String lottiePath = 'assets/lottie';
+const String gif = 'assets/gif';
 
 class ImageAssets {
   //images
@@ -25,6 +26,8 @@ class ImageAssets {
   static const String marker2 = '$imagePath/toktomap.png';
   static const String finishTripBike = '$imagePath/finishTripBike.png';
   static const String tuktukWallet = '$imagePath/tuktukWallet.png';
+  static const String phone = '$imagePath/phone.png';
+  static const String whats = '$imagePath/whats.png';
 
   // icons
   static const String phoneIcon = '$iconsPath/phone.svg';
@@ -63,14 +66,19 @@ class ImageAssets {
   static const String update = '$iconsPath/update.svg';
   static const String mapIcon = '$iconsPath/map.svg';
   static const String myWallet = '$iconsPath/myWallet.svg';
-
   static const String finishTripMap = '$iconsPath/finishTripMap.svg';
   static const String finishTripMoney = '$iconsPath/finishTripMoney.svg';
   static const String finishTripTime = '$iconsPath/finishTripTime.svg';
+
+  //Gif
+  static const String searchGif = '$gif/search.gif';
 
 
   //Lottie
   static const String noItems = '$lottiePath/no_item.json';
   static const String noExam = '$lottiePath/no_exam.json';
   static const String noLessons = '$lottiePath/no_lessons.json';
+
+
+  //
 }

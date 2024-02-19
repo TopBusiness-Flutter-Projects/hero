@@ -34,7 +34,10 @@ class CustomTripsPriceContainer extends StatelessWidget {
                       height: 40,
                       child: VerticalDivider(
                           color: AppColors.black, thickness: 1, width: 1)),
-                  CustomColumn(text: "price".tr(),value:  "${cubit.profitsModelDay.data!.totalTripsPrice??0}",isPrice: true,)
+                  CustomColumn(text: "price".tr(),value:
+                  "${double.parse(double.parse(cubit.profitsModelDay.data!.totalTripsPrice.toString()).toStringAsFixed(2))}"
+
+                ,isPrice: true,)
                 ],
               ),
             ),
@@ -52,7 +55,7 @@ class CustomTripsPriceContainer extends StatelessWidget {
                       height: 40,
                       child: VerticalDivider(
                           color: AppColors.black, thickness: 1, width: 1)),
-                  CustomColumn(text: "price".tr(),value:  "${cubit.profitsModelWeek.data!.totalTripsPrice??0}",isPrice: true,)
+                  CustomColumn(text: "price".tr(),value:  "${double.parse(double.parse(cubit.profitsModelWeek.data!.totalTripsPrice.toString()).toStringAsFixed(2))}" ,isPrice: true,)
                 ],
               ),
             ),
@@ -71,7 +74,7 @@ class CustomTripsPriceContainer extends StatelessWidget {
                       height: 40,
                       child: VerticalDivider(
                           color: AppColors.black, thickness: 1, width: 1)),
-                  CustomColumn(text: "price".tr(),value:  "${cubit.profitsModelCustom.data!.totalTripsPrice??0}",isPrice: true,)
+                  CustomColumn(text: "price".tr(),value:  "${double.parse(double.parse(cubit.profitsModelCustom.data!.totalTripsPrice.toString()).toStringAsFixed(2))}" ,isPrice: true,)
                 ],
               ),
             ),

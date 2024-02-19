@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'dart:math';
 import 'dart:ui' as ui;
 import 'package:bloc/bloc.dart';
@@ -97,7 +98,7 @@ changeDriverStatus(context);
     }, (r) {
       checkStatusModel = r;
       successGetBar(r.message);
-
+      getDriverData();
       Navigator.pop(context);
       emit(SuccessChangeDriverStatusState());
 
@@ -174,8 +175,8 @@ print(strartlocation.longitude);
     arrivalTime= DateTime.now();
 
 
-   tripTime = arrivalTime!.difference(startTime!).inMinutes.toString();
-    print ('lllllllllllllllll ${startQuickTripModel.data!.phone!}');
+
+  //  print ('lllllllllllllllll ${startQuickTripModel.data!.phone!}');
     double distance =calculateDistance(strartlocation.latitude, strartlocation.longitude, destinaion.latitude, destinaion.longitude);
 
    tripDistance=distance. toStringAsFixed(2).toString();
@@ -199,6 +200,8 @@ print(strartlocation.longitude);
       emit(FailureEndQuickTripState());
     }, (r) {
       endQuickTripModel = r;
+      startTime =r.data!.startTime!;
+      tripTime = arrivalTime!.difference(startTime!).inMinutes.toString();
       Navigator.pop(context);
       successGetBar(r.message);
 
@@ -207,12 +210,25 @@ print(strartlocation.longitude);
 
     });
   }
+/// set destination
+
+  setDestination(
+      String lon,String lat
+      ){
+    destinaion= LatLng(double.parse(lat), double.parse(lon));
+    emit(ChangeTripStageUIState());
+  }
+  setStartLocation(
+      String lon,String lat
+      ){
+    strartlocation= LatLng(double.parse(lat), double.parse(lon));
+    emit(ChangeTripStageUIState());
+  }
 
 //********************************************************************************//
   getmarker() async {
     markerIcon = await getBytesFromAsset(ImageAssets.marker, 100);
   }
-
   Future<Uint8List> getBytesFromAsset(String path, int width) async {
     ByteData data = await rootBundle.load(path);
     ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),

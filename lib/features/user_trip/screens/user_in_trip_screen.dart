@@ -41,8 +41,10 @@ class _UserTripScreenState extends State<UserTripScreen> {
 
         context.read<HomeCubit>().getTripStatus();
     });
-    context.read<UserTripCubit>().setMarkerIcon(widget.trip.toAddress??" ", LatLng(double.parse(widget.trip.fromLat??"31.98354"), double.parse(widget.trip.fromLong??"31.1234065")),
-        LatLng(double.parse(widget.trip.toLat??"31.98354"), double.parse(widget.trip.toLong??"31.1234065")));
+    context.read<HomeCubit>().setMyMarker(widget.trip
+       // widget.trip.toAddress??" ", LatLng(double.parse(widget.trip.fromLat??"31.98354"), double.parse(widget.trip.fromLong??"31.1234065")),
+       // LatLng(double.parse(widget.trip.toLat??"31.98354"), double.parse(widget.trip.toLong??"31.1234065"))
+    );
     super.initState();
   }
 
@@ -56,7 +58,6 @@ class _UserTripScreenState extends State<UserTripScreen> {
             if (context.read<HomeCubit>().checkTripStatusModel.data != null){
 
             }
-
           },
           builder: (context, state) => Column(
             children: [
@@ -252,7 +253,7 @@ class _UserTripScreenState extends State<UserTripScreen> {
                             cubit.tripStages ==1   ?
                             DriverAcceptWidget():
                             cubit.tripStages ==0   ?
-                            WaitingDriverWidget()
+                            WaitingDriverWidget(tripId: widget.trip.id,)
                            :
                             cubit.tripStages ==3   ?
                 TripCompletedWidget(trip: context.read<HomeCubit>().checkTripStatusModel.data!,)

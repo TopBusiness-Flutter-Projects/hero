@@ -14,8 +14,8 @@ import '../../../../core/widgets/custom_button.dart';
 
 class WaitingDriverWidget extends StatefulWidget {
 
-  const WaitingDriverWidget({super.key});
-
+  const WaitingDriverWidget({super.key, this.tripId});
+final int?tripId;
   @override
   State<WaitingDriverWidget> createState() => _WaitingDriverWidgetState();
 }
@@ -63,7 +63,7 @@ class _WaitingDriverWidgetState extends State<WaitingDriverWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Image.asset(
-                      ImageAssets.search,
+                      ImageAssets.searchGif,
                       width: getSize(context) / 4,
                     ),
                     //progress indicator
@@ -110,7 +110,7 @@ class _WaitingDriverWidgetState extends State<WaitingDriverWidget> {
 
                        // cubit.tabsController.animateTo(0);
                        // cubit.currentEnumStatus = MyEnum.defaultState;
-                        cubit.cancelTrip(context);
+                        cubit.cancelTrip(context,tripId: widget.tripId);
 
                       },
                       width: getSize(context) * 0.9,

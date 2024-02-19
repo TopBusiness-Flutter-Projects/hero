@@ -311,8 +311,8 @@ class NewTrip {
   final dynamic phone;
   final User? user;
   final Driver? driver;
-  final String? createdAt;
-  final String? updatedAt;
+  final dynamic createdAt;
+  final dynamic updatedAt;
 
   NewTrip({
     this.id,

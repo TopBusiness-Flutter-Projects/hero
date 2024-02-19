@@ -29,7 +29,10 @@ class _HomeMapDriverState extends State<HomeMapDriver> {
   Widget build(BuildContext context) {
     cubit = context.read<HomeDriverCubit>();
 
-    return BlocBuilder<HomeDriverCubit, HomeDriverState>(
+    return BlocConsumer<HomeDriverCubit, HomeDriverState>(
+      listener: (context, state) {
+
+      },
       builder: (context, state) {
         return Scaffold(
           body: Stack(
@@ -37,7 +40,7 @@ class _HomeMapDriverState extends State<HomeMapDriver> {
             children: [
               Builder(
                 builder: (context) {
-                  return GoogleMap(
+                  return cubit!.currentLocation != null ? GoogleMap(
                     initialCameraPosition: CameraPosition(
                       target: LatLng(
                         cubit!.currentLocation != null ? cubit!.currentLocation!
@@ -78,6 +81,8 @@ class _HomeMapDriverState extends State<HomeMapDriver> {
                     },
 
 
+                  ):CircularProgressIndicator(
+                    color: AppColors.primary,
                   );
                 },
 

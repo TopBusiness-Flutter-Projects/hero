@@ -8,85 +8,174 @@ import 'package:hero/features/profits/cubit/profits_cubit.dart';
 
 class CustomProfitsDetails extends StatelessWidget {
   const CustomProfitsDetails({
-    super.key, required this.tripsDistance, required this.kiloPrice, required this.cashPay, required this.theWallet, required this.totalProfits,
+    super.key,
+    required this.tripsDistance,
+    required this.kiloPrice,
+    required this.cashPay,
+    required this.theWallet,
+    required this.totalProfits,
   });
-final String tripsDistance;
-final String kiloPrice;
-final String cashPay;
-final String theWallet;
-final String totalProfits;
+
+  final String tripsDistance;
+  final String kiloPrice;
+  final String cashPay;
+  final String theWallet;
+  final String totalProfits;
+
   @override
   Widget build(BuildContext context) {
     ProfitsCubit cubit = context.read<ProfitsCubit>();
-    return BlocConsumer<ProfitsCubit,ProfitsState>(
-      listener: (context, state) {
+    return BlocConsumer<ProfitsCubit, ProfitsState>(
+        listener: (context, state) {},
+        builder: (context, state) {
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: cubit.selected == 0
+                ? ConditionalBuilder(
+                    condition: cubit.profitsModelDay.data != null,
+                    fallback: (context) => SizedBox(height: 50),
+                    builder: (context) => Column(
+                      children: [
+                        CustomRow(
+                            text: "tripsDistance".tr(),
+                            value:
+                                "${double.parse(double.parse(cubit.profitsModelDay.data!.tripsDistance.toString()).toStringAsFixed(2))}" +
+                                    " " +
+                                    "KM"),
+                   //   CustomRow(
+                   //       text: "kiloPrice".tr(),
+                   //       value:
+                   //           "${cubit.profitsModelDay.data!.kmPrice ?? 0}" +
+                   //               " " +
+                   //               "currency".tr()),
+                        CustomRow(
+                            text: "cashPay".tr(),
+                            value:   "${double.parse(double.parse(cubit.profitsModelDay.data!.total.toString()).toStringAsFixed(2))}" +
+                                " " +
+                                "currency".tr()),
+                        CustomRow(
+                          text: "theWallet".tr(),
+                          value:
+                              "${cubit.profitsModelDay.data!.vatTotal ?? 0}" +
+                                  " " +
+                                  "currency".tr(),
+                          color: AppColors.red,
+                        ),
+                        Divider(color: AppColors.black, thickness: 1),
+                        CustomRow(
+                          text: "totalProfits".tr(),
+                          value:
+                              "${double.parse(double.parse(cubit.profitsModelDay.data!.netTotal.toString()).toStringAsFixed(2))}" +
+                                  " " +
+                                  "currency".tr(),
+                          color: AppColors.totalProfitsColor,
+                        ),
+                      ],
+                    ),
+                  )
+                : cubit.selected == 1
+                    ? ConditionalBuilder(
+                        condition: cubit.profitsModelWeek.data != null,
+                        fallback: (context) => SizedBox(height: 50),
+                        builder: (context) => Column(
+                          children: [
+                            CustomRow(
+                                text: "tripsDistance".tr(),
+                                value:
+                                "${double.parse(double.parse(cubit.profitsModelWeek.data!.tripsDistance.toString()).toStringAsFixed(2))}" +
+                                    " " +
+                                    "KM"),
+                      //     CustomRow(
+                      //         text: "kiloPrice".tr(),
+                      //         value:
+                      //             "${cubit.profitsModelWeek.data!.kmPrice ?? 0}" +
+                      //                 " " +
+                      //                 "currency".tr()),
+                            CustomRow(
+                                text: "cashPay".tr(),
+                                value:"${double.parse(double.parse(cubit.profitsModelWeek.data!.total.toString()).toStringAsFixed(2))}"
+                                     +
+                                        " " +
+                                        "currency".tr()),
+                            CustomRow(
+                              text: "theWallet".tr(),
+                              value:
+                                  "${cubit.profitsModelWeek.data!.vatTotal ?? 0}" +
+                                      " " +
+                                      "currency".tr(),
+                              color: AppColors.red,
+                            ),
+                            Divider(color: AppColors.black, thickness: 1),
+                            CustomRow(
+                              text: "totalProfits".tr(),
+                              value:
+                              "${double.parse(double.parse(cubit.profitsModelWeek.data!.netTotal.toString()).toStringAsFixed(2))}" +
+                                      " " +
+                                      "currency".tr(),
+                              color: AppColors.totalProfitsColor,
+                            ),
+                          ],
+                        ),
+                      )
+                    : ConditionalBuilder(
+                        condition: cubit.profitsModelCustom.data != null,
+                        fallback: (context) => SizedBox(height: 50),
+                        builder: (context) => Column(
+                          children: [
+                            CustomRow(
+                                text: "tripsDistance".tr(),
+                                value:
+                                "${double.parse(double.parse(cubit.profitsModelCustom.data!.tripsDistance.toString()).toStringAsFixed(2))}" +
+                                    " " +
+                                    "KM"),
+                        //  CustomRow(
+                        //      text: "kiloPrice".tr(),
+                        //      value:
+                        //          "${cubit.profitsModelCustom.data!.kmPrice ?? 0}" +
+                        //              " " +
+                        //              "currency".tr()),
+                            CustomRow(
+                                text: "cashPay".tr(),
+                                value: "${double.parse(double.parse(cubit.profitsModelCustom.data!.total.toString()).toStringAsFixed(2))}" +
 
-      },
-      builder:  (context, state) {
-        return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: cubit.selected == 0 ?
-          ConditionalBuilder(
-            condition: cubit.profitsModelDay.data != null,
-            fallback: (context) => SizedBox(height: 50),
-            builder: (context) =>
-                Column(
-                  children: [
-                    CustomRow(text: "tripsDistance".tr(),value: "${cubit.profitsModelDay.data!.tripsDistance ??0}"+" "+"KM"),
-                    CustomRow(text: "kiloPrice".tr(),value:"${cubit.profitsModelDay.data!.kmPrice ??0}"+" "+"currency".tr()),
-                    CustomRow(text: "cashPay".tr(),value: "${cubit.profitsModelDay.data!.total ??0}"+" "+"currency".tr()),
-                    CustomRow(text: "theWallet".tr(),value: "${cubit.profitsModelDay.data!.vatTotal ??0}"+" "+"currency".tr(),color: AppColors.red,),
-                    Divider(color: AppColors.black,thickness: 1),
-                    CustomRow(text: "totalProfits".tr(),value: "${cubit.profitsModelDay.data!.netTotal ??0}"+" "+"currency".tr(),color: AppColors.totalProfitsColor,),
-                  ],
-                ),
-          ):
-          cubit.selected == 1 ?
-          ConditionalBuilder(
-            condition: cubit.profitsModelWeek.data != null,
-            fallback: (context) => SizedBox(height: 50),
-            builder: (context) =>
-                Column(
-                  children: [
-                    CustomRow(text: "tripsDistance".tr(),value: "${cubit.profitsModelWeek.data!.tripsDistance ??0}"+" "+"KM"),
-                    CustomRow(text: "kiloPrice".tr(),value:"${cubit.profitsModelWeek.data!.kmPrice ??0}"+" "+"currency".tr()),
-                    CustomRow(text: "cashPay".tr(),value: "${cubit.profitsModelWeek.data!.total ??0}"+" "+"currency".tr()),
-                    CustomRow(text: "theWallet".tr(),value: "${cubit.profitsModelWeek.data!.vatTotal ??0}"+" "+"currency".tr(),color: AppColors.red,),
-                    Divider(color: AppColors.black,thickness: 1),
-                    CustomRow(text: "totalProfits".tr(),value: "${cubit.profitsModelWeek.data!.netTotal ??0}"+" "+"currency".tr(),color: AppColors.totalProfitsColor,),
-
-                  ],
-                ),
-          ):
-          ConditionalBuilder(
-            condition: cubit.profitsModelCustom.data != null,
-            fallback: (context) => SizedBox(height: 50),
-            builder: (context) =>
-                Column(
-              children: [
-                CustomRow(text: "tripsDistance".tr(),value: "${cubit.profitsModelCustom.data!.tripsDistance ??0}"+" "+"KM"),
-                CustomRow(text: "kiloPrice".tr(),value:"${cubit.profitsModelCustom.data!.kmPrice ??0}"+" "+"currency".tr()),
-                CustomRow(text: "cashPay".tr(),value: "${cubit.profitsModelCustom.data!.total ??0}"+" "+"currency".tr()),
-                CustomRow(text: "theWallet".tr(),value: "${cubit.profitsModelCustom.data!.vatTotal ??0}"+" "+"currency".tr(),color: AppColors.red,),
-                Divider(color: AppColors.black,thickness: 1),
-                CustomRow(text: "totalProfits".tr(),value: "${cubit.profitsModelCustom.data!.netTotal ??0}"+" "+"currency".tr(),color: AppColors.totalProfitsColor,),
-
-              ],
-            ),
-          ),
-        );
-      }
-    );
+                                        " " +
+                                        "currency".tr()),
+                            CustomRow(
+                              text: "theWallet".tr(),
+                              value:
+                                  "${cubit.profitsModelCustom.data!.vatTotal ?? 0}" +
+                                      " " +
+                                      "currency".tr(),
+                              color: AppColors.red,
+                            ),
+                            Divider(color: AppColors.black, thickness: 1),
+                            CustomRow(
+                              text: "totalProfits".tr(),
+                              value:
+                              "${double.parse(double.parse(cubit.profitsModelCustom.data!.netTotal.toString()).toStringAsFixed(2))}" +
+                                      " " +
+                                      "currency".tr(),
+                              color: AppColors.totalProfitsColor,
+                            ),
+                          ],
+                        ),
+                      ),
+          );
+        });
   }
 }
 
 class CustomRow extends StatelessWidget {
   const CustomRow({
-    super.key, required this.text, required this.value, this.color,
+    super.key,
+    required this.text,
+    required this.value,
+    this.color,
   });
-final String text;
-final String value;
-final Color? color;
+
+  final String text;
+  final String value;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -95,12 +184,16 @@ final Color? color;
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(text,style: getBoldStyle(fontSize: 18,color: color??AppColors.black),),
-          Text(value,style: getBoldStyle(fontSize: 18,color:color?? AppColors.black),),
-
+          Text(
+            text,
+            style: getBoldStyle(fontSize: 18, color: color ?? AppColors.black),
+          ),
+          Text(
+            value,
+            style: getBoldStyle(fontSize: 18, color: color ?? AppColors.black),
+          ),
         ],
       ),
     );
   }
 }
-

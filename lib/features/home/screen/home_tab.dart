@@ -1,4 +1,5 @@
 
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hero/features/home/screen/banner.dart';
+import 'package:hero/features/home/screen/show_trip.dart';
 import '../../../config/routes/app_routes.dart';
 import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/assets_manager.dart';
@@ -32,7 +34,7 @@ class _HomeTabState extends State<HomeTab> {
   context.read<HomeCubit>().getUserData();
     super.initState();
     context.read<HomeCubit>().getHomeData();
-    context.read<HomeCubit>().getTripStatus();
+    context.read<HomeCubit>().getUserTripStatus(context);
 
     //context.read<HomeCubit>().carouselController = CarouselController();
   }
@@ -50,40 +52,40 @@ class _HomeTabState extends State<HomeTab> {
     }    else if(state is ErrorGettingHomeDataState){
       isLoading = false;
     }
-    if (state is SuccessCheckTripStatusState){
-      if(context.read<HomeCubit>().checkTripStatusModel.data != null){
-        if (context.read<HomeCubit>().checkTripStatusModel.data!.type == 'accept' || context.read<HomeCubit>().checkTripStatusModel.data!.type == 'new'||context.read<HomeCubit>().checkTripStatusModel.data!.type == 'progress'){
-
-          isInTrip = true;
-        }
-
-
-
-        if (context.read<HomeCubit>().checkTripStatusModel.data!.type == 'accept'){
-
-
-        //  context.read<HomeCubit>().getLocation(LatLng( double.parse(context.read<HomeCubit>().checkTripStatusModel.data!.toLat!) , double.parse(context.read<HomeCubit>().checkTripStatusModel.data!.toLong!)), "to");
-
-       //  Navigator.pushNamed(
-       //    context, Routes.AddTripTab,arguments: true
-       //  );
-
-
-        //  context.read<HomeCubit>().currentEnumStatus = MyEnum.success;
-        //  successGetBar(context.read<HomeCubit>().checkTripStatusModel.message!);
-        }
-        else if(context.read<HomeCubit>().checkTripStatusModel.data!.type == 'new'){
-        //
-
-       //   Navigator.pushNamed(
-       //     context, Routes.AddTripTab,arguments: true
-       //   );
-       //  context.read<HomeCubit>().currentEnumStatus = MyEnum.load;
+//     if (state is SuccessCheckTripStatusState){
+//       if(context.read<HomeCubit>().checkTripStatusModel.data != null){
+//         if (context.read<HomeCubit>().checkTripStatusModel.data!.type == 'accept' || context.read<HomeCubit>().checkTripStatusModel.data!.type == 'new'||context.read<HomeCubit>().checkTripStatusModel.data!.type == 'progress'){
 //
-
-        }
-      }
-    }
+//           isInTrip = true;
+//         }
+//
+//
+//
+//         if (context.read<HomeCubit>().checkTripStatusModel.data!.type == 'accept'){
+//
+//
+//         //  context.read<HomeCubit>().getLocation(LatLng( double.parse(context.read<HomeCubit>().checkTripStatusModel.data!.toLat!) , double.parse(context.read<HomeCubit>().checkTripStatusModel.data!.toLong!)), "to");
+//
+//        //  Navigator.pushNamed(
+//        //    context, Routes.AddTripTab,arguments: true
+//        //  );
+//
+//
+//         //  context.read<HomeCubit>().currentEnumStatus = MyEnum.success;
+//         //  successGetBar(context.read<HomeCubit>().checkTripStatusModel.message!);
+//         }
+//         else if(context.read<HomeCubit>().checkTripStatusModel.data!.type == 'new'){
+//         //
+//
+//        //   Navigator.pushNamed(
+//        //     context, Routes.AddTripTab,arguments: true
+//        //   );
+//        //  context.read<HomeCubit>().currentEnumStatus = MyEnum.load;
+// //
+//
+//         }
+//       }
+//     }
 
 
 
@@ -206,25 +208,43 @@ class _HomeTabState extends State<HomeTab> {
                           onRefresh: () async {
                            await cubit.getHomeData();
                            await cubit.getTripStatus();
+                           print('ffffffffffffffffffff');
+                           print(cubit.homeModel?.data?.newTrips?.length);
                           },
-                          child: ListView.builder(
-                            itemCount: cubit.homeModel?.data?.newTrips?.length??0,
-                            itemBuilder: (context, index) {
+                          child: ConditionalBuilder(
+                            condition: cubit.homeModel?.data?.newTrips?.length != 0 ,
+                            fallback:(context) => ListView.builder(
+                              itemCount: 1,
+                              itemBuilder: (context, index) {
 
-                              return InkWell(
-                                onTap: () {
-                                  //todo=>
-                                  if(cubit.homeModel?.data?.newTrips?[index].type=="new"){
-                                    Navigator.pushNamed(
-                                        context, Routes.AddTripTab,arguments: false
-                                        );
-                                  // context.read<HomeCubit>().tabsController.animateTo(1);
-                                  //  Navigator.pushNamed(context, Routes.homeRoute);
-                                  }
-                                },
-                                  child: HomeListItem(trip: cubit.homeModel?.data?.newTrips?[index],));
+                                return Center(child: Padding(
+                                  padding: const EdgeInsets.only(top: 18.0),
+                                  child: Text(" لا يوجد طلبات"),
+                                ),);
 
-                            },
+                              },
+                            ),
+                            builder: (context) =>
+                          ListView.builder(
+                              itemCount: cubit.homeModel?.data?.newTrips?.length??0,
+                              itemBuilder: (context, index) {
+
+                                return InkWell(
+                                  onTap: () {
+                                    //todo=>
+                                    if(cubit.homeModel?.data?.newTrips?[index].type=="new"){
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => ShowTripScreen(trip: cubit.homeModel!.data!.newTrips![index]),));
+                                    //  Navigator.pushNamed(
+                                    //      context, Routes.AddTripTab,arguments: true
+                                    //      );
+                                    // context.read<HomeCubit>().tabsController.animateTo(1);
+                                    //  Navigator.pushNamed(context, Routes.homeRoute);
+                                    }
+                                  },
+                                    child: HomeListItem(trip: cubit.homeModel?.data?.newTrips?[index],));
+
+                              },
+                            ),
                           ),
 
                         ),

@@ -304,40 +304,36 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                           ),
                         ],
                       ),
-                      Row(
+                      Wrap(
                         children: [
                           Icon(Icons.location_on_outlined),
                           Text(
-                            "${widget.trip.distance}km",
+                            "${double.parse(double.parse(widget.trip.distance).toStringAsFixed(2))}km",
                             style: TextStyle(fontSize: getSize(context) * 0.04),
                           ),
-                          SizedBox(
-                            width: getSize(context) * 0.15,
-                          ),
+                          Spacer(),
                           Image.asset(
                             "assets/images/clock.png",
                             height: getSize(context) * 0.05,
                           ),
                           //  Icon(Icons.watch_later_outlined,),
                           SizedBox(
-                            width: getSize(context) * 0.02,
+                            width: getSize(context) * 0.01,
                           ),
                           Text(
                             "${widget.trip.time} min",
                             style: TextStyle(fontSize: getSize(context) * 0.04),
                           ),
-                          SizedBox(
-                            width: getSize(context) * 0.15,
-                          ),
+                          Spacer(),
                           Image.asset(
                             "assets/images/money.png",
                             height: getSize(context) * 0.05,
                           ),
                           SizedBox(
-                            width: getSize(context) * 0.02,
+                            width: getSize(context) * 0.01,
                           ),
                           Text(
-                            "${widget.trip.price} د.ع",
+                            "${double.parse(widget.trip.price.toStringAsFixed(2))} د.ع",
                             style: TextStyle(fontSize: getSize(context) * 0.04),
                           ),
                         ],

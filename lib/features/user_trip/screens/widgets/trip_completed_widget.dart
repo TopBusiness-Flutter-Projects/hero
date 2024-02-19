@@ -220,7 +220,7 @@ class _TripCompletedWidgetState extends State<TripCompletedWidget> {
                     width: getSize(context) * 0.02,
                   ),
                   Text(
-                    "${widget.trip.price} د.ع",
+                    "${double.parse(widget.trip.price.toStringAsFixed(2))} د.ع",
                     style: TextStyle(fontSize: getSize(context) * 0.04),
                   ),
                 ],

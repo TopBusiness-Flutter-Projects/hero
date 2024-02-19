@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hero/core/models/home_model.dart';
 import 'package:hero/core/utils/dialogs.dart';
 import 'package:hero/core/widgets/custom_button.dart';
 import '../../../core/utils/app_colors.dart';
@@ -17,51 +18,29 @@ import '../../../core/widgets/custom_textfield.dart';
 import '../components/default_widget.dart';
 import '../components/failure_widget.dart';
 import '../components/loading_widget.dart';
+import '../components/show_trip_widget.dart';
 import '../components/success_widget.dart';
 import '../cubit/home_cubit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class AddTripTab extends StatefulWidget {
-  AddTripTab({super.key, required this.isInTrip});
-final bool isInTrip;
+class ShowTripScreen extends StatefulWidget {
+  ShowTripScreen({super.key,  required this.trip, });
+
+  final NewTrip trip;
 
   @override
-  State<AddTripTab> createState() => _AddTripTabState();
+  State<ShowTripScreen> createState() => _ShowTripScreenState();
 }
 
-class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
-  // final scaffoldKey = GlobalKey<ScaffoldState>();
-
-  CustomInfoWindowController _customInfoWindowController =
-      CustomInfoWindowController();
-
-  // late FlutterGifController gifController;
-
-  @override
-  void dispose() {
-    _customInfoWindowController.dispose();
-   //_timer.cancel();
-    super.dispose();
-  }
+class _ShowTripScreenState extends State<ShowTripScreen> with TickerProviderStateMixin {
 
   @override
   void initState() {
     super.initState();
     context.read<HomeCubit>().destination=LatLng(0, 0);
     context.read<HomeCubit>().location_control.text = "";
-    context.read<HomeCubit>().getCurrentLocation();
-    // gifController = FlutterGifController(vsync: this);
+    context.read<HomeCubit>().setMyMarker(widget.trip);
     context.read<HomeCubit>().checkAndRequestLocationPermission();
-//     if(widget.isInTrip){
-//       if(context.read<HomeCubit>().checkTripStatusModel.data != null)
-//       context.read<HomeCubit>().destination=LatLng(double.parse(context.read<HomeCubit>().checkTripStatusModel.data!.toLat!) , double.parse(context.read<HomeCubit>().checkTripStatusModel.data!.toLong!));
-// else{
-//   print('nulllllllll');
-//       }
-//
-//  //context.read<HomeCubit>().getLocation(LatLng( double.parse(context.read<HomeCubit>().checkTripStatusModel.data!.fromLat!) , double.parse(context.read<HomeCubit>().checkTripStatusModel.data!.fromLong!)), "from");
-//  //context.read<HomeCubit>().getLocation(LatLng( double.parse(context.read<HomeCubit>().checkTripStatusModel.data!.toLat!) , double.parse(context.read<HomeCubit>().checkTripStatusModel.data!.toLong!)), "to");
-// }
 
   }
 
@@ -81,9 +60,9 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
           //  key: scaffoldKey,
           body: BlocConsumer<HomeCubit, HomeState>(
             listener: (context, state) {
-           if(state is SuccessCreateSchedualTripState ){
-             Navigator.pop(context);
-           }
+              if(state is SuccessCreateSchedualTripState ){
+                Navigator.pop(context);
+              }
             },
             builder: (context, state) {
               HomeCubit cubit = context.read<HomeCubit>();
@@ -92,95 +71,94 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
                   cubit.currentLocation == null
                       ? const Center(child: Text("Loading"))
                       : GoogleMap(
-                          initialCameraPosition: CameraPosition(
-                            target: LatLng(
-                              cubit.currentLocation != null
-                                  ? cubit.currentLocation!.latitude!
-                                  : 0,
-                              cubit.currentLocation != null
-                                  ? cubit.currentLocation!.longitude!
-                                  : 0,
-                            ),
-                            zoom: 13.5,
-                          ),
-                          markers: cubit.markers,
-                          //       {
-                          //         Marker(
-                          //           markerId: const MarkerId("currentLocation"),
-                          //           icon: cubit.currentLocationIcon,
-                          //
-                          //           position: LatLng(cubit.currentLocation!.latitude!,
-                          //               cubit.currentLocation!.longitude!),
-                          //         ),
-                          //         // Marker(
-                          //         //   markerId: const MarkerId("source"),
-                          //         //   infoWindow: InfoWindow(
-                          //         //     title: "from",
-                          //         //   ),
-                          //         //  // icon: customMarkerIcon,
-                          //         //   icon: cubit.sourceIcon,
-                          //         //   position: cubit.sourceLocation,
-                          //         // ),
-                          //         Marker(
-                          //           markerId: MarkerId("destination"),
-                          //           infoWindow: InfoWindow(
-                          //             title: "to",
-                          //           ),
-                          //           icon: cubit.destinationIcon,
-                          //           position: cubit.destinationH,
-                          //         ),
-                          //       //  markers.first
-                          //       },
-                          onMapCreated: (GoogleMapController mapController) {
-                            cubit.mapController = mapController;
-                          },
-                          onTap: (argument) {
+                    initialCameraPosition: CameraPosition(
+                      target: LatLng(
+                       double.parse(widget.trip.fromLat??'0') ,
+                        double.parse(widget.trip.fromLong??'0') ,
+                      ),
+                      zoom: 13.5,
+                    ),
+                    markers: cubit.tripMarkers,
+                    //       {
+                    //         Marker(
+                    //           markerId: const MarkerId("currentLocation"),
+                    //           icon: cubit.currentLocationIcon,
+                    //
+                    //           position: LatLng(cubit.currentLocation!.latitude!,
+                    //               cubit.currentLocation!.longitude!),
+                    //         ),
+                    //         // Marker(
+                    //         //   markerId: const MarkerId("source"),
+                    //         //   infoWindow: InfoWindow(
+                    //         //     title: "from",
+                    //         //   ),
+                    //         //  // icon: customMarkerIcon,
+                    //         //   icon: cubit.sourceIcon,
+                    //         //   position: cubit.sourceLocation,
+                    //         // ),
+                    //         Marker(
+                    //           markerId: MarkerId("destination"),
+                    //           infoWindow: InfoWindow(
+                    //             title: "to",
+                    //           ),
+                    //           icon: cubit.destinationIcon,
+                    //           position: cubit.destinationH,
+                    //         ),
+                    //       //  markers.first
+                    //       },
+                    onMapCreated: (GoogleMapController mapController) {
+                      cubit.mapController = mapController;
+                    },
+                    onTap: (argument) {
 
-                            cubit.getLocation(argument, "to");
-                          //  if(cubit.currentEnumStatus == MyEnum.defaultState){
-                            // if (context.read<HomeCubit>().flag == 1) {
-                            //   //   cubit.getLocation(argument);
-                            //
-                            // } else {}
-                         // // }
+                    //  cubit.getLocation(argument, "to");
+                      //  if(cubit.currentEnumStatus == MyEnum.defaultState){
+                      // if (context.read<HomeCubit>().flag == 1) {
+                      //   //   cubit.getLocation(argument);
+                      //
+                      // } else {}
+                      // // }
 
 
 
 
 
-                            //  _customInfoWindowController.hideInfoWindow!();
-                          },
-                          onCameraMove: (position) {
-                          //  if (cubit.strartlocation != position.target) {
-                          //   // print(cubit.strartlocation);
-                          //    cubit.strartlocation = position.target;
-                          //    cubit.getCurrentLocation();
-                          //  }
-                            // _customInfoWindowController.hideInfoWindow!();
+                      //  _customInfoWindowController.hideInfoWindow!();
+                    },
+                    onCameraMove: (position) {
+                      //  if (cubit.strartlocation != position.target) {
+                      //   // print(cubit.strartlocation);
+                      //    cubit.strartlocation = position.target;
+                      //    cubit.getCurrentLocation();
+                      //  }
+                      // _customInfoWindowController.hideInfoWindow!();
 
-                            //  _customInfoWindowController.hideInfoWindow!();
-                          },
-                          polylines: {
-                            Polyline(
-                              polylineId: const PolylineId("route"),
-                              points: cubit.latLngList,
-                              color: const Color(0xFF7B61FF),
-                              width: 6,
-                            ),
-                          },
-                        ),
-                  DefaultWidget(isATrip: widget.isInTrip),
-                     // cubit.chooseWidget(cubit.currentEnumStatus),
+                      //  _customInfoWindowController.hideInfoWindow!();
+                    },
+                    polylines:
+
+                    widget.trip.toAddress == null ?
+                        {}
+                        :
+                    {
+                      Polyline(
+                        polylineId: const PolylineId("routes"),
+                        points:
+                          [
+                            LatLng(double.parse(widget.trip.fromLat!),
+                                double.parse(widget.trip.fromLong!)),
+                            LatLng(double.parse(widget.trip.toLat!),
+                                double.parse(widget.trip.toLong!)),
 
 
-                  //   // default case
-                  // DefaultWidget(),
-                  // // loading state
-                  // LoadingWidget(),
-                  // // //success state
-                  // SuccessWidget(),
-                  // // //failure state
-                  // FailureWidget(),
+                        ],
+                        color: const Color(0xFF7B61FF),
+                        width: 6,
+                      ),
+                    },
+                  ),
+                  ShowTripWidget(isWith: widget.trip.toAddress != null,trip: widget.trip),
+
 
                   //back button
                   Positioned(

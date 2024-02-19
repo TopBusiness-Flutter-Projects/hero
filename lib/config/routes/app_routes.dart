@@ -209,7 +209,7 @@ case Routes.ImmediateTripDriver:
           builder: (context) =>  UserTripScreen(trip: trip),
         );
   case Routes.QuickTripScreen:
-     final trip = settings.arguments as StartNewTripData;
+     final trip = settings.arguments as NewTrip;
         return MaterialPageRoute(
 
           builder: (context) =>  QuickTripScreen(trip: trip),

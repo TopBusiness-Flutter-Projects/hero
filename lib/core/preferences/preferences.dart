@@ -25,6 +25,56 @@ class Preferences {
   //   return jsonData;
   // }
 
+  ////notification
+  bool notiSound = true;
+  bool notiVisbrate = true;
+  bool notiLight = true;
+
+  Future<void> setNotiSound({bool status = true}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('notiSound', status);
+  }
+
+  Future<bool?> getNotiSound() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      notiSound = prefs.getBool('notiSound') ?? true;
+    } catch (e) {
+      notiSound = true;
+    }
+    return notiSound;
+  }
+
+  Future<void> setNotiVibrate({bool status = true}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('notiVibrate', status);
+  }
+
+  Future<bool?> getNotiVibrate() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      notiVisbrate = prefs.getBool('notiVibrate') ?? true;
+    } catch (e) {
+      notiVisbrate = true;
+    }
+    return notiVisbrate;
+  }
+
+  Future<void> setNotiLights({bool status = true}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('notiLights', status);
+  }
+
+  Future<bool?> getNotiLights() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      notiLight = prefs.getBool('notiLights') ?? true;
+    } catch (e) {
+      notiLight = true;
+    }
+    return notiLight;
+  }
+  //////////////////////////////////
   // Notification token
   Future<String?> getNotificationToken() async{
     SharedPreferences preferences = await SharedPreferences.getInstance();

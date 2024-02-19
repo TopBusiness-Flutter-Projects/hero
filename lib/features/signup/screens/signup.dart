@@ -152,17 +152,17 @@ class _SignUpState extends State<SignUp> {
                       ),
                     ),
 
-                    CustomTextField(
-                      title: 'email'.tr(),
-                      controller: cubit.emailController,
-                      textInputType: TextInputType.emailAddress,
-                      backgroundColor: AppColors.white,
-                      prefixWidget: const Icon(CupertinoIcons.mail),
-                      validatorMessage: 'email_msg'.tr(),
-                      horizontalPadding: 2,
-
-                      // controller: controller.phoneNumberController,
-                    ),
+                    // CustomTextField(
+                    //   title: 'email'.tr(),
+                    //   controller: cubit.emailController,
+                    //   textInputType: TextInputType.emailAddress,
+                    //   backgroundColor: AppColors.white,
+                    //   prefixWidget: const Icon(CupertinoIcons.mail),
+                    //   validatorMessage: 'email_msg'.tr(),
+                    //   horizontalPadding: 2,
+                    //
+                    //   // controller: controller.phoneNumberController,
+                    // ),
                     //   ),
                     // ),
                     Container(

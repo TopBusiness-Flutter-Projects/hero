@@ -37,6 +37,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   void initState() {
     // TODO: implement initState
     super.initState();
+  //  context.read<HomeCubit>().getUserTripStatus(context);
     context.read<HomeCubit>().tabsController =
         TabController(length: 11, vsync: this);
   }
@@ -152,7 +153,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                         ),
                       ),
                   subtitle: Text(
-                    "${context.read<HomeCubit>().signUpModel?.data?.email}",
+                    "${context.read<HomeCubit>().signUpModel?.data?.phone}",
                     style: TextStyle(
                         fontSize: getSize(context) * 0.0295,
                         fontWeight: FontWeight.w400,
@@ -220,7 +221,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                 context.read<HomeCubit>().logout(context);
                               }
                             },
-                            child: DrawerListItem(
+                            child:index==0?Container(
+
+                            ): DrawerListItem(
                               drawerItemModel: drawerItems[index],
                               textColor: index != drawerItems.length - 1
                                   ? AppColors.black1
@@ -229,7 +232,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                           );
                         },
                         separatorBuilder: (context, index) {
-                          return Divider();
+                          return index==0?Container(
+
+                          ):Divider();
                         },
                         itemCount: drawerItems.length)),
               ],

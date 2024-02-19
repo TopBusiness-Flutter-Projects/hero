@@ -57,7 +57,8 @@ final String vat;
               ),
             ),
             Spacer()
-,            Text('$vat ',style: getRegularStyle(color: AppColors.primary,fontSize: 20),),
+,            Text(
+                '${double.parse(double.parse(vat).toStringAsFixed(2))}',style: getRegularStyle(color: AppColors.primary,fontSize: 20),),
             Text('currency'.tr(),style: getRegularStyle(color: AppColors.primary,fontSize: 20),)
           ],
         ),
