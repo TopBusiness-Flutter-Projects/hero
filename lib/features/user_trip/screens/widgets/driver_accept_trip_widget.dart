@@ -121,10 +121,6 @@ class _DriverAcceptWidgetState extends State<DriverAcceptWidget> {
                             InkWell(
                                 onTap: () async{
 
-
-
-
-
                                   String number = cubit.checkTripStatusModel.data!.driver!.phone!;
                                   var whatsappUrl = "whatsapp://send?phone=$number";
 

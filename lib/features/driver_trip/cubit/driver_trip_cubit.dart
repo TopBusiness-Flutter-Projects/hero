@@ -18,10 +18,16 @@ import '../../../core/utils/custom_marker.dart';
 import '../../../core/utils/dialogs.dart';
 import '../../homedriver/cubit/home_driver_cubit.dart';
 import '../../orders/cubit/cubit/orders_cubit.dart';
-
+import 'package:maps_toolkit/maps_toolkit.dart' as mp;
 part 'driver_trip_state.dart';
 
 class DriverTripCubit extends Cubit<DriverTripState> {
+
+  List<LatLng> latLngList = [];
+  List<LatLng> latLngListFromTo = [];
+  List<mp.LatLng> point = [];
+  List<mp.LatLng> pointFromTo = [];
+
   DriverTripCubit(this.api) : super(DriverTripInitial());
   ServiceApi api;
 
@@ -31,48 +37,74 @@ class DriverTripCubit extends Cubit<DriverTripState> {
   RateModel? rateTripModel;
   LatLng destinaion = LatLng(0, 0);
   LatLng strartlocation = LatLng(0, 0);
-  // giveRate(
-  //     {required int tripId,required int toId,
-  //     String? description,
-  //
-  //     required BuildContext context}) async {
-  //   emit(LoadingRatingState());
-  //   final response = await api.giveRate(
-  //
-  //  //     tripId: tripId,
-  //  //     rate: rate,
-  //  //     description: description,
-  //  // to: toId
-  //       tripId: 129,
-  //       rate: 2.5,
-  //       description: 'description',
-  //   to: 140
-  //   );
-  //   response.fold((l) {
-  //     emit(RatingFailedState());
-  //     Navigator.pop(context);
-  //     errorGetBar("something wrong");
-  //   }, (r) {
-  //     if (r.code == 200 || r.code == 201) {
-  //       Navigator.pop(context);
-  //       rateTripModel = r;
-  //       emit(RatingSuccessState());
-  //       successGetBar(r.message);
-  //     } else if (r.code == 500) {
-  //       Navigator.pop(context);
-  //       rateTripModel = r;
-  //       emit(RatingSuccessState());
-  //       successGetBar(r.message);
-  //     } else {
-  //       Navigator.pop(context);
-  //       errorGetBar(r.message ?? "something iii wrong");
-  //     }
-  //
-  //     Navigator.pushNamedAndRemoveUntil(
-  //         context, Routes.homedriverRoute, (route) => false);
-  //
-  //   });
-  // }
+
+//////// GET direction
+
+  String origin = "", dest = "";
+  getDirection(LatLng startPosition, LatLng endPosition) async {
+
+    origin = startPosition.latitude.toString() +
+        "," +
+        startPosition.longitude.toString();
+    dest = endPosition.latitude.toString() +
+        "," +
+        endPosition.longitude.toString();
+    final response = await api.getDirection(origin, dest, "bus");
+    response.fold(
+          (l) => emit(ErrorLocationSearch()),
+          (r) {
+        latLngList.clear();
+
+        if (r.routes.length > 0) {
+          point = mp.PolygonUtil.decode(
+              r.routes.elementAt(0).overviewPolyline.points);
+          latLngList =
+              point.map((e) => LatLng(e.latitude, e.longitude)).toList();
+        } else {
+          latLngList = [];
+        }
+        // destinaion = LatLng(r.candidates.elementAt(0).geometry.location.lat, r.candidates.elementAt(0).geometry.location.lng);
+
+        emit(UpdateDesitnationLocationState());
+      },
+    );
+  }
+
+  String originFrom = "", destTo = "";
+  getDirectionFromTo(LatLng startPosition, LatLng endPosition) async {
+
+    originFrom = startPosition.latitude.toString() +
+        "," +
+        startPosition.longitude.toString();
+    destTo = endPosition.latitude.toString() +
+        "," +
+        endPosition.longitude.toString();
+    final response = await api.getDirection(originFrom, destTo, "bus");
+    response.fold(
+          (l) => emit(ErrorLocationSearch()),
+          (r) {
+        latLngListFromTo.clear();
+
+        if (r.routes.length > 0) {
+          point = mp.PolygonUtil.decode(
+              r.routes.elementAt(0).overviewPolyline.points);
+          latLngListFromTo =
+              point.map((e) => LatLng(e.latitude, e.longitude)).toList();
+        } else {
+          latLngListFromTo = [];
+        }
+        // destinaion = LatLng(r.candidates.elementAt(0).geometry.location.lat, r.candidates.elementAt(0).geometry.location.lng);
+
+        emit(UpdateDesitnationLocationState());
+      },
+    );
+  }
+
+
+
+
+
+
 
   Set<Marker> markers = {};
 

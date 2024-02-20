@@ -1,8 +1,11 @@
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hero/features/homedriver/screen/pages/home_map_driver/screens/home_map_driver.dart';
 import 'package:hero/features/homedriver/screen/pages/home_map_driver/screens/immediate_trip_driver.dart';
+import 'package:hero/features/homedriver/screen/widgets/custom_slider.dart';
 import 'package:hero/features/homedriver/screen/widgets/drawer_list_item.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../config/routes/app_routes.dart';
 import '../../../core/utils/app_colors.dart';
@@ -10,6 +13,7 @@ import '../../../core/utils/assets_manager.dart';
 import '../../../core/utils/getsize.dart';
 import '../../../core/widgets/close_widget.dart';
 import '../../../core/widgets/network_image.dart';
+import '../../../core/widgets/show_loading_indicator.dart';
 import '../../home/components/drawer_list_item.dart';
 import '../../home/cubit/home_cubit.dart';
 import '../cubit/home_driver_cubit.dart';
@@ -20,6 +24,7 @@ class HomeDriver extends StatefulWidget {
   @override
   State<HomeDriver> createState() => _HomeDriverState();
 }
+
 class _HomeDriverState extends State<HomeDriver> with TickerProviderStateMixin {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -34,67 +39,121 @@ class _HomeDriverState extends State<HomeDriver> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    HomeCubit homeCubit=   context.read<HomeCubit>();
+    HomeCubit homeCubit = context.read<HomeCubit>();
+    HomeDriverCubit cubit = context.read<HomeDriverCubit>();
     return Scaffold(
       key: _scaffoldKey,
-      body: BlocConsumer<HomeCubit,HomeState>(
-        listener: (context, state) {
-
-        },
-        builder: (context, state) =>
-         SafeArea(
-          child: Stack(
+      body: BlocConsumer<HomeCubit, HomeState>(
+        listener: (context, state) {},
+        builder: (context, state) => SafeArea(
+          child: Column(
             children: [
-              TabBarView(
-                  physics: NeverScrollableScrollPhysics(),
-                  controller: context.read<HomeDriverCubit>().tabsController,
+              Flexible(
+                child: Stack(
                   children: [
-                    HomeMapDriver(),
-                    ImmediateTripDriver(),
-                  ]),
-              Positioned(
-                top: 10,
-                left: 10,
-                child: //drawer
-                    InkWell(
-                  onTap: () {
-                    _scaffoldKey.currentState?.openDrawer();
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Container(
-                          //  margin: EdgeInsets.only(left: 10, top: 10),
-                          padding: EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                    color: AppColors.black.withOpacity(0.25),
-                                    blurRadius: 1,
-                                    spreadRadius: 1)
-                              ],
-                              borderRadius: BorderRadius.all(
-                                  Radius.circular(getSize(context) / 80)),
-                              color: AppColors.white),
-                          child: Icon(
-                            Icons.menu,
-                            size: 20,
-                          )),
-                    ],
-                  ),
+                    TabBarView(
+                        physics: NeverScrollableScrollPhysics(),
+                        controller:
+                            context.read<HomeDriverCubit>().tabsController,
+                        children: [
+                          HomeMapDriver(),
+                          ImmediateTripDriver(),
+                        ]),
+                    Positioned(
+                      top: 10,
+                      left: 10,
+                      child: //drawer
+                          InkWell(
+                        onTap: () {
+                          _scaffoldKey.currentState?.openDrawer();
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                                //  margin: EdgeInsets.only(left: 10, top: 10),
+                                padding: EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color:
+                                              AppColors.black.withOpacity(0.25),
+                                          blurRadius: 1,
+                                          spreadRadius: 1)
+                                    ],
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(getSize(context) / 80)),
+                                    color: AppColors.white),
+                                child: Icon(
+                                  Icons.menu,
+                                  size: 20,
+                                )),
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
                 ),
-              )
+              ),
+    BlocConsumer<HomeDriverCubit, HomeDriverState>(
+    listener: (context, state) {},
+    builder: (context, state) =>
+
+
+     ConditionalBuilder(
+       condition: cubit.driverDataModel.data != null ,
+       fallback: (context) => const ShowLoadingIndicator(),
+        builder: (context) =>  CustomSlider(
+                    items:
+                  // [
+                  //   CustomNetworkImage(
+                  //                boxFit: BoxFit.fill,
+                  //                imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Test-Logo.svg/1175px-Test-Logo.svg.png?20150906031702",
+
+                  //                errorWidget: Image.asset(
+                  //                  ImageAssets.mapIcon,
+                  //                  fit: BoxFit.contain,
+                  //                ),
+                  //                width: double.maxFinite),  CustomNetworkImage(
+                  //                boxFit: BoxFit.fill,
+                  //                imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Test-Logo.svg/1175px-Test-Logo.svg.png?20150906031702",
+
+                  //                errorWidget: Image.asset(
+                  //                  ImageAssets.mapIcon,
+                  //                  fit: BoxFit.contain,
+                  //                ),
+                  //                width: double.maxFinite),
+                  // ]
+
+
+                     cubit.driverDataModel.data!.sliders!
+                         .map((e) => GestureDetector(
+                               onTap: () async {
+                                 final _url = Uri.parse(e.link!);
+                                 await launchUrl(_url,
+                                     mode: LaunchMode.externalApplication);
+                               },
+                               child: CustomNetworkImage(
+                                   boxFit: BoxFit.fill,
+                                   imageUrl: e.image!,
+                                   errorWidget: Image.asset(
+                                     ImageAssets.logoImage,
+                                     fit: BoxFit.contain,
+                                   ),
+                                   width: double.maxFinite),
+                             ))
+                         .toList(),
+                  ),
+     ),
+              ),
             ],
           ),
         ),
       ),
       drawer: Drawer(
-        child: BlocConsumer<HomeCubit,HomeState>(
-          listener: (context, state) {
-
-          },
-          builder: (context, state) =>
-          ListView(
+        child: BlocConsumer<HomeCubit, HomeState>(
+          listener: (context, state) {},
+          builder: (context, state) => ListView(
             shrinkWrap: true,
             physics: ClampingScrollPhysics(),
             // padding: EdgeInsets.zero,
@@ -121,26 +180,25 @@ class _HomeDriverState extends State<HomeDriver> with TickerProviderStateMixin {
                   ],
                 ),
                 leading:
-                context.read<HomeCubit>().signUpModel?.data?.image == null
-                    ? CircleAvatar(
-                  radius: getSize(context) / 8,
-                  backgroundImage: AssetImage(ImageAssets.person),
-                )
-                    : ClipRRect(
-                      borderRadius: BorderRadius.circular(getSize(context) / 8),
-                      child: ManageNetworkImage(
-                        imageUrl:
-                        context
-                            .read<HomeCubit>()
-                            .signUpModel!
-                            .data
-                        !.image! ,
-                        boxFit: BoxFit.cover,
-                        height:60 ,
-                        width: 60,
-
-                      ),
-                    ),
+                    context.read<HomeCubit>().signUpModel?.data?.image == null
+                        ? CircleAvatar(
+                            radius: getSize(context) / 8,
+                            backgroundImage: AssetImage(ImageAssets.person),
+                          )
+                        : ClipRRect(
+                            borderRadius:
+                                BorderRadius.circular(getSize(context) / 8),
+                            child: ManageNetworkImage(
+                              imageUrl: context
+                                  .read<HomeCubit>()
+                                  .signUpModel!
+                                  .data!
+                                  .image!,
+                              boxFit: BoxFit.cover,
+                              height: 60,
+                              width: 60,
+                            ),
+                          ),
                 subtitle: Text(
                   "${context.read<HomeCubit>().signUpModel?.data?.phone}",
                   style: TextStyle(
@@ -159,19 +217,17 @@ class _HomeDriverState extends State<HomeDriver> with TickerProviderStateMixin {
                           if (index == 0) {
                             ///  MY WALLET
                             Navigator.pop(context);
-                            Navigator.pushNamed(
-                                context, Routes.MyWalletScreen);
+                            Navigator.pushNamed(context, Routes.MyWalletScreen);
                           } else if (index == 1) {
                             /// MY ORDERS
                             Navigator.pop(context);
 
-                            Navigator.of(context).pushNamed(Routes.OrdersScreen,arguments: false);
-
+                            Navigator.of(context).pushNamed(Routes.OrdersScreen,
+                                arguments: false);
                           } else if (index == 2) {
                             ///  PROFITS
                             Navigator.pop(context);
-                            Navigator.pushNamed(
-                                context, Routes.ProfitsScreen);
+                            Navigator.pushNamed(context, Routes.ProfitsScreen);
                           } else if (index == 3) {
                             /// NOTIFICATION
                             Navigator.pop(context);
@@ -180,11 +236,15 @@ class _HomeDriverState extends State<HomeDriver> with TickerProviderStateMixin {
                           } else if (index == 4) {
                             ///  BIKE INFORMATION
                             Navigator.pop(context);
-                            Navigator.of(context).pushNamed(Routes.bikeDetailsRoute,arguments: true);
+                            Navigator.of(context).pushNamed(
+                                Routes.bikeDetailsRoute,
+                                arguments: true);
                           } else if (index == 5) {
                             ///  BIKE DOCUMENTS
                             Navigator.pop(context);
-                            Navigator.of(context).pushNamed(Routes.uploadDocumentsScreenRoute,arguments: true);
+                            Navigator.of(context).pushNamed(
+                                Routes.uploadDocumentsScreenRoute,
+                                arguments: true);
                           } else if (index == 6) {
                             /// TRIP SERVICE
                             Navigator.pop(context);
@@ -193,7 +253,8 @@ class _HomeDriverState extends State<HomeDriver> with TickerProviderStateMixin {
                           } else if (index == 7) {
                             /// ABOUT HERO
                             Navigator.pop(context);
-                            Navigator.pushNamed(context, Routes.aboutHeroScreen);
+                            Navigator.pushNamed(
+                                context, Routes.aboutHeroScreen);
                           } else if (index == 8) {
                             /// CALL SUPPORT
                             context
@@ -215,7 +276,9 @@ class _HomeDriverState extends State<HomeDriver> with TickerProviderStateMixin {
                           } else if (index == 12) {
                             ///EDIT PROFILE
                             Navigator.pop(context);
-                            Navigator.pushNamed(context, Routes.editProfileRoute, arguments: "driver");
+                            Navigator.pushNamed(
+                                context, Routes.editProfileRoute,
+                                arguments: "driver");
                           } else if (index == 13) {
                             /// DELETE ACCOUNT
                             context.read<HomeCubit>().deleteUser(context);

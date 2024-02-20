@@ -9,7 +9,8 @@ class RatingSuccessState extends UserTripState {}
 class RatingFailedState extends UserTripState {}
 class LoadingRatingState extends UserTripState {}
 class AddDetailsMarkersState extends UserTripState {}
-
+class UpdateDesitnationLocationState extends UserTripState {}
+class ErrorLocationSearch extends UserTripState {}
 class LoadingAcceptTripState extends UserTripState {}
 class FailureAcceptTripState extends UserTripState {}
 class SuccessAcceptTripState extends UserTripState {}

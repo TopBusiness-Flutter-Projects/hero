@@ -59,12 +59,16 @@ class HomeCubit extends Cubit<HomeState> {
   BitmapDescriptor? bitmapDescriptorto;
   BitmapDescriptor? bitmapDescriptorfrom;
   SignUpModel? signUpModel ;
+  Uint8List? markerIcon;
+  List<LatLng> latLngListFromTo = [];
 
+  List<mp.LatLng> pointFromTo = [];
   HomeCubit(this.api) : super(HomeInitial()){
    getUserData();
    getSettings();
    getTripStatus();
     latLngList = [];
+   latLngListFromTo = [];
     getmarker();
     checkAndRequestLocationPermission();
    getNotification();
@@ -74,7 +78,6 @@ class HomeCubit extends Cubit<HomeState> {
   }
   getUserData() async {
     signUpModel = await Preferences.instance.getUserModel();
-
     emit(GettingUserData());
   }
   ServiceApi api;
@@ -246,7 +249,7 @@ void setflag(int flag){
       // ...
     }
   }
-  Uint8List? markerIcon;
+  //Uint8List? markerIcon;
 
   Future<Uint8List> getBytesFromAsset(String path, int width) async {
     ByteData data = await rootBundle.load(path);
@@ -261,7 +264,36 @@ void setflag(int flag){
   getmarker() async {
     markerIcon = await getBytesFromAsset(ImageAssets.marker, 100);
   }
+/// set direction from to
+  String originFrom = "", destTo = "";
+  getDirectionFromTo(LatLng startPosition, LatLng endPosition) async {
 
+    originFrom = startPosition.latitude.toString() +
+        "," +
+        startPosition.longitude.toString();
+    destTo = endPosition.latitude.toString() +
+        "," +
+        endPosition.longitude.toString();
+    final response = await api.getDirection(originFrom, destTo, "bus");
+    response.fold(
+          (l) => emit(ErrorLocationSearch1()),
+          (r) {
+        latLngListFromTo.clear();
+
+        if (r.routes.length > 0) {
+          point = mp.PolygonUtil.decode(
+              r.routes.elementAt(0).overviewPolyline.points);
+          latLngListFromTo =
+              point.map((e) => LatLng(e.latitude, e.longitude)).toList();
+        } else {
+          latLngListFromTo = [];
+        }
+        // destinaion = LatLng(r.candidates.elementAt(0).geometry.location.lat, r.candidates.elementAt(0).geometry.location.lng);
+
+        emit(UpdateDesitnationLocationState1());
+      },
+    );
+  }
 
 
 
@@ -278,53 +310,52 @@ double paymentMoney = 0;
 
 setMyMarker(NewTrip trip)async{
 
+print('dddddddddddddddddddd');
+print(trip.toAddress);
 
     bitmapDescriptorfrom = await CustomeMarker(
       title: "from".tr(),
       location: trip.fromAddress!,
     ).toBitmapDescriptor().then((value) async{
       bitmapDescriptorfrom=value;
-
+    });
 if (trip.toAddress != null)
 
-  {
-    bitmapDescriptorto = await CustomeMarker(
-      title: "to".tr(),
-      location: trip.toAddress!,
-    ).toBitmapDescriptor().then((value) {
-      bitmapDescriptorto=value;
+{
+  print('dddddddddddddddddddddd');
+  bitmapDescriptorto = await CustomeMarker(
+    title: "to".tr(),
+    location: trip.toAddress!,
+  ).toBitmapDescriptor().then((value) {
+    bitmapDescriptorto=value;
 
-      setTripMarkers(
-        Marker(
-          markerId: const MarkerId("from"),
-          icon:bitmapDescriptorfrom!,
-          position: LatLng(double.parse(trip.fromLat!),
-              double.parse(trip.fromLong!)),
-        ),
-        Marker(
-          markerId: MarkerId("to"),
+    setTripMarkers(
+      Marker(
+        markerId: const MarkerId("from"),
+        icon:bitmapDescriptorfrom!,
+        position: LatLng(double.parse(trip.fromLat!),
+            double.parse(trip.fromLong!)),
+      ),
+      Marker(
+        markerId: MarkerId("to"),
 
-          icon:bitmapDescriptorto!,
-          position:LatLng(double.parse(trip.toLat!),
-              double.parse(trip.toLong!)),
-        ),
-      );
-    });
-  }
+        icon:bitmapDescriptorto!,
+        position:LatLng(double.parse(trip.toLat!),
+            double.parse(trip.toLong!)),
+      ),
+    );
+  });
+}
 else{
   setTripMarkers(
-    Marker(
-      markerId: const MarkerId("from"),
-      icon:bitmapDescriptorfrom!,
-      position: LatLng(double.parse(trip.fromLat!),
-          double.parse(trip.fromLong!)),
-    ),null
+      Marker(
+        markerId: const MarkerId("from"),
+        icon:bitmapDescriptorfrom!,
+        position: LatLng(double.parse(trip.fromLat!),
+            double.parse(trip.fromLong!)),
+      ),null
   );
 }
-
-
-    });
-
 
 
 }
@@ -775,6 +806,8 @@ bool isLoadingSettings = true;
              else{
                // بوجهة
               // if (r.data!.tripType == 'with'){
+
+
                  if(r.data!.type =='progress'){
                    context.read<DriverTripCubit>().tripStages =2;
                  //  context.read<DriverTripCubit>().getEndStage();
@@ -1109,7 +1142,8 @@ print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
             emit(SuccessCreateSchedualTripState());
            // bottomContainerLoadingState = true;
-
+            Navigator.pushNamedAndRemoveUntil(
+                context, Routes.homeRoute, (route) => false);
           } else {
              Navigator.pop(context);
             // Navigator.pop(context);
@@ -1293,10 +1327,12 @@ print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
       checkDocumentsModel = r;
       if( r.data!.driverDetails == 1 && r.data!.driverDocuments ==1){
         if ( r.data!.status ==1){
+          successGetBar('تمت الموافقة علي طلبك');
+
           Navigator.pushNamedAndRemoveUntil(
               context, Routes.homedriverRoute, (route) => false);
         }else
-          successGetBar('ما زال طلبك معلق');
+          errorGetBar('ما زال طلبك معلق');
       }
       emit(SuccessCheckDocumentsState());
     });

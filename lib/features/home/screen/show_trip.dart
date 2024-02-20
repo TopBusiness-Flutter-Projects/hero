@@ -24,7 +24,10 @@ import '../cubit/home_cubit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class ShowTripScreen extends StatefulWidget {
-  ShowTripScreen({super.key,  required this.trip, });
+  ShowTripScreen({
+    super.key,
+    required this.trip,
+  });
 
   final NewTrip trip;
 
@@ -32,19 +35,22 @@ class ShowTripScreen extends StatefulWidget {
   State<ShowTripScreen> createState() => _ShowTripScreenState();
 }
 
-class _ShowTripScreenState extends State<ShowTripScreen> with TickerProviderStateMixin {
-
+class _ShowTripScreenState extends State<ShowTripScreen>
+    with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    context.read<HomeCubit>().destination=LatLng(0, 0);
+    context.read<HomeCubit>().destination = LatLng(0, 0);
     context.read<HomeCubit>().location_control.text = "";
     context.read<HomeCubit>().setMyMarker(widget.trip);
     context.read<HomeCubit>().checkAndRequestLocationPermission();
-
+    context.read<HomeCubit>().getDirectionFromTo(
+        //widget.trip
+        LatLng(double.parse(widget.trip.fromLat ?? "31.98354"),
+            double.parse(widget.trip.fromLong ?? "31.1234065")),
+        LatLng(double.parse(widget.trip.toLat ?? "31.98354"),
+            double.parse(widget.trip.toLong ?? "31.1234065")));
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +66,7 @@ class _ShowTripScreenState extends State<ShowTripScreen> with TickerProviderStat
           //  key: scaffoldKey,
           body: BlocConsumer<HomeCubit, HomeState>(
             listener: (context, state) {
-              if(state is SuccessCreateSchedualTripState ){
+              if (state is SuccessCreateSchedualTripState) {
                 Navigator.pop(context);
               }
             },
@@ -71,94 +77,118 @@ class _ShowTripScreenState extends State<ShowTripScreen> with TickerProviderStat
                   cubit.currentLocation == null
                       ? const Center(child: Text("Loading"))
                       : GoogleMap(
-                    initialCameraPosition: CameraPosition(
-                      target: LatLng(
-                       double.parse(widget.trip.fromLat??'0') ,
-                        double.parse(widget.trip.fromLong??'0') ,
-                      ),
-                      zoom: 13.5,
-                    ),
-                    markers: cubit.tripMarkers,
-                    //       {
-                    //         Marker(
-                    //           markerId: const MarkerId("currentLocation"),
-                    //           icon: cubit.currentLocationIcon,
-                    //
-                    //           position: LatLng(cubit.currentLocation!.latitude!,
-                    //               cubit.currentLocation!.longitude!),
-                    //         ),
-                    //         // Marker(
-                    //         //   markerId: const MarkerId("source"),
-                    //         //   infoWindow: InfoWindow(
-                    //         //     title: "from",
-                    //         //   ),
-                    //         //  // icon: customMarkerIcon,
-                    //         //   icon: cubit.sourceIcon,
-                    //         //   position: cubit.sourceLocation,
-                    //         // ),
-                    //         Marker(
-                    //           markerId: MarkerId("destination"),
-                    //           infoWindow: InfoWindow(
-                    //             title: "to",
-                    //           ),
-                    //           icon: cubit.destinationIcon,
-                    //           position: cubit.destinationH,
-                    //         ),
-                    //       //  markers.first
-                    //       },
-                    onMapCreated: (GoogleMapController mapController) {
-                      cubit.mapController = mapController;
-                    },
-                    onTap: (argument) {
+                          initialCameraPosition: CameraPosition(
+                            target: LatLng(
+                              double.parse(widget.trip.fromLat ?? '0'),
+                              double.parse(widget.trip.fromLong ?? '0'),
+                            ),
+                            zoom: 13.5,
+                          ),
+                          markers: // cubit.tripMarkers,
 
-                    //  cubit.getLocation(argument, "to");
-                      //  if(cubit.currentEnumStatus == MyEnum.defaultState){
-                      // if (context.read<HomeCubit>().flag == 1) {
-                      //   //   cubit.getLocation(argument);
-                      //
-                      // } else {}
-                      // // }
+                              widget.trip.toAddress != null
+                                  ? {
+                                      Marker(
+                                        markerId: const MarkerId("from"),
+                                        icon: cubit.markerIcon != null
+                                            ? BitmapDescriptor.fromBytes(
+                                                cubit.markerIcon!)
+                                            : cubit.currentLocationIcon,
+                                        position: LatLng(
+                                            double.parse(widget.trip.fromLat!),
+                                            double.parse(
+                                                widget.trip.fromLong!)),
+                                      ),
+                                      Marker(
+                                        markerId: MarkerId("to"),
+                                        infoWindow: InfoWindow(
+                                          title: "to",
+                                        ),
+                                        // icon: cubit.destinationIcon,
+                                        position: LatLng(
+                                            double.parse(widget.trip.toLat!),
+                                            double.parse(widget.trip.toLong!)),
+                                      ),
+                                      //  markers.first
+                                    }
+                                  // without
+                                  : {
+                                      Marker(
+                                        markerId: const MarkerId("from"),
+                                        icon: cubit.markerIcon != null
+                                            ? BitmapDescriptor.fromBytes(
+                                                cubit.markerIcon!)
+                                            : cubit.currentLocationIcon,
+                                        position: LatLng(
+                                            double.parse(widget.trip.fromLat!),
+                                            double.parse(
+                                                widget.trip.fromLong!)),
+                                      )
+                                    },
+                          //       {
+                          //         Marker(
+                          //           markerId: const MarkerId("currentLocation"),
+                          //           icon: cubit.currentLocationIcon,
+                          //
+                          //           position: LatLng(cubit.currentLocation!.latitude!,
+                          //               cubit.currentLocation!.longitude!),
+                          //         ),
+                          //         // Marker(
+                          //         //   markerId: const MarkerId("source"),
+                          //         //   infoWindow: InfoWindow(
+                          //         //     title: "from",
+                          //         //   ),
+                          //         //  // icon: customMarkerIcon,
+                          //         //   icon: cubit.sourceIcon,
+                          //         //   position: cubit.sourceLocation,
+                          //         // ),
+                          //         Marker(
+                          //           markerId: MarkerId("destination"),
+                          //           infoWindow: InfoWindow(
+                          //             title: "to",
+                          //           ),
+                          //           icon: cubit.destinationIcon,
+                          //           position: cubit.destinationH,
+                          //         ),
+                          //       //  markers.first
+                          //       },
+                          onMapCreated: (GoogleMapController mapController) {
+                            cubit.mapController = mapController;
+                          },
+                          onTap: (argument) {
+                            //  cubit.getLocation(argument, "to");
+                            //  if(cubit.currentEnumStatus == MyEnum.defaultState){
+                            // if (context.read<HomeCubit>().flag == 1) {
+                            //   //   cubit.getLocation(argument);
+                            //
+                            // } else {}
+                            // // }
 
+                            //  _customInfoWindowController.hideInfoWindow!();
+                          },
+                          onCameraMove: (position) {
+                            //  if (cubit.strartlocation != position.target) {
+                            //   // print(cubit.strartlocation);
+                            //    cubit.strartlocation = position.target;
+                            //    cubit.getCurrentLocation();
+                            //  }
+                            // _customInfoWindowController.hideInfoWindow!();
 
-
-
-
-                      //  _customInfoWindowController.hideInfoWindow!();
-                    },
-                    onCameraMove: (position) {
-                      //  if (cubit.strartlocation != position.target) {
-                      //   // print(cubit.strartlocation);
-                      //    cubit.strartlocation = position.target;
-                      //    cubit.getCurrentLocation();
-                      //  }
-                      // _customInfoWindowController.hideInfoWindow!();
-
-                      //  _customInfoWindowController.hideInfoWindow!();
-                    },
-                    polylines:
-
-                    widget.trip.toAddress == null ?
-                        {}
-                        :
-                    {
-                      Polyline(
-                        polylineId: const PolylineId("routes"),
-                        points:
-                          [
-                            LatLng(double.parse(widget.trip.fromLat!),
-                                double.parse(widget.trip.fromLong!)),
-                            LatLng(double.parse(widget.trip.toLat!),
-                                double.parse(widget.trip.toLong!)),
-
-
-                        ],
-                        color: const Color(0xFF7B61FF),
-                        width: 6,
-                      ),
-                    },
-                  ),
-                  ShowTripWidget(isWith: widget.trip.toAddress != null,trip: widget.trip),
-
+                            //  _customInfoWindowController.hideInfoWindow!();
+                          },
+                          polylines: widget.trip.toAddress == null
+                              ? {}
+                              : {
+                                  Polyline(
+                                    polylineId: const PolylineId("routes"),
+                                    points: cubit.latLngListFromTo,
+                                    color: const Color(0xFF7B61FF),
+                                    width: 6,
+                                  ),
+                                },
+                        ),
+                  ShowTripWidget(
+                      isWith: widget.trip.toAddress != null, trip: widget.trip),
 
                   //back button
                   Positioned(
@@ -309,5 +339,3 @@ class _ShowTripScreenState extends State<ShowTripScreen> with TickerProviderStat
 //   return byteData.buffer.asUint8List();
 // }
 }
-
-

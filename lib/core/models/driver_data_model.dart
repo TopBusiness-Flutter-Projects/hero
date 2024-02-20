@@ -33,12 +33,13 @@ class DriverDataModel {
 }
 
 class Data {
+  List<Slider>? sliders;
   int? driverStatus;
   int? cityId;
   DriverDetails? driverDetails;
   DriverDocuments? driverDocuments;
 
-  Data({
+  Data({ this.sliders,
     this.driverStatus,
     this.cityId,
     this.driverDetails,
@@ -46,6 +47,8 @@ class Data {
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
+    sliders: json["sliders"] == null ? [] : List<Slider>.from(json["sliders"]!.map((x) => Slider.fromJson(x))),
+
     driverStatus: json["driver_status"],
     cityId: json["city_id"],
     driverDetails: json["driver_details"] == null ? null : DriverDetails.fromJson(json["driver_details"]),
@@ -53,6 +56,8 @@ class Data {
   );
 
   Map<String, dynamic> toJson() => {
+    "sliders": sliders == null ? [] : List<dynamic>.from(sliders!.map((x) => x.toJson())),
+
     "driver_status": driverStatus,
     "city_id": cityId,
     "driver_details": driverDetails?.toJson(),
@@ -121,5 +126,24 @@ class DriverDocuments {
     "id_card": idCard,
     "house_card": houseCard,
     "bike_image": bikeImage,
+  };
+}
+class Slider {
+  String? image;
+  String? link;
+
+  Slider({
+    this.image,
+    this.link,
+  });
+
+  factory Slider.fromJson(Map<String, dynamic> json) => Slider(
+    image: json["image"],
+    link: json["link"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "image": image,
+    "link": link,
   };
 }

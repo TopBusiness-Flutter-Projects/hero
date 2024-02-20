@@ -38,11 +38,27 @@ class _DriverTripScreenState extends State<DriverTripScreen> {
               double.parse(widget.trip.fromLong ?? "31.1234065")),
           LatLng(double.parse(widget.trip.toLat ?? "31.98354"),
               double.parse(widget.trip.toLong ?? "31.1234065"))
-      ,
-          context,
-
-
+      ,       context,
       widget.trip.fromAddress!);
+if(context.read<DriverTripCubit>().tripStages ==1){
+  context.read<DriverTripCubit>().getDirection(//widget.trip
+      LatLng( context.read<HomeDriverCubit>().currentLocation != null ? context.read<HomeDriverCubit>()
+          .currentLocation!.latitude! : 0,
+        context.read<HomeDriverCubit>().currentLocation != null ? context.read<HomeDriverCubit>()
+            .currentLocation!.longitude! : 0,),
+      LatLng(double.parse(widget.trip.fromLat??"31.98354"), double.parse(widget.trip.fromLong??"31.1234065"))
+  );
+
+}else if(context.read<DriverTripCubit>().tripStages ==2){
+  context.read<DriverTripCubit>().getDirection(//widget.trip
+      LatLng( context.read<HomeDriverCubit>().currentLocation != null ? context.read<HomeDriverCubit>()
+          .currentLocation!.latitude! : 0,
+        context.read<HomeDriverCubit>().currentLocation != null ? context.read<HomeDriverCubit>()
+            .currentLocation!.longitude! : 0,),
+      LatLng(double.parse(widget.trip.toLat??"31.98354"), double.parse(widget.trip.toLong??"31.1234065"))
+  );
+}
+
     } else
       context.read<DriverTripCubit>().setMarkerIcon(
           null,
@@ -53,6 +69,18 @@ class _DriverTripScreenState extends State<DriverTripScreen> {
 
           widget.trip.fromAddress!
           );
+    context.read<DriverTripCubit>().getDirectionFromTo(//widget.trip
+        LatLng(double.parse(widget.trip.fromLat??"31.98354"), double.parse(widget.trip.fromLong??"31.1234065")),
+        LatLng(double.parse(widget.trip.toLat??"31.98354"), double.parse(widget.trip.toLong??"31.1234065"))
+    );
+
+    context.read<DriverTripCubit>().getDirection(//widget.trip
+        LatLng( context.read<HomeDriverCubit>().currentLocation != null ? context.read<HomeDriverCubit>()
+            .currentLocation!.latitude! : 0,
+          context.read<HomeDriverCubit>().currentLocation != null ? context.read<HomeDriverCubit>()
+              .currentLocation!.longitude! : 0,),
+        LatLng(double.parse(widget.trip.toLat??"31.98354"), double.parse(widget.trip.toLong??"31.1234065"))
+    );
     super.initState();
   }
 
@@ -321,6 +349,7 @@ class _DriverTripScreenState extends State<DriverTripScreen> {
                                     :
 
 
+
                                 {
                                   Marker(
                                     markerId: const MarkerId("currentLocation"),
@@ -363,16 +392,18 @@ class _DriverTripScreenState extends State<DriverTripScreen> {
 
                                 Polyline(
                                   polylineId: const PolylineId("route"),
-                                  points: [
-                                    LatLng(
-                                      homeDriverCubit!.currentLocation != null ? homeDriverCubit!
-                                          .currentLocation!.latitude! : 0,
-                                      homeDriverCubit!.currentLocation != null ? homeDriverCubit!
-                                          .currentLocation!.longitude! : 0,
-                                    ),
-                                    LatLng(double.parse(widget.trip.fromLat!),
-                                        double.parse(widget.trip.fromLong!)),
-                                  ],
+                                  points:cubit.latLngList
+                                 // [
+                                 //   LatLng(
+                                 //     homeDriverCubit!.currentLocation != null ? homeDriverCubit!
+                                 //         .currentLocation!.latitude! : 0,
+                                 //     homeDriverCubit!.currentLocation != null ? homeDriverCubit!
+                                 //         .currentLocation!.longitude! : 0,
+                                 //   ),
+                                 //   LatLng(double.parse(widget.trip.fromLat!),
+                                 //       double.parse(widget.trip.fromLong!)),
+                                 // ]
+                                  ,
                                   color: const Color(0xFF7B61FF),
                                   width: 6,
                                 ),}
@@ -385,39 +416,37 @@ class _DriverTripScreenState extends State<DriverTripScreen> {
 
                                 Polyline(
                                   polylineId: const PolylineId("route"),
-                                  points: [
-                                    LatLng(
-                                      homeDriverCubit.currentLocation != null ? homeDriverCubit
-                                          .currentLocation!.latitude! : 0,
-                                      homeDriverCubit.currentLocation != null ? homeDriverCubit
-                                          .currentLocation!.longitude! : 0,
-                                    ),
-                                    LatLng(double.parse(widget.trip.toLat!),
-                                        double.parse(widget.trip.toLong!)),
-                                  ],
+                                  points:cubit.latLngList
+                                  // points: [
+                                  //   LatLng(
+                                  //     homeDriverCubit.currentLocation != null ? homeDriverCubit
+                                  //         .currentLocation!.latitude! : 0,
+                                  //     homeDriverCubit.currentLocation != null ? homeDriverCubit
+                                  //         .currentLocation!.longitude! : 0,
+                                  //   ),
+                                  //   LatLng(double.parse(widget.trip.toLat!),
+                                  //       double.parse(widget.trip.toLong!)),
+                                  // ]
+                                  ,
                                   color: const Color(0xFF7B61FF),
                                   width: 6,
                                 ),}
                                   :
 
                               {
-                             //  Polyline(
-                             //      polylineId: const PolylineId("route"),
-                             //      points: cubit.latLngList,
-                             //      color: AppColors.black,
-                             //      width: 5,visible: true
 
-                             //  ),
 
 
                                 Polyline(
                                 polylineId: const PolylineId("route"),
-                                points: [
-                                  LatLng(double.parse(widget.trip.fromLat!),
-                                      double.parse(widget.trip.fromLong!)),
-                                  LatLng(double.parse(widget.trip.toLat!),
-                                      double.parse(widget.trip.toLong!)),
-                                ],
+                                  points:cubit.latLngListFromTo
+                                // points: [
+                                //   LatLng(double.parse(widget.trip.fromLat!),
+                                //       double.parse(widget.trip.fromLong!)),
+                                //   LatLng(double.parse(widget.trip.toLat!),
+                                //       double.parse(widget.trip.toLong!)),
+                                // ]
+                                  ,
                                 color: const Color(0xFF7B61FF),
                                 width: 6,
                               ),}
@@ -428,6 +457,35 @@ class _DriverTripScreenState extends State<DriverTripScreen> {
 
                                     },
                             onCameraMove: (position) {
+
+                              if (homeDriverCubit.strartlocation != position.target) {
+                                // print(cubit.strartlocation);
+                                homeDriverCubit.strartlocation = position.target;
+                                homeDriverCubit.getCurrentLocation();
+
+                                if( widget.trip.toAddress != null ){
+                                 if( cubit.tripStages ==2 )
+                                  cubit.getDirection(
+                                      LatLng(homeDriverCubit.currentLocation!.latitude!, homeDriverCubit.currentLocation!.longitude!),
+                                      LatLng(double.parse(widget.trip.toLat??"0"), double.parse(widget.trip.toLong??"0")));
+
+                                      else
+                                  cubit.getDirection(
+                                      LatLng(homeDriverCubit.currentLocation!.latitude!, homeDriverCubit.currentLocation!.longitude!),
+                                      LatLng(double.parse(widget.trip.fromLat??"0"), double.parse(widget.trip.fromLong??"0")));
+                                }
+                                else{
+
+                                  if (cubit.tripStages ==0){
+                                    cubit.getDirection(
+                                        LatLng(homeDriverCubit.currentLocation!.latitude!, homeDriverCubit.currentLocation!.longitude!),
+                                        LatLng(double.parse(widget.trip.fromLat??"0"), double.parse(widget.trip.fromLong??"0")));
+                                  }
+                                }
+
+                              }
+
+
 
                             //  if (homeDriverCubit.strartlocation!=position.target){
                             //    print(homeDriverCubit.strartlocation);

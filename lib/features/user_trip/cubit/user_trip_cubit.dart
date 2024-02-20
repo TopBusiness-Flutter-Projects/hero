@@ -16,11 +16,19 @@ import '../../../core/utils/appwidget.dart';
 import '../../../core/utils/custom_marker.dart';
 import '../../../core/utils/dialogs.dart';
 import '../../orders/cubit/cubit/orders_cubit.dart';
+import 'package:maps_toolkit/maps_toolkit.dart' as mp;
 
 part 'user_trip_state.dart';
 
 class UserTripCubit extends Cubit<UserTripState> {
-  UserTripCubit(this.api) : super(DriverTripInitial());
+  List<LatLng> latLngList = [];
+  List<LatLng> latLngListFromTo = [];
+  List<mp.LatLng> point = [];
+  List<mp.LatLng> pointFromTo = [];
+  UserTripCubit(this.api) : super(DriverTripInitial()){
+   // latLngList = [];
+   // latLngListFromTo = [];
+  }
   ServiceApi api;
 
   double rate = 0;
@@ -29,6 +37,7 @@ class UserTripCubit extends Cubit<UserTripState> {
   RateModel? rateTripModel;
   LatLng destinaion = LatLng(0, 0);
   LatLng strartlocation = LatLng(0, 0);
+
   // giveRate(
   //     {required int tripId,required int toId,
   //     String? description,
@@ -135,6 +144,71 @@ class UserTripCubit extends Cubit<UserTripState> {
   double radians(double degrees) {
     return degrees * (pi / 180);
   }
+//////// GET direction
+
+  String origin = "", dest = "";
+  getDirection(LatLng startPosition, LatLng endPosition) async {
+
+    origin = startPosition.latitude.toString() +
+        "," +
+        startPosition.longitude.toString();
+    dest = endPosition.latitude.toString() +
+        "," +
+        endPosition.longitude.toString();
+    final response = await api.getDirection(origin, dest, "bus");
+    response.fold(
+          (l) => emit(ErrorLocationSearch()),
+          (r) {
+        latLngList.clear();
+
+        if (r.routes.length > 0) {
+          point = mp.PolygonUtil.decode(
+              r.routes.elementAt(0).overviewPolyline.points);
+          latLngList =
+              point.map((e) => LatLng(e.latitude, e.longitude)).toList();
+        } else {
+          latLngList = [];
+        }
+        // destinaion = LatLng(r.candidates.elementAt(0).geometry.location.lat, r.candidates.elementAt(0).geometry.location.lng);
+
+        emit(UpdateDesitnationLocationState());
+      },
+    );
+  }
+
+  String originFrom = "", destTo = "";
+  getDirectionFromTo(LatLng startPosition, LatLng endPosition) async {
+
+    originFrom = startPosition.latitude.toString() +
+        "," +
+        startPosition.longitude.toString();
+    destTo = endPosition.latitude.toString() +
+        "," +
+        endPosition.longitude.toString();
+    final response = await api.getDirection(originFrom, destTo, "bus");
+    response.fold(
+          (l) => emit(ErrorLocationSearch()),
+          (r) {
+        latLngListFromTo.clear();
+
+        if (r.routes.length > 0) {
+          point = mp.PolygonUtil.decode(
+              r.routes.elementAt(0).overviewPolyline.points);
+          latLngListFromTo =
+              point.map((e) => LatLng(e.latitude, e.longitude)).toList();
+        } else {
+          latLngListFromTo = [];
+        }
+        // destinaion = LatLng(r.candidates.elementAt(0).geometry.location.lat, r.candidates.elementAt(0).geometry.location.lng);
+
+        emit(UpdateDesitnationLocationState());
+      },
+    );
+  }
+
+
+
+
 
 //   ///// Driver Trips ///////
 // // accept trip

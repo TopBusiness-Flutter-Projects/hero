@@ -69,3 +69,5 @@ class AddressAlreadyExists extends HomeState {}
 class FailureCheckDocumentsState extends HomeState {}
 class SuccessCheckDocumentsState extends HomeState {}
 class LoadingCheckDocumentsStatus extends HomeState {}
+class ErrorLocationSearch1 extends HomeState {}
+class UpdateDesitnationLocationState1 extends HomeState {}

@@ -36,21 +36,36 @@ class _UserTripScreenState extends State<UserTripScreen> {
   void initState() {
     context.read<HomeCubit>().getTripStatus();
     context.read<UserTripCubit>().getWaitingDriverStage();
+    //context.read<UserTripCubit>().getDirectionFromTo(widget.trip., endPosition);
+    context.read<UserTripCubit>().getDirectionFromTo(//widget.trip
+        LatLng(double.parse(widget.trip.fromLat??"31.98354"), double.parse(widget.trip.fromLong??"31.1234065")),
+        LatLng(double.parse(widget.trip.toLat??"31.98354"), double.parse(widget.trip.toLong??"31.1234065"))
+    );
+
+    context.read<UserTripCubit>().getDirection(//widget.trip
+        LatLng( context.read<HomeCubit>().currentLocation != null ? context.read<HomeCubit>()
+            .currentLocation!.latitude! : 0,
+          context.read<HomeCubit>().currentLocation != null ? context.read<HomeCubit>()
+              .currentLocation!.longitude! : 0,),
+        LatLng(double.parse(widget.trip.toLat??"31.98354"), double.parse(widget.trip.toLong??"31.1234065"))
+    );
 
     Timer.periodic(Duration(seconds: 10), (timer) {
+   //  context.read<UserTripCubit>().getDirectionFromTo(//widget.trip
+   //      LatLng(double.parse(widget.trip.fromLat??"31.98354"), double.parse(widget.trip.fromLong??"31.1234065")),
+   //      LatLng(double.parse(widget.trip.toLat??"31.98354"), double.parse(widget.trip.toLong??"31.1234065"))
+   //  );
 
         context.read<HomeCubit>().getTripStatus();
     });
-    context.read<HomeCubit>().setMyMarker(widget.trip
-       // widget.trip.toAddress??" ", LatLng(double.parse(widget.trip.fromLat??"31.98354"), double.parse(widget.trip.fromLong??"31.1234065")),
-       // LatLng(double.parse(widget.trip.toLat??"31.98354"), double.parse(widget.trip.toLong??"31.1234065"))
-    );
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
    UserTripCubit cubit = context.read<UserTripCubit>();
+   HomeCubit homeCubit = context.read<HomeCubit>();
     return Scaffold(
       body: SafeArea(
         child: BlocConsumer<UserTripCubit,UserTripState>(
@@ -90,71 +105,171 @@ class _UserTripScreenState extends State<UserTripScreen> {
                             ),
                             zoom: 13.5,
                           ),
-                          markers: context.read<HomeCubit>().markers,
-                          //       {
-                          //         Marker(
-                          //           markerId: const MarkerId("currentLocation"),
-                          //           icon: cubit.currentLocationIcon,
-                          //
-                          //           position: LatLng(cubit.currentLocation!.latitude!,
-                          //               cubit.currentLocation!.longitude!),
-                          //         ),
-                          //         // Marker(
-                          //         //   markerId: const MarkerId("source"),
-                          //         //   infoWindow: InfoWindow(
-                          //         //     title: "from",
-                          //         //   ),
-                          //         //  // icon: customMarkerIcon,
-                          //         //   icon: cubit.sourceIcon,
-                          //         //   position: cubit.sourceLocation,
-                          //         // ),
-                          //         Marker(
-                          //           markerId: MarkerId("destination"),
-                          //           infoWindow: InfoWindow(
-                          //             title: "to",
-                          //           ),
-                          //           icon: cubit.destinationIcon,
-                          //           position: cubit.destinationH,
-                          //         ),
-                          //       //  markers.first
-                          //       },
+                          //0 for waitingDriver , 1 for driverAcceptTheTrip , 2  for driverStart the trip ,
+                          //3 for completed
+                          markers: cubit.tripStages ==0 || cubit.tripStages ==1||cubit.tripStages==3?
+                              //with
+                             widget.trip.toAddress != null ? {
+                               Marker(
+                                 markerId: const MarkerId("from"),
+                                 icon: homeCubit.markerIcon != null
+                                     ? BitmapDescriptor.fromBytes(homeCubit.markerIcon!)
+                                     : homeCubit.currentLocationIcon,
+
+                                 position: LatLng(double.parse(widget.trip.fromLat!),
+                                     double.parse(widget.trip.fromLong!)),
+                               ),
+                               Marker(
+                                 markerId: MarkerId("to"),
+                                 infoWindow: InfoWindow(
+                                   title: "to",
+                                 ),
+                                 // icon: cubit.destinationIcon,
+                                 position: LatLng(double.parse(widget.trip.toLat!),
+                                     double.parse(widget.trip.toLong!)),
+                               ),
+                               //  markers.first
+                             }
+                             // without
+                             : {
+                               Marker(
+                                 markerId: const MarkerId("from"),
+                                 icon: homeCubit.markerIcon != null
+                                     ? BitmapDescriptor.fromBytes(
+                                     homeCubit.markerIcon!)
+                                     : homeCubit.currentLocationIcon,
+
+                                 position: LatLng(
+                                     double.parse(widget.trip.fromLat!),
+                                     double.parse(widget.trip.fromLong!)),
+                               )
+                             }
+                          : // driver start
+
+
+                          widget.trip.toAddress != null ?
+                          // with
+                                {
+                                  Marker(
+                                    markerId: const MarkerId("currentLocation"),
+
+                                    icon: homeCubit.markerIcon != null
+                      ? BitmapDescriptor.fromBytes(homeCubit.markerIcon!)
+              : homeCubit.currentLocationIcon,
+
+
+
+                                    position: LatLng(homeCubit.currentLocation!.latitude!,
+                                        homeCubit.currentLocation!.longitude!),
+                                  ),
+
+                                  Marker(
+                                    markerId: MarkerId("to"),
+                                    infoWindow: InfoWindow(
+                                      title: "to",
+                                    ),
+                                    // icon: cubit.destinationIcon,
+                                    position: LatLng(double.parse(widget.trip.toLat!),
+                                        double.parse(widget.trip.toLong!)),
+                                  ),
+                                //  markers.first
+                                }
+                                // without
+                                :
+                        {
+                            Marker(
+                            markerId: const MarkerId("currentLocation"),
+
+                        icon: homeCubit.markerIcon != null
+                            ? BitmapDescriptor.fromBytes(homeCubit.markerIcon!)
+                            : homeCubit.currentLocationIcon,
+
+
+
+                        position: LatLng(homeCubit.currentLocation!.latitude!,
+                            homeCubit.currentLocation!.longitude!),
+                      ),}
+
+
+
+                                ,
                           onMapCreated: (GoogleMapController mapController) {
                             context.read<HomeCubit>().mapController = mapController;
                           },
-                          onTap: (argument) {
 
-                           // cubit.getLocation(argument, "to");
-                            //  if(cubit.currentEnumStatus == MyEnum.defaultState){
-                            // if (context.read<HomeCubit>().flag == 1) {
-                            //   //   cubit.getLocation(argument);
-                            //
-                            // } else {}
-                            // // }
-
-
-
-
-
-                            //  _customInfoWindowController.hideInfoWindow!();
-                          },
                           onCameraMove: (position) {
-                            if (cubit.strartlocation != position.target) {
+
+
+                            if (homeCubit.strartlocation != position.target) {
                               // print(cubit.strartlocation);
                               context.read<HomeCubit>().strartlocation = position.target;
                               context.read<HomeCubit>().getCurrentLocation();
+
+                              if( widget.trip.toAddress != null )
+                              cubit.getDirection(
+                                  LatLng(homeCubit.currentLocation!.latitude!, homeCubit.currentLocation!.longitude!),
+                                  LatLng(double.parse(widget.trip.toLat??"0"), double.parse(widget.trip.toLong??"0")));
                             }
                             // _customInfoWindowController.hideInfoWindow!();
 
                             //  _customInfoWindowController.hideInfoWindow!();
                           },
-                          polylines: {
+                          polylines:
+                          widget.trip.toAddress != null ?
+
+
+                          cubit.tripStages ==0 || cubit.tripStages ==1|| cubit.tripStages ==3?
+
+                          {
+
+
+
                             Polyline(
-                              polylineId: const PolylineId("route"),
-                              points: context.read<HomeCubit>().latLngList,
+                              polylineId: const PolylineId("routet"),
+                              points:cubit.latLngListFromTo
+                              // [
+
+                              //   LatLng(double.parse(widget.trip.fromLat!),
+                              //       double.parse(widget.trip.fromLong!)),
+                              //   LatLng(double.parse(widget.trip.toLat!),
+                              //       double.parse(widget.trip.toLong!)),
+
+                              // ]
+                              ,
                               color: const Color(0xFF7B61FF),
                               width: 6,
-                            ),
-                          },
+                            ),}
+
+                              :
+
+
+                          {
+
+
+
+                            Polyline(
+                              polylineId: const PolylineId("current"),
+                              points: cubit.latLngList
+
+                              // [
+                              //  LatLng(
+                              //    homeCubit.currentLocation != null ? homeCubit
+                              //        .currentLocation!.latitude! : 0,
+                              //    homeCubit.currentLocation != null ? homeCubit
+                              //        .currentLocation!.longitude! : 0,
+                              //  ),
+                              //  LatLng(double.parse(widget.trip.toLat!),
+                              //      double.parse(widget.trip.toLong!)),
+                              //]
+                              ,
+                              color: const Color(0xFF7B61FF),
+                              width: 6,
+                            ),}
+                              :
+                          {}
+
+
+
                         ),
                       ),
                       // child: GoogleMap(
