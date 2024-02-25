@@ -44,8 +44,8 @@ class CustomReportWidget extends StatelessWidget {
               onTap: () async {
                 final DateTime? picked = await showDatePicker(
                   context: context,
-                  initialDate: DateTime(2000),
-                  firstDate: DateTime(1900),
+                  initialDate:cubit.fromController.text.isEmpty? DateTime(2024):DateTime.parse(cubit.fromController.text),
+                  firstDate: DateTime(2024),
                   lastDate: DateTime.now(),
                 );
                 if (picked != null && picked != cubit.fromSelectedDate) {
@@ -78,8 +78,8 @@ class CustomReportWidget extends StatelessWidget {
               onTap: () async {
                 final DateTime? picked = await showDatePicker(
                   context: context,
-                  initialDate: DateTime(2000),
-                  firstDate: DateTime(1900),
+                  initialDate:cubit.toController.text.isEmpty? DateTime(2024):DateTime.parse(cubit.toController.text),
+                  firstDate: DateTime(2024),
                   lastDate: DateTime.now(),
                 );
                 if (picked != null && picked != cubit.toSelectedDate) {

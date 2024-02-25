@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hero/core/utils/dialogs.dart';
 import 'package:hero/core/widgets/custom_button.dart';
+import '../../../config/routes/app_routes.dart';
 import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/assets_manager.dart';
 import '../../../core/utils/getsize.dart';
@@ -23,7 +24,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class AddTripTab extends StatefulWidget {
   AddTripTab({super.key, required this.isInTrip});
-final bool isInTrip;
+
+  final bool isInTrip;
 
   @override
   State<AddTripTab> createState() => _AddTripTabState();
@@ -40,15 +42,15 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
   @override
   void dispose() {
     _customInfoWindowController.dispose();
-   //_timer.cancel();
+    //_timer.cancel();
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
-    context.read<HomeCubit>().destination=LatLng(0, 0);
-    context.read<HomeCubit>().location_control.text = "";
+    context.read<HomeCubit>().destination = LatLng(0, 0);
+    if (!widget.isInTrip) context.read<HomeCubit>().location_control.text = "";
     context.read<HomeCubit>().getCurrentLocation();
     // gifController = FlutterGifController(vsync: this);
     context.read<HomeCubit>().checkAndRequestLocationPermission();
@@ -62,10 +64,7 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
 //  //context.read<HomeCubit>().getLocation(LatLng( double.parse(context.read<HomeCubit>().checkTripStatusModel.data!.fromLat!) , double.parse(context.read<HomeCubit>().checkTripStatusModel.data!.fromLong!)), "from");
 //  //context.read<HomeCubit>().getLocation(LatLng( double.parse(context.read<HomeCubit>().checkTripStatusModel.data!.toLat!) , double.parse(context.read<HomeCubit>().checkTripStatusModel.data!.toLong!)), "to");
 // }
-
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -77,13 +76,14 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
       },
       child: SafeArea(
         child: Scaffold(
-          resizeToAvoidBottomInset: false,
+          resizeToAvoidBottomInset: true,
           //  key: scaffoldKey,
           body: BlocConsumer<HomeCubit, HomeState>(
             listener: (context, state) {
-           if(state is SuccessCreateSchedualTripState ){
-             Navigator.pop(context);
-           }
+              if (state is SuccessCreateSchedualTripState) {
+                Navigator.pop(context);
+                Navigator.pushReplacementNamed(context, Routes.homeRoute);
+              }
             },
             builder: (context, state) {
               HomeCubit cubit = context.read<HomeCubit>();
@@ -135,27 +135,34 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
                             cubit.mapController = mapController;
                           },
                           onTap: (argument) {
+                            cubit.changeFavourite();
 
-                            cubit.getLocation(argument, "to");
-                          //  if(cubit.currentEnumStatus == MyEnum.defaultState){
+                            if (context.read<HomeCubit>().flag == 1) {
+                              cubit.getLocation(argument, "to");
+                              double distance = cubit.calculateDistance(
+                                  LatLng(cubit.currentLocation!.latitude!,
+                                      cubit.currentLocation!.longitude!),
+                                  argument);
+
+                              cubit.paymentMoney =
+                                  distance * cubit.settingsModel.data!.km!;
+                            }
+
+                            //  if(cubit.currentEnumStatus == MyEnum.defaultState){
                             // if (context.read<HomeCubit>().flag == 1) {
                             //   //   cubit.getLocation(argument);
                             //
                             // } else {}
-                         // // }
-
-
-
-
+                            // // }
 
                             //  _customInfoWindowController.hideInfoWindow!();
                           },
                           onCameraMove: (position) {
-                          //  if (cubit.strartlocation != position.target) {
-                          //   // print(cubit.strartlocation);
-                          //    cubit.strartlocation = position.target;
-                          //    cubit.getCurrentLocation();
-                          //  }
+                            //  if (cubit.strartlocation != position.target) {
+                            //   // print(cubit.strartlocation);
+                            //    cubit.strartlocation = position.target;
+                            //    cubit.getCurrentLocation();
+                            //  }
                             // _customInfoWindowController.hideInfoWindow!();
 
                             //  _customInfoWindowController.hideInfoWindow!();
@@ -170,8 +177,7 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
                           },
                         ),
                   DefaultWidget(isATrip: widget.isInTrip),
-                     // cubit.chooseWidget(cubit.currentEnumStatus),
-
+                  // cubit.chooseWidget(cubit.currentEnumStatus),
 
                   //   // default case
                   // DefaultWidget(),
@@ -331,5 +337,3 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
 //   return byteData.buffer.asUint8List();
 // }
 }
-
-

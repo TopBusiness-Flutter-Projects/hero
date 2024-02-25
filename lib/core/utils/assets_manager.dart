@@ -72,6 +72,7 @@ class ImageAssets {
 
   //Gif
   static const String searchGif = '$gif/search.gif';
+  static const String inTrip = '$gif/inTrip.gif';
 
 
   //Lottie

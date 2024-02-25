@@ -16,6 +16,7 @@ import '../../../../core/utils/getsize.dart';
 import 'dart:async';
 
 import '../../../home/cubit/home_cubit.dart';
+import '../../../homedriver/screen/widgets/finish_trip_sheet.dart';
 
 class TripCompletedWidget extends StatefulWidget {
   const TripCompletedWidget({super.key, required this.trip});
@@ -97,7 +98,10 @@ class _TripCompletedWidgetState extends State<TripCompletedWidget> {
                 Flexible(
                   child: Text(
                     " ${widget.trip.fromAddress}",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
+
                         color: AppColors.gray,
                         fontSize: getSize(context) * 0.04,
                         fontWeight: FontWeight.w400),
@@ -132,9 +136,9 @@ class _TripCompletedWidgetState extends State<TripCompletedWidget> {
                   Flexible(
 
                     child: Text(
-                      maxLines: 2,
+                      maxLines: 1,
 
-                      "${widget.trip.toAddress}",
+                      "${widget.trip.toAddress??"بدون وجهة"}",
                       style: TextStyle(
                         overflow:TextOverflow.ellipsis ,
                         color: AppColors.gray,
@@ -188,43 +192,25 @@ class _TripCompletedWidgetState extends State<TripCompletedWidget> {
                 ],
               ),
               Row(
+                //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Icon(Icons.location_on_outlined),
-                  Text(
-                    "${widget.trip.distance}km",
-                    style: TextStyle(fontSize: getSize(context) * 0.04),
-                  ),
-                  SizedBox(
-                    width: getSize(context) * 0.15,
-                  ),
-                  Image.asset(
-                    "assets/images/clock.png",
-                    height: getSize(context) * 0.05,
-                  ),
-                  //  Icon(Icons.watch_later_outlined,),
-                  SizedBox(
-                    width: getSize(context) * 0.02,
-                  ),
-                  Text(
-                    "${widget.trip.time} min",
-                    style: TextStyle(fontSize: getSize(context) * 0.04),
-                  ),
-                  SizedBox(
-                    width: getSize(context) * 0.15,
-                  ),
-                  Image.asset(
-                    "assets/images/money.png",
-                    height: getSize(context) * 0.05,
-                  ),
-                  SizedBox(
-                    width: getSize(context) * 0.02,
-                  ),
-                  Text(
-                    "${double.parse(widget.trip.price.toStringAsFixed(2))} د.ع",
-                    style: TextStyle(fontSize: getSize(context) * 0.04),
+                  FinishTripColumn(
+                    path: ImageAssets.finishTripMap,
+                    text: "${double.parse(double.parse(widget.trip.distance.toString()).toStringAsFixed(2))} km",
+
+                  ), FinishTripColumn(
+                    path: ImageAssets.finishTripTime,
+                    text:"${widget.trip.time} min",
+
+                  ), FinishTripColumn(
+                      path: ImageAssets.finishTripMoney,
+                      text:"${double.parse(widget.trip.price.toStringAsFixed(2))} د.ع",
+
                   ),
                 ],
+
               ),
+
               SizedBox(
                 height: getSize(context) * 0.03,
               ),
@@ -256,7 +242,7 @@ class _TripCompletedWidgetState extends State<TripCompletedWidget> {
                                       InkWell(
                                           onTap: () {
                                             Navigator.pushNamedAndRemoveUntil(
-                                                context, Routes.homedriverRoute, (route) => false);
+                                                context, Routes.homeRoute, (route) => false);
                                           },
                                           child: Padding(
                                             padding: const EdgeInsets.symmetric(
@@ -352,9 +338,6 @@ class _TripCompletedWidgetState extends State<TripCompletedWidget> {
 
                     },
                     child: Text(
-
-
-
                       "rate_trip".tr(),
                       style: TextStyle(color: AppColors.green1),
                     ),
@@ -370,10 +353,10 @@ class _TripCompletedWidgetState extends State<TripCompletedWidget> {
                     },
                     child: Text(
                       "goHome".tr(),
-                      style: TextStyle(color: AppColors.green1),
+                      style: TextStyle(color: AppColors.white),
                     ),
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.greenLight,
+                        backgroundColor: AppColors.primary,
                         minimumSize: Size(getSize(context) * 0.3,
                             getSize(context) * 0.1)),
                   ),

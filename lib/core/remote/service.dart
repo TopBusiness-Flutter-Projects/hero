@@ -60,6 +60,8 @@ class ServiceApi {
 //
   Future<Either<Failure, SignUpModel>> postRegister(
       RegisterModel registerModel, bool isSignUp) async {
+
+    String? notificationToken = await Preferences.instance.getNotificationToken()??'';
     try {
       if (registerModel.phone.startsWith("964")) {
         print("Before: ${registerModel.phone}");
@@ -74,7 +76,7 @@ class ServiceApi {
         isSignUp ? EndPoints.registerUrl : EndPoints.editProfileUrl,
         queryParameters: {
           "device_type": registerModel.deviceType,
-          "token": registerModel.token
+          "token": notificationToken
         },
         formDataIsEnabled: true,
         body: {
@@ -728,9 +730,12 @@ class ServiceApi {
       return Left(ServerFailure());
     }
   }
-
+//fUHZXVLrTaCOa7HwKv2vMX:APA91bHyS1pj1qbxjyWdUGm0gnu2YxYVZNQVAj6NSvAAJW5Rl7aVwHTlITm2H7xettAtHOpyHCdQpmlacXUYKk26tZCsWKoYO4F2FAb8yHoAZFC6vBac5Em5qiUwBvtwhK3WGUZ2VLz2
   Future<Either<Failure, SignUpModel>> login(
       String phone, String deviceType, String token) async {
+
+    String? notificationToken = await Preferences.instance.getNotificationToken()??'';
+    print('ggggggggggg$notificationToken');
     try {
       if (phone.startsWith("964")) {
         print("Before: ${phone}");
@@ -745,7 +750,7 @@ class ServiceApi {
         body: {
           'phone': AppStrings.countryCode + phone,
         },
-        queryParameters: {"device_type": deviceType, "token": token},
+        queryParameters: {"device_type": deviceType, "token": notificationToken},
       );
       print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
       print(response);

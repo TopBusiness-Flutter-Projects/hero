@@ -93,7 +93,7 @@ class Preferences {
   }
  Future<void> clearShared()async{
    SharedPreferences preferences = await SharedPreferences.getInstance();
-   preferences.clear();
+   preferences.remove('user');
  }
 
   Future<SignUpModel> getUserModel() async {

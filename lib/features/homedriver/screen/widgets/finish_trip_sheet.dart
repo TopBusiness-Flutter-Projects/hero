@@ -75,8 +75,6 @@ class _FinishTripSheetState extends State<FinishTripSheet> {
                         name: cubit.startQuickTripModel.data!.name!,
                         to: cubit.startQuickTripModel.data!.toAddress!,
                         from: cubit.startQuickTripModel.data!.fromAddress!,) ,
-
-
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [ Column(children: [
@@ -88,10 +86,7 @@ class _FinishTripSheetState extends State<FinishTripSheet> {
 
                         Image.asset(
                           ImageAssets.finishTripBike,
-
                         ),
-
-
                         Column(children: [
                           Text("arrivalTime".tr()),
                           Text('${cubit.arrivalTime!.hour}:${cubit.arrivalTime!.minute}'),
@@ -144,17 +139,21 @@ final String path;
 final String text;
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        MyCustomSvgWidget(
-          path:
-          path,
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(text),
-        )
-      ],
+    return Flexible(
+      child: Row(
+        children: [
+          MyCustomSvgWidget(
+            path:
+            path,
+          ),
+          Flexible(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(text),
+            ),
+          )
+        ],
+      ),
     );
   }
 }

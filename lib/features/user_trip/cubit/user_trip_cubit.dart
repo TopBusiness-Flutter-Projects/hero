@@ -330,7 +330,7 @@ class UserTripCubit extends Cubit<UserTripState> {
   // }
 
   //0 for waitingDriver , 1 for driverAcceptTheTrip , 2  for driverStart the trip ,
-  //3 for completed
+  //3 for completed // 4 for no driver
 int tripStages =0;
 
   getDriverAcceptTripStage(){
@@ -345,6 +345,9 @@ int tripStages =0;
     emit(ChangeTripStageUIState());
   }getCompletedStage(){
     tripStages =3;
+    emit(ChangeTripStageUIState());
+  }getNoDriverStage(){
+    tripStages =4;
     emit(ChangeTripStageUIState());
   }
 

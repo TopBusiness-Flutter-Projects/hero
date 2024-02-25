@@ -15,6 +15,7 @@ import '../../../core/utils/assets_manager.dart';
 import '../../../core/widgets/back_button.dart';
 import '../../../core/widgets/custom_button.dart';
 import '../../home/cubit/home_cubit.dart';
+import '../../homedriver/screen/widgets/finish_trip_sheet.dart';
 
 class TripDetailsScreen extends StatefulWidget {
   const TripDetailsScreen({super.key,required this.trip});
@@ -304,40 +305,26 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                           ),
                         ],
                       ),
-                      Wrap(
+
+                      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Icon(Icons.location_on_outlined),
-                          Text(
-                            "${double.parse(double.parse(widget.trip.distance).toStringAsFixed(2))}km",
-                            style: TextStyle(fontSize: getSize(context) * 0.04),
-                          ),
-                          Spacer(),
-                          Image.asset(
-                            "assets/images/clock.png",
-                            height: getSize(context) * 0.05,
-                          ),
-                          //  Icon(Icons.watch_later_outlined,),
-                          SizedBox(
-                            width: getSize(context) * 0.01,
-                          ),
-                          Text(
-                            "${widget.trip.time} min",
-                            style: TextStyle(fontSize: getSize(context) * 0.04),
-                          ),
-                          Spacer(),
-                          Image.asset(
-                            "assets/images/money.png",
-                            height: getSize(context) * 0.05,
-                          ),
-                          SizedBox(
-                            width: getSize(context) * 0.01,
-                          ),
-                          Text(
-                            "${double.parse(widget.trip.price.toStringAsFixed(2))} د.ع",
-                            style: TextStyle(fontSize: getSize(context) * 0.04),
+                          FinishTripColumn(
+                            path: ImageAssets.finishTripMap,
+                            text:   "${double.parse(double.parse(widget.trip.distance).toStringAsFixed(2))}km",
+
+                          ), FinishTripColumn(
+                            path: ImageAssets.finishTripTime,
+                            text: "${widget.trip.time} min",
+
+                          ), FinishTripColumn(
+                            path: ImageAssets.finishTripMoney,
+                            text: "${double.parse(widget.trip.price.toStringAsFixed(2))} د.ع",
+
                           ),
                         ],
+
                       ),
+
                       SizedBox(
                         height: 10,
                       )

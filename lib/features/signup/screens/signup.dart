@@ -152,19 +152,19 @@ class _SignUpState extends State<SignUp> {
                       ),
                     ),
 
-                    // CustomTextField(
-                    //   title: 'email'.tr(),
-                    //   controller: cubit.emailController,
-                    //   textInputType: TextInputType.emailAddress,
-                    //   backgroundColor: AppColors.white,
-                    //   prefixWidget: const Icon(CupertinoIcons.mail),
-                    //   validatorMessage: 'email_msg'.tr(),
-                    //   horizontalPadding: 2,
-                    //
-                    //   // controller: controller.phoneNumberController,
-                    // ),
-                    //   ),
-                    // ),
+                    CustomTextField(
+                      title: 'email'.tr(),
+                      controller: cubit.emailController,
+                      textInputType: TextInputType.emailAddress,
+                      backgroundColor: AppColors.white,
+                      prefixWidget: const Icon(CupertinoIcons.mail),
+                      validatorMessage: 'email_msg'.tr(),
+                      horizontalPadding: 2,
+
+                      // controller: controller.phoneNumberController,
+                    ),
+                      //),
+                   // ),
                     Container(
                       padding:
                           EdgeInsets.symmetric(vertical: getSize(context) / 22),
@@ -241,7 +241,7 @@ class _SignUpState extends State<SignUp> {
                       // ),
                       title: 'date_of_birth'.tr(),
                       controller: cubit.dateOfBirthController,
-                      textInputType: TextInputType.phone,
+                      textInputType: TextInputType.none,
                       backgroundColor: AppColors.white,
                       //isEnable: false,
                       validatorMessage: 'date_of_birth_msg'.tr(),

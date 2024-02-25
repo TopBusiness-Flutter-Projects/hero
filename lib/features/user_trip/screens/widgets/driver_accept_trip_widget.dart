@@ -71,7 +71,7 @@ class _DriverAcceptWidgetState extends State<DriverAcceptWidget> {
                   children: [
                     Image.asset(
                       ImageAssets.success,
-                      width: getSize(context) / 4,
+                      width: getSize(context) / 5,
                     ),
 
                     //rich text

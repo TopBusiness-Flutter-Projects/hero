@@ -1,20 +1,35 @@
+import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart ' as easy;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../core/utils/app_colors.dart';
-import '../../../core/utils/assets_manager.dart';
-import '../../../core/utils/getsize.dart';
-import '../../../core/widgets/custom_button.dart';
-import '../cubit/home_cubit.dart';
+import 'package:hero/features/home/cubit/home_cubit.dart';
 
-class FailureWidget extends StatefulWidget {
-  const FailureWidget({super.key});
+import '../../../../config/routes/app_routes.dart';
+import '../../../../core/utils/app_colors.dart';
+import '../../../../core/utils/assets_manager.dart';
+import '../../../../core/utils/getsize.dart';
+import '../../../../core/widgets/custom_button.dart';
+import '../../cubit/user_trip_cubit.dart';
+
+
+class NoDriverWidget extends StatefulWidget {
+
+  const NoDriverWidget({super.key,});
 
   @override
-  State<FailureWidget> createState() => _FailureWidgetState();
+  State<NoDriverWidget> createState() => _NoDriverWidgetState();
 }
 
-class _FailureWidgetState extends State<FailureWidget> {
+class _NoDriverWidgetState extends State<NoDriverWidget> {
+  @override
+  void initState() {
+
+    Timer.periodic(Duration(seconds: 10), (timer) {
+      // context.read<HomeCubit>().getTripStatus();
+    });
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<HomeCubit, HomeState>(
@@ -55,8 +70,11 @@ class _FailureWidgetState extends State<FailureWidget> {
                       text: "try_again".tr(),
                       color: AppColors.red,
                       onClick: () {
-                        cubit.tabsController.animateTo(0);
-                        cubit.currentEnumStatus = MyEnum.defaultState;
+                        //cubit.tabsController.animateTo(0);
+                        cubit.progressValue=0.0;
+                        cubit.timer.cancel();
+                        context.read<UserTripCubit>().getWaitingDriverStage();
+                        cubit.startTimer(context);
                       },
                       width: getSize(context) * 0.9,
                       borderRadius: 16,
@@ -64,7 +82,7 @@ class _FailureWidgetState extends State<FailureWidget> {
                   ],
                 ),
               ));
-       // );
+        // );
       },
     );
   }

@@ -48,232 +48,229 @@ class _MyWalletScreenState extends State<MyWalletScreen> {
       builder: (context, state) {
         MyWalletCubit cubit = context.read<MyWalletCubit>();
         HomeCubit homeCubit = context.read<HomeCubit>();
-        return Scaffold(
-          body: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: ListView(
+        return SafeArea(
+          child: Scaffold(
+            body: Column(
               children: [
                 SizedBox(
                   height: 10,
                 ),
+
                 Row(
                   children: [
-                    SizedBox(
-                      height: 10,
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Image.asset(
+                        ImageAssets.backImage,
+                        color: AppColors.grey3,
+                        height: getSize(context) / 15,
+                        width: getSize(context) / 15,
+                      ),
                     ),
-                    Expanded(
-                        child: Column(
-                      children: [
-                        //welcome user
-                        Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                              child: Image.asset(
-                                ImageAssets.backImage,
-                                color: AppColors.grey3,
-                                height: getSize(context) / 15,
-                                width: getSize(context) / 15,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Icon(
-                              CupertinoIcons.person_circle_fill,
-                              color: Colors.grey,
-                            ),
-                            BlocBuilder<HomeCubit, HomeState>(
-                                builder: (context, state) {
-                              return Text(
-                                'welcome'.tr() +
-                                    "${homeCubit.signUpModel?.data?.name}",
-                                style: TextStyle(
-                                    fontSize: getSize(context) / 24,
-                                    fontWeight: FontWeight.normal,
-                                    color: AppColors.black),
-                              );
-                            }),
-                            Spacer(),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        //address + location icon
-                        BlocBuilder<HomeCubit, HomeState>(
-                            builder: (context, state) {
-                          return Row(
-                            children: [
-                              Icon(
-                                Icons.location_on_outlined,
-                                size: 27,
-                              ),
-                              //address
-                              Expanded(
-                                child: Text(
-                                  "${homeCubit.address}",
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                      fontSize: getSize(context) / 24,
-                                      fontWeight: FontWeight.normal,
-                                      color: AppColors.gray),
-                                ),
-                              ),
-                            ],
-                          );
-                        }),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        isLoading
-                            ? Center(
-                                child: CircularProgressIndicator(
-                                  color: AppColors.primary,
-                                ),
-                              )
-                            : isEmpty
-                                ? Center(
-                                    child: Text(cubit.myWalletModel.message!),
-                                  )
-                                : Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(vertical: 8.0,horizontal: 20),
-                                        child: Container(
-                                            width: double.maxFinite,
-                                            margin: const EdgeInsets.symmetric(
-                                                vertical: 10),
-                                            decoration: BoxDecoration(
-                                              boxShadow: const [
-                                                BoxShadow(
-                                                  color: Color.fromRGBO(
-                                                      0, 0, 0, 0.1),
-                                                  blurRadius: 20,
-                                                  offset: Offset(
-                                                      0, 0), // Shadow position
-                                                ),
-                                                BoxShadow(
-                                                  color: Color.fromRGBO(
-                                                      0, 0, 0, 0.1),
-                                                  blurRadius: 10,
-                                                  offset: Offset(
-                                                      0, 0), // Shadow position
-                                                ),
-                                              ],
-                                              color: AppColors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            child: Padding(
-                                              padding: const EdgeInsets.symmetric(
-                                                  vertical: 10.0, horizontal: 15),
-                                              child: Column(
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Text(
-                                                        "wallet".tr(),
-                                                        style: getRegularStyle(
-                                                            fontSize: 18),
-                                                      ),
-                                                      GestureDetector(
-                                                        onTap: () {},
-                                                        child: Container(
-                                                          decoration: BoxDecoration(
-                                                              color: AppColors
-                                                                  .primary,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          20)),
-                                                          child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .symmetric(
-                                                                    horizontal:
-                                                                        25,
-                                                                    vertical: 10),
-                                                            child: Text(
-                                                              "pay".tr(),
-                                                              style: getRegularStyle(
-                                                                  fontSize: 18,
-                                                                  color: AppColors
-                                                                      .white),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      MyCustomSvgWidget(
-                                                        path:
-                                                            ImageAssets.myWallet,
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets.all(
-                                                                8.0),
-                                                        child: Text(
-                                                          cubit.myWalletModel
-                                                              .data!.vatTotal!,
-                                                          style: getBoldStyle(
-                                                              fontSize: 30),
-                                                        ),
-                                                      ),
-                                                      Text(
-                                                        'currency'.tr(),
-                                                        style: getRegularStyle(
-                                                            color: AppColors
-                                                                .currencyColor,
-                                                            fontSize: 14),
-                                                      ),
-                                                    ],
-                                                  )
-                                                ],
-                                              ),
-                                            )),
-                                      ),
-                                      Text(
-                                        "latestTransfers".tr(),
-                                        style: getBoldStyle(
-                                            color: AppColors.gray3),
-                                      ),
-                                      ListView.separated(
-                                        shrinkWrap: true,
-                                          itemBuilder: (context, index) {
-                                            return Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                              child: CustomMyWalletWidget(time:DateFormat('d\'${cubit.getDaySuffix(DateTime
-                                                  .parse(cubit.myWalletModel.data!.trips![index].timeArrive!.toString())
-                                                  .day)}\' MMM yyyy hh:mm a').format(DateTime.parse(cubit.myWalletModel.data!.trips![index].timeArrive!.toString())) ,
-                                              vat: cubit.myWalletModel.data!.trips![index].vat.toString(),),
-                                            );
-                                          },
-                                          separatorBuilder: (context, index) {
-                                            return Divider(
-                                              color: AppColors.grey2,
-                                              thickness: 1,
-                                            );
-                                          },
-                                          itemCount: cubit.myWalletModel.data!.trips!.length ??
-                                              0)
-                                    ],
-                                  )
-                      ],
-                    )),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Icon(
+                      CupertinoIcons.person_circle_fill,
+                      color: Colors.grey,
+                    ),
+                    BlocBuilder<HomeCubit, HomeState>(
+                        builder: (context, state) {
+                      return Text(
+                        'welcome'.tr() +
+                            "${homeCubit.signUpModel?.data?.name}",
+                        style: TextStyle(
+                            fontSize: getSize(context) / 24,
+                            fontWeight: FontWeight.normal,
+                            color: AppColors.black),
+                      );
+                    }),
+                    Spacer(),
                   ],
                 ),
+                SizedBox(
+                  height: 10,
+                ),
+                //address + location icon
+                Container(
+
+                  height:
+                  200,
+                  child: BlocBuilder<HomeCubit, HomeState>(
+                      builder: (context, state) {
+                    return Row(
+                      children: [
+                        Icon(
+                          Icons.location_on_outlined,
+                          size: 27,
+                        ),
+                        //address
+                        Flexible(
+                          child: Text(
+                            "${homeCubit.address}",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontSize: getSize(context) / 24,
+                                fontWeight: FontWeight.normal,
+                                color: AppColors.gray),
+                          ),
+                        ),
+                      ],
+                    );
+                  }),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                isLoading
+                  ? Center(
+                child: CircularProgressIndicator(
+                  color: AppColors.primary,
+                ),
+                                )
+                  : isEmpty
+                  ? Center(
+                child: Text(cubit.myWalletModel.message!),
+                                )
+                  : Flexible(
+                    child: Column(
+                      crossAxisAlignment:
+                      CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0,horizontal: 20),
+                          child: Container(
+                              width: double.maxFinite,
+                              margin: const EdgeInsets.symmetric(
+                                  vertical: 10),
+                              decoration: BoxDecoration(
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Color.fromRGBO(
+                                        0, 0, 0, 0.1),
+                                    blurRadius: 20,
+                                    offset: Offset(
+                                        0, 0), // Shadow position
+                                  ),
+                                  BoxShadow(
+                                    color: Color.fromRGBO(
+                                        0, 0, 0, 0.1),
+                                    blurRadius: 10,
+                                    offset: Offset(
+                                        0, 0), // Shadow position
+                                  ),
+                                ],
+                                color: AppColors.white,
+                                borderRadius:
+                                BorderRadius.circular(10),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 10.0, horizontal: 15),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment
+                                          .spaceBetween,
+                                      children: [
+                                        Text(
+                                          "wallet".tr(),
+                                          style: getRegularStyle(
+                                              fontSize: 18),
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {},
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                color: AppColors
+                                                    .primary,
+                                                borderRadius:
+                                                BorderRadius
+                                                    .circular(
+                                                    20)),
+                                            child: Padding(
+                                              padding:
+                                              const EdgeInsets
+                                                  .symmetric(
+                                                  horizontal:
+                                                  25,
+                                                  vertical: 10),
+                                              child: Text(
+                                                "pay".tr(),
+                                                style: getRegularStyle(
+                                                    fontSize: 18,
+                                                    color: AppColors
+                                                        .white),
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        MyCustomSvgWidget(
+                                          path:
+                                          ImageAssets.myWallet,
+                                        ),
+                                        Padding(
+                                          padding:
+                                          const EdgeInsets.all(
+                                              8.0),
+                                          child: Text(
+                                            cubit.myWalletModel
+                                                .data!.vatTotal!,
+                                            style: getBoldStyle(
+                                                fontSize: 30),
+                                          ),
+                                        ),
+                                        Text(
+                                          'currency'.tr(),
+                                          style: getRegularStyle(
+                                              color: AppColors
+                                                  .currencyColor,
+                                              fontSize: 14),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              )),
+                        ),
+                        Text(
+                          "latestTransfers".tr(),
+                          style: getBoldStyle(
+                              color: AppColors.gray3),
+                        ),
+                        Flexible(
+                          child: ListView.separated(
+                              shrinkWrap: true,
+                              physics: BouncingScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                  child: CustomMyWalletWidget(time:DateFormat('d\'${cubit.getDaySuffix(DateTime
+                                      .parse(cubit.myWalletModel.data!.trips![index].timeArrive!.toString())
+                                      .day)}\' MMM yyyy hh:mm a').format(DateTime.parse(cubit.myWalletModel.data!.trips![index].timeArrive!.toString())) ,
+                                    vat: cubit.myWalletModel.data!.trips![index].vat.toString(),),
+                                );
+                              },
+                              separatorBuilder: (context, index) {
+                                return Divider(
+                                  color: AppColors.grey2,
+                                  thickness: 1,
+                                );
+                              },
+                              itemCount: cubit.myWalletModel.data!.trips!.length ??
+                                  0),
+                        )
+                      ],
+                    ),
+                  )
               ],
             ),
           ),

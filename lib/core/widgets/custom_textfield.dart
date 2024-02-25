@@ -57,6 +57,9 @@ class CustomTextField extends StatelessWidget {
 
             /// here char limit is 5
           ],
+          onTapOutside: (event) {
+            FocusManager.instance.primaryFocus?.unfocus();
+          },
           textAlignVertical: TextAlignVertical.center,
           controller: controller,
           keyboardType: textInputType,
@@ -81,6 +84,7 @@ class CustomTextField extends StatelessWidget {
               fontWeight: FontWeight.w400,
             ),
             hintText: title,
+
             isDense: true,
             border:
                 // textInputType != TextInputType.phone

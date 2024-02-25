@@ -35,7 +35,7 @@ class _LoadingWidgetState extends State<LoadingWidget> {
           if(context.read<HomeCubit>().checkTripStatusModel.data != null){
             if (context.read<HomeCubit>().checkTripStatusModel.data!.type == 'accept'){
               context.read<HomeCubit>().currentEnumStatus = MyEnum.success;
-              successGetBar("تم قبول رحلتك من قبل ${context.read<HomeCubit>().checkTripStatusModel.data!.driver!.name!}");
+            //  successGetBar("تم قبول رحلتك من قبل ${context.read<HomeCubit>().checkTripStatusModel.data!.driver!.name!}");
             }
           }
         }

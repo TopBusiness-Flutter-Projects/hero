@@ -57,6 +57,7 @@ class SuccessFavouriteState extends HomeState {}
 class FailureDeletingFavourite extends HomeState {}
 class SuccessDeletingFavourite extends HomeState {}
 class LoadingIndicatorState extends HomeState {}
+class SuccessIndicatorState extends HomeState {}
 class changingStatus extends HomeState {}
 class NoAdressFound extends HomeState {}
 class LoadingAddToFavourite extends HomeState {}
@@ -71,3 +72,4 @@ class SuccessCheckDocumentsState extends HomeState {}
 class LoadingCheckDocumentsStatus extends HomeState {}
 class ErrorLocationSearch1 extends HomeState {}
 class UpdateDesitnationLocationState1 extends HomeState {}
+class ChangeFavouriteState extends HomeState {}

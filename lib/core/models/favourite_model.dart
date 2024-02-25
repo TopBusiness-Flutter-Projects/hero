@@ -36,8 +36,8 @@ class FavouriteData {
   final int? id;
   final int? userId;
   final String? address;
-  final int? lat;
-  final int? long;
+  final dynamic? lat;
+  final dynamic? long;
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final dynamic deletedAt;

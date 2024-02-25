@@ -41,7 +41,7 @@ class _ShowTripWidgetState extends State<ShowTripWidget> {
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-                height: getSize(context) * 0.8,
+               // height: getSize(context) * 0.8,
                 decoration: BoxDecoration(
                     color: Colors.white,
                     boxShadow: [
@@ -190,12 +190,12 @@ class _ShowTripWidgetState extends State<ShowTripWidget> {
                             Spacer(),
                             Padding(
                               padding: const EdgeInsets.only(left: 10.0),
-                              child: Text("${cubit.paymentMoney.toStringAsFixed(1)}"),
+                              child: Text("${widget.trip.price}"),
                             ),
                           ],
                         ),
                         //SizedBox(height: 5,),
-
+if(widget.trip.tripType == "scheduled")
                         CustomButton(
                           borderRadius: 16,
                           text: "cancel".tr(),

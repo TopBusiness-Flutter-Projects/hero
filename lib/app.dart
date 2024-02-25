@@ -23,6 +23,7 @@ import 'features/orders/cubit/cubit/orders_cubit.dart';
 import 'features/profits/cubit/profits_cubit.dart';
 import 'features/trip_details/cubit/trip_details_cubit.dart';
 import 'features/user_trip/cubit/user_trip_cubit.dart';
+import 'main.dart';
 
 class HeroApp extends StatefulWidget {
   const HeroApp({Key? key}) : super(key: key);
@@ -97,9 +98,6 @@ class _HeroAppState extends State<HeroApp> {
           create: (_) => injector.serviceLocator<UserTripCubit>(),
         ),
 
-    //
-    //
-    //
       ],
       child: GetMaterialApp(
         supportedLocales: context.supportedLocales,
@@ -108,7 +106,7 @@ class _HeroAppState extends State<HeroApp> {
         ),
         themeMode: ThemeMode.light,
         darkTheme: ThemeData.light(),
-
+        navigatorKey: navigatorKey,
         // standard dark theme
         localizationsDelegates: context.localizationDelegates,
         debugShowCheckedModeBanner: false,

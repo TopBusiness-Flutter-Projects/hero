@@ -40,7 +40,7 @@ class _SuccessWidgetState extends State<SuccessWidget> {
             //      context, Routes.tripDetailsRoute,
             //      arguments:
             //      context.read<HomeCubit>().checkTripStatusModel.data);
-              successGetBar(context.read<HomeCubit>().checkTripStatusModel.message!);
+             // successGetBar(context.read<HomeCubit>().checkTripStatusModel.message!);
             }
           }
         }

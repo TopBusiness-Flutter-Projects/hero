@@ -37,6 +37,7 @@ import '../../../core/models/check_document_model.dart';
 import '../../../core/models/check_trip_status_model.dart';
 import '../../../core/models/create_schedual_trip_model.dart';
 import '../../../core/models/favourite_model.dart';
+import '../../../core/models/place_details.dart';
 import '../../../core/models/signup_response_model.dart';
 import '../../../core/utils/custom_marker.dart';
 import '../../driver_trip/cubit/driver_trip_cubit.dart';
@@ -100,7 +101,7 @@ class HomeCubit extends Cubit<HomeState> {
   var dateFormatted;
   var timeFormatted;
   final oo.DateFormat dateFormatter = oo.DateFormat('d MMM EEE');
-  TimeOfDay time = new TimeOfDay.now();
+  TimeOfDay time = new TimeOfDay.now();//now.add(Duration(hours: 1))
   final Completer<GoogleMapController> controller = Completer();
   GoogleMapController? mapController;
   String location = "Search Location";
@@ -305,7 +306,9 @@ void setflag(int flag){
 
 double distance = 0;
 double paymentMoney = 0;
-
+ void changeFavourite(){
+   emit(ChangeFavouriteState());
+ }
 // handle the on tab user event on map
 
 setMyMarker(NewTrip trip)async{
@@ -435,7 +438,7 @@ else{
 
         if(destination.longitude!=0&&destination.latitude!=0){
           distance =  calculateDistance(LatLng(currentLocation!.latitude!, currentLocation!.longitude!),destination);
-          paymentMoney = distance * settingsModel!.data!.km!;
+         // paymentMoney = distance * settingsModel!.data!.km!;
         }
 
         getDirection(
@@ -464,7 +467,6 @@ else{
           getLocation(LatLng(currentLocation!.latitude!, currentLocation!.longitude!), "from");
           // move the camera to the current location
           updateLocation();
-
           emit(UpdateCurrentLocationState());
 
         }
@@ -513,50 +515,105 @@ else{
   LatLng destination = LatLng(0, 0);
 
 
+List<Candidate> placesList =[];
 
 
-  search(String search) async {
+
+
+  searchFavourite(String search) async {
     emit(LoadingSearchState());
     final response = await api.searchOnMap("textquery",search,fields);
     response.fold(
           (l) => emit(FailureSearchState()),
           (r) async {
-            destination = LatLng(r.candidates.elementAt(0).geometry.location.lat, r.candidates.elementAt(0).geometry.location.lng);
-            //todo => calculate the distance and price
-            if(destination.longitude!=0&&destination.latitude!=0){
-              distance =  calculateDistance(LatLng(currentLocation!.latitude!, currentLocation!.longitude!),destination);
-              paymentMoney = distance * settingsModel!.data!.km!;
-            }
-            bitmapDescriptorto = await CustomeMarker(
-              title: 'to'.tr(),
-              location: location_control.text,
-            ).toBitmapDescriptor().then((value) {
-              bitmapDescriptorto=value;
-              setMarkers(
-                Marker(
-                  markerId: const MarkerId("currentLocation"),
-                  icon:bitmapDescriptorfrom!,
+        destination = LatLng(r.candidates.elementAt(0).geometry.location.lat, r.candidates.elementAt(0).geometry.location.lng);
+        //todo => calculate the distance and price
+        if(destination.longitude!=0&&destination.latitude!=0){
+          distance =  calculateDistance(LatLng(currentLocation!.latitude!, currentLocation!.longitude!),destination);
+          paymentMoney = distance * settingsModel!.data!.km!;
+        }
+        bitmapDescriptorto = await CustomeMarker(
+          title: 'to'.tr(),
+          location: location_control.text,
+        ).toBitmapDescriptor().then((value) {
+          bitmapDescriptorto=value;
+          setMarkers(
+            Marker(
+              markerId: const MarkerId("currentLocation"),
+              icon:bitmapDescriptorfrom!,
 
-                  position: LatLng(currentLocation?.latitude??0,
-                      currentLocation?.longitude??0),
-                ),
-                Marker(
-                  markerId: MarkerId("destination"),
+              position: LatLng(currentLocation?.latitude??0,
+                  currentLocation?.longitude??0),
+            ),
+            Marker(
+              markerId: MarkerId("destination"),
 
-                  icon:value,
-                  position:destination,
-                ),
-              );
-            });
+              icon:value,
+              position:destination,
+            ),
+          );
+        });
 
 
 
-            getDirection(
-                LatLng(currentLocation!.latitude!, currentLocation!.longitude!), destination);
+        getDirection(
+            LatLng(currentLocation!.latitude!, currentLocation!.longitude!), destination);
         emit(SuccessSearchState());
       },
     );
   }
+
+
+
+
+  search(String search) async {
+    placesList =[];
+    emit(LoadingSearchState());
+    final response = await api.searchOnMap("textquery",search,fields);
+    response.fold(
+          (l) => emit(FailureSearchState()),
+          (r) async {
+            placesList =r.candidates;
+
+      },
+    );
+  }
+setSearchResult(LatLng latLong)async{
+  destination = latLong;
+  //todo => calculate the distance and price
+  if(destination.longitude!=0&&destination.latitude!=0){
+    distance =  calculateDistance(LatLng(currentLocation!.latitude!, currentLocation!.longitude!),destination);
+    paymentMoney = distance * settingsModel!.data!.km!;
+  }
+  bitmapDescriptorto = await CustomeMarker(
+    title: 'to'.tr(),
+    location: location_control.text,
+  ).toBitmapDescriptor().then((value) {
+    bitmapDescriptorto=value;
+    setMarkers(
+      Marker(
+        markerId: const MarkerId("currentLocation"),
+        icon:bitmapDescriptorfrom!,
+
+        position: LatLng(currentLocation?.latitude??0,
+            currentLocation?.longitude??0),
+      ),
+      Marker(
+        markerId: MarkerId("destination"),
+
+        icon:value,
+        position:destination,
+      ),
+    );
+  });
+
+
+
+  getDirection(
+      LatLng(currentLocation!.latitude!, currentLocation!.longitude!), destination);
+  emit(SuccessSearchState());
+
+}
 
 
   changeRadioButton(value){
@@ -577,11 +634,9 @@ else{
      datePicked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
-      firstDate: new DateTime(2023),
+      firstDate: DateTime.now(),
       lastDate: new DateTime(2030),
-
     );
-
 
     if(datePicked != null && datePicked != date) {
 
@@ -598,7 +653,6 @@ else{
     );
 
     if(timePicked != null) {
-
       //setState((){
         time = timePicked!;
         timeFormatted = time.format(context);
@@ -886,6 +940,7 @@ bool isLoadingSettings = true;
         arguments:
         r.data);
   }
+  print("llllllllllllll${r.data!.type}");
 
 // }
 // else{
@@ -1028,7 +1083,7 @@ bool isLoadingSettings = true;
 print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     if(address!=null && currentLocation!=null){
        emit(LoadingCreateTripState());
-     // loadingDialog();
+      loadingDialog();
 
       final response = await  api.createTrip(
           tripType: tripType, fromAddress: address!, fromLng: currentLocation!.longitude!,
@@ -1046,7 +1101,7 @@ print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
           }, (r) {
       if(r.code==200 || r.code ==201){
         createTripModel = r;
-
+        Navigator.pop(context);
         print(createTripModel);
        // bottomContainerLoadingState = true;
         if (r.data == null)
@@ -1067,12 +1122,12 @@ print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
       }
 
       else if(r.code==502|| r.code==202){
-       // Navigator.pop(context);
+        Navigator.pop(context);
         emit(AlreadyInTrip());
         errorGetBar(r.message??"Already in trip");
       }
       else{
-      //  Navigator.pop(context);
+        Navigator.pop(context);
         emit(FailureCreateTrip());
         errorGetBar(r.message??"something wrong");
       }
@@ -1142,8 +1197,7 @@ print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
             emit(SuccessCreateSchedualTripState());
            // bottomContainerLoadingState = true;
-            Navigator.pushNamedAndRemoveUntil(
-                context, Routes.homeRoute, (route) => false);
+
           } else {
              Navigator.pop(context);
             // Navigator.pop(context);
@@ -1253,18 +1307,24 @@ print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
 
   double progressValue = 0.0;
-  late Timer _timer;
-  final Duration _duration = const Duration(minutes: 1);
+  late Timer timer;
+  final Duration _duration = const Duration(seconds: 10);
   void startTimer(BuildContext context) {
-    const oneSecond = const Duration(seconds: 1);
-    _timer = Timer.periodic(oneSecond, (Timer timer) {
 
-        if (progressValue < 1.0) {
+    const oneSecond = const Duration(seconds: 1);
+    timer = Timer.periodic(oneSecond, (Timer timer) {
+
+        if (progressValue <= 1.0) {
+          print ('sssssssss  $progressValue');
           progressValue += 1.0 / (_duration.inSeconds);
         } else {
-          _timer.cancel();
-          //currentEnumStatus = MyEnum.failure;
+         // context.read<UserTripCubit>().getNoDriverStage();
+          print('llllllllllllllllllllllll');
+          timer.cancel();
+         // context.read<UserTripCubit>().tripStages =4;
+          emit(SuccessIndicatorState());
 
+          //currentEnumStatus = MyEnum.failure;
 
         }
       });
@@ -1338,5 +1398,12 @@ print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     });
   }
 
-
+  // Future<List<String>> _fetchSuggestions(String searchValue) async {
+  //   await Future.delayed(Duration(milliseconds: 750));
+  //   List<String> _suggestions = ['Afeganistan', 'Albania', 'Algeria', 'Australia', 'Brazil', 'German', 'Madagascar', 'Mozambique', 'Portugal', 'Zambia'];
+  //   List<String> _filteredSuggestions = _suggestions.where((element) {
+  //     return element.toLowerCase().contains(searchValue.toLowerCase());
+  //   }).toList();
+  //   return _filteredSuggestions;
+  // }
 }

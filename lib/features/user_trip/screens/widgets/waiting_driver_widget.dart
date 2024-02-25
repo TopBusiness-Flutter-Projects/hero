@@ -33,6 +33,8 @@ class _WaitingDriverWidgetState extends State<WaitingDriverWidget> {
   Widget build(BuildContext context) {
     return BlocConsumer<HomeCubit, HomeState>(
       listener: (context, state) {
+       // context.read<HomeCubit>(). progressValue = 0.0;
+       // context.read<HomeCubit>().startTimer(context);
         if (state is SuccessCheckTripStatusState){
         // if(context.read<HomeCubit>().checkTripStatusModel.data != null){
         //   if (context.read<HomeCubit>().checkTripStatusModel.data!.type == 'accept'){
@@ -106,8 +108,6 @@ class _WaitingDriverWidgetState extends State<WaitingDriverWidget> {
                       text: "cancel".tr(),
                       color: AppColors.red,
                       onClick: () {
-
-
                        // cubit.tabsController.animateTo(0);
                        // cubit.currentEnumStatus = MyEnum.defaultState;
                         cubit.cancelTrip(context,tripId: widget.tripId);

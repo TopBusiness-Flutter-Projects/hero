@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart%20';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hero/config/routes/app_routes.dart';
+import 'package:hero/core/utils/app_fonts.dart';
 import 'package:hero/features/user_trip/cubit/user_trip_cubit.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/assets_manager.dart';
@@ -51,7 +52,7 @@ class _TripINProgressWidgetState extends State<TripINProgressWidget> {
           Align(
               alignment: Alignment.bottomCenter,
               child: Container(
-                height: getSize(context) * 0.6,
+               // height: getSize(context) * 0.6,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
@@ -63,31 +64,23 @@ class _TripINProgressWidgetState extends State<TripINProgressWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Image.asset(
-                      ImageAssets.success,
-                      width: getSize(context) / 4,
+                      ImageAssets.inTrip,
+                      height: getSize(context) / 2.5,
+                      width: getSize(context) / 2.5,
                     ),
 
-                    //rich text
-                    Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12.0),
-                        child: Text("driverStartTrip".tr())),
+
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SizedBox(
                           width: 10,
                         ),
-                        Icon(
-                          Icons.person,
-                          color: Colors.grey,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
+                        Text("happy_trip".tr()),
+
                         Text(
-                          cubit.checkTripStatusModel.data!.driver!.name!,
-                          style: TextStyle(color: AppColors.black3),
+                          cubit.checkTripStatusModel.data!.user!.name!,
+                          style: getBoldStyle(color: AppColors.black3),
                         )
                       ],
                     )

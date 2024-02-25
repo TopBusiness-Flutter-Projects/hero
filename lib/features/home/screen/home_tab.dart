@@ -28,7 +28,7 @@ class _HomeTabState extends State<HomeTab> {
  bool isLoading = true;
  bool isInTrip = false;
 
-  
+
   @override
   void initState() {
   context.read<HomeCubit>().getUserData();
@@ -38,9 +38,7 @@ class _HomeTabState extends State<HomeTab> {
 
     //context.read<HomeCubit>().carouselController = CarouselController();
   }
-  
-  
-  @override
+   @override
   Widget build(BuildContext context) {
     return BlocConsumer<HomeCubit, HomeState>(
   listener: (context, state) {
@@ -86,8 +84,6 @@ class _HomeTabState extends State<HomeTab> {
 //         }
 //       }
 //     }
-
-
 
   },
   builder: (context, state) {
@@ -207,7 +203,7 @@ class _HomeTabState extends State<HomeTab> {
                         child: RefreshIndicator(
                           onRefresh: () async {
                            await cubit.getHomeData();
-                           await cubit.getTripStatus();
+                           await cubit.getUserTripStatus(context);
                            print('ffffffffffffffffffff');
                            print(cubit.homeModel?.data?.newTrips?.length);
                           },
