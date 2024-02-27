@@ -49,6 +49,8 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    context.read<HomeCubit>().isSelected=false;
+    context.read<HomeCubit>().placesList =[];
     context.read<HomeCubit>().destination = LatLng(0, 0);
     if (!widget.isInTrip) context.read<HomeCubit>().location_control.text = "";
     context.read<HomeCubit>().getCurrentLocation();
@@ -138,12 +140,13 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
                             cubit.changeFavourite();
 
                             if (context.read<HomeCubit>().flag == 1) {
+                              cubit.placesList =[];
                               cubit.getLocation(argument, "to");
                               double distance = cubit.calculateDistance(
                                   LatLng(cubit.currentLocation!.latitude!,
                                       cubit.currentLocation!.longitude!),
                                   argument);
-
+cubit.isSelected=true;
                               cubit.paymentMoney =
                                   distance * cubit.settingsModel.data!.km!;
                             }
@@ -198,7 +201,19 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
                           vertical: 10.0, horizontal: 12),
                       child: Row(
                         children: [
-                          CustomBackButton(),
+                          InkWell(
+                            onTap: () {
+                              context.read<HomeCubit>().latLngList = [];
+                              Navigator.pop(context);
+                            },
+                            child: Image.asset(
+                              ImageAssets.backImage,
+                              color: AppColors.grey3,
+                              height: getSize(context) / 15,
+                              width: getSize(context) / 15,
+
+                            ),
+                          ),
                           Spacer(),
                         ],
                       ),

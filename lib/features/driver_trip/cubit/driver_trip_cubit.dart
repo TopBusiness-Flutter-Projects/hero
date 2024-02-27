@@ -354,11 +354,18 @@ class DriverTripCubit extends Cubit<DriverTripState> {
 
   DriverTripsModel cancelTripModel = DriverTripsModel();
 
-  void cancelTrip(BuildContext context, String id) async {
+  void cancelTrip(
+  {required BuildContext context,required String id,
+  String? toAddress,
+  String? toLat,
+  String? toLong,}
+
+
+      ) async {
     emit(LoadingCancelTripState());
     AppWidget.createProgressDialog(context, "wait".tr());
 
-    final response = await api.cancelTrip(tripId: id);
+    final response = await api.cancelTrip(tripId: id,toAddress: toAddress,toLat: toLat,toLong: toLong);
 
     response.fold((l) {
       Navigator.pop(context);

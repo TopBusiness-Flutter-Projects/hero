@@ -115,17 +115,23 @@ class _NotificationScreenState extends State<NotificationScreen> {
                             SizedBox(height: 10,),
                             isLoading?
                          Center(child: CircularProgressIndicator(color: AppColors.primary,),)
-                            :SizedBox(
-                                height: getSize(context) * 2,
-                                child: ListView.separated(
-                                    itemBuilder: (context, index) {
-                                      return NotificationListItem(notificationData: cubit.notificationModel?.data?[index],);
-                                    },
-                                    separatorBuilder: (context, index) {
-                                      return Divider(
-                                        color: AppColors.grey2, thickness: 1,);
-                                    },
-                                    itemCount: cubit.notificationModel?.data?.length??0))
+                            :RefreshIndicator(
+                              onRefresh: () async {
+                                await context.read<HomeCubit>().getNotification();
+
+                              },
+                              child: SizedBox(
+                                  height: getSize(context) * 2,
+                                  child: ListView.separated(
+                                      itemBuilder: (context, index) {
+                                        return NotificationListItem(notificationData: cubit.notificationModel?.data?[index],);
+                                      },
+                                      separatorBuilder: (context, index) {
+                                        return Divider(
+                                          color: AppColors.grey2, thickness: 1,);
+                                      },
+                                      itemCount: cubit.notificationModel?.data?.length??0)),
+                            )
                           ],
                         )),
                   ],

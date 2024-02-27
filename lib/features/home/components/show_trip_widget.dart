@@ -190,7 +190,7 @@ class _ShowTripWidgetState extends State<ShowTripWidget> {
                             Spacer(),
                             Padding(
                               padding: const EdgeInsets.only(left: 10.0),
-                              child: Text("${widget.trip.price}"),
+                              child: Text("${widget.trip.price??0}"),
                             ),
                           ],
                         ),

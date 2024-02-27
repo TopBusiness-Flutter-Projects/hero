@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hero/features/homedriver/screen/pages/home_map_driver/screens/home_map_driver.dart';
@@ -32,6 +35,14 @@ class _HomeDriverState extends State<HomeDriver> with TickerProviderStateMixin {
     // TODO: implement initState
     super.initState();
     context.read<HomeCubit>().getUserData();
+    FirebaseMessaging.onMessage.listen((event) {
+      context
+          .read<HomeCubit>()
+          .checkDocumentsHome(context);
+    });
+   Timer.periodic(Duration(minutes: 3), (timer) {
+     context.read<HomeDriverCubit>().updateDriverLocation();
+   });
     context.read<HomeCubit>().getDriverTripStatus(context);
     context.read<HomeDriverCubit>().tabsController =
         TabController(length: 2, vsync: this);
@@ -98,11 +109,14 @@ class _HomeDriverState extends State<HomeDriver> with TickerProviderStateMixin {
     BlocConsumer<HomeDriverCubit, HomeDriverState>(
     listener: (context, state) {},
     builder: (context, state) =>
-
-
-     ConditionalBuilder(
+        ConditionalBuilder(
        condition: cubit.driverDataModel.data != null ,
-       fallback: (context) => const ShowLoadingIndicator(),
+       fallback: (context) => SizedBox(
+         height: MediaQuery.of(context).size.width/4,
+         child:  CircularProgressIndicator(
+           color: AppColors.primary,
+         ),
+       ),
         builder: (context) =>  CustomSlider(
                     items:
                   // [

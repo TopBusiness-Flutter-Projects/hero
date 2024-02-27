@@ -13,6 +13,7 @@ import 'package:lite_rolling_switch/lite_rolling_switch.dart';
 import '../../../../../../config/routes/app_routes.dart';
 import '../../../../../../core/utils/show_bottom_sheet.dart';
 import '../../../../../../core/widgets/custom_button.dart';
+import '../../../../../../core/widgets/show_loading_indicator.dart';
 import '../../../../cubit/home_driver_cubit.dart';
 
 class HomeMapDriver extends StatefulWidget {
@@ -81,9 +82,7 @@ class _HomeMapDriverState extends State<HomeMapDriver> {
                     },
 
 
-                  ):CircularProgressIndicator(
-                    color: AppColors.primary,
-                  );
+                  ):const ShowLoadingIndicator();
                 },
 
 

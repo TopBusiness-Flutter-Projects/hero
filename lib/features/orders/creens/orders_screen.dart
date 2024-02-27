@@ -14,6 +14,7 @@ import '../../../core/utils/dialogs.dart';
 import '../../../core/utils/getsize.dart';
 import '../../../core/widgets/back_button.dart';
 import '../../home/components/home_list_item.dart';
+import '../../trip_details/screens/trip_details_screen.dart';
 import '../cubit/cubit/orders_cubit.dart';
 
 class OrdersScreen extends StatefulWidget {
@@ -226,10 +227,10 @@ class _OrdersScreenState extends State<OrdersScreen>
                                   itemBuilder: (context, index) {
                                     return InkWell(
                                       onTap: () {
-                                        Navigator.pushNamed(
-                                            context, Routes.tripDetailsRoute,
-                                            arguments:
-                                                cubit.completeTrips![index]);
+                                        Navigator.push(
+
+                                          context,MaterialPageRoute(builder: (context) => TripDetailsScreen(trip: cubit.completeTrips![index],isUser:    widget.isUser),));
+
                                       },
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(

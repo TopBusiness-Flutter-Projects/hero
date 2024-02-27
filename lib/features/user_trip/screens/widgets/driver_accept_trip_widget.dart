@@ -43,7 +43,7 @@ class _DriverAcceptWidgetState extends State<DriverAcceptWidget> {
              //  context.read<HomeCubit>().currentEnumStatus = MyEnum.success;
 
              context.read<UserTripCubit>().getDriverStartTripStage();
-             successGetBar(context.read<HomeCubit>().checkTripStatusModel.message!);
+             //successGetBar(context.read<HomeCubit>().checkTripStatusModel.message!);
            }
           }
         }

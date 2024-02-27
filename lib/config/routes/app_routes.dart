@@ -217,8 +217,9 @@ case Routes.ImmediateTripDriver:
 
       case Routes.tripDetailsRoute:
         final trip = settings.arguments as NewTrip;
+        bool isUser=settings.arguments as bool;
         return MaterialPageRoute(
-          builder: (context) =>  TripDetailsScreen(trip: trip),
+          builder: (context) =>  TripDetailsScreen(trip: trip,isUser: isUser),
         );
       // case Routes.detailsRoute:
       //   final service = settings.arguments as ServicesModel;

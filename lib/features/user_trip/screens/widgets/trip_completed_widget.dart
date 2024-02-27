@@ -301,7 +301,11 @@ class _TripCompletedWidgetState extends State<TripCompletedWidget> {
                                       print(widget.trip.id!);
                                       print('fffffffffffff');
 
-                                      context.read<UserTripCubit>().rateTrip(context,widget.trip.id.toString(),context.read<UserTripCubit>().rate.toString(),widget.trip.driver!.id.toString(),context.read<UserTripCubit>().commentController.text);
+                                      context.read<UserTripCubit>().rateTrip(context,
+                                          widget.trip.id.toString(),
+                                          context.read<UserTripCubit>().rate.toString(),
+                                          widget.trip.driver!.id.toString(),
+                                          context.read<UserTripCubit>().commentController.text);
 
                                       // cubit.giveRate(tripId: widget.trip.id!,
                                       //     toId: widget.trip.user!.id!,

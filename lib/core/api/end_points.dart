@@ -12,6 +12,7 @@ class EndPoints {
   static const String removeFavouriteUrl = '${baseUrl}removeFavouriteLocations';
   static const String addFavouriteUrl = '${baseUrl}createFavouriteLocations';
   static const String giveRateUrl = '${baseUrl}createTripRate';
+  static const String driverLocation = '${baseUrl}driverLocation';
   static const String citiesUrl = '${baseUrl}cities';
   static const String servicesUrl = '${baseUrl}services/';
   static const String editServicesUrl = '${baseUrl}services/update/';

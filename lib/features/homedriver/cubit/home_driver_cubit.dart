@@ -6,6 +6,7 @@ import 'package:bloc/bloc.dart';
 import 'package:easy_localization/easy_localization.dart' as easy;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hero/core/models/end_quick_trip_model.dart';
 import 'package:hero/core/utils/assets_manager.dart';
@@ -21,7 +22,9 @@ import '../../../../../../core/utils/appwidget.dart';
 import '../../../../../../core/utils/custom_marker.dart';
 import '../../../../../../core/utils/dialogs.dart';
 import '../../../core/models/start_new_trip_model.dart';
+import '../../../core/models/update_driver_location_model.dart';
 import '../../../core/utils/show_bottom_sheet.dart';
+import '../../driver_trip/cubit/driver_trip_cubit.dart';
 import '../screen/widgets/enter_client_info_sheet.dart';
 
 part 'home_driver_state.dart';
@@ -80,6 +83,22 @@ changeDriverStatus(context);
       inService = r.data!.driverStatus ==1 ;
       emit(SuccessGEtDriverDataState());
     });
+  }
+  UpdateDriverLocationModel updateDriverLocationModel = UpdateDriverLocationModel();
+ updateDriverLocation() async {
+    emit(LoadingUpdateDriverLocationState());
+
+    if(currentLocation != null){
+      final response = await api.updateDriverLocation(long: currentLocation!.longitude.toString(), lat: currentLocation!.latitude.toString());
+      response.fold((l) {
+        emit(FailureUpdateDriverLocationState());
+      }, (r) {
+        updateDriverLocationModel =r;
+        emit(SuccessUpdateDriverLocationState());
+      });
+    }
+
+
   }
 
 // Change driver status
@@ -247,6 +266,7 @@ print(strartlocation.longitude);
     location.getLocation().then(
       (location) {
         currentLocation = location;
+
         if(strartlocation!=LatLng(currentLocation!.latitude!,currentLocation!.longitude!)){
         strartlocation=  LatLng(
           currentLocation!.latitude!,
@@ -306,6 +326,29 @@ print(strartlocation.longitude);
   }
   String fromAddress ='';
   String toAddress ='';
+  String cancelTripToAddress ='';
+
+ cancelWithoutDestinationTrip(BuildContext context,String id)async{
+   final response = await api.getGeoData(
+       currentLocation!.latitude.toString() + "," + currentLocation!.longitude.toString());
+   response.fold(
+         (l) => emit(ErrorLocationSearch()),
+         (r) async {
+           cancelTripToAddress =r.results
+               .elementAt(0)
+               .formattedAddress
+               .replaceAll("Unnamed Road,", "");
+           context.read<DriverTripCubit>().cancelTrip(context: context, id: id,
+           toAddress: cancelTripToAddress,
+           toLong: currentLocation!.longitude.toString(),
+             toLat:  currentLocation!.latitude.toString()
+           );
+
+       emit(UpdateDesitnationLocationState());
+        },
+   );
+ }
+
 
 // handle the on tab on map ( set the destination marker and draw the route , get the address)
   getLocation(LatLng argument, String title) async {

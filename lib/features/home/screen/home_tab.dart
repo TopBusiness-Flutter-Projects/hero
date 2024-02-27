@@ -1,6 +1,7 @@
 
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,9 +32,16 @@ class _HomeTabState extends State<HomeTab> {
 
   @override
   void initState() {
-  context.read<HomeCubit>().getUserData();
+    FirebaseMessaging.onMessage.listen((event) {
+      context.read<HomeCubit>().getHomeData(context);
+      context.read<HomeCubit>().getUserTripStatus(context);
+
+    });
+
+
+      context.read<HomeCubit>().getUserData();
     super.initState();
-    context.read<HomeCubit>().getHomeData();
+    context.read<HomeCubit>().getHomeData(context);
     context.read<HomeCubit>().getUserTripStatus(context);
 
     //context.read<HomeCubit>().carouselController = CarouselController();
@@ -202,7 +210,7 @@ class _HomeTabState extends State<HomeTab> {
                       Expanded(
                         child: RefreshIndicator(
                           onRefresh: () async {
-                           await cubit.getHomeData();
+                           await cubit.getHomeData(context);
                            await cubit.getUserTripStatus(context);
                            print('ffffffffffffffffffff');
                            print(cubit.homeModel?.data?.newTrips?.length);

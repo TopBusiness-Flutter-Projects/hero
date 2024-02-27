@@ -29,6 +29,7 @@ class FavouriteListItem extends StatelessWidget {
               Navigator.pushNamed(
                   context, Routes.AddTripTab,arguments: true
               );
+              context.read<HomeCubit>().isSelected=true;
               context.read<HomeCubit>().flag = 1;
               context.read<HomeCubit>().location_control.text = favouriteData.address!;
               context.read<HomeCubit>().searchFavourite(favouriteData.address!);

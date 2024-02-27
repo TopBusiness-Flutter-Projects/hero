@@ -1,5 +1,6 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -164,11 +165,14 @@ class _DriverWaitingState extends State<DriverWaiting> {
     // TODO: implement initState
     // fetchLocation();
     context.read<HomeCubit>().getSettings();
-
+    FirebaseMessaging.onMessage.listen((event) {
+      context
+          .read<HomeCubit>()
+          .checkDocuments(context);
+    });
     checkAndDriverWaitingPermission();
     super.initState();
   }
-
   Future<void> enableLocationServices() async {
     loc.Location location = loc.Location();
 

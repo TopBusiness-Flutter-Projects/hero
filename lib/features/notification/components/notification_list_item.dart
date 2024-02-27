@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hero/core/models/notification_model.dart';
 
+import '../../../config/routes/app_routes.dart';
 import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/assets_manager.dart';
 import '../../../core/utils/getsize.dart';
@@ -20,56 +21,63 @@ class _NotificationListItemState extends State<NotificationListItem> {
   String since = "";
 @override
   void initState() {
-
     super.initState();
     calculateDuration();
   }
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-             // CircleAvatar(radius: 5,backgroundColor: Colors.green,),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: SvgPicture.asset(ImageAssets.notification),
-              ),
-              Expanded(
-                flex: 2,
-                child: Text("${widget.notificationData?.title}", style: TextStyle(
+    return InkWell(
+       onTap: () {
+         if (widget.notificationData!.title =='رحلة جديدة'){
+           Navigator.pushNamed(
+               context, Routes.OrdersScreen,arguments: false);
+         }
+       },
+      child: Container(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+               // CircleAvatar(radius: 5,backgroundColor: Colors.green,),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: SvgPicture.asset(ImageAssets.notification),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Text("${widget.notificationData?.title}", style: TextStyle(
+                      color: AppColors.black4,
+                      fontWeight: FontWeight.w700,
+                      fontSize: getSize(context)*0.05
+                  ),),
+                ),
+                Spacer(),
+                Expanded(
+                  child: Text("منذ ${since} ",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+
+                      color: AppColors.black,
+                      fontWeight: FontWeight.w400,
+                      fontSize: getSize(context)*0.03,
+
+                  ),),
+                ),
+              ],),
+            Padding(
+              padding:  EdgeInsets.only(left: getSize(context)/15,right:  getSize(context)/15,top:  getSize(context)/30),
+              child: Text("${widget.notificationData?.description}",
+                maxLines: 2,
+                style: TextStyle(
                     color: AppColors.black4,
-                    fontWeight: FontWeight.w700,
-                    fontSize: getSize(context)*0.05
-                ),),
-              ),
-              Spacer(),
-              Expanded(
-                child: Text("منذ ${since} ",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-
-                    color: AppColors.black,
                     fontWeight: FontWeight.w400,
-                    fontSize: getSize(context)*0.03,
-
-                ),),
-              ),
-            ],),
-          Padding(
-            padding:  EdgeInsets.only(left: getSize(context)/15,right:  getSize(context)/15,top:  getSize(context)/30),
-            child: Text("${widget.notificationData?.description}",
-              maxLines: 2,
-              style: TextStyle(
-                  color: AppColors.black4,
-                  fontWeight: FontWeight.w400,
-                  fontSize: getSize(context)*0.04
-              ),
-              overflow: TextOverflow.ellipsis,),
-          ),
-        ],
+                    fontSize: getSize(context)*0.04
+                ),
+                overflow: TextOverflow.ellipsis,),
+            ),
+          ],
+        ),
       ),
     );
   }

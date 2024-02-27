@@ -55,6 +55,7 @@ enum MyEnum {
 class HomeCubit extends Cubit<HomeState> {
   MyEnum currentEnumStatus = MyEnum.defaultState;
   int? flag;
+  bool isSelected =false;
   Set<Marker> markers = {};
   Set<Marker> tripMarkers = {};
   BitmapDescriptor? bitmapDescriptorto;
@@ -66,7 +67,9 @@ class HomeCubit extends Cubit<HomeState> {
   List<mp.LatLng> pointFromTo = [];
   HomeCubit(this.api) : super(HomeInitial()){
    getUserData();
+
    getSettings();
+   isSelected =false;
    getTripStatus();
     latLngList = [];
    latLngListFromTo = [];
@@ -782,7 +785,7 @@ setSearchResult(LatLng latLong)async{
   }
 
   HomeModel? homeModel;
-  getHomeData()async{
+  getHomeData(BuildContext context)async{
     //loadingDialog();
     emit(LoadingHomeDataState());
    final response = await api.getHomeData();
@@ -792,6 +795,13 @@ setSearchResult(LatLng latLong)async{
    }, (r) {
 
      homeModel = r ;
+     if (r.data!.user!.status=='block'){
+
+       print('lllllllllllllllblock');
+       Preferences.instance.clearShared();
+       Navigator.pushNamedAndRemoveUntil(context,
+           Routes.initialRoute, (route) => false);
+     }else{print('lllllllllllllllactive');}
     // Navigator.pop(context);
      emit(SuccessGettingHomeData());
    });
@@ -1387,18 +1397,40 @@ print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
       checkDocumentsModel = r;
       if( r.data!.driverDetails == 1 && r.data!.driverDocuments ==1){
         if ( r.data!.status ==1){
-          successGetBar('تمت الموافقة علي طلبك');
+        //  successGetBar('تمت الموافقة علي طلبك');
 
           Navigator.pushNamedAndRemoveUntil(
               context, Routes.homedriverRoute, (route) => false);
         }else
-          errorGetBar('ما زال طلبك معلق');
+          Navigator.pushNamedAndRemoveUntil(
+              context, Routes.driverwaitScreenRoute, (route) => false);
       }
       emit(SuccessCheckDocumentsState());
     });
+  }  // checkDocumentsHome
+  CheckDocumentsModel checkDocumentsModelHome=  CheckDocumentsModel ();
+
+  checkDocumentsHome(BuildContext context) async {
+    emit(LoadingCheckDocumentsStatus());
+    final response = await api.checkDocuments();
+    response.fold((l) {
+      emit(FailureCheckDocumentsState());
+    }, (r) {
+      checkDocumentsModelHome = r;
+
+        if ( r.data!.status ==0) {
+          Preferences.instance.clearShared();
+
+          Navigator.pushNamedAndRemoveUntil(context,
+              Routes.initialRoute, (route) => false);
+
+        }
+      emit(SuccessCheckDocumentsState());
+
+    });
   }
 
-  // Future<List<String>> _fetchSuggestions(String searchValue) async {
+// Future<List<String>> _fetchSuggestions(String searchValue) async {
   //   await Future.delayed(Duration(milliseconds: 750));
   //   List<String> _suggestions = ['Afeganistan', 'Albania', 'Algeria', 'Australia', 'Brazil', 'German', 'Madagascar', 'Mozambique', 'Portugal', 'Zambia'];
   //   List<String> _filteredSuggestions = _suggestions.where((element) {

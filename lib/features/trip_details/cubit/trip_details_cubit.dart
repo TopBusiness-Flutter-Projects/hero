@@ -27,30 +27,27 @@ class TripDetailsCubit extends Cubit<TripDetailsState> {
     emit(LoadingRatingState());
     final response = await api.giveRate(tripId: tripId,
         to: toId,
-
         rate: rate,description:description );
     response.fold((l) {
       emit(RatingFailedState());
       Navigator.pop(context);
       errorGetBar("something wrong");
     }, (r) {
-      if(r.code==200 || r.code ==201){
+      Navigator.pop(context);
+        rateTripModel = r ;
+        if(r.data != null){
 
-        Navigator.pop(context);
-        rateTripModel = r ;
-        emit(RatingSuccessState());
-        successGetBar(r.message);
-      }
-      else if(r.code==500){
-        Navigator.pop(context);
-        rateTripModel = r ;
-        emit(RatingSuccessState());
-        successGetBar(r.message);
-      }
-      else{
-        Navigator.pop(context);
-        errorGetBar(r.message??"something wrong");
-      }
+          emit(RatingSuccessState());
+          successGetBar(r.message);
+
+        }else{
+          emit(RatingSuccessState());
+          errorGetBar(r.message!);
+        }
+
+
+
+
     });
   }
 
@@ -62,7 +59,6 @@ class TripDetailsCubit extends Cubit<TripDetailsState> {
     if(destination!=null){
       markers.add(destination);
     }
-
     emit(AddDetailsMarkersState());
   }
 

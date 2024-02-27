@@ -209,6 +209,7 @@ if (state is SuccessCreateSchedualTripState){
                               cubit.location_control.text =cubit.placesList[index].name;
                               cubit.setSearchResult(LatLng(cubit.placesList[index].geometry.location.lat, cubit.placesList[index].geometry.location.lng));
                               cubit.placesList =[];
+                              cubit.isSelected=true;
 
                             },
                             child:
@@ -264,7 +265,7 @@ if (state is SuccessCreateSchedualTripState){
                   ],
                 ),
                 //SizedBox(height: 5,),
-
+                context.read<HomeCubit>().flag !=1?
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -304,6 +305,51 @@ if (state is SuccessCreateSchedualTripState){
                       ),
                     )
                   ],
+                ):
+
+
+                Visibility(
+                  visible: context.read<HomeCubit>().isSelected,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      //ride_later
+                      CustomButton(
+                        text: "ride_later".tr(),
+                        color: AppColors.primary,
+                        borderRadius: 16,
+                        onClick: () async {
+                          print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+                          await cubit.selectDateAndTime(context);
+                        },
+                        width: getSize(context) / 2,
+                      ),
+                      //  ride_now"
+                      Container(
+                        //   padding: EdgeInsets.symmetric(horizontal: 1),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                                width: 3, color: AppColors.primary)),
+                        child: CustomButton(
+                          borderRadius: 16,
+                          text: "ride_now".tr(),
+                          color: AppColors.white,
+                          textcolor: AppColors.primary,
+                          onClick: () async {
+                           // cubit.bottomContainerInitialState=false;
+                            // cubit.bottomContainerLoadingState = true;
+
+                           // cubit.startTimer(context);
+                            context.read<UserTripCubit>().getWaitingDriverStage();
+                            await  cubit.createTrip(tripType: cubit.flag==1?"with":"without",context: context);
+                            // cubit.changeToRideNowState();
+                          },
+                          width: getSize(context) / 3,
+                        ),
+                      )
+                    ],
+                  ),
                 ),
                 SizedBox(height: 8,)
               ],

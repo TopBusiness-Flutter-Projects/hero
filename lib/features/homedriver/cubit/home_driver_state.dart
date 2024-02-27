@@ -23,4 +23,7 @@ class SuccessStartQuickTripState extends HomeDriverState {}
 class LoadingEndQuickTripState extends HomeDriverState {}
 class FailureEndQuickTripState extends HomeDriverState {}
 class SuccessEndQuickTripState extends HomeDriverState {}
+class LoadingUpdateDriverLocationState extends HomeDriverState {}
+class FailureUpdateDriverLocationState extends HomeDriverState {}
+class SuccessUpdateDriverLocationState extends HomeDriverState {}
 class ChangeTripStageUIState extends HomeDriverState {}

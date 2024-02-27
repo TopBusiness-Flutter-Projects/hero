@@ -33,6 +33,7 @@ import '../models/start_new_trip_model.dart';
 import '../models/status_model.dart';
 import '../models/store_bike_details_model.dart';
 import '../models/store_driver_data_model.dart';
+import '../models/update_driver_location_model.dart';
 import '../preferences/preferences.dart';
 import '../utils/app_strings.dart';
 
@@ -205,6 +206,9 @@ class ServiceApi {
   //// Cancel trip
   Future<Either<Failure, DriverTripsModel>> cancelTrip({
     required String tripId,
+    String? toAddress,
+    String? toLat,
+    String? toLong,
   }) async {
     SignUpModel signUpModel = await Preferences.instance.getUserModel();
     try {
@@ -214,6 +218,10 @@ class ServiceApi {
           ),
           body: {
             "trip_id": tripId,
+            "to_address": toAddress,
+            "to_lat": toLat,
+            "to_long": toLong,
+
           });
       return Right(DriverTripsModel.fromJson(response));
     } on ServerException {
@@ -701,9 +709,6 @@ class ServiceApi {
     }
   }
 
-
-
-
   Future<Either<Failure, RateModel>> giveRate(
       {
         required int tripId,
@@ -720,12 +725,36 @@ class ServiceApi {
           headers: {'Authorization': signUpModel.data?.token},
         ),
         body: {
-          'trip_id': "240",
-          'rate': "2.5",
-          'to': "143",
-          'description': 'description'},
+          'trip_id': tripId,
+          'rate': rate,
+          'to': to,
+          'description': description},
       );
       return Right(RateModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+  //update driver location
+  Future<Either<Failure, UpdateDriverLocationModel>> updateDriverLocation(
+      {
+        required String long,
+        required String lat,
+   }) async {
+
+    SignUpModel signUpModel = await Preferences.instance.getUserModel();
+    try {
+      final response = await dio.post(
+        EndPoints.driverLocation,
+        options: Options(
+          headers: {'Authorization': signUpModel.data?.token},
+        ),
+        body: {
+          'lat': lat,
+          'long': long,
+         },
+      );
+      return Right(UpdateDriverLocationModel.fromJson(response));
     } on ServerException {
       return Left(ServerFailure());
     }
@@ -743,7 +772,7 @@ class ServiceApi {
         print("After: ${phone}");
       }
 
-      print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+     // print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
       print(AppStrings.countryCode + phone);
       final response = await dio.post(
         EndPoints.loginUrl,
@@ -759,7 +788,6 @@ class ServiceApi {
       return Left(ServerFailure());
     }
   }
-
   Future<Either<Failure, HomeModel>> getHomeData() async {
     SignUpModel signUpModel = await Preferences.instance.getUserModel();
     try {

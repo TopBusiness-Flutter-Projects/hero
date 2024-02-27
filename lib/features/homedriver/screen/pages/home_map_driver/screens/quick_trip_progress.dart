@@ -40,257 +40,263 @@ class _QuickTripScreenState extends State<QuickTripScreen> {
   @override
   Widget build(BuildContext context) {
     HomeDriverCubit cubit = context.read<HomeDriverCubit>();
-    return Scaffold(
-      body: SafeArea(
-        child: BlocConsumer<HomeDriverCubit, HomeDriverState>(
-          listener: (context, state) {
-            if (state is SuccessEndTripState) {}
-          },
-          builder: (context, state) => Column(
-            children: [
-              Flexible(
-                child: Stack(
-                  alignment: Alignment.topRight,
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(bottom: 5),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(20),
-                              bottomRight: Radius.circular(20))),
-                      child: GoogleMap(
-                        initialCameraPosition: CameraPosition(
-                          target: LatLng(
-                            cubit.currentLocation != null
-                                ? cubit.currentLocation!.latitude!
-                                : 0,
-                            cubit.currentLocation != null
-                                ? cubit.currentLocation!.longitude!
-                                : 0,),
-                          zoom: 13.5,
-                        ),
-                        markers:  {
-                          Marker(
-                            markerId: const MarkerId("currentLocation"),icon: cubit!.markerIcon != null
-                              ? BitmapDescriptor.fromBytes(cubit!.markerIcon!)
-                              : cubit!.currentLocationIcon,
-                            // icon: cubit.bitmapDescriptorfrom != null
-                            //     ? cubit.bitmapDescriptorfrom!
-                            //     : cubit.currentLocationIcon,
-                            position: LatLng(
+    return WillPopScope(
+      onWillPop: () async {
+
+        return false;
+      },
+      child: Scaffold(
+        body: SafeArea(
+          child: BlocConsumer<HomeDriverCubit, HomeDriverState>(
+            listener: (context, state) {
+              if (state is SuccessEndTripState) {}
+            },
+            builder: (context, state) => Column(
+              children: [
+                Flexible(
+                  child: Stack(
+                    alignment: Alignment.topRight,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(bottom: 5),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(20),
+                                bottomRight: Radius.circular(20))),
+                        child: GoogleMap(
+                          initialCameraPosition: CameraPosition(
+                            target: LatLng(
                               cubit.currentLocation != null
                                   ? cubit.currentLocation!.latitude!
                                   : 0,
                               cubit.currentLocation != null
                                   ? cubit.currentLocation!.longitude!
-                                  : 0,
-                            ),
+                                  : 0,),
+                            zoom: 13.5,
                           ),
-                          Marker(
-                            markerId: const MarkerId("destinationLocation"),
-                           // icon: cubit.bitmapDescriptorto != null
-                           //     ? cubit.bitmapDescriptorto!
-                           //     : cubit.currentLocationIcon,
-                            position: LatLng(cubit.destinaion.latitude,
-                                cubit.destinaion.longitude),
-                          ),
-                        // Marker(
-                        //   markerId: const MarkerId("destinationLocation"),
-                        //   icon: cubit.bitmapDescriptorto != null
-                        //       ? cubit.bitmapDescriptorto!
-                        //       : cubit.currentLocationIcon,
-                        //   position: LatLng(cubit.destinaion.latitude,
-                        //       cubit.destinaion.longitude),
-                        // ),
-                          // Rest of the markers...
-                        },
-                        onMapCreated: (GoogleMapController controller) {
-                          cubit.mapController =
-                              controller;// Store the GoogleMapController
-                        },
-                        onCameraMove: (position) {
-
-                          if (cubit.strartlocation!=position.target){
-                            print(cubit.strartlocation);
-                            cubit.strartlocation=position.target;
-                            cubit.getCurrentLocation();}
-                          // _customInfoWindowController.hideInfoWindow!();
-                        },
-                        polylines: {
-                          Polyline(
-                            polylineId: const PolylineId("route"),
-                            points: cubit.latLngList,
-                            color: AppColors.black,
-                            width: 5,visible: true
-
-                          ),
-                        },
-                      ),
-                    ),
-                    // GoogleMap(
-                    //   initialCameraPosition: CameraPosition(
-                    //     target: LatLng(
-                    //         double.parse(widget.trip.fromLat ?? "31.1234"),
-                    //         double.parse(
-                    //             widget.trip.fromLong ?? "31.098765")),
-                    //     zoom: 13.5,
-                    //   ),
-                    //   markers: {
-                    //     Marker(
-                    //       markerId: MarkerId("from"),
-                    //       position: LatLng(double.parse(widget.trip.fromLat!),
-                    //           double.parse(widget.trip.fromLong!)),
-                    //     ),
-                    //     Marker(
-                    //       markerId: MarkerId("to"),
-                    //       position: LatLng(double.parse(widget.trip.toLat!),
-                    //           double.parse(widget.trip.toLong!)),
-                    //     ),
-                    //   },
-                    //   polylines: {
-                    //     Polyline(
-                    //       polylineId: const PolylineId("route"),
-                    //       points: [
-                    //         LatLng(double.parse(widget.trip.fromLat!),
-                    //             double.parse(widget.trip.fromLong!)),
-                    //         LatLng(double.parse(widget.trip.toLat!),
-                    //             double.parse(widget.trip.toLong!)),
-                    //       ],
-                    //       color: const Color(0xFF7B61FF),
-                    //       width: 6,
-                    //     ),
-                    //   },
-                    // )
-                  ],
-                ),
-              ),
-              Column(
-                children: [
-                  SizedBox(height: getSize(context) * 0.02),
-                  SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child:
-                      cubit.tripStages ==0?
-
-                      EndTripWidget(widget: widget):
-                      Container(
-                        width: double.maxFinite,
-                        decoration: BoxDecoration(
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color.fromRGBO(
-                                  0, 0, 0, 0.1),
-                              blurRadius: 20,
-                              offset: Offset(
-                                  0, 0), // Shadow position
+                          markers:  {
+                            Marker(
+                              markerId: const MarkerId("currentLocation"),icon: cubit!.markerIcon != null
+                                ? BitmapDescriptor.fromBytes(cubit!.markerIcon!)
+                                : cubit!.currentLocationIcon,
+                              // icon: cubit.bitmapDescriptorfrom != null
+                              //     ? cubit.bitmapDescriptorfrom!
+                              //     : cubit.currentLocationIcon,
+                              position: LatLng(
+                                cubit.currentLocation != null
+                                    ? cubit.currentLocation!.latitude!
+                                    : 0,
+                                cubit.currentLocation != null
+                                    ? cubit.currentLocation!.longitude!
+                                    : 0,
+                              ),
                             ),
-                            BoxShadow(
-                              color: Color.fromRGBO(
-                                  0, 0, 0, 0.1),
-                              blurRadius: 10,
-                              offset: Offset(
-                                  0, 0), // Shadow position
+                            Marker(
+                              markerId: const MarkerId("destinationLocation"),
+                             // icon: cubit.bitmapDescriptorto != null
+                             //     ? cubit.bitmapDescriptorto!
+                             //     : cubit.currentLocationIcon,
+                              position: LatLng(cubit.destinaion.latitude,
+                                  cubit.destinaion.longitude),
                             ),
-                          ],
-                          color: AppColors.white,
-                          borderRadius:
-                          BorderRadius.circular(10),
+                          // Marker(
+                          //   markerId: const MarkerId("destinationLocation"),
+                          //   icon: cubit.bitmapDescriptorto != null
+                          //       ? cubit.bitmapDescriptorto!
+                          //       : cubit.currentLocationIcon,
+                          //   position: LatLng(cubit.destinaion.latitude,
+                          //       cubit.destinaion.longitude),
+                          // ),
+                            // Rest of the markers...
+                          },
+                          onMapCreated: (GoogleMapController controller) {
+                            cubit.mapController =
+                                controller;// Store the GoogleMapController
+                          },
+                          onCameraMove: (position) {
+
+                            if (cubit.strartlocation!=position.target){
+                              print(cubit.strartlocation);
+                              cubit.strartlocation=position.target;
+                              cubit.getCurrentLocation();}
+                            // _customInfoWindowController.hideInfoWindow!();
+                          },
+                          polylines: {
+                            Polyline(
+                              polylineId: const PolylineId("route"),
+                              points: cubit.latLngList,
+                              color: AppColors.black,
+                              width: 5,visible: true
+
+                            ),
+                          },
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Column(
+                      ),
+                      // GoogleMap(
+                      //   initialCameraPosition: CameraPosition(
+                      //     target: LatLng(
+                      //         double.parse(widget.trip.fromLat ?? "31.1234"),
+                      //         double.parse(
+                      //             widget.trip.fromLong ?? "31.098765")),
+                      //     zoom: 13.5,
+                      //   ),
+                      //   markers: {
+                      //     Marker(
+                      //       markerId: MarkerId("from"),
+                      //       position: LatLng(double.parse(widget.trip.fromLat!),
+                      //           double.parse(widget.trip.fromLong!)),
+                      //     ),
+                      //     Marker(
+                      //       markerId: MarkerId("to"),
+                      //       position: LatLng(double.parse(widget.trip.toLat!),
+                      //           double.parse(widget.trip.toLong!)),
+                      //     ),
+                      //   },
+                      //   polylines: {
+                      //     Polyline(
+                      //       polylineId: const PolylineId("route"),
+                      //       points: [
+                      //         LatLng(double.parse(widget.trip.fromLat!),
+                      //             double.parse(widget.trip.fromLong!)),
+                      //         LatLng(double.parse(widget.trip.toLat!),
+                      //             double.parse(widget.trip.toLong!)),
+                      //       ],
+                      //       color: const Color(0xFF7B61FF),
+                      //       width: 6,
+                      //     ),
+                      //   },
+                      // )
+                    ],
+                  ),
+                ),
+                Column(
+                  children: [
+                    SizedBox(height: getSize(context) * 0.02),
+                    SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child:
+                        cubit.tripStages ==0?
 
-                            children: [
+                        EndTripWidget(widget: widget):
+                        Container(
+                          width: double.maxFinite,
+                          decoration: BoxDecoration(
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Color.fromRGBO(
+                                    0, 0, 0, 0.1),
+                                blurRadius: 20,
+                                offset: Offset(
+                                    0, 0), // Shadow position
+                              ),
+                              BoxShadow(
+                                color: Color.fromRGBO(
+                                    0, 0, 0, 0.1),
+                                blurRadius: 10,
+                                offset: Offset(
+                                    0, 0), // Shadow position
+                              ),
+                            ],
+                            color: AppColors.white,
+                            borderRadius:
+                            BorderRadius.circular(10),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Column(
 
-                              CustomFromToWidget(
-                                withName: false,
-                                name: widget.trip.name!,
-                                to:  widget.trip.toAddress!,
-                                from:  widget.trip.fromAddress!,) ,
+                              children: [
+
+                                CustomFromToWidget(
+                                  withName: false,
+                                  name: widget.trip.name!,
+                                  to:  widget.trip.toAddress!,
+                                  from:  widget.trip.fromAddress!,) ,
 
 
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [ Column(children: [
-                                  Text("rideTime".tr()),
-                                  Text('${cubit.startTime!.hour}:${cubit.startTime!.minute}'),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [ Column(children: [
+                                    Text("rideTime".tr()),
+                                    Text('${cubit.startTime!.hour}:${cubit.startTime!.minute}'),
 
-
-                                ],),
-
-                                  Image.asset(
-                                    ImageAssets.finishTripBike,
-
-                                  ),
-
-
-                                  Column(children: [
-                                    Text("arrivalTime".tr()),
-                                    Text('${cubit.arrivalTime!.hour}:${cubit.arrivalTime!.minute}'),
 
                                   ],),
-                                ],),
-                              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  FinishTripColumn(
-                                    path: ImageAssets.finishTripMap,
-                                    text: cubit.tripDistance,
 
-                                  ), FinishTripColumn(
-                                    path: ImageAssets.finishTripTime,
-                                    text: cubit.tripTime,
+                                    Image.asset(
+                                      ImageAssets.finishTripBike,
 
-                                  ), FinishTripColumn(
-                                    path: ImageAssets.finishTripMoney,
-                                      text:"${double.parse(double.parse(cubit.endQuickTripModel.data!.price!.toString()).toStringAsFixed(2))}"
+                                    ),
 
 
-                                  ),
-                                ],
+                                    Column(children: [
+                                      Text("arrivalTime".tr()),
+                                      Text('${cubit.arrivalTime!.hour}:${cubit.arrivalTime!.minute}'),
 
-                              )
+                                    ],),
+                                  ],),
+                                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    FinishTripColumn(
+                                      path: ImageAssets.finishTripMap,
+                                      text: cubit.tripDistance,
 
-                            ],
+                                    ), FinishTripColumn(
+                                      path: ImageAssets.finishTripTime,
+                                      text: cubit.tripTime,
+
+                                    ), FinishTripColumn(
+                                      path: ImageAssets.finishTripMoney,
+                                        text:"${double.parse(double.parse(cubit.endQuickTripModel.data!.price!.toString()).toStringAsFixed(2))}"
+
+
+                                    ),
+                                  ],
+
+                                )
+
+                              ],
+                            ),
                           ),
-                        ),
-                      )
+                        )
 
 
-                      ,
+                        ,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: getSize(context) * 0.02),
-                  cubit.tripStages ==0?
+                    SizedBox(height: getSize(context) * 0.02),
+                    cubit.tripStages ==0?
 
-                  CustomButton(
-                    text: 'endTrip'.tr(),
-                    color: AppColors.primary,
-                    onClick: () {
-                      cubit.endQuickTrip(context);
+                    CustomButton(
+                      text: 'endTrip'.tr(),
+                      color: AppColors.primary,
+                      onClick: () {
+                        cubit.endQuickTrip(context);
 
-                    },
-                    width: getSize(context) * 0.9,
-                    height: getSize(context) * 0.14,
-                  ):
-                  CustomButton(
-                    text: 'confirm'.tr(),
-                    color: AppColors.primary,
-                    onClick: () {
+                      },
+                      width: getSize(context) * 0.9,
+                      height: getSize(context) * 0.14,
+                    ):
+                    CustomButton(
+                      text: 'confirm'.tr(),
+                      color: AppColors.primary,
+                      onClick: () {
 
-                      Navigator.pushNamedAndRemoveUntil(
-                          context, Routes.homedriverRoute, (route) => false);
-                      cubit.setInitial();
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, Routes.homedriverRoute, (route) => false);
+                        cubit.setInitial();
 
-                    },
-                    width: getSize(context) * 0.9,
-                    height: getSize(context) * 0.14,
-                  )
+                      },
+                      width: getSize(context) * 0.9,
+                      height: getSize(context) * 0.14,
+                    )
 
 
-                ],
-              )
-            ],
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),
