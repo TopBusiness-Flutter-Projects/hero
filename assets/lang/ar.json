@@ -19,7 +19,21 @@
   "cancel": "الغاء",
   "from": "من",
   "to": "الى",
+  "choosePayMethod": "اختر وسيلة الدفع",
+  "zainCashPay": "ادفع من خلال زين كاش",
+  "enterPhoneAndPass": "قم بادخال رقم التليفون وكلمة المرور لاكمال خطوات الدفع",
+  "googlePay": "ادفع من خلال جوجل باى",
+  "visa": "ادفع من خلال فيزا",
+  "phoneNumber":"رقم التليفون",
+  "enterPhoneNumber": "ادخل الرقم",
+  "password":  "كلمة المرور",
+  "enterPassword":  "ادخل كلمة المرور",
+  "code":  "الكود التأكيدى",
+  "enterCode":  "ادخل الكود",
+  
+ 
   "loaction_msg": "",
+  "getInsurance": "احصل على تأمينك",
 
   "startTrip": "بداية الرحلة",
   "endTrip": "نهاية الرحلة",

@@ -10,6 +10,7 @@ class UpdateCurrentLocationState extends HomeDriverState {}
 class UpdateDesitnationLocationState extends HomeDriverState {}
 class ErrorLocationSearch extends HomeDriverState {}
 class UpdateCameraPosition extends HomeDriverState {}
+class LocationChangedState extends HomeDriverState {}
 class LoadingChangeDriverStatusState extends HomeDriverState {}
 class FailureChangeDriverStatusState extends HomeDriverState {}
 class SuccessChangeDriverStatusState extends HomeDriverState {}
@@ -27,3 +28,5 @@ class LoadingUpdateDriverLocationState extends HomeDriverState {}
 class FailureUpdateDriverLocationState extends HomeDriverState {}
 class SuccessUpdateDriverLocationState extends HomeDriverState {}
 class ChangeTripStageUIState extends HomeDriverState {}
+class UpdateDesitnationLocationState1 extends HomeDriverState {}
+class ErrorLocationSearch1 extends HomeDriverState {}

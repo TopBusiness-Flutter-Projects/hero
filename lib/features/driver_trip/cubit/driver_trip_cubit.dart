@@ -23,8 +23,8 @@ part 'driver_trip_state.dart';
 
 class DriverTripCubit extends Cubit<DriverTripState> {
 
-  List<LatLng> latLngList = [];
-  List<LatLng> latLngListFromTo = [];
+  List<LatLng> latLngListTrip = [];
+  List<LatLng> latLngListFromToTrip = [];
   List<mp.LatLng> point = [];
   List<mp.LatLng> pointFromTo = [];
 
@@ -53,15 +53,15 @@ class DriverTripCubit extends Cubit<DriverTripState> {
     response.fold(
           (l) => emit(ErrorLocationSearch()),
           (r) {
-        latLngList.clear();
+        latLngListTrip.clear();
 
         if (r.routes.length > 0) {
           point = mp.PolygonUtil.decode(
               r.routes.elementAt(0).overviewPolyline.points);
-          latLngList =
+          latLngListTrip =
               point.map((e) => LatLng(e.latitude, e.longitude)).toList();
         } else {
-          latLngList = [];
+          latLngListTrip = [];
         }
         // destinaion = LatLng(r.candidates.elementAt(0).geometry.location.lat, r.candidates.elementAt(0).geometry.location.lng);
 
@@ -83,15 +83,15 @@ class DriverTripCubit extends Cubit<DriverTripState> {
     response.fold(
           (l) => emit(ErrorLocationSearch()),
           (r) {
-        latLngListFromTo.clear();
+        latLngListFromToTrip.clear();
 
         if (r.routes.length > 0) {
           point = mp.PolygonUtil.decode(
               r.routes.elementAt(0).overviewPolyline.points);
-          latLngListFromTo =
+          latLngListFromToTrip =
               point.map((e) => LatLng(e.latitude, e.longitude)).toList();
         } else {
-          latLngListFromTo = [];
+          latLngListFromToTrip = [];
         }
         // destinaion = LatLng(r.candidates.elementAt(0).geometry.location.lat, r.candidates.elementAt(0).geometry.location.lng);
 

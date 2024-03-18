@@ -25,14 +25,11 @@ class HomeMapDriver extends StatefulWidget {
 
 class _HomeMapDriverState extends State<HomeMapDriver> {
   HomeDriverCubit? cubit;
-
   @override
   Widget build(BuildContext context) {
     cubit = context.read<HomeDriverCubit>();
-
     return BlocConsumer<HomeDriverCubit, HomeDriverState>(
       listener: (context, state) {
-
       },
       builder: (context, state) {
         return Scaffold(
@@ -42,6 +39,7 @@ class _HomeMapDriverState extends State<HomeMapDriver> {
               Builder(
                 builder: (context) {
                   return cubit!.currentLocation != null ? GoogleMap(
+                    mapType: MapType.normal,
                     initialCameraPosition: CameraPosition(
                       target: LatLng(
                         cubit!.currentLocation != null ? cubit!.currentLocation!
@@ -80,8 +78,6 @@ class _HomeMapDriverState extends State<HomeMapDriver> {
                         cubit!.getCurrentLocation();}
                       // _customInfoWindowController.hideInfoWindow!();
                     },
-
-
                   ):const ShowLoadingIndicator();
                 },
 

@@ -56,74 +56,68 @@ class _MyWalletScreenState extends State<MyWalletScreen> {
                   height: 10,
                 ),
 
-                Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Image.asset(
-                        ImageAssets.backImage,
-                        color: AppColors.grey3,
-                        height: getSize(context) / 15,
-                        width: getSize(context) / 15,
+                BlocConsumer<HomeCubit, HomeState>(
+                  listener: (context, state) {
+                    // TODO: implement listener
+                  },
+                  builder: (context, state) => Row(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Image.asset(
+                          ImageAssets.backImage,
+                          color: AppColors.grey3,
+                          height: getSize(context) / 15,
+                          width: getSize(context) / 15,
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Icon(
-                      CupertinoIcons.person_circle_fill,
-                      color: Colors.grey,
-                    ),
-                    BlocBuilder<HomeCubit, HomeState>(
-                        builder: (context, state) {
-                      return Text(
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Icon(
+                        CupertinoIcons.person_circle_fill,
+                        color: Colors.grey,
+                      ),
+                      Text(
                         'welcome'.tr() +
-                            "${homeCubit.signUpModel?.data?.name}",
+                            "${context.read<HomeCubit>().signUpModel?.data?.name}",
                         style: TextStyle(
                             fontSize: getSize(context) / 24,
                             fontWeight: FontWeight.normal,
                             color: AppColors.black),
-                      );
-                    }),
-                    Spacer(),
-                  ],
+                      ),
+                      Spacer(),
+                    ],
+                  ),
                 ),
                 SizedBox(
                   height: 10,
                 ),
                 //address + location icon
-                Container(
-
-                  height:
-                  200,
-                  child: BlocBuilder<HomeCubit, HomeState>(
-                      builder: (context, state) {
-                    return Row(
-                      children: [
-                        Icon(
-                          Icons.location_on_outlined,
-                          size: 27,
-                        ),
-                        //address
-                        Flexible(
-                          child: Text(
-                            "${homeCubit.address}",
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: getSize(context) / 24,
-                                fontWeight: FontWeight.normal,
-                                color: AppColors.gray),
-                          ),
-                        ),
-                      ],
-                    );
-                  }),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.location_on_outlined,
+                      size: 27,
+                    ),
+                    //address
+                    Flexible(
+                      child: Text(
+                        "${context.read<HomeCubit>().address}",
+                        maxLines: 1,
+                         overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            fontSize: getSize(context) / 24,
+                            fontWeight: FontWeight.normal,
+                            color: AppColors.gray),
+                      ),
+                    ),
+                  ],
                 ),
                 SizedBox(
-                  height: 10,
+                  height: getSize(context) * 0.03,
                 ),
                 isLoading
                   ? Center(

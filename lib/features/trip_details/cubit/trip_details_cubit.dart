@@ -11,6 +11,7 @@ import 'package:meta/meta.dart';
 import 'package:widget_to_marker/widget_to_marker.dart';
 
 import '../../../core/models/rate_trip_model.dart';
+import '../../../core/utils/appwidget.dart';
 import '../../../core/utils/custom_marker.dart';
 
 part 'trip_details_state.dart';
@@ -25,9 +26,11 @@ class TripDetailsCubit extends Cubit<TripDetailsState> {
   RateModel? rateTripModel;
   giveRate({required int tripId ,required int toId , String? description , required BuildContext context })async{
     emit(LoadingRatingState());
-    final response = await api.giveRate(tripId: tripId,
-        to: toId,
-        rate: rate,description:description );
+    AppWidget.createProgressDialog(context, "wait".tr());
+    final response = await api.rateUser(tripId: tripId.toString(),
+        to: toId.toString(),
+
+        rate: rate.toString(),description:description.toString() );
     response.fold((l) {
       emit(RatingFailedState());
       Navigator.pop(context);
@@ -36,11 +39,12 @@ class TripDetailsCubit extends Cubit<TripDetailsState> {
       Navigator.pop(context);
         rateTripModel = r ;
         if(r.data != null){
-
+          Navigator.pop(context);
           emit(RatingSuccessState());
           successGetBar(r.message);
 
         }else{
+          Navigator.pop(context);
           emit(RatingSuccessState());
           errorGetBar(r.message!);
         }

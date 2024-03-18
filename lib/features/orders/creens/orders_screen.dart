@@ -107,6 +107,8 @@ class _OrdersScreenState extends State<OrdersScreen>
                     Flexible(
                       child: Text(
                         "${context.read<HomeCubit>().address}",
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                             fontSize: getSize(context) / 24,
                             fontWeight: FontWeight.normal,
@@ -228,9 +230,7 @@ class _OrdersScreenState extends State<OrdersScreen>
                                     return InkWell(
                                       onTap: () {
                                         Navigator.push(
-
                                           context,MaterialPageRoute(builder: (context) => TripDetailsScreen(trip: cubit.completeTrips![index],isUser:    widget.isUser),));
-
                                       },
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(

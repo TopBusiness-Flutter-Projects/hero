@@ -7,6 +7,7 @@ import 'package:hero/features/login/cubit/login_cubit.dart';
 import 'package:hero/features/my_wallet/cubit/my_wallet_cubit.dart';
 import 'package:hero/features/requestlocation/cubit/request_location_cubit.dart';
 import 'package:hero/features/signup/cubit/signup_cubit.dart';
+import 'package:hero/features/trip_service/cubit/payment_cubit.dart';
 
 
 import 'config/routes/app_routes.dart';
@@ -67,6 +68,9 @@ class _HeroAppState extends State<HeroApp> {
         ),
         BlocProvider(
           create: (_) => injector.serviceLocator<LoginCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => injector.serviceLocator<PaymentCubit>(),
         ),
         BlocProvider(
           create: (_) => injector.serviceLocator<SignupCubit>(),

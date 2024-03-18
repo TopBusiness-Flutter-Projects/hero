@@ -282,24 +282,104 @@ print(strartlocation.longitude);
         }
       },
     );
+    location.onLocationChanged.listen((newLoc) {
+    //  currentLocation = newLoc;
 
-    location.onLocationChanged.listen(
-      (newLoc) {
-        currentLocation = newLoc;
+      double latDiff = (newLoc.latitude! - strartlocation!.latitude!);
+      double lngDiff = (newLoc.longitude! - strartlocation!.longitude!);
 
-        if(currentLocation==null||strartlocation!=LatLng(currentLocation!.latitude!,currentLocation!.longitude!)){
+      if( latDiff > 0.01 || lngDiff > 0.01){
+        strartlocation =  LatLng(
+          currentLocation!.latitude!,
+          currentLocation!.longitude!,
+        );
 
-          strartlocation=  LatLng(
-            currentLocation!.latitude!,
-            currentLocation!.longitude!,
-          );
         getLocation(LatLng(currentLocation!.latitude!, currentLocation!.longitude!), "from");
-
-     // move the camera to the current location
         updateLocation();
-        emit(UpdateCameraPosition());}
+        emit(LocationChangedState());
+        emit(UpdateCameraPosition());
+      }
+     });
+    // location.onLocationChanged.listen(
+    //   (newLoc) {
+    //     currentLocation = newLoc;
+    //
+    //     if(currentLocation==null||strartlocation!=LatLng(currentLocation!.latitude!,currentLocation!.longitude!)){
+    //
+    //       strartlocation=  LatLng(
+    //         currentLocation!.latitude!,
+    //         currentLocation!.longitude!,
+    //       );
+    //     getLocation(LatLng(currentLocation!.latitude!, currentLocation!.longitude!), "from");
+    //
+    //  // move the camera to the current location
+    //     updateLocation();
+    //     emit(UpdateCameraPosition());}
+    //   },
+    // );
+  }
+
+  void getCurrentLocationTrip(BuildContext context,LatLng destination) async {
+    loc.Location location = loc.Location();
+    // we can remove this future method because we listen on data in the onLocationChanged.listen
+    location.getLocation().then(
+      (location) {
+        currentLocation = location;
+        if(strartlocation!=LatLng(currentLocation!.latitude!,currentLocation!.longitude!)){
+        strartlocation=  LatLng(
+          currentLocation!.latitude!,
+          currentLocation!.longitude!,
+        );
+       //get the address and draw route
+      //  getLocation(LatLng(currentLocation!.latitude!, currentLocation!.longitude!), "from");
+      //   // move the camera to the current location
+      //  updateLocation();
+
+        emit(UpdateCurrentLocationState());
+
+        }
       },
     );
+    location.onLocationChanged.listen((newLoc) {
+      currentLocation = newLoc;
+      double latDiff = (currentLocation!.latitude! - strartlocation!.latitude!);
+      double lngDiff = (currentLocation!.longitude! - strartlocation!.longitude!);
+
+      if( latDiff > 0.01 || lngDiff > 0.01){
+        strartlocation =  LatLng(
+          currentLocation!.latitude!,
+          currentLocation!.longitude!,
+        );
+
+
+        context.read<DriverTripCubit>().getDirection(//widget.trip
+            LatLng( currentLocation != null ? currentLocation!.latitude! : 0,
+             currentLocation != null ? currentLocation!.longitude! : 0,),
+            destination
+          //  LatLng(double.parse(widget.trip.fromLat??"31.98354"), double.parse(widget.trip.fromLong??"31.1234065"))
+        );
+       // getLocation(LatLng(currentLocation!.latitude!, currentLocation!.longitude!), "from");
+       // updateLocation();
+        emit(UpdateCameraPosition());
+      }
+    });
+    // location.onLocationChanged.listen(
+    //   (newLoc) {
+    //     currentLocation = newLoc;
+    //
+    //     if(currentLocation==null||strartlocation!=LatLng(currentLocation!.latitude!,currentLocation!.longitude!)){
+    //
+    //       strartlocation=  LatLng(
+    //         currentLocation!.latitude!,
+    //         currentLocation!.longitude!,
+    //       );
+    //     getLocation(LatLng(currentLocation!.latitude!, currentLocation!.longitude!), "from");
+    //
+    //  // move the camera to the current location
+    //     updateLocation();
+    //     emit(UpdateCameraPosition());}
+    //   },
+    // );
   }
 
   search(String search) async {
@@ -396,6 +476,7 @@ toAddress =r.results
         getDirection(
             LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
             destinaion);
+
         emit(UpdateDesitnationLocationState());
         // bitmapDescriptor  = BitmapDescriptor.fromWidget;
         // destinaion = LatLng(r.candidates.elementAt(0).geometry.location.lat, r.candidates.elementAt(0).geometry.location.lng);

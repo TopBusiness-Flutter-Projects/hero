@@ -172,32 +172,36 @@ class _HomeTabState extends State<HomeTab> {
            //slider+dots
             cubit.homeModel?.data?.sliders !=null?
             BannerWidget(sliderData: cubit.homeModel!.data!.sliders!):
-            Container(),
-            SizedBox(height: getSize(context)*0.1,),            // new orders     //all
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'new_orders'.tr(),
-                  style: TextStyle(
-                      fontSize: getSize(context) / 20,
-                      fontWeight: FontWeight.normal,
-                      color: AppColors.black),
-                ),
-                InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(
-                        context, Routes.OrdersScreen,arguments: true);
-                  },
-                  child: Text(
-                    'all'.tr(),
+
+             SizedBox( height: 12,),            // new orders     //all
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    //1111111111
+                    'new_orders'.tr(),
                     style: TextStyle(
-                        fontSize: getSize(context) / 24,
+                        fontSize: getSize(context) / 20,
                         fontWeight: FontWeight.normal,
-                        color: AppColors.primary),
+                        color: AppColors.black),
                   ),
-                ),
-              ],
+                  InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(
+                          context, Routes.OrdersScreen,arguments: true);
+                    },
+                    child: Text(
+                      'all'.tr(),
+                      style: TextStyle(
+                          fontSize: getSize(context) / 24,
+                          fontWeight: FontWeight.normal,
+                          color: AppColors.primary),
+                    ),
+                  ),
+                ],
+              ),
             ),
             SizedBox(height: getSize(context)*0.03,),
             // list of orders
@@ -220,19 +224,16 @@ class _HomeTabState extends State<HomeTab> {
                             fallback:(context) => ListView.builder(
                               itemCount: 1,
                               itemBuilder: (context, index) {
-
                                 return Center(child: Padding(
                                   padding: const EdgeInsets.only(top: 18.0),
                                   child: Text(" لا يوجد طلبات"),
                                 ),);
-
                               },
                             ),
                             builder: (context) =>
                           ListView.builder(
                               itemCount: cubit.homeModel?.data?.newTrips?.length??0,
                               itemBuilder: (context, index) {
-
                                 return InkWell(
                                   onTap: () {
                                     //todo=>
@@ -246,20 +247,16 @@ class _HomeTabState extends State<HomeTab> {
                                     }
                                   },
                                     child: HomeListItem(trip: cubit.homeModel?.data?.newTrips?[index],));
-
                               },
                             ),
                           ),
-
                         ),
                       ),
                       SizedBox(height: getSize(context)*0.25),
                     ],
                   ),
                 ),),
-
-
-          ],
+          ]
         ),
       ),
 

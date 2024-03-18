@@ -29,7 +29,7 @@ import 'package:hero/core/remote/service.dart';
 import 'package:hero/core/utils/assets_manager.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:location/location.dart'as loc;
+import 'package:location/location.dart' as loc;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:widget_to_marker/widget_to_marker.dart';
 import '../../../config/routes/app_routes.dart';
@@ -44,7 +44,6 @@ import '../../driver_trip/cubit/driver_trip_cubit.dart';
 import '../../homedriver/cubit/home_driver_cubit.dart';
 part 'home_state.dart';
 
-
 enum MyEnum {
   success,
   defaultState,
@@ -55,68 +54,69 @@ enum MyEnum {
 class HomeCubit extends Cubit<HomeState> {
   MyEnum currentEnumStatus = MyEnum.defaultState;
   int? flag;
-  bool isSelected =false;
+  bool isSelected = false;
   Set<Marker> markers = {};
   Set<Marker> tripMarkers = {};
   BitmapDescriptor? bitmapDescriptorto;
   BitmapDescriptor? bitmapDescriptorfrom;
-  SignUpModel? signUpModel ;
+  SignUpModel? signUpModel;
   Uint8List? markerIcon;
   List<LatLng> latLngListFromTo = [];
 
   List<mp.LatLng> pointFromTo = [];
-  HomeCubit(this.api) : super(HomeInitial()){
-   getUserData();
+  HomeCubit(this.api) : super(HomeInitial()) {
+    getUserData();
 
-   getSettings();
-   isSelected =false;
-   getTripStatus();
+    getSettings();
+    isSelected = false;
+    getTripStatus();
     latLngList = [];
-   latLngListFromTo = [];
+    latLngListFromTo = [];
     getmarker();
     checkAndRequestLocationPermission();
-   getNotification();
-   //getNotification();
-   //getHomeData();// it's better to call this method in initstate
-
+    getNotification();
+    //getNotification();
+    //getHomeData();// it's better to call this method in initstate
   }
   getUserData() async {
     signUpModel = await Preferences.instance.getUserModel();
     emit(GettingUserData());
   }
+
   ServiceApi api;
   String? payment = "cash";
-  late TabController tabsController ;
- // GoogleMapController? mapController;
+  late TabController tabsController;
+  // GoogleMapController? mapController;
   List<LatLng> polylineCoordinates = [];
-   LatLng sourceLocation = LatLng(31.2693, 30.7873);
+  LatLng sourceLocation = LatLng(31.2693, 30.7873);
   //  LatLng destination = LatLng(30.4301, 31.0364);
- // TextEditingController locationControl = TextEditingController();
- //    bool bottomContainerInitialState = true;
- //    bool bottomContainerLoadingState = false;
- //    bool bottomContainerFailureState = false;
- //    bool bottomContainerSuccessState = false;
+  // TextEditingController locationControl = TextEditingController();
+  //    bool bottomContainerInitialState = true;
+  //    bool bottomContainerLoadingState = false;
+  //    bool bottomContainerFailureState = false;
+  //    bool bottomContainerSuccessState = false;
 
-   DateTime? datePicked;
-   TimeOfDay? timePicked;
- // DateTime date = new DateTime.now();
-  DateTime? date ;
+  DateTime? datePicked;
+  TimeOfDay? timePicked;
+  // DateTime date = new DateTime.now();
+  DateTime? date;
   var dateFormatted;
   var timeFormatted;
   final oo.DateFormat dateFormatter = oo.DateFormat('d MMM EEE');
-  TimeOfDay time = new TimeOfDay.now();//now.add(Duration(hours: 1))
+  TimeOfDay time = new TimeOfDay.now(); //now.add(Duration(hours: 1))
   final Completer<GoogleMapController> controller = Completer();
   GoogleMapController? mapController;
   String location = "Search Location";
 
   BitmapDescriptor defaultLocationIcon = BitmapDescriptor.defaultMarker;
 
-void setflag(int flag){
-  this.flag=flag;
-  emit(HomeInitial());
-}
+  void setflag(int flag) {
+    this.flag = flag;
+    emit(HomeInitial());
+  }
+
   List<LatLng> latLngList = [];
-  List<mp.LatLng> point=[];
+  List<mp.LatLng> point = [];
 
   getDirection(LatLng startPosition, LatLng endPosition) async {
     String origin = "", dest = "";
@@ -128,17 +128,17 @@ void setflag(int flag){
         endPosition.longitude.toString();
     final response = await api.getDirection(origin, dest, "bus");
     response.fold(
-          (l) => emit(ErrorLocationSearchState()),
-          (r) {
+      (l) => emit(ErrorLocationSearchState()),
+      (r) {
         latLngList.clear();
 
-        if(r.routes.length>0){
+        if (r.routes.length > 0) {
           point = mp.PolygonUtil.decode(
               r.routes.elementAt(0).overviewPolyline.points);
           latLngList =
-              point.map((e) => LatLng(e.latitude, e.longitude)).toList();}
-        else{
-          latLngList=[];
+              point.map((e) => LatLng(e.latitude, e.longitude)).toList();
+        } else {
+          latLngList = [];
         }
         // destinaion = LatLng(r.candidates.elementAt(0).geometry.location.lat, r.candidates.elementAt(0).geometry.location.lng);
 
@@ -149,21 +149,20 @@ void setflag(int flag){
 
   TextEditingController location_control = TextEditingController();
 
-
-
-  setMarkers(Marker source , Marker? destination){
+  setMarkers(Marker source, Marker? destination) {
     markers.clear();
     markers.add(source);
-    if(destination!=null){
+    if (destination != null) {
       markers.add(destination);
     }
 
     emit(AddMarkersState());
   }
-  setTripMarkers(Marker source , Marker? destination){
+
+  setTripMarkers(Marker source, Marker? destination) {
     tripMarkers.clear();
     tripMarkers.add(source);
-    if(destination!=null){
+    if (destination != null) {
       tripMarkers.add(destination);
     }
 
@@ -188,7 +187,6 @@ void setflag(int flag){
   //   }
   // }
 
-
   // changeToRideNowState(){
   //   bottomContainerInitialState = false;
   //   bottomContainerLoadingState = true;
@@ -198,17 +196,14 @@ void setflag(int flag){
   //   emit(ChangeToRideNowState());
   //
   // }
-
   //step 1 get the location permission
   Future<void> checkAndRequestLocationPermission() async {
     // Check the current status of the location permission
     PermissionStatus permissionStatus = await Permission.location.status;
-
     if (permissionStatus.isDenied) {
       // If the permission is denied, request it from the user
       PermissionStatus newPermissionStatus =
-      await Permission.location.request();
-
+          await Permission.location.request();
       if (newPermissionStatus.isGranted) {
         await enableLocationServices();
         // Permission granted, continue with location-related tasks
@@ -228,7 +223,6 @@ void setflag(int flag){
 
   Future<void> enableLocationServices() async {
     loc.Location location = loc.Location();
-
     bool serviceEnabled = await location.serviceEnabled();
     if (!serviceEnabled) {
       serviceEnabled = await location.requestService();
@@ -236,13 +230,10 @@ void setflag(int flag){
         // Location services are still not enabled, handle accordingly (show a message, disable functionality, etc.)
         // ...
         return;
-      }
-      else{
+      } else {
         getCurrentLocation();
-
       }
     }
-
     PermissionStatus permissionStatus = await Permission.location.status;
     if (permissionStatus.isGranted) {
       getCurrentLocation();
@@ -253,8 +244,8 @@ void setflag(int flag){
       // ...
     }
   }
-  //Uint8List? markerIcon;
 
+  //Uint8List? markerIcon;
   Future<Uint8List> getBytesFromAsset(String path, int width) async {
     ByteData data = await rootBundle.load(path);
     ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
@@ -268,10 +259,10 @@ void setflag(int flag){
   getmarker() async {
     markerIcon = await getBytesFromAsset(ImageAssets.marker, 100);
   }
-/// set direction from to
+
+  /// set direction from to
   String originFrom = "", destTo = "";
   getDirectionFromTo(LatLng startPosition, LatLng endPosition) async {
-
     originFrom = startPosition.latitude.toString() +
         "," +
         startPosition.longitude.toString();
@@ -280,10 +271,9 @@ void setflag(int flag){
         endPosition.longitude.toString();
     final response = await api.getDirection(originFrom, destTo, "bus");
     response.fold(
-          (l) => emit(ErrorLocationSearch1()),
-          (r) {
+      (l) => emit(ErrorLocationSearch1()),
+      (r) {
         latLngListFromTo.clear();
-
         if (r.routes.length > 0) {
           point = mp.PolygonUtil.decode(
               r.routes.elementAt(0).overviewPolyline.points);
@@ -293,93 +283,77 @@ void setflag(int flag){
           latLngListFromTo = [];
         }
         // destinaion = LatLng(r.candidates.elementAt(0).geometry.location.lat, r.candidates.elementAt(0).geometry.location.lng);
-
         emit(UpdateDesitnationLocationState1());
       },
     );
   }
 
-
-
   loc.LocationData? currentLocation;
   String? address;
-
-
   LatLng strartlocation = LatLng(0, 0);
+  double distance = 0;
+  double paymentMoney = 0;
+  void changeFavourite() {
+    emit(ChangeFavouriteState());
+  }
 
-double distance = 0;
-double paymentMoney = 0;
- void changeFavourite(){
-   emit(ChangeFavouriteState());
- }
 // handle the on tab user event on map
-
-setMyMarker(NewTrip trip)async{
-
-print('dddddddddddddddddddd');
-print(trip.toAddress);
-
+  setMyMarker(NewTrip trip) async {
+    print('dddddddddddddddddddd');
+    print(trip.toAddress);
     bitmapDescriptorfrom = await CustomeMarker(
       title: "from".tr(),
       location: trip.fromAddress!,
-    ).toBitmapDescriptor().then((value) async{
-      bitmapDescriptorfrom=value;
+    ).toBitmapDescriptor().then((value) async {
+      bitmapDescriptorfrom = value;
     });
-if (trip.toAddress != null)
+    if (trip.toAddress != null) {
+      print('dddddddddddddddddddddd');
+      bitmapDescriptorto = await CustomeMarker(
+        title: "to".tr(),
+        location: trip.toAddress!,
+      ).toBitmapDescriptor().then((value) {
+        bitmapDescriptorto = value;
 
-{
-  print('dddddddddddddddddddddd');
-  bitmapDescriptorto = await CustomeMarker(
-    title: "to".tr(),
-    location: trip.toAddress!,
-  ).toBitmapDescriptor().then((value) {
-    bitmapDescriptorto=value;
-
-    setTripMarkers(
-      Marker(
-        markerId: const MarkerId("from"),
-        icon:bitmapDescriptorfrom!,
-        position: LatLng(double.parse(trip.fromLat!),
-            double.parse(trip.fromLong!)),
-      ),
-      Marker(
-        markerId: MarkerId("to"),
-
-        icon:bitmapDescriptorto!,
-        position:LatLng(double.parse(trip.toLat!),
-            double.parse(trip.toLong!)),
-      ),
-    );
-  });
-}
-else{
-  setTripMarkers(
-      Marker(
-        markerId: const MarkerId("from"),
-        icon:bitmapDescriptorfrom!,
-        position: LatLng(double.parse(trip.fromLat!),
-            double.parse(trip.fromLong!)),
-      ),null
-  );
-}
-
-
-}
+        setTripMarkers(
+          Marker(
+            markerId: const MarkerId("from"),
+            icon: bitmapDescriptorfrom!,
+            position: LatLng(
+                double.parse(trip.fromLat!), double.parse(trip.fromLong!)),
+          ),
+          Marker(
+            markerId: MarkerId("to"),
+            icon: bitmapDescriptorto!,
+            position:
+                LatLng(double.parse(trip.toLat!), double.parse(trip.toLong!)),
+          ),
+        );
+      });
+    } else {
+      setTripMarkers(
+          Marker(
+            markerId: const MarkerId("from"),
+            icon: bitmapDescriptorfrom!,
+            position: LatLng(
+                double.parse(trip.fromLat!), double.parse(trip.fromLong!)),
+          ),
+          null);
+    }
+  }
 
   getLocation(LatLng argument, String title) async {
     //location_control.text  = "";
     final response = await api.getGeoData(
         argument.latitude.toString() + "," + argument.longitude.toString());
-
     response.fold(
-          (l) => emit(ErrorLocationSearchStat()),
-          (r) async {
-        address =  r.results
+      (l) => emit(ErrorLocationSearchStat()),
+      (r) async {
+        address = r.results
             .elementAt(0)
             .formattedAddress
             .replaceAll("Unnamed Road,", "");
-
-        if(title=="to"){
+        if (title == "to") {
           destination = argument;
           location_control.text = r.results
               .elementAt(0)
@@ -392,25 +366,22 @@ else{
                 .formattedAddress
                 .replaceAll("Unnamed Road,", ""),
           ).toBitmapDescriptor().then((value) {
-            bitmapDescriptorto=value;
+            bitmapDescriptorto = value;
             setMarkers(
               Marker(
                 markerId: const MarkerId("currentLocation"),
-              icon:bitmapDescriptorfrom!,
-                position: LatLng(currentLocation?.latitude??0,
-                    currentLocation?.longitude??0),
+                icon: bitmapDescriptorfrom ?? BitmapDescriptor.defaultMarker,
+                position: LatLng(currentLocation?.latitude ?? 0,
+                    currentLocation?.longitude ?? 0),
               ),
               Marker(
                 markerId: MarkerId("destination"),
-
-                icon:value,
-                position:destination,
+                icon: value,
+                position: destination,
               ),
             );
           });
-
-        }
-        else{
+        } else {
           bitmapDescriptorfrom = await CustomeMarker(
             title: title.tr(),
             location: r.results
@@ -418,30 +389,31 @@ else{
                 .formattedAddress
                 .replaceAll("Unnamed Road,", ""),
           ).toBitmapDescriptor().then((value) {
-            bitmapDescriptorfrom=value;
+            bitmapDescriptorfrom = value;
 
             setMarkers(
               Marker(
                 markerId: const MarkerId("currentLocation"),
-                icon:value,
-
-                position: LatLng(currentLocation?.latitude??0,
-                    currentLocation?.longitude??0),
+                icon: value,
+                position: LatLng(currentLocation?.latitude ?? 0,
+                    currentLocation?.longitude ?? 0),
               ),
               Marker(
                 markerId: MarkerId("destination"),
-
-                icon:bitmapDescriptorto!=null?bitmapDescriptorto!:currentLocationIcon,
-                position:destination,
+                icon: bitmapDescriptorto != null
+                    ? bitmapDescriptorto!
+                    : currentLocationIcon,
+                position: destination,
               ),
             );
           });
-
         }
 
-        if(destination.longitude!=0&&destination.latitude!=0){
-          distance =  calculateDistance(LatLng(currentLocation!.latitude!, currentLocation!.longitude!),destination);
-         // paymentMoney = distance * settingsModel!.data!.km!;
+        if (destination.longitude != 0 && destination.latitude != 0) {
+          distance = calculateDistance(
+              LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
+              destination);
+          // paymentMoney = distance * settingsModel!.data!.km!;
         }
 
         getDirection(
@@ -453,319 +425,335 @@ else{
     );
   }
 
-
   void getCurrentLocation() async {
-
     loc.Location location = loc.Location();
     // we can remove this future method because we listen on data in the onLocationChanged.listen
     location.getLocation().then(
-          (location) async {
+      (location) async {
         currentLocation = location;
-        if(strartlocation!=LatLng(currentLocation!.latitude!,currentLocation!.longitude!)){
-          strartlocation=  LatLng(
+        if (strartlocation !=
+            LatLng(currentLocation!.latitude!, currentLocation!.longitude!)) {
+          strartlocation = LatLng(
             currentLocation!.latitude!,
             currentLocation!.longitude!,
           );
           //get the address and draw route
-          getLocation(LatLng(currentLocation!.latitude!, currentLocation!.longitude!), "from");
+          getLocation(
+              LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
+              "from");
           // move the camera to the current location
           updateLocation();
           emit(UpdateCurrentLocationState());
-
         }
       },
     );
 
     location.onLocationChanged.listen(
-          (newLoc) {
+      (newLoc) {
         currentLocation = newLoc;
 
-        if(currentLocation==null||strartlocation!=LatLng(currentLocation!.latitude!,currentLocation!.longitude!)){
-
-          strartlocation=  LatLng(
+        if (currentLocation == null ||
+            strartlocation !=
+                LatLng(
+                    currentLocation!.latitude!, currentLocation!.longitude!)) {
+          strartlocation = LatLng(
             currentLocation!.latitude!,
             currentLocation!.longitude!,
           );
-          getLocation(LatLng(currentLocation!.latitude!, currentLocation!.longitude!), "from");
+          getLocation(
+              LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
+              "from");
 
           // move the camera to the current location
           updateLocation();
-          emit(UpdateCameraPosition());}
+          emit(UpdateCameraPosition());
+        }
       },
     );
   }
 
+  /// location changed if the different between old location and new location is old
+// void getCurrentLocation() async {
+//   loc.Location location = loc.Location();
+//   loc.LocationData? previousLocation;
+//   location.onLocationChanged.listen((newLoc) {
+//     if (previousLocation != null) {
+//       double latitudeDifference =
+//           (newLoc.latitude! - previousLocation!.latitude!).abs();
+//       double longitudeDifference =
+//           (newLoc.longitude! - previousLocation!.longitude!).abs();
+//       // You can adjust this threshold value according to your requirement
+//       double threshold = 0.001; // Example threshold value
+//       if (latitudeDifference > threshold || longitudeDifference > threshold) {
+//         previousLocation = newLoc;
 
+//         strartlocation = LatLng(newLoc.latitude!, newLoc.longitude!);
+//         getLocation(strartlocation, "from");
 
+//         // Move the camera to the current location
+//         updateLocation();
+//         emit(UpdateCameraPosition());
+//       }
+//     } else {
+//       // If it's the first location received, update the previous location
+//       previousLocation = newLoc;
+//     }
+//   });
+// }
+  ///
   Uint8List? icon;
   Future<void> updateLocation() async {
     if (mapController != null && currentLocation != null) {
-
       mapController!.animateCamera(
         CameraUpdate.newLatLng(
           LatLng(
             currentLocation!.latitude!,
             currentLocation!.longitude!,
-
           ),
         ),
       );
     }
   }
 
-
   String fields = "id,place_id,name,geometry,formatted_address";
   LatLng destination = LatLng(0, 0);
 
-
-List<Candidate> placesList =[];
-
-
-
+  List<Candidate> placesList = [];
 
   searchFavourite(String search) async {
     emit(LoadingSearchState());
-    final response = await api.searchOnMap("textquery",search,fields);
+    final response = await api.searchOnMap("textquery", search, fields);
     response.fold(
-          (l) => emit(FailureSearchState()),
-          (r) async {
-        destination = LatLng(r.candidates.elementAt(0).geometry.location.lat, r.candidates.elementAt(0).geometry.location.lng);
+      (l) => emit(FailureSearchState()),
+      (r) async {
+        destination = LatLng(r.candidates.elementAt(0).geometry.location.lat,
+            r.candidates.elementAt(0).geometry.location.lng);
         //todo => calculate the distance and price
-        if(destination.longitude!=0&&destination.latitude!=0){
-          distance =  calculateDistance(LatLng(currentLocation!.latitude!, currentLocation!.longitude!),destination);
+        if (destination.longitude != 0 && destination.latitude != 0) {
+          distance = calculateDistance(
+              LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
+              destination);
           paymentMoney = distance * settingsModel!.data!.km!;
         }
         bitmapDescriptorto = await CustomeMarker(
           title: 'to'.tr(),
           location: location_control.text,
         ).toBitmapDescriptor().then((value) {
-          bitmapDescriptorto=value;
+          bitmapDescriptorto = value;
           setMarkers(
             Marker(
               markerId: const MarkerId("currentLocation"),
-              icon:bitmapDescriptorfrom!,
-
-              position: LatLng(currentLocation?.latitude??0,
-                  currentLocation?.longitude??0),
+              icon: bitmapDescriptorfrom!,
+              position: LatLng(currentLocation?.latitude ?? 0,
+                  currentLocation?.longitude ?? 0),
             ),
             Marker(
               markerId: MarkerId("destination"),
-
-              icon:value,
-              position:destination,
+              icon: value,
+              position: destination,
             ),
           );
         });
 
-
-
         getDirection(
-            LatLng(currentLocation!.latitude!, currentLocation!.longitude!), destination);
+            LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
+            destination);
         emit(SuccessSearchState());
       },
     );
   }
 
-
-
-
   search(String search) async {
-    placesList =[];
+    placesList = [];
     emit(LoadingSearchState());
-    final response = await api.searchOnMap("textquery",search,fields);
+    final response = await api.searchOnMap("textquery", search, fields);
     response.fold(
-          (l) => emit(FailureSearchState()),
-          (r) async {
-            placesList =r.candidates;
-
+      (l) => emit(FailureSearchState()),
+      (r) async {
+        placesList = r.candidates;
       },
     );
   }
-setSearchResult(LatLng latLong)async{
-  destination = latLong;
-  //todo => calculate the distance and price
-  if(destination.longitude!=0&&destination.latitude!=0){
-    distance =  calculateDistance(LatLng(currentLocation!.latitude!, currentLocation!.longitude!),destination);
-    paymentMoney = distance * settingsModel!.data!.km!;
+
+  setSearchResult(LatLng latLong) async {
+    destination = latLong;
+    //todo => calculate the distance and price
+    if (destination.longitude != 0 && destination.latitude != 0) {
+      distance = calculateDistance(
+          LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
+          destination);
+      paymentMoney = distance * settingsModel!.data!.km!;
+    }
+    bitmapDescriptorto = await CustomeMarker(
+      title: 'to'.tr(),
+      location: location_control.text,
+    ).toBitmapDescriptor().then((value) {
+      bitmapDescriptorto = value;
+      setMarkers(
+        Marker(
+          markerId: const MarkerId("currentLocation"),
+          icon: bitmapDescriptorfrom!,
+          position: LatLng(
+              currentLocation?.latitude ?? 0, currentLocation?.longitude ?? 0),
+        ),
+        Marker(
+          markerId: MarkerId("destination"),
+          icon: value,
+          position: destination,
+        ),
+      );
+    });
+
+    getDirection(
+        LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
+        destination);
+    emit(SuccessSearchState());
   }
-  bitmapDescriptorto = await CustomeMarker(
-    title: 'to'.tr(),
-    location: location_control.text,
-  ).toBitmapDescriptor().then((value) {
-    bitmapDescriptorto=value;
-    setMarkers(
-      Marker(
-        markerId: const MarkerId("currentLocation"),
-        icon:bitmapDescriptorfrom!,
 
-        position: LatLng(currentLocation?.latitude??0,
-            currentLocation?.longitude??0),
-      ),
-      Marker(
-        markerId: MarkerId("destination"),
-
-        icon:value,
-        position:destination,
-      ),
-    );
-  });
-
-
-
-  getDirection(
-      LatLng(currentLocation!.latitude!, currentLocation!.longitude!), destination);
-  emit(SuccessSearchState());
-
-}
-
-
-  changeRadioButton(value){
-  //setState(() {
+  changeRadioButton(value) {
+    //setState(() {
     payment = value.toString();
     emit(ChangeRadiState());
- // });
-}
+    // });
+  }
 
   BitmapDescriptor sourceIcon = BitmapDescriptor.defaultMarker;
   BitmapDescriptor destinationIcon = BitmapDescriptor.defaultMarker;
   BitmapDescriptor currentLocationIcon = BitmapDescriptor.defaultMarker;
 
-
   //*****************************************************************//
 
   Future<Null> _selectDate(BuildContext context) async {
-     datePicked = await showDatePicker(
+    datePicked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime.now(),
       lastDate: new DateTime(2030),
     );
 
-    if(datePicked != null && datePicked != date) {
-
-        date = datePicked;
-        dateFormatted = dateFormatter.format(datePicked!);
-        emit(DateUpdateState());
+    if (datePicked != null && datePicked != date) {
+      date = datePicked;
+      dateFormatted = dateFormatter.format(datePicked!);
+      emit(DateUpdateState());
     }
   }
 
   Future<Null> _selectTime(BuildContext context) async {
-     timePicked = await showTimePicker(
+    timePicked = await showTimePicker(
       context: context,
       initialTime: time,
     );
 
-    if(timePicked != null) {
+    if (timePicked != null) {
       //setState((){
-        time = timePicked!;
-        timeFormatted = time.format(context);
-        emit(TimeUpdateState());
-    //  });
+      time = timePicked!;
+      timeFormatted = time.format(context);
+      emit(TimeUpdateState());
+      //  });
     }
- // else{
- //   await selectDateAndTime(context);
- //    }
+    // else{
+    //   await selectDateAndTime(context);
+    //    }
   }
 
-  confirmPopUp(BuildContext context){
-    showDialog(context: context, builder: (context) {
-      return Dialog(
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
-          child: Stack(
-            alignment: Alignment.topLeft,
-            children: [
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Image.asset(ImageAssets.dateConfirm),
-                  Text("sure_about_date").tr(),
-                  Text(" $dateFormatted $timeFormatted",textDirection: TextDirection.ltr,),
-                  //Text("time: $timeFormatted"),
-                  ElevatedButton(
-                      onPressed: ()  {
-                    Navigator.pop(context);
+  confirmPopUp(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Stack(
+              alignment: Alignment.topLeft,
+              children: [
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.asset(ImageAssets.dateConfirm),
+                    Text("sure_about_date").tr(),
+                    Text(
+                      " $dateFormatted $timeFormatted",
+                      textDirection: TextDirection.ltr,
+                    ),
+                    //Text("time: $timeFormatted"),
+                    ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
 
-                     createScheduleTrip(tripType: flag==1?"with":"without", context: context);
-
-
-                  }, child: Text("confirm".tr()))
-
-                ],
-              ),
-              InkWell(
-                onTap: () async {
-
-              //   await selectDateAndTime(context);
-                 Navigator.pop(context);
-                },
-                  child: SvgPicture.asset("assets/icons/close.svg"))
-            ],
+                          createScheduleTrip(
+                              tripType: flag == 1 ? "with" : "without",
+                              context: context);
+                        },
+                        child: Text("confirm".tr()))
+                  ],
+                ),
+                InkWell(
+                    onTap: () async {
+                      //   await selectDateAndTime(context);
+                      Navigator.pop(context);
+                    },
+                    child: SvgPicture.asset("assets/icons/close.svg"))
+              ],
+            ),
           ),
-        ),
-      );
-    },);
- }
+        );
+      },
+    );
+  }
 
   Future<Null> selectDateAndTime(BuildContext context) async {
     await _selectDate(context);
-    if(datePicked!=null){
+    if (datePicked != null) {
       await _selectTime(context);
-      if(timePicked!=null){
+      if (timePicked != null) {
         confirmPopUp(context);
       }
-
     }
-
-
   }
 
-  deleteUser(BuildContext context)async{
-  loadingDialog();
+  deleteUser(BuildContext context) async {
+    loadingDialog();
     final response = await api.delete();
     response.fold((l) {
       emit(FailedDeleteUser());
       Navigator.pop(context);
       errorGetBar("failed to delete user");
-      } ,
-            (r) {
-         if(r.code==200){
-           emit(SuccessDeleteUser());
-           Preferences.instance.clearShared();
-           Navigator.pop(context);
-           Navigator.pushReplacementNamed(context, Routes.loginRoute);
-         }
-         else{
-           emit(FailedDeleteUser());
-           Navigator.pop(context);
-           errorGetBar(r.message??"failed to delete user");
-         }
+    }, (r) {
+      if (r.code == 200) {
+        emit(SuccessDeleteUser());
+        Preferences.instance.clearShared();
+        Navigator.pop(context);
+        Navigator.pushReplacementNamed(context, Routes.loginRoute);
+      } else {
+        emit(FailedDeleteUser());
+        Navigator.pop(context);
+        errorGetBar(r.message ?? "failed to delete user");
+      }
     });
   }
 
-
   Future<String?> _getId() async {
     var deviceInfo = DeviceInfoPlugin();
-    if (Platform.isIOS) { // import 'dart:io'
+    if (Platform.isIOS) {
+      // import 'dart:io'
       var iosDeviceInfo = await deviceInfo.iosInfo;
       return iosDeviceInfo.identifierForVendor; // unique ID on iOS
-    } else if(Platform.isAndroid) {
+    } else if (Platform.isAndroid) {
       var androidDeviceInfo = await deviceInfo.androidInfo;
       return androidDeviceInfo.id; // unique ID on Android
     }
   }
 
   DeleteModel? deleteModel;
-  logout(BuildContext context)async{
-
+  logout(BuildContext context) async {
     emit(LoadingToLogOutState());
     loadingDialog();
     String? token = await _getId();
     Preferences.instance.clearShared();
     Navigator.pop(context);
     emit(SuccessToLogOutState());
-    Navigator.pushNamedAndRemoveUntil(context,
-        Routes.initialRoute, (route) => false);
+    Navigator.pushNamedAndRemoveUntil(
+        context, Routes.initialRoute, (route) => false);
     // if(token!=null){
     //   final response = await api.logout(token);
     //   response.fold((l) {
@@ -785,188 +773,167 @@ setSearchResult(LatLng latLong)async{
   }
 
   HomeModel? homeModel;
-  getHomeData(BuildContext context)async{
+  getHomeData(BuildContext context) async {
     //loadingDialog();
     emit(LoadingHomeDataState());
-   final response = await api.getHomeData();
-   response.fold((l) {
-     emit(ErrorGettingHomeDataState());
-     //Navigator.pop(context);
-   }, (r) {
-
-     homeModel = r ;
-     if (r.data!.user!.status=='block'){
-
-       print('lllllllllllllllblock');
-       Preferences.instance.clearShared();
-       Navigator.pushNamedAndRemoveUntil(context,
-           Routes.initialRoute, (route) => false);
-     }else{print('lllllllllllllllactive');}
-    // Navigator.pop(context);
-     emit(SuccessGettingHomeData());
-   });
+    final response = await api.getHomeData();
+    response.fold((l) {
+      emit(ErrorGettingHomeDataState());
+      //Navigator.pop(context);
+    }, (r) {
+      homeModel = r;
+      if (r.data!.user!.status == 'block') {
+        print('lllllllllllllllblock');
+        Preferences.instance.clearShared();
+        Navigator.pushNamedAndRemoveUntil(
+            context, Routes.initialRoute, (route) => false);
+      } else {
+        print('lllllllllllllllactive');
+      }
+      // Navigator.pop(context);
+      emit(SuccessGettingHomeData());
+    });
   }
+
   CarouselController carouselController = CarouselController();
 
-  SettingsModel settingsModel=SettingsModel();
-bool isLoadingSettings = true;
-  getSettings()async{
+  SettingsModel settingsModel = SettingsModel();
+  bool isLoadingSettings = true;
+  getSettings() async {
     emit(LoadingSettings());
     isLoadingSettings = true;
-  final response = await  api.getSettings();
-  response.fold((l) {
-    emit(FailureSettings());
-  }, (r) {
-     if(r.code==200){
-       settingsModel = r;
-       isLoadingSettings = false;
-       emit(SuccessSettings());
-     }
-
-  });
+    final response = await api.getSettings();
+    response.fold((l) {
+      emit(FailureSettings());
+    }, (r) {
+      if (r.code == 200) {
+        settingsModel = r;
+        isLoadingSettings = false;
+        emit(SuccessSettings());
+      }
+    });
   }
 
-  CheckTripStatusModel checkTripStatusModel=CheckTripStatusModel();
+  CheckTripStatusModel checkTripStatusModel = CheckTripStatusModel();
 
-  getTripStatus()async{
+  getTripStatus() async {
     emit(LoadingCheckTripStatusState());
 
-  final response = await  api.checkTripStatus();
-  response.fold((l) {
-    emit(FailureCheckTripStatusState());
-  }, (r) {
-           checkTripStatusModel = r;
-       emit(SuccessCheckTripStatusState());
-  });
+    final response = await api.checkTripStatus();
+    response.fold((l) {
+      emit(FailureCheckTripStatusState());
+    }, (r) {
+      checkTripStatusModel = r;
+      emit(SuccessCheckTripStatusState());
+    });
   }
 
+  CheckTripStatusModel checkTripStatusModelOfDriver = CheckTripStatusModel();
 
-  CheckTripStatusModel checkTripStatusModelOfDriver=CheckTripStatusModel();
-
-  getDriverTripStatus(BuildContext context)async{
+  getDriverTripStatus(BuildContext context) async {
     emit(LoadingCheckTripStatusState());
 
-  final response = await  api.checkTripStatus();
-  response.fold((l) {
-    emit(FailureCheckTripStatusState());
-  }, (r) {
-    checkTripStatusModelOfDriver = r;
+    final response = await api.checkTripStatus();
+    response.fold((l) {
+      emit(FailureCheckTripStatusState());
+    }, (r) {
+      checkTripStatusModelOfDriver = r;
 
-    print ('lllllllllllllllllllllll trip in progress');
+      print('lllllllllllllllllllllll trip in progress');
 
-           if (r.data != null){
-             // رحلة فورية
+      if (r.data != null) {
+        // رحلة فورية
 
-             if (r.data!.tripType == 'quick'){
-               if(r.data!.type =='progress'){
-                 context.read<HomeDriverCubit>().setDestination(r.data!.toLong!, r.data!.toLat!);
-                 context.read<HomeDriverCubit>().setStartLocation(r.data!.fromLong!, r.data!.fromLat!);
-                 context.read<HomeDriverCubit>().startQuickTripModel.data=r.data;
-                 Navigator.pushNamed(
-                     context, Routes.QuickTripScreen,
-                     arguments: r.data);
-               }
-             }
-             else{
-               // بوجهة
-              // if (r.data!.tripType == 'with'){
+        if (r.data!.tripType == 'quick') {
+          if (r.data!.type == 'progress') {
+            context
+                .read<HomeDriverCubit>()
+                .setDestination(r.data!.toLong!, r.data!.toLat!);
+            context
+                .read<HomeDriverCubit>()
+                .setStartLocation(r.data!.fromLong!, r.data!.fromLat!);
+            context.read<HomeDriverCubit>().startQuickTripModel.data = r.data;
+            Navigator.pushNamed(context, Routes.QuickTripScreen,
+                arguments: r.data);
+          }
+        } else {
+          // بوجهة
+          // if (r.data!.tripType == 'with'){
 
+          if (r.data!.type == 'progress') {
+            context.read<DriverTripCubit>().tripStages = 2;
+            //  context.read<DriverTripCubit>().getEndStage();
+            Navigator.pushNamed(context, Routes.DriverTripScreen,
+                arguments: r.data);
+          } else if (r.data!.type == 'accept') {
+            //  context.read<DriverTripCubit>().getStartStage;
+            context.read<DriverTripCubit>().tripStages = 1;
+            print(
+                'gggggggggggggggggggg ${context.read<DriverTripCubit>().tripStages}');
+            Navigator.pushNamed(context, Routes.DriverTripScreen,
+                arguments: r.data);
+          }
 
-                 if(r.data!.type =='progress'){
-                   context.read<DriverTripCubit>().tripStages =2;
-                 //  context.read<DriverTripCubit>().getEndStage();
-                   Navigator.pushNamed(context,
-                       Routes.DriverTripScreen,
-                       arguments:
-                      r.data);
-                 }else if(r.data!.type =='accept'){
-                 //  context.read<DriverTripCubit>().getStartStage;
-                   context.read<DriverTripCubit>().tripStages =1;
-                   print('gggggggggggggggggggg ${context.read<DriverTripCubit>().tripStages}');
-                   Navigator.pushNamed(context,
-                       Routes.DriverTripScreen,
-                       arguments:
-                       r.data);
-                 }
-
-
-             //  }
-               // بدون وجهة
-               // else{
-               //   if(r.data!.type =='progress'){
-               //
-               //
-               //   }else if(r.data!.type =='accept'){
-               //
-               //   }
-               //
-               // }
-
-
-
-
-
-
-             }
-
-           }
-       emit(SuccessCheckTripStatusState());
-  });
+          //  }
+          // بدون وجهة
+          // else{
+          //   if(r.data!.type =='progress'){
+          //
+          //
+          //   }else if(r.data!.type =='accept'){
+          //
+          //   }
+          //
+          // }
+        }
+      }
+      emit(SuccessCheckTripStatusState());
+    });
   }
-  CheckTripStatusModel checkTripStatusModelOfUser=CheckTripStatusModel();
 
-  getUserTripStatus(BuildContext context)async{
+  CheckTripStatusModel checkTripStatusModelOfUser = CheckTripStatusModel();
+
+  getUserTripStatus(BuildContext context) async {
     emit(LoadingCheckTripStatusState());
 
-  final response = await  api.checkTripStatus();
-  response.fold((l) {
-    emit(FailureCheckTripStatusState());
-  }, (r) {
-    checkTripStatusModelOfUser = r;
+    final response = await api.checkTripStatus();
+    response.fold((l) {
+      emit(FailureCheckTripStatusState());
+    }, (r) {
+      checkTripStatusModelOfUser = r;
 
-    print ('lllllllllllllllllllllll trip in progress');
+      print('lllllllllllllllllllllll trip in progress');
 
-           if (r.data != null){
+      if (r.data != null) {
 //if(r.data!.tripType!= "schedule"){
 
-  if(r.data!.type =='progress'){
-    context.read<UserTripCubit>().tripStages =2;
+        if (r.data!.type == 'progress') {
+          context.read<UserTripCubit>().tripStages = 2;
 
-    Navigator.pushNamed(context,
-        Routes.UserTripScreen,
-        arguments:
-        r.data);
-  }else if(r.data!.type =='accept'){
-    //  context.read<DriverTripCubit>().getStartStage;
-    context.read<UserTripCubit>().tripStages =1;
-    Navigator.pushNamed(context,
-        Routes.UserTripScreen,
-        arguments:
-        r.data);
-  }else if(r.data!.type == 'new'){
-    context.read<UserTripCubit>().tripStages =0;
-    Navigator.pushNamed(context,
-        Routes.UserTripScreen,
-        arguments:
-        r.data);
-  }
-  print("llllllllllllll${r.data!.type}");
+          Navigator.pushNamed(context, Routes.UserTripScreen,
+              arguments: r.data);
+        } else if (r.data!.type == 'accept') {
+          //  context.read<DriverTripCubit>().getStartStage;
+          context.read<UserTripCubit>().tripStages = 1;
+          Navigator.pushNamed(context, Routes.UserTripScreen,
+              arguments: r.data);
+        } else if (r.data!.type == 'new') {
+          context.read<UserTripCubit>().tripStages = 0;
+          Navigator.pushNamed(context, Routes.UserTripScreen,
+              arguments: r.data);
+        }
+        print("llllllllllllll${r.data!.type}");
 
 // }
 // else{
 //
 // }
-
-
-
-           }
-       emit(SuccessCheckTripStatusState());
-  });
+      }
+      emit(SuccessCheckTripStatusState());
+    });
   }
 
   void launchPhoneDialer(String phoneNumber) async {
-
-
     String url = 'tel:${settingsModel.data!.phone}';
 
     if (await canLaunchUrl(Uri.parse(url))) {
@@ -993,93 +960,88 @@ bool isLoadingSettings = true;
   }
 
   NotificationModel? notificationModel;
-  getNotification()async{
+  getNotification() async {
     emit(LoadingNotificationState());
     final response = await api.getNotification();
     response.fold((l) {
       emit(FailureNotificationState());
     }, (r) {
-      notificationModel = r ;
+      notificationModel = r;
       // Calculate the time difference
       emit(SuccessNotificationState());
     });
-
   }
 
   FavouriteModel? favouriteModel;
-  getFavourite()async{
+  getFavourite() async {
     emit(LoadingFavouriteState());
     final response = await api.getFavourite();
     response.fold((l) {
       emit(FailureFavouriteState());
     }, (r) {
-      favouriteModel = r ;
+      favouriteModel = r;
       // Calculate the time difference
       emit(SuccessFavouriteState());
     });
-
   }
 
-  deleteFavourite({required int addressId , required BuildContext context})async{
+  deleteFavourite(
+      {required int addressId, required BuildContext context}) async {
     loadingDialog();
-     final response = await api.deleteFavourite(addressId);
-     response.fold((l) {
-       Navigator.pop(context);
-       emit(FailureDeletingFavourite());
-     }, (r) {
-       if(r.code==200){
-         Navigator.pop(context);
-         getFavourite();
-         emit(SuccessDeletingFavourite());
-         successGetBar(r.message);
-       }
-       else if(r.code==404){
-         Navigator.pop(context);
-         emit(NoAdressFound());
-         errorGetBar(r.message!);
-       }
-       else{
-         Navigator.pop(context);
-         emit(FailureDeletingFavourite());
-         errorGetBar(r.message!);
-       }
-     });
+    final response = await api.deleteFavourite(addressId);
+    response.fold((l) {
+      Navigator.pop(context);
+      emit(FailureDeletingFavourite());
+    }, (r) {
+      if (r.code == 200) {
+        Navigator.pop(context);
+        getFavourite();
+        emit(SuccessDeletingFavourite());
+        successGetBar(r.message);
+      } else if (r.code == 404) {
+        Navigator.pop(context);
+        emit(NoAdressFound());
+        errorGetBar(r.message!);
+      } else {
+        Navigator.pop(context);
+        emit(FailureDeletingFavourite());
+        errorGetBar(r.message!);
+      }
+    });
   }
 
-
-
-  addFavourite({required String address,required String lat ,required String  long, required BuildContext context})async{
-
+  addFavourite(
+      {required String address,
+      required String lat,
+      required String long,
+      required BuildContext context}) async {
     emit(LoadingAddToFavourite());
     loadingDialog();
 
     // Check if the address already exists in the favoriteModel
-  if(favouriteModel != null && favouriteModel?.data != null){
-    for(FavouriteData data in favouriteModel!.data!){
-
-      if(data.address?.trim() == address.trim()){
-        Navigator.pop(context);
-        emit(AddressAlreadyExists());
-        successGetBar("address_exist".tr());
-        return;
+    if (favouriteModel != null && favouriteModel?.data != null) {
+      for (FavouriteData data in favouriteModel!.data!) {
+        if (data.address?.trim() == address.trim()) {
+          Navigator.pop(context);
+          emit(AddressAlreadyExists());
+          successGetBar("address_exist".tr());
+          return;
+        }
       }
     }
-  }
 
-
-    final response = await api.addFavourite(address: address,lat: lat,long:long );
+    final response =
+        await api.addFavourite(address: address, lat: lat, long: long);
     response.fold((l) {
       Navigator.pop(context);
       emit(FailureAddingFavourite());
     }, (r) {
-      if(r.code==200 || r.code ==201){
+      if (r.code == 200 || r.code == 201) {
         Navigator.pop(context);
         getFavourite();
         emit(SuccessAddingFavourite());
         successGetBar(r.message);
-      }
-
-      else{
+      } else {
         Navigator.pop(context);
         emit(FailureAddingFavourite());
         errorGetBar(r.message!);
@@ -1089,209 +1051,161 @@ bool isLoadingSettings = true;
 
   CreateTripModel? createTripModel;
 
-  createTrip({required String tripType , required BuildContext context})async{
-print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-    if(address!=null && currentLocation!=null){
-       emit(LoadingCreateTripState());
+  createTrip({required String tripType, required BuildContext context}) async {
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    if (address != null && currentLocation != null) {
+      emit(LoadingCreateTripState());
       loadingDialog();
 
-      final response = await  api.createTrip(
-          tripType: tripType, fromAddress: address!, fromLng: currentLocation!.longitude!,
+      final response = await api.createTrip(
+          tripType: tripType,
+          fromAddress: address!,
+          fromLng: currentLocation!.longitude!,
           fromLat: currentLocation!.latitude!,
-          toAddress:tripType=="with"?
-          location_control.text :null,
-          toLat:tripType=="with"?
-          destination.latitude:null,
-          toLng:tripType=="with"?
-          destination.longitude:null);
-          response.fold((l) {
-           emit(FailureCreateTrip());
-         //  Navigator.pop(context);
-           errorGetBar("couldn't create trip");
-          }, (r) {
-      if(r.code==200 || r.code ==201){
-        createTripModel = r;
-        Navigator.pop(context);
-        print(createTripModel);
-       // bottomContainerLoadingState = true;
-        if (r.data == null)
-        {
-          errorGetBar(r.message!);
-        }else{
-
-          Navigator.pushNamed(context,
-              Routes.UserTripScreen,
-              arguments:
-             r.data);
-         // currentEnumStatus = MyEnum.load;
-          emit(SuccessCreateTripState());
-          successGetBar(r.message!);
-        }
-
-
-      }
-
-      else if(r.code==502|| r.code==202){
-        Navigator.pop(context);
-        emit(AlreadyInTrip());
-        errorGetBar(r.message??"Already in trip");
-      }
-      else{
-        Navigator.pop(context);
+          toAddress: tripType == "with" ? location_control.text : null,
+          toLat: tripType == "with" ? destination.latitude : null,
+          toLng: tripType == "with" ? destination.longitude : null);
+      response.fold((l) {
         emit(FailureCreateTrip());
-        errorGetBar(r.message??"something wrong");
-      }
+        //  Navigator.pop(context);
+        errorGetBar("couldn't create trip");
+      }, (r) {
+        if (r.code == 200 || r.code == 201) {
+          createTripModel = r;
+          Navigator.pop(context);
+          print(createTripModel);
+          // bottomContainerLoadingState = true;
+          if (r.data == null) {
+            errorGetBar(r.message!);
+          } else {
+            Navigator.pushNamed(context, Routes.UserTripScreen,
+                arguments: r.data);
+            // currentEnumStatus = MyEnum.load;
+            emit(SuccessCreateTripState());
+            successGetBar(r.message!);
+          }
+        } else if (r.code == 502 || r.code == 202) {
+          Navigator.pop(context);
+          emit(AlreadyInTrip());
+          errorGetBar(r.message ?? "Already in trip");
+        } else {
+          Navigator.pop(context);
+          emit(FailureCreateTrip());
+          errorGetBar(r.message ?? "something wrong");
+        }
       });
 
-
-
-
-     //  // with destination
-     // if(flag==1){
-     //   final response = await  api.createTrip(
-     //       tripType: "with", fromAddress: address!, fromLng: currentLocation!.longitude!,
-     //       fromLat: currentLocation!.latitude!,toAddress:location_control.text ,
-     //       toLat: destination.latitude,toLng:destination.longitude );
-     // }
-     // //without
-     // else{
-     //   final response = await  api.createTrip(
-     //       tripType: "without", fromAddress: address!, fromLng: currentLocation!.longitude!,
-     //       fromLat: currentLocation!.latitude!);
-     // }
-    }
-    else{
+      //  // with destination
+      // if(flag==1){
+      //   final response = await  api.createTrip(
+      //       tripType: "with", fromAddress: address!, fromLng: currentLocation!.longitude!,
+      //       fromLat: currentLocation!.latitude!,toAddress:location_control.text ,
+      //       toLat: destination.latitude,toLng:destination.longitude );
+      // }
+      // //without
+      // else{
+      //   final response = await  api.createTrip(
+      //       tripType: "without", fromAddress: address!, fromLng: currentLocation!.longitude!,
+      //       fromLat: currentLocation!.latitude!);
+      // }
+    } else {
       errorGetBar("some required field is null we can't make the request");
     }
-
   }
 
   CreateScedualTripModel? createScedualTripModel;
-  createScheduleTrip({required String tripType, required BuildContext context}) async {
-
-    if (address != null && currentLocation != null && date != null && time != null) {
-
+  createScheduleTrip(
+      {required String tripType, required BuildContext context}) async {
+    if (address != null &&
+        currentLocation != null &&
+        date != null &&
+        time != null) {
       emit(LoadingCreateScheduelTripState());
       loadingDialog();
 
-
-      String formattedDate  =intl. DateFormat('yyyy-M-d').format(date!);
+      String formattedDate = intl.DateFormat('yyyy-M-d').format(date!);
       // DateTime dateTime = DateTime(0, 1, 1, time.hour, time.minute, 0);
-      String formattedTime  = '${time.hour}:${time.minute}:00';
+      String formattedTime = '${time.hour}:${time.minute}:00';
       //
 
       try {
-
         final response = await api.createScheduleTrip(
-          tripType: tripType,
-          fromAddress: address!,
-          fromLng: currentLocation!.longitude!.toString(),
-          fromLat: currentLocation!.latitude!.toString(),
-          toAddress: tripType == "with" ? location_control.text : null,
-          toLat: tripType == "with" ? destination.latitude.toString() : null,
-          toLng: tripType == "with" ? destination.longitude .toString(): null,
-
-          date: formattedDate ,
-          time: formattedTime
-        );
+            tripType: tripType,
+            fromAddress: address!,
+            fromLng: currentLocation!.longitude!.toString(),
+            fromLat: currentLocation!.latitude!.toString(),
+            toAddress: tripType == "with" ? location_control.text : null,
+            toLat: tripType == "with" ? destination.latitude.toString() : null,
+            toLng: tripType == "with" ? destination.longitude.toString() : null,
+            date: formattedDate,
+            time: formattedTime);
 
         response.fold((l) {
-           Navigator.pop(context);
+          Navigator.pop(context);
 
           emit(FailureCreateSchedualTrip());
           errorGetBar("failed to create schedule trip");
         }, (r) {
-
           if (r.code == 200 || r.code == 201) {
             successGetBar(r.message);
 
             emit(SuccessCreateSchedualTripState());
-           // bottomContainerLoadingState = true;
-
+            // bottomContainerLoadingState = true;
           } else {
-             Navigator.pop(context);
+            Navigator.pop(context);
             // Navigator.pop(context);
-             errorGetBar(r.message??"something wrong");
+            errorGetBar(r.message ?? "something wrong");
             emit(FailureCreateSchedualTrip());
           }
         });
       } catch (e) {
         emit(FailureCreateSchedualTrip());
-        errorGetBar(e.toString()??"something wrong");
+        errorGetBar(e.toString() ?? "something wrong");
       }
-    }
-
-    else {
+    } else {
       Navigator.pop(context);
       errorGetBar("Some required field is null. We can't make the request.");
-
     }
   }
 
-
-
-     cancelTrip(BuildContext context
-  ,  { int? tripId}
-    )async{
-
-
-
-    if(tripId != null){
-
+  cancelTrip(BuildContext context, {int? tripId}) async {
+    if (tripId != null) {
       emit(CancelTripLoading());
       final response = await api.cancelUserTrip(tripId: tripId);
       response.fold((l) {
         errorGetBar("something wrong");
         emit(CancelTripFailure());
       }, (r) {
-
         emit(CancelTripSuccess());
 
-
-
-
-        if(r.data!= null){
-
+        if (r.data != null) {
           Navigator.pushNamedAndRemoveUntil(
               context, Routes.homeRoute, (route) => false);
         }
         successGetBar(r.message);
-
-
       });
-
-    }else{
-
-
-      if(createTripModel!=null){
+    } else {
+      if (createTripModel != null) {
         emit(CancelTripLoading());
-        final response = await api.cancelUserTrip(tripId: createTripModel!.data!.id!);
+        final response =
+            await api.cancelUserTrip(tripId: createTripModel!.data!.id!);
         response.fold((l) {
           errorGetBar("something wrong");
           emit(CancelTripFailure());
         }, (r) {
-
           emit(CancelTripSuccess());
 
-
-
-
-          if(r.data!= null){
-
+          if (r.data != null) {
             Navigator.pushNamedAndRemoveUntil(
                 context, Routes.homeRoute, (route) => false);
           }
           successGetBar(r.message);
-
-
         });
-      }
-      else{
+      } else {
         errorGetBar("there is no trip to cancel it");
       }
     }
-
-}
+  }
 
   //
   // double progressValue = 0.0;
@@ -1311,42 +1225,35 @@ print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
   //   });
   // }
 
-
-
-
-
-
   double progressValue = 0.0;
   late Timer timer;
-  final Duration _duration = const Duration(seconds: 10);
+  final Duration _duration = const Duration(minutes: 12);
   void startTimer(BuildContext context) {
-
     const oneSecond = const Duration(seconds: 1);
     timer = Timer.periodic(oneSecond, (Timer timer) {
+      if (progressValue <= 1.0) {
+        print('sssssssss  $progressValue');
+        progressValue += 1.0 / (_duration.inSeconds);
+      } else {
+        // context.read<UserTripCubit>().getNoDriverStage();
+        print('llllllllllllllllllllllll');
+        timer.cancel();
+        // context.read<UserTripCubit>().tripStages =4;
+        emit(SuccessIndicatorState());
 
-        if (progressValue <= 1.0) {
-          print ('sssssssss  $progressValue');
-          progressValue += 1.0 / (_duration.inSeconds);
-        } else {
-         // context.read<UserTripCubit>().getNoDriverStage();
-          print('llllllllllllllllllllllll');
-          timer.cancel();
-         // context.read<UserTripCubit>().tripStages =4;
-          emit(SuccessIndicatorState());
-
-          //currentEnumStatus = MyEnum.failure;
-
-        }
-      });
-  emit(LoadingIndicatorState());
+        //currentEnumStatus = MyEnum.failure;
+      }
+    });
+    emit(LoadingIndicatorState());
   }
 
-  Widget chooseWidget(MyEnum state){
-    switch(state){
-
+  Widget chooseWidget(MyEnum state) {
+    switch (state) {
       case MyEnum.defaultState:
         emit(changingStatus());
-        return DefaultWidget(isATrip: false,);
+        return DefaultWidget(
+          isATrip: false,
+        );
       case MyEnum.load:
         emit(changingStatus());
         return LoadingWidget();
@@ -1358,9 +1265,11 @@ print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         return FailureWidget();
       default:
         emit(changingStatus());
-        return DefaultWidget(isATrip: false,);
+        return DefaultWidget(
+          isATrip: false,
+        );
     }
- }
+  }
 
   double calculateDistance(LatLng point1, LatLng point2) {
     const double earthRadius = 6371.0; // Earth radius in kilometers
@@ -1386,7 +1295,7 @@ print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
   }
 
   // checkDocuments
-  CheckDocumentsModel checkDocumentsModel=  CheckDocumentsModel ();
+  CheckDocumentsModel checkDocumentsModel = CheckDocumentsModel();
 
   checkDocuments(BuildContext context) async {
     emit(LoadingCheckDocumentsStatus());
@@ -1395,20 +1304,21 @@ print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
       emit(FailureCheckDocumentsState());
     }, (r) {
       checkDocumentsModel = r;
-      if( r.data!.driverDetails == 1 && r.data!.driverDocuments ==1){
-        if ( r.data!.status ==1){
-        //  successGetBar('تمت الموافقة علي طلبك');
+      if (r.data!.driverDetails == 1 && r.data!.driverDocuments == 1) {
+        if (r.data!.status == 1) {
+          //  successGetBar('تمت الموافقة علي طلبك');
 
           Navigator.pushNamedAndRemoveUntil(
               context, Routes.homedriverRoute, (route) => false);
-        }else
+        } else
           Navigator.pushNamedAndRemoveUntil(
               context, Routes.driverwaitScreenRoute, (route) => false);
       }
       emit(SuccessCheckDocumentsState());
     });
-  }  // checkDocumentsHome
-  CheckDocumentsModel checkDocumentsModelHome=  CheckDocumentsModel ();
+  } // checkDocumentsHome
+
+  CheckDocumentsModel checkDocumentsModelHome = CheckDocumentsModel();
 
   checkDocumentsHome(BuildContext context) async {
     emit(LoadingCheckDocumentsStatus());
@@ -1418,24 +1328,22 @@ print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     }, (r) {
       checkDocumentsModelHome = r;
 
-        if ( r.data!.status ==0) {
-          Preferences.instance.clearShared();
+      if (r.data!.status == 0) {
+        Preferences.instance.clearShared();
 
-          Navigator.pushNamedAndRemoveUntil(context,
-              Routes.initialRoute, (route) => false);
-
-        }
+        Navigator.pushNamedAndRemoveUntil(
+            context, Routes.initialRoute, (route) => false);
+      }
       emit(SuccessCheckDocumentsState());
-
     });
   }
 
 // Future<List<String>> _fetchSuggestions(String searchValue) async {
-  //   await Future.delayed(Duration(milliseconds: 750));
-  //   List<String> _suggestions = ['Afeganistan', 'Albania', 'Algeria', 'Australia', 'Brazil', 'German', 'Madagascar', 'Mozambique', 'Portugal', 'Zambia'];
-  //   List<String> _filteredSuggestions = _suggestions.where((element) {
-  //     return element.toLowerCase().contains(searchValue.toLowerCase());
-  //   }).toList();
-  //   return _filteredSuggestions;
-  // }
+//   await Future.delayed(Duration(milliseconds: 750));
+//   List<String> _suggestions = ['Afeganistan', 'Albania', 'Algeria', 'Australia', 'Brazil', 'German', 'Madagascar', 'Mozambique', 'Portugal', 'Zambia'];
+//   List<String> _filteredSuggestions = _suggestions.where((element) {
+//     return element.toLowerCase().contains(searchValue.toLowerCase());
+//   }).toList();
+//   return _filteredSuggestions;
+// }
 }

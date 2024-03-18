@@ -2,11 +2,10 @@ name: hero
 description: A new Flutter project.
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-version: 1.0.0+2
+version: 1.0.0+3
 
 environment:
   sdk: '>=3.0.6 <4.0.0'
-
 dependencies:
   flutter:
     sdk: flutter
@@ -137,8 +136,8 @@ flutter_icons:
   android: true
   ios: true
   remove_alpha_ios: true
-  image_path: "assets/images/requestlocation.png"
-  adaptive_icon_foreground: "assets/images/requestlocation.png"
+  image_path: "assets/images/hero.png"
+  adaptive_icon_foreground: "assets/images/hero.png"
 
 
 

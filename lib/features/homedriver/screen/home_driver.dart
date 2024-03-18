@@ -1,15 +1,14 @@
 import 'dart:async';
-
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hero/features/bike_details/cubit/bike_details_cubit.dart';
 import 'package:hero/features/homedriver/screen/pages/home_map_driver/screens/home_map_driver.dart';
 import 'package:hero/features/homedriver/screen/pages/home_map_driver/screens/immediate_trip_driver.dart';
 import 'package:hero/features/homedriver/screen/widgets/custom_slider.dart';
 import 'package:hero/features/homedriver/screen/widgets/drawer_list_item.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import '../../../config/routes/app_routes.dart';
 import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/assets_manager.dart';
@@ -23,7 +22,6 @@ import '../cubit/home_driver_cubit.dart';
 
 class HomeDriver extends StatefulWidget {
   const HomeDriver({super.key});
-
   @override
   State<HomeDriver> createState() => _HomeDriverState();
 }
@@ -35,14 +33,13 @@ class _HomeDriverState extends State<HomeDriver> with TickerProviderStateMixin {
     // TODO: implement initState
     super.initState();
     context.read<HomeCubit>().getUserData();
+    context.read<BikeDetailsCubit>().getCities();
     FirebaseMessaging.onMessage.listen((event) {
-      context
-          .read<HomeCubit>()
-          .checkDocumentsHome(context);
+      context.read<HomeCubit>().checkDocumentsHome(context);
     });
-   Timer.periodic(Duration(minutes: 3), (timer) {
-     context.read<HomeDriverCubit>().updateDriverLocation();
-   });
+    Timer.periodic(Duration(minutes: 3), (timer) {
+      context.read<HomeDriverCubit>().updateDriverLocation();
+    });
     context.read<HomeCubit>().getDriverTripStatus(context);
     context.read<HomeDriverCubit>().tabsController =
         TabController(length: 2, vsync: this);
@@ -106,59 +103,54 @@ class _HomeDriverState extends State<HomeDriver> with TickerProviderStateMixin {
                   ],
                 ),
               ),
-    BlocConsumer<HomeDriverCubit, HomeDriverState>(
-    listener: (context, state) {},
-    builder: (context, state) =>
-        ConditionalBuilder(
-       condition: cubit.driverDataModel.data != null ,
-       fallback: (context) => SizedBox(
-         height: MediaQuery.of(context).size.width/4,
-         child:  CircularProgressIndicator(
-           color: AppColors.primary,
-         ),
-       ),
-        builder: (context) =>  CustomSlider(
-                    items:
-                  // [
-                  //   CustomNetworkImage(
-                  //                boxFit: BoxFit.fill,
-                  //                imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Test-Logo.svg/1175px-Test-Logo.svg.png?20150906031702",
-
-                  //                errorWidget: Image.asset(
-                  //                  ImageAssets.mapIcon,
-                  //                  fit: BoxFit.contain,
-                  //                ),
-                  //                width: double.maxFinite),  CustomNetworkImage(
-                  //                boxFit: BoxFit.fill,
-                  //                imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Test-Logo.svg/1175px-Test-Logo.svg.png?20150906031702",
-
-                  //                errorWidget: Image.asset(
-                  //                  ImageAssets.mapIcon,
-                  //                  fit: BoxFit.contain,
-                  //                ),
-                  //                width: double.maxFinite),
-                  // ]
-
-
-                     cubit.driverDataModel.data!.sliders!
-                         .map((e) => GestureDetector(
-                               onTap: () async {
-                                 final _url = Uri.parse(e.link!);
-                                 await launchUrl(_url,
-                                     mode: LaunchMode.externalApplication);
-                               },
-                               child: CustomNetworkImage(
-                                   boxFit: BoxFit.fill,
-                                   imageUrl: e.image!,
-                                   errorWidget: Image.asset(
-                                     ImageAssets.logoImage,
-                                     fit: BoxFit.contain,
-                                   ),
-                                   width: double.maxFinite),
-                             ))
-                         .toList(),
+              BlocConsumer<HomeDriverCubit, HomeDriverState>(
+                listener: (context, state) {},
+                builder: (context, state) => ConditionalBuilder(
+                  condition: cubit.driverDataModel.data != null,
+                  fallback: (context) => SizedBox(
+                    height: 1,
                   ),
-     ),
+                  builder: (context) => CustomSlider(
+                    items:
+                        // [
+                        //   CustomNetworkImage(
+                        //                boxFit: BoxFit.fill,
+                        //                imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Test-Logo.svg/1175px-Test-Logo.svg.png?20150906031702",
+
+                        //                errorWidget: Image.asset(
+                        //                  ImageAssets.mapIcon,
+                        //                  fit: BoxFit.contain,
+                        //                ),
+                        //                width: double.maxFinite),  CustomNetworkImage(
+                        //                boxFit: BoxFit.fill,
+                        //                imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Test-Logo.svg/1175px-Test-Logo.svg.png?20150906031702",
+
+                        //                errorWidget: Image.asset(
+                        //                  ImageAssets.mapIcon,
+                        //                  fit: BoxFit.contain,
+                        //                ),
+                        //                width: double.maxFinite),
+                        // ]
+
+                        cubit.driverDataModel.data!.sliders!
+                            .map((e) => GestureDetector(
+                                  onTap: () async {
+                                    final _url = Uri.parse(e.link!);
+                                    await launchUrl(_url,
+                                        mode: LaunchMode.externalApplication);
+                                  },
+                                  child: CustomNetworkImage(
+                                      boxFit: BoxFit.fill,
+                                      imageUrl: e.image!,
+                                      errorWidget: Image.asset(
+                                        ImageAssets.logoImage,
+                                        fit: BoxFit.contain,
+                                      ),
+                                      width: double.maxFinite),
+                                ))
+                            .toList(),
+                  ),
+                ),
               ),
             ],
           ),
@@ -248,6 +240,8 @@ class _HomeDriverState extends State<HomeDriver> with TickerProviderStateMixin {
                             Navigator.pushNamed(
                                 context, Routes.notificationRoute);
                           } else if (index == 4) {
+                            context.read<BikeDetailsCubit>().getDriverData();
+
                             ///  BIKE INFORMATION
                             Navigator.pop(context);
                             Navigator.of(context).pushNamed(

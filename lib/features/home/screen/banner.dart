@@ -25,7 +25,8 @@ class _BannerWidgetState extends State<BannerWidget> {
     if (widget.sliderData.isEmpty) {
       return Container();
     } else {
-      return Column(
+      return Stack(
+        alignment: Alignment.bottomCenter,
         children: [
           CarouselSlider(
             options: CarouselOptions(
@@ -37,7 +38,7 @@ class _BannerWidgetState extends State<BannerWidget> {
                 enlargeCenterPage: true,
                 enableInfiniteScroll: false,
                 autoPlay: true,
-                height: MediaQuery.of(context).size.height * 0.18,
+                height: MediaQuery.of(context).size.width * 0.5,
                 reverse: false,
                 viewportFraction: 1.0),
             items: widget.sliderData.map((i) {
@@ -45,14 +46,14 @@ class _BannerWidgetState extends State<BannerWidget> {
                 builder: (BuildContext context) {
                   return InkWell(
                     onTap: () async {
-                      await launchUrl(Uri.parse(i.link.toString()),
-                          mode: LaunchMode.externalApplication);
+                      await launchUrl(Uri.parse(i.link.toString()), mode: LaunchMode.externalApplication);
                     },
                     child: ManageNetworkImage(
                       imageUrl: i.image!,
                       borderRadius: 10,
-                      width: MediaQuery.of(context).size.width * 0.85,
-
+                      //boxFit: BoxFit.contain,
+                      width: MediaQuery.of(context).size.width ,
+                      height: MediaQuery.of(context).size.width /1.2,
                     ),
                   );
                 },
@@ -63,10 +64,13 @@ class _BannerWidgetState extends State<BannerWidget> {
               ? const SizedBox(height: 18)
               : const SizedBox(height: 0),
           widget.isDotes == true
-              ? DotesWidget(
-            page: page,
-            length: widget.sliderData.length,
-          )
+              ? Padding(
+                padding: const EdgeInsets.only(bottom: 4),
+                child: DotesWidget(
+                            page: page,
+                            length: widget.sliderData.length,
+                          ),
+              )
               : Container(),
         ],
       );

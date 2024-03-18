@@ -6,6 +6,8 @@ const String gif = 'assets/gif';
 class ImageAssets {
   //images
   static const String logoImage = '$imagePath/logo.png';
+  static const String topBusiness = '$imagePath/topBusiness.png';
+  static const String flag = '$imagePath/flag.png';
   static const String splashImage = '$imagePath/splashbackground.png';
   static const String loginImage = '$imagePath/login_image.png';
   static const String verifyImage = '$imagePath/lock_verfy.png';
@@ -28,6 +30,9 @@ class ImageAssets {
   static const String tuktukWallet = '$imagePath/tuktukWallet.png';
   static const String phone = '$imagePath/phone.png';
   static const String whats = '$imagePath/whats.png';
+  static const String zain = '$imagePath/zaincash.png';
+  static const String googlePay = '$imagePath/googlepay.png';
+  static const String visa = '$imagePath/visa.png';
 
   // icons
   static const String phoneIcon = '$iconsPath/phone.svg';

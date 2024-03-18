@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:hero/core/api/end_points.dart';
 import 'package:hero/core/models/cities_model.dart';
@@ -5,14 +6,15 @@ import 'package:hero/core/models/driver_data_model.dart';
 import 'package:hero/core/models/end_quick_trip_model.dart';
 import 'package:hero/core/models/home_model.dart';
 import 'package:hero/core/models/notification_model.dart';
+import 'package:hero/core/models/payment_transaction_model.dart';
 import 'package:hero/core/models/profit_model.dart';
 import 'package:hero/core/models/settings_model.dart';
-import 'package:hero/features/documents/screens/upload_documents.dart';
+import 'package:hero/core/models/zain_cash_model.dart';
 import 'package:hero/features/signup/models/register_model.dart';
+
 import '../api/base_api_consumer.dart';
 import '../error/exceptions.dart';
 import '../error/failures.dart';
-import 'package:dartz/dartz.dart';
 import '../models/add_favourite_model.dart';
 import '../models/all_trips_model.dart';
 import '../models/check_document_model.dart';
@@ -61,15 +63,14 @@ class ServiceApi {
 //
   Future<Either<Failure, SignUpModel>> postRegister(
       RegisterModel registerModel, bool isSignUp) async {
-
-    String? notificationToken = await Preferences.instance.getNotificationToken()??'';
+    String? notificationToken =
+        await Preferences.instance.getNotificationToken() ?? '';
     try {
       if (registerModel.phone.startsWith("964")) {
         print("Before: ${registerModel.phone}");
         registerModel.phone = registerModel.phone.substring(3);
         print("After: ${registerModel.phone}");
       }
-
       var image = registerModel.image != null
           ? await MultipartFile.fromFile(registerModel.image!.path)
           : null;
@@ -94,7 +95,64 @@ class ServiceApi {
       return Left(ServerFailure());
     }
   }
+//////// PAyment //////
+// zain
 
+  Future<Either<Failure, ZainCashModel>> zainPayment({
+    required String phoneNumber,
+    required String pin,
+  }) async {
+    SignUpModel signUpModel = await Preferences.instance.getUserModel();
+    try {
+      final response = await dio.post(EndPoints.zain,
+          options: Options(
+            headers: {'Authorization': signUpModel.data?.token},
+          ),
+          body: {
+            "phone_number": "964$phoneNumber",
+            "pin": pin,
+          });
+      return Right(ZainCashModel.fromJson(response));
+    } catch (e) {
+      if (e is DioError) {
+        print('ggggggggg${e.response!.statusCode}');
+        return left(
+          ServerFailure(),
+        );
+      } else {
+        print('ggggggggg${e.runtimeType.toString()}');
+        return left(
+          ServerFailure(),
+        );
+      }
+    }
+  }
+
+// Pay Transaction
+
+  Future<Either<Failure, PayTransactionModel>> paymentTransaction({
+    required String phoneNumber,
+    required String transactionId,
+    required String pin,
+    required String otp,
+  }) async {
+    SignUpModel signUpModel = await Preferences.instance.getUserModel();
+    try {
+      final response = await dio.post(EndPoints.payTransaction,
+          options: Options(
+            headers: {'Authorization': signUpModel.data?.token},
+          ),
+          body: {
+            "transaction_id": transactionId,
+            "phone_number": "964$phoneNumber",
+            "pin": pin,
+            "otp": otp,
+          });
+      return Right(PayTransactionModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
   /////// Driver trips //////////////
 
   // start quick trip
@@ -146,7 +204,7 @@ class ServiceApi {
             "distance": distance,
             //"time": time,
             //"phone": phone,
-           // "distance": '3',
+            // "distance": '3',
             //"time": '30',
             "phone": phone,
           });
@@ -183,7 +241,8 @@ class ServiceApi {
 
   //// Start trip
   Future<Either<Failure, DriverTripsModel>> startTrip({
-    required String tripId, required String lat,
+    required String tripId,
+    required String lat,
     required String long,
   }) async {
     SignUpModel signUpModel = await Preferences.instance.getUserModel();
@@ -221,7 +280,6 @@ class ServiceApi {
             "to_address": toAddress,
             "to_lat": toLat,
             "to_long": toLong,
-
           });
       return Right(DriverTripsModel.fromJson(response));
     } on ServerException {
@@ -243,7 +301,7 @@ class ServiceApi {
           ),
           body: {
             "distance": distance,
-           // "time": time,
+            // "time": time,
             "trip_id": tripId,
           });
       return Right(DriverTripsModel.fromJson(response));
@@ -574,9 +632,12 @@ class ServiceApi {
     SignUpModel signUpModel = await Preferences.instance.getUserModel();
 
     try {
-      final response = await dio.get(EndPoints.getTripStatus,options: Options(
-        headers: {'Authorization': signUpModel.data?.token},
-      ),);
+      final response = await dio.get(
+        EndPoints.getTripStatus,
+        options: Options(
+          headers: {'Authorization': signUpModel.data?.token},
+        ),
+      );
       return Right(CheckTripStatusModel.fromJson(response));
     } on ServerException {
       return Left(ServerFailure());
@@ -673,7 +734,6 @@ class ServiceApi {
 
       final response = await dio.post(
         EndPoints.checkPhoneUrl,
-
       );
       return Right(LoginModel.fromJson(response));
     } on ServerException {
@@ -686,10 +746,9 @@ class ServiceApi {
     required String rate,
     required String description,
     required String tripId,
-}) async {
+  }) async {
     SignUpModel signUpModel = await Preferences.instance.getUserModel();
     try {
-
       final response = await dio.post(
         EndPoints.giveRateUrl,
         body: {
@@ -701,7 +760,6 @@ class ServiceApi {
         options: Options(
           headers: {'Authorization': signUpModel.data?.token},
         ),
-
       );
       return Right(RateModel.fromJson(response));
     } on ServerException {
@@ -710,11 +768,10 @@ class ServiceApi {
   }
 
   Future<Either<Failure, RateModel>> giveRate(
-      {
-        required int tripId,
-        required int to,
-        required double rate,
-        String? description}) async {
+      {required int tripId,
+      required int to,
+      required double rate,
+      String? description}) async {
     print("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
     print("tripId = $tripId rate = $rate");
     SignUpModel signUpModel = await Preferences.instance.getUserModel();
@@ -728,20 +785,20 @@ class ServiceApi {
           'trip_id': tripId,
           'rate': rate,
           'to': to,
-          'description': description},
+          'description': description
+        },
       );
       return Right(RateModel.fromJson(response));
     } on ServerException {
       return Left(ServerFailure());
     }
   }
-  //update driver location
-  Future<Either<Failure, UpdateDriverLocationModel>> updateDriverLocation(
-      {
-        required String long,
-        required String lat,
-   }) async {
 
+  //update driver location
+  Future<Either<Failure, UpdateDriverLocationModel>> updateDriverLocation({
+    required String long,
+    required String lat,
+  }) async {
     SignUpModel signUpModel = await Preferences.instance.getUserModel();
     try {
       final response = await dio.post(
@@ -752,18 +809,19 @@ class ServiceApi {
         body: {
           'lat': lat,
           'long': long,
-         },
+        },
       );
       return Right(UpdateDriverLocationModel.fromJson(response));
     } on ServerException {
       return Left(ServerFailure());
     }
   }
+
 //fUHZXVLrTaCOa7HwKv2vMX:APA91bHyS1pj1qbxjyWdUGm0gnu2YxYVZNQVAj6NSvAAJW5Rl7aVwHTlITm2H7xettAtHOpyHCdQpmlacXUYKk26tZCsWKoYO4F2FAb8yHoAZFC6vBac5Em5qiUwBvtwhK3WGUZ2VLz2
   Future<Either<Failure, SignUpModel>> login(
       String phone, String deviceType, String token) async {
-
-    String? notificationToken = await Preferences.instance.getNotificationToken()??'';
+    String? notificationToken =
+        await Preferences.instance.getNotificationToken() ?? '';
     print('ggggggggggg$notificationToken');
     try {
       if (phone.startsWith("964")) {
@@ -772,14 +830,17 @@ class ServiceApi {
         print("After: ${phone}");
       }
 
-     // print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+      // print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
       print(AppStrings.countryCode + phone);
       final response = await dio.post(
         EndPoints.loginUrl,
         body: {
           'phone': AppStrings.countryCode + phone,
         },
-        queryParameters: {"device_type": deviceType, "token": notificationToken},
+        queryParameters: {
+          "device_type": deviceType,
+          "token": notificationToken
+        },
       );
       print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
       print(response);
@@ -788,6 +849,7 @@ class ServiceApi {
       return Left(ServerFailure());
     }
   }
+
   Future<Either<Failure, HomeModel>> getHomeData() async {
     SignUpModel signUpModel = await Preferences.instance.getUserModel();
     try {

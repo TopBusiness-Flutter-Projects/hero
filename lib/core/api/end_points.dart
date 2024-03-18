@@ -45,6 +45,8 @@ class EndPoints {
   static const String cancelTrip = '${baseUrl}cancelTrip';
   static const String startTrip = '${baseUrl}startTrip';
   static const String endTrip = '${baseUrl}endTrip';
+  static const String zain = '${baseUrl}zain';
+  static const String payTransaction = '${baseUrl}payTransaction';
 
 
   //************************ Google  ****************************************************

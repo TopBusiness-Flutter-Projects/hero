@@ -19,6 +19,7 @@ import 'features/home/cubit/home_cubit.dart';
 import 'features/homedriver/cubit/home_driver_cubit.dart';
 import 'features/orders/cubit/cubit/orders_cubit.dart';
 import 'features/trip_details/cubit/trip_details_cubit.dart';
+import 'features/trip_service/cubit/payment_cubit.dart';
 import 'features/user_trip/cubit/user_trip_cubit.dart';
 
 // import 'features/downloads_videos/cubit/downloads_videos_cubit.dart';
@@ -103,6 +104,11 @@ serviceLocator.registerFactory(
    );
 serviceLocator.registerFactory(
     () => UserTripCubit(
+      serviceLocator(),
+    ),
+   );
+serviceLocator.registerFactory(
+    () => PaymentCubit(
       serviceLocator(),
     ),
    );

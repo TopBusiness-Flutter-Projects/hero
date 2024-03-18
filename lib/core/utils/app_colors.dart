@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'hex_color.dart';
 
 class AppColors {
-  static Color primary = HexColor('#FEC200');
+  static Color primary = HexColor('#EFAB00');
+ // static Color primary = HexColor('#FEC200');
   static Color primaryOpacity = HexColor('#FEC200').withOpacity(.3);
   static Color primaryOpacity2 =Color.fromRGBO(254, 194, 0, 0.3) ;
 

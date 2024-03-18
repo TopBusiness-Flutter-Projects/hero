@@ -6,6 +6,7 @@ import 'package:hero/core/utils/app_colors.dart';
 import 'package:hero/core/utils/getsize.dart';
 import 'package:hero/features/home/cubit/home_cubit.dart';
 import 'package:hero/features/home/screen/home.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../config/routes/app_routes.dart';
 import '../../../core/utils/assets_manager.dart';
@@ -55,7 +56,22 @@ class AboutHeroScreen extends StatelessWidget {
                          // Text("${cubit.settingsModel?.data?.about}")
                         ],
                       ),
-                    )
+                    ),
+                    Spacer(),
+                    GestureDetector(
+                      onTap: () async {
+                        final _url = Uri.parse('https://topbuziness.com/');
+                        await launchUrl(_url,
+                            mode: LaunchMode.externalApplication);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Image.asset(
+                          ImageAssets.topBusiness,
+                          width: getSize(context) / 2.5,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
                 //back button

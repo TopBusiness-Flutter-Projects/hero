@@ -49,10 +49,13 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    context.read<HomeCubit>().isSelected=false;
+
     context.read<HomeCubit>().placesList =[];
     context.read<HomeCubit>().destination = LatLng(0, 0);
     if (!widget.isInTrip) context.read<HomeCubit>().location_control.text = "";
+    if(context.read<HomeCubit>().location_control.text.isEmpty){
+      context.read<HomeCubit>().isSelected=false;
+    }
     context.read<HomeCubit>().getCurrentLocation();
     // gifController = FlutterGifController(vsync: this);
     context.read<HomeCubit>().checkAndRequestLocationPermission();

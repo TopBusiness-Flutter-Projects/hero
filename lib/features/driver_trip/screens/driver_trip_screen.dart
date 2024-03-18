@@ -32,6 +32,7 @@ class _DriverTripScreenState extends State<DriverTripScreen> {
   @override
   void initState() {
     if (widget.trip.tripType != 'without') {
+      //with
       context.read<DriverTripCubit>().setMarkerIcon(
           widget.trip.toAddress ,
           LatLng(double.parse(widget.trip.fromLat ?? "31.98354"),
@@ -60,15 +61,28 @@ if(context.read<DriverTripCubit>().tripStages ==1){
 }
 
     } else
-      context.read<DriverTripCubit>().setMarkerIcon(
-          null,
-          LatLng(double.parse(widget.trip.fromLat ?? "31.98354"),
-              double.parse(widget.trip.fromLong ?? "31.1234065")),
-        null,context,
+      {
+        context.read<DriverTripCubit>().setMarkerIcon(
+            null,
+            LatLng(double.parse(widget.trip.fromLat ?? "31.98354"),
+                double.parse(widget.trip.fromLong ?? "31.1234065")),
+            null,context,
 
-
-          widget.trip.fromAddress!
+            widget.trip.fromAddress!
+        );
+        if(context.read<DriverTripCubit>().tripStages ==0){
+          context.read<DriverTripCubit>().getDirection(//widget.trip
+              LatLng( context.read<HomeDriverCubit>().currentLocation != null ? context.read<HomeDriverCubit>()
+                  .currentLocation!.latitude! : 0,
+                context.read<HomeDriverCubit>().currentLocation != null ? context.read<HomeDriverCubit>()
+                    .currentLocation!.longitude! : 0,),
+              LatLng(double.parse(widget.trip.fromLat??"31.98354"), double.parse(widget.trip.fromLong??"31.1234065"))
           );
+
+        }
+
+      }
+
     context.read<DriverTripCubit>().getDirectionFromTo(//widget.trip
         LatLng(double.parse(widget.trip.fromLat??"31.98354"), double.parse(widget.trip.fromLong??"31.1234065")),
         LatLng(double.parse(widget.trip.toLat??"31.98354"), double.parse(widget.trip.toLong??"31.1234065"))
@@ -89,6 +103,9 @@ if(context.read<DriverTripCubit>().tripStages ==1){
     HomeDriverCubit homeDriverCubit = context.read<HomeDriverCubit>();
     return WillPopScope(
       onWillPop: () async {
+        if(cubit.tripStages==0)
+          return true;
+        else
         return false;
       },
       child: Scaffold(
@@ -224,7 +241,9 @@ if(context.read<DriverTripCubit>().tripStages ==1){
                         // height: getSize(context) * 1.2,
                         child: BlocConsumer<HomeDriverCubit,HomeDriverState>(
                           listener: (context, state) {
-
+                          if (state is LocationChangedState){
+                            print('yyyyyyyy');
+                          }
                           },
                           builder: (context,state) {
                             return GoogleMap(
@@ -238,7 +257,6 @@ if(context.read<DriverTripCubit>().tripStages ==1){
                                 zoom: 13.5,
                               ),
                               markers:  widget.trip.tripType != 'without' ?
-
 
                                   cubit.tripStages == 1?
                                   {
@@ -333,25 +351,23 @@ if(context.read<DriverTripCubit>().tripStages ==1){
 
                                   :
       /// without trip
-                                  cubit.tripStages ==1 ?
-                                  {
-                                    Marker(
-                                      markerId: const MarkerId("currentLocation"),
-                                      icon: homeDriverCubit.markerIcon != null
-                                          ? BitmapDescriptor.fromBytes(homeDriverCubit.markerIcon!)
-                                          : homeDriverCubit.currentLocationIcon,
-                                      position: LatLng(
-                                        homeDriverCubit.currentLocation != null ? homeDriverCubit
-                                            .currentLocation!.latitude! : 0,
-                                        homeDriverCubit.currentLocation != null ? homeDriverCubit
-                                            .currentLocation!.longitude! : 0,
-                                      ),
-                                    ),
-                                    // Rest of the markers...
-                                  }
-                                      :
-
-
+      //                             cubit.tripStages ==1 ?
+      //                             {
+      //                               Marker(
+      //                                 markerId: const MarkerId("currentLocation"),
+      //                                 icon: homeDriverCubit.markerIcon != null
+      //                                     ? BitmapDescriptor.fromBytes(homeDriverCubit.markerIcon!)
+      //                                     : homeDriverCubit.currentLocationIcon,
+      //                                 position: LatLng(
+      //                                   homeDriverCubit.currentLocation != null ? homeDriverCubit
+      //                                       .currentLocation!.latitude! : 0,
+      //                                   homeDriverCubit.currentLocation != null ? homeDriverCubit
+      //                                       .currentLocation!.longitude! : 0,
+      //                                 ),
+      //                               ),
+      //                               // Rest of the markers...
+      //                             }
+      //                                 :
 
                                   {
                                     Marker(
@@ -374,8 +390,6 @@ if(context.read<DriverTripCubit>().tripStages ==1){
                                           double.parse(widget.trip.fromLong!)),
                                     ),
 
-
-
                                     // Rest of the markers...
                                   },
                               onMapCreated: (GoogleMapController controller) {
@@ -395,7 +409,7 @@ if(context.read<DriverTripCubit>().tripStages ==1){
 
                                   Polyline(
                                     polylineId: const PolylineId("route"),
-                                    points:cubit.latLngList
+                                    points:cubit.latLngListTrip
                                    // [
                                    //   LatLng(
                                    //     homeDriverCubit!.currentLocation != null ? homeDriverCubit!
@@ -419,7 +433,7 @@ if(context.read<DriverTripCubit>().tripStages ==1){
 
                                   Polyline(
                                     polylineId: const PolylineId("route"),
-                                    points:cubit.latLngList
+                                    points:cubit.latLngListTrip
                                     // points: [
                                     //   LatLng(
                                     //     homeDriverCubit.currentLocation != null ? homeDriverCubit
@@ -442,7 +456,7 @@ if(context.read<DriverTripCubit>().tripStages ==1){
 
                                   Polyline(
                                   polylineId: const PolylineId("route"),
-                                    points:cubit.latLngListFromTo
+                                    points:cubit.latLngListFromToTrip
                                   // points: [
                                   //   LatLng(double.parse(widget.trip.fromLat!),
                                   //       double.parse(widget.trip.fromLong!)),
@@ -458,7 +472,25 @@ if(context.read<DriverTripCubit>().tripStages ==1){
                                 /// without trip
                                 {
 
-                                      },
+
+
+                                  Polyline(
+                                    polylineId: const PolylineId("route"),
+                                    points:cubit.latLngListTrip
+                                    // [
+                                    //   LatLng(
+                                    //     homeDriverCubit!.currentLocation != null ? homeDriverCubit!
+                                    //         .currentLocation!.latitude! : 0,
+                                    //     homeDriverCubit!.currentLocation != null ? homeDriverCubit!
+                                    //         .currentLocation!.longitude! : 0,
+                                    //   ),
+                                    //   LatLng(double.parse(widget.trip.fromLat!),
+                                    //       double.parse(widget.trip.fromLong!)),
+                                    // ]
+                                    ,
+                                    color: const Color(0xFF7B61FF),
+                                    width: 6,
+                                  ),},
                               onCameraMove: (position) {
 
                                 if (homeDriverCubit.strartlocation != position.target) {
@@ -617,8 +649,6 @@ if(context.read<DriverTripCubit>().tripStages ==1){
                                 ),
                                 Spacer(),
                                 if (cubit.tripStages == 1)
-
-
                                   InkWell(
                                     onTap: () {
                                       widget.trip.toAddress != null ?
@@ -631,8 +661,6 @@ if(context.read<DriverTripCubit>().tripStages ==1){
 
                                           context,
                                           widget.trip.id.toString(),
-
-
                                       );
 
                                     },
