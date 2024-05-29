@@ -56,6 +56,8 @@ class EndPoints {
   // give it name and get the place
   static const String searchUrl = googleBaseUrl+'place/findplacefromtext/json';
   static const String directionUrl = googleBaseUrl+'directions/json';
+  static const String getPlacesUrl = googleBaseUrl+'place/autocomplete/json';
+  static const String getPlaceLatLong = googleBaseUrl+'place/details/json';
 
 
 

@@ -5,6 +5,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:hero/core/utils/app_colors.dart';
 import 'package:hero/core/utils/getsize.dart';
 import 'package:hero/core/widgets/custom_button.dart';
+import 'package:hero/core/widgets/my_svg_widget.dart';
 import 'package:hero/features/home/cubit/home_cubit.dart';
 import '../../../core/utils/assets_manager.dart';
 import 'package:hero/features/trip_service/screens/zain_cash.dart';
@@ -24,27 +25,83 @@ class TripInsuranceService extends StatelessWidget {
         return SafeArea(
           child: Scaffold(
             floatingActionButton: Padding(
-              padding: const EdgeInsets.only(right: 30),
-              child: CustomButton(
-                width: getSize(context),
-                text: "getInsurance".tr(),
-                borderRadius: getSize(context) / 24,
-                color: AppColors.primary,
-                onClick: () {
-                   Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ZainCashScreen(),
-                                ));
-                 
-                  // Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //       builder: (context) => PaymentsScreen(),
-                  //     ));
-                },
-              ),
-            ),
+                padding: const EdgeInsets.only(right: 30),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 0,
+                  ),
+                  child: InkWell(
+                    onTap: () {
+                      context.read<HomeCubit>().launcheWhatsApp();
+                    },
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: getSize(context),
+                          // height: height ?? getSize(context) / 8.5,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              color: AppColors.primary,
+                              borderRadius:
+                                  BorderRadius.circular(getSize(context) / 24),
+                              boxShadow: [
+                                BoxShadow(
+                                    offset: const Offset(0, 1),
+                                    blurRadius: 1,
+                                    color: AppColors.hint)
+                              ]),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 4.0, vertical: 13),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                MyCustomSvgWidget(
+                                  path: ImageAssets.whatsAppIcon,
+                                ),
+                                SizedBox(
+                                  width: 4,
+                                ),
+                                Flexible(
+                                  child: Text(
+                                    "getInsurance".tr(),
+                                    style: TextStyle(
+                                        fontFamily: 'Cairo',
+                                        color: AppColors.weekColor,
+                                        fontSize: getSize(context) / 20,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+                //  CustomButton(
+                //   width: getSize(context),
+                //   text: "getInsurance".tr(),
+                //   borderRadius: getSize(context) / 24,
+                //   color: AppColors.primary,
+                //   onClick: () {
+
+                //   //   Navigator.push(
+                //   //                context,
+                //   //                MaterialPageRoute(
+                //   //                  builder: (context) => ZainCashScreen(),
+                //   //                ));
+                //   //
+                //     // Navigator.push(
+                //     //     context,
+                //     //     MaterialPageRoute(
+                //     //       builder: (context) => PaymentsScreen(),
+                //     //     ));
+                //   },
+                // ),
+                ),
             body: Column(
               children: [
                 SizedBox(

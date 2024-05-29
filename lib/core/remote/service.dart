@@ -4,9 +4,11 @@ import 'package:hero/core/api/end_points.dart';
 import 'package:hero/core/models/cities_model.dart';
 import 'package:hero/core/models/driver_data_model.dart';
 import 'package:hero/core/models/end_quick_trip_model.dart';
+import 'package:hero/core/models/get_places_model.dart';
 import 'package:hero/core/models/home_model.dart';
 import 'package:hero/core/models/notification_model.dart';
 import 'package:hero/core/models/payment_transaction_model.dart';
+import 'package:hero/core/models/place_lat_long.dart';
 import 'package:hero/core/models/profit_model.dart';
 import 'package:hero/core/models/settings_model.dart';
 import 'package:hero/core/models/zain_cash_model.dart';
@@ -586,7 +588,6 @@ class ServiceApi {
   }
 
   //// check documents
-
   Future<Either<Failure, CheckDocumentsModel>> checkDocuments() async {
     SignUpModel signUpModel = await Preferences.instance.getUserModel();
     try {
@@ -932,6 +933,7 @@ class ServiceApi {
       required double fromLng,
       required fromLat,
       String? toAddress,
+      String? price,
       double? toLng,
       double? toLat}) async {
     SignUpModel signUpModel = await Preferences.instance.getUserModel();
@@ -948,7 +950,8 @@ class ServiceApi {
             "from_lat": fromLat,
             "to_address": toAddress,
             "to_long": toLng,
-            "to_lat": toLat
+            "to_lat": toLat,
+            "price": price,
           });
       print("1111111111111111111111111111111111111111");
       print(response);
@@ -983,6 +986,7 @@ class ServiceApi {
       String? toLng,
       String? toLat,
       required String date,
+      String? price,
       required String time}) async {
     print("55555555555555555555555555555555555555555");
     print("date = $date , time = $time");
@@ -1004,6 +1008,7 @@ class ServiceApi {
             "to_lat": toLat,
             "date": date,
             "time": time,
+            "price": price,
           });
       print("666666666666666666666666666666666666666");
       print(response);
@@ -1182,6 +1187,39 @@ class ServiceApi {
         "key": AppStrings.mapKey
       });
       return Right(DirectionModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
+  Future<Either<Failure, GetPlacesModel>> getPlaces(
+    String searchKey,
+  ) async {
+    try {
+      final response = await dio.get(EndPoints.getPlacesUrl, queryParameters: {
+        "type": "address",
+        "input": searchKey,
+        "language": "ar",
+        "components": "country:IRQ",
+        "key": AppStrings.mapKey
+      });
+      return Right(GetPlacesModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
+  Future<Either<Failure, GetPlaceLatLongModel>> getPlaceLatLong(
+    String placeId,
+  ) async {
+    try {
+      final response = await dio.get(EndPoints.getPlaceLatLong,
+          queryParameters: {
+            "placeid": placeId,
+            "fields": "geometry",
+            "key": AppStrings.mapKey
+          });
+      return Right(GetPlaceLatLongModel.fromJson(response));
     } on ServerException {
       return Left(ServerFailure());
     }

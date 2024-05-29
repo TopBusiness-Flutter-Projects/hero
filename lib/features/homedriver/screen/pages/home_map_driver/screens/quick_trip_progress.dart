@@ -42,7 +42,6 @@ class _QuickTripScreenState extends State<QuickTripScreen> {
     HomeDriverCubit cubit = context.read<HomeDriverCubit>();
     return WillPopScope(
       onWillPop: () async {
-
         return false;
       },
       child: Scaffold(
@@ -71,14 +70,17 @@ class _QuickTripScreenState extends State<QuickTripScreen> {
                                   : 0,
                               cubit.currentLocation != null
                                   ? cubit.currentLocation!.longitude!
-                                  : 0,),
+                                  : 0,
+                            ),
                             zoom: 13.5,
                           ),
-                          markers:  {
+                          markers: {
                             Marker(
-                              markerId: const MarkerId("currentLocation"),icon: cubit!.markerIcon != null
-                                ? BitmapDescriptor.fromBytes(cubit!.markerIcon!)
-                                : cubit!.currentLocationIcon,
+                              markerId: const MarkerId("currentLocation"),
+                              icon: cubit!.markerIcon != null
+                                  ? BitmapDescriptor.fromBytes(
+                                      cubit!.markerIcon!)
+                                  : cubit!.currentLocationIcon,
                               // icon: cubit.bitmapDescriptorfrom != null
                               //     ? cubit.bitmapDescriptorfrom!
                               //     : cubit.currentLocationIcon,
@@ -93,42 +95,41 @@ class _QuickTripScreenState extends State<QuickTripScreen> {
                             ),
                             Marker(
                               markerId: const MarkerId("destinationLocation"),
-                             // icon: cubit.bitmapDescriptorto != null
-                             //     ? cubit.bitmapDescriptorto!
-                             //     : cubit.currentLocationIcon,
+                              // icon: cubit.bitmapDescriptorto != null
+                              //     ? cubit.bitmapDescriptorto!
+                              //     : cubit.currentLocationIcon,
                               position: LatLng(cubit.destinaion.latitude,
                                   cubit.destinaion.longitude),
                             ),
-                          // Marker(
-                          //   markerId: const MarkerId("destinationLocation"),
-                          //   icon: cubit.bitmapDescriptorto != null
-                          //       ? cubit.bitmapDescriptorto!
-                          //       : cubit.currentLocationIcon,
-                          //   position: LatLng(cubit.destinaion.latitude,
-                          //       cubit.destinaion.longitude),
-                          // ),
+                            // Marker(
+                            //   markerId: const MarkerId("destinationLocation"),
+                            //   icon: cubit.bitmapDescriptorto != null
+                            //       ? cubit.bitmapDescriptorto!
+                            //       : cubit.currentLocationIcon,
+                            //   position: LatLng(cubit.destinaion.latitude,
+                            //       cubit.destinaion.longitude),
+                            // ),
                             // Rest of the markers...
                           },
                           onMapCreated: (GoogleMapController controller) {
                             cubit.mapController =
-                                controller;// Store the GoogleMapController
+                                controller; // Store the GoogleMapController
                           },
                           onCameraMove: (position) {
-
-                            if (cubit.strartlocation!=position.target){
+                            if (cubit.strartlocation != position.target) {
                               print(cubit.strartlocation);
-                              cubit.strartlocation=position.target;
-                              cubit.getCurrentLocation();}
+                              cubit.strartlocation = position.target;
+                              cubit.getCurrentLocation();
+                            }
                             // _customInfoWindowController.hideInfoWindow!();
                           },
                           polylines: {
                             Polyline(
-                              polylineId: const PolylineId("route"),
-                              points: cubit.latLngList,
-                              color: AppColors.black,
-                              width: 5,visible: true
-
-                            ),
+                                polylineId: const PolylineId("route"),
+                                points: cubit.latLngList,
+                                color: AppColors.black,
+                                width: 5,
+                                visible: true),
                           },
                         ),
                       ),
@@ -175,124 +176,106 @@ class _QuickTripScreenState extends State<QuickTripScreen> {
                     SingleChildScrollView(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child:
-                        cubit.tripStages ==0?
-
-                        EndTripWidget(widget: widget):
-                        Container(
-                          width: double.maxFinite,
-                          decoration: BoxDecoration(
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Color.fromRGBO(
-                                    0, 0, 0, 0.1),
-                                blurRadius: 20,
-                                offset: Offset(
-                                    0, 0), // Shadow position
-                              ),
-                              BoxShadow(
-                                color: Color.fromRGBO(
-                                    0, 0, 0, 0.1),
-                                blurRadius: 10,
-                                offset: Offset(
-                                    0, 0), // Shadow position
-                              ),
-                            ],
-                            color: AppColors.white,
-                            borderRadius:
-                            BorderRadius.circular(10),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Column(
-
-                              children: [
-
-                                CustomFromToWidget(
-                                  withName: false,
-                                  name: widget.trip.name!,
-                                  to:  widget.trip.toAddress!,
-                                  from:  widget.trip.fromAddress!,) ,
-
-
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [ Column(children: [
-                                    Text("rideTime".tr()),
-                                    Text('${cubit.startTime!.hour}:${cubit.startTime!.minute}'),
-
-
-                                  ],),
-
-                                    Image.asset(
-                                      ImageAssets.finishTripBike,
-
+                        child: cubit.tripStages == 0
+                            ? EndTripWidget(widget: widget)
+                            : Container(
+                                width: double.maxFinite,
+                                decoration: BoxDecoration(
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Color.fromRGBO(0, 0, 0, 0.1),
+                                      blurRadius: 20,
+                                      offset: Offset(0, 0), // Shadow position
                                     ),
-
-
-                                    Column(children: [
-                                      Text("arrivalTime".tr()),
-                                      Text('${cubit.arrivalTime!.hour}:${cubit.arrivalTime!.minute}'),
-
-                                    ],),
-                                  ],),
-                                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    FinishTripColumn(
-                                      path: ImageAssets.finishTripMap,
-                                      text: cubit.tripDistance,
-
-                                    ), FinishTripColumn(
-                                      path: ImageAssets.finishTripTime,
-                                      text: cubit.tripTime,
-
-                                    ), FinishTripColumn(
-                                      path: ImageAssets.finishTripMoney,
-                                        text:"${double.parse(double.parse(cubit.endQuickTripModel.data!.price!.toString()).toStringAsFixed(2))}"
-
-
+                                    BoxShadow(
+                                      color: Color.fromRGBO(0, 0, 0, 0.1),
+                                      blurRadius: 10,
+                                      offset: Offset(0, 0), // Shadow position
                                     ),
                                   ],
-
-                                )
-
-                              ],
-                            ),
-                          ),
-                        )
-
-
-                        ,
+                                  color: AppColors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: Column(
+                                    children: [
+                                      CustomFromToWidget(
+                                        withName: false,
+                                        name: widget.trip.name!,
+                                        to: widget.trip.toAddress!,
+                                        from: widget.trip.fromAddress!,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Column(
+                                            children: [
+                                              Text("rideTime".tr()),
+                                              Text(
+                                                  '${cubit.startTime!.hour}:${cubit.startTime!.minute}'),
+                                            ],
+                                          ),
+                                          Image.asset(
+                                            ImageAssets.finishTripBike,
+                                          ),
+                                          Column(
+                                            children: [
+                                              Text("arrivalTime".tr()),
+                                              Text(
+                                                  '${cubit.arrivalTime!.hour}:${cubit.arrivalTime!.minute}'),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          FinishTripColumn(
+                                            path: ImageAssets.finishTripMap,
+                                            text: cubit.tripDistance,
+                                          ),
+                                          FinishTripColumn(
+                                            path: ImageAssets.finishTripTime,
+                                            text: cubit.tripTime,
+                                          ),
+                                          FinishTripColumn(
+                                              path: ImageAssets.finishTripMoney,
+                                              text:
+                                                  "${double.parse(double.parse(cubit.endQuickTripModel.data!.price!.toString()).toStringAsFixed(2))}"),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
                       ),
                     ),
                     SizedBox(height: getSize(context) * 0.02),
-                    cubit.tripStages ==0?
-
-                    CustomButton(
-                      text: 'endTrip'.tr(),
-                      color: AppColors.primary,
-                      onClick: () {
-                        cubit.endQuickTrip(context);
-
-                      },
-                      width: getSize(context) * 0.9,
-                      height: getSize(context) * 0.14,
-                    ):
-                    CustomButton(
-                      text: 'confirm'.tr(),
-                      color: AppColors.primary,
-                      onClick: () {
-
-                        Navigator.pushNamedAndRemoveUntil(
-                            context, Routes.homedriverRoute, (route) => false);
-                        cubit.setInitial();
-
-                      },
-                      width: getSize(context) * 0.9,
-                      height: getSize(context) * 0.14,
-                    )
-
-
+                    cubit.tripStages == 0
+                        ? CustomButton(
+                            text: 'endTrip'.tr(),
+                            color: AppColors.primary,
+                            onClick: () {
+                              cubit.endQuickTrip(context);
+                            },
+                            width: getSize(context) * 0.9,
+                            height: getSize(context) * 0.14,
+                          )
+                        : CustomButton(
+                            text: 'confirm'.tr(),
+                            color: AppColors.primary,
+                            onClick: () {
+                              Navigator.pushNamedAndRemoveUntil(context,
+                                  Routes.homedriverRoute, (route) => false);
+                              cubit.setInitial();
+                            },
+                            width: getSize(context) * 0.9,
+                            height: getSize(context) * 0.14,
+                          )
                   ],
                 )
               ],
@@ -363,8 +346,7 @@ class EndTripWidget extends StatelessWidget {
             width: getSize(context) * 0.03,
           ),
           Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: 8.0),
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Dash(
                 direction: Axis.vertical,
                 length: 40,

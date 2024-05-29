@@ -15,8 +15,7 @@ import '../../../core/utils/assets_manager.dart';
 import '../../../core/utils/getsize.dart';
 import '../../../core/widgets/close_widget.dart';
 import '../../../core/widgets/network_image.dart';
-import '../../../core/widgets/show_loading_indicator.dart';
-import '../../home/components/drawer_list_item.dart';
+
 import '../../home/cubit/home_cubit.dart';
 import '../cubit/home_driver_cubit.dart';
 
@@ -28,14 +27,17 @@ class HomeDriver extends StatefulWidget {
 
 class _HomeDriverState extends State<HomeDriver> with TickerProviderStateMixin {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-
   void initState() {
     // TODO: implement initState
     super.initState();
     context.read<HomeCubit>().getUserData();
     context.read<BikeDetailsCubit>().getCities();
+    context.read<HomeDriverCubit>().getCurrentLocation(isFirst: true);
+    context.read<HomeCubit>().getCurrentLocation();
     FirebaseMessaging.onMessage.listen((event) {
+      context.read<HomeDriverCubit>().getDriverData();
       context.read<HomeCubit>().checkDocumentsHome(context);
+      context.read<HomeCubit>().getHomeData(context);
     });
     Timer.periodic(Duration(minutes: 3), (timer) {
       context.read<HomeDriverCubit>().updateDriverLocation();
@@ -94,7 +96,7 @@ class _HomeDriverState extends State<HomeDriver> with TickerProviderStateMixin {
                                     color: AppColors.white),
                                 child: Icon(
                                   Icons.menu,
-                                  size: 20,
+                                  size: 30,
                                 )),
                           ],
                         ),
@@ -171,12 +173,41 @@ class _HomeDriverState extends State<HomeDriver> with TickerProviderStateMixin {
                 title: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      "${context.read<HomeCubit>().signUpModel?.data?.name}",
-                      style: TextStyle(
-                          fontSize: getSize(context) * 0.03,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.black2),
+                    Flexible(
+                      child: Row(
+                        children: [
+                          Flexible(
+                            child: Text(
+                              "${context.read<HomeCubit>().signUpModel?.data?.name}",
+                              style: TextStyle(
+                                  fontSize: getSize(context) * 0.043,
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColors.black2),
+                            ),
+                          ),
+                          BlocBuilder<HomeDriverCubit, HomeDriverState>(
+                              builder: (context, state) {
+                            return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: context
+                                            .read<HomeDriverCubit>()
+                                            .driverDataModel
+                                            .data !=
+                                        null
+                                    ? context
+                                                .read<HomeDriverCubit>()
+                                                .driverDataModel
+                                                .data!
+                                                .isVip ==
+                                            1
+                                        ? Image.asset(ImageAssets.verifiedIcon,
+                                            width: 40, height: 40)
+                                        : null
+                                    : null);
+                          })
+                        ],
+                      ),
                     ),
                     CloseWidget(
                       onTap: () {
@@ -208,7 +239,7 @@ class _HomeDriverState extends State<HomeDriver> with TickerProviderStateMixin {
                 subtitle: Text(
                   "${context.read<HomeCubit>().signUpModel?.data?.phone}",
                   style: TextStyle(
-                      fontSize: getSize(context) * 0.0295,
+                      fontSize: getSize(context) * 0.034,
                       fontWeight: FontWeight.w400,
                       color: AppColors.black2),
                 ),

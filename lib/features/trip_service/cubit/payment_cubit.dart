@@ -41,16 +41,20 @@ class PaymentCubit extends Cubit<PaymentState> {
     response.fold((l) {
       Navigator.pop(context);
       errorGetBar("حدث خطأ");
-     
+
       emit(FailureZainCashState());
     }, (r) {
       zainCashModel = r;
-
-      if (r.processingTransaction!.success == 1) {
-        Navigator.pop(context);
-        successGetBar("من فضلك ادخل الرمز التأكيدي لاتمام الدفع");
-        transactionId = r.processingTransaction!.transactionid.toString();
-        payButton();
+      if (r.processingTransaction != null) {
+        if (r.processingTransaction!.success == 1) {
+          Navigator.pop(context);
+          successGetBar("من فضلك ادخل الرمز التأكيدي لاتمام الدفع");
+          transactionId = r.processingTransaction!.transactionid.toString();
+          payButton();
+        } else {
+          Navigator.pop(context);
+          errorGetBar("تأكد من صحة المعلومات !");
+        }
       } else {
         Navigator.pop(context);
         errorGetBar("تأكد من صحة المعلومات !");

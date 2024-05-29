@@ -49,6 +49,7 @@ class ImageAssets {
   static const String fromToIcon = '$iconsPath/fromto.svg';
   static const String toIcon = '$iconsPath/to.svg';
   static const String trips = '$iconsPath/trips.svg';
+  static const String trips2 = '$iconsPath/trips2.svg';
   static const String rewards = '$iconsPath/rewards.svg';
   static const String notifications = '$iconsPath/notifications.svg';
   static const String favouriteTitles = '$iconsPath/favourite_titles.svg';
@@ -74,6 +75,8 @@ class ImageAssets {
   static const String finishTripMap = '$iconsPath/finishTripMap.svg';
   static const String finishTripMoney = '$iconsPath/finishTripMoney.svg';
   static const String finishTripTime = '$iconsPath/finishTripTime.svg';
+  static const String whatsAppIcon = '$iconsPath/whatsapp.svg';
+  static const String verifiedIcon = '$iconsPath/verified.png';
 
   //Gif
   static const String searchGif = '$gif/search.gif';

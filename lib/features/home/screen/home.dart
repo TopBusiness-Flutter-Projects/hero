@@ -37,7 +37,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   void initState() {
     // TODO: implement initState
     super.initState();
-  //  context.read<HomeCubit>().getUserTripStatus(context);
+    //  context.read<HomeCubit>().getUserTripStatus(context);
     context.read<HomeCubit>().tabsController =
         TabController(length: 11, vsync: this);
   }
@@ -45,9 +45,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<HomeCubit, HomeState>(
-      listener: (context, state) {
-
-      },
+      listener: (context, state) {},
       builder: (context, state) {
         return Scaffold(
           key: _scaffoldKey,
@@ -138,20 +136,19 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                               backgroundImage: AssetImage(ImageAssets.person),
                             )
                           : ClipRRect(
-                        borderRadius: BorderRadius.circular(getSize(context) / 8),
-                        child: ManageNetworkImage(
-                          imageUrl:
-                          context
-                              .read<HomeCubit>()
-                              .signUpModel!
-                              .data
-                          !.image! ,
-                          boxFit: BoxFit.cover,
-                          height:60 ,
-                          width: 60,
-
-                        ),
-                      ),
+                              borderRadius:
+                                  BorderRadius.circular(getSize(context) / 8),
+                              child: ManageNetworkImage(
+                                imageUrl: context
+                                    .read<HomeCubit>()
+                                    .signUpModel!
+                                    .data!
+                                    .image!,
+                                boxFit: BoxFit.cover,
+                                height: 60,
+                                width: 60,
+                              ),
+                            ),
                   subtitle: Text(
                     "${context.read<HomeCubit>().signUpModel?.data?.phone}",
                     style: TextStyle(
@@ -171,20 +168,20 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                 Navigator.pushNamed(
                                     context, Routes.tripInsuranceService);
                               } else if (index == 1) {
-                                /// MY REWARDS
-                                Navigator.pop(context);
-                                Navigator.pushNamed(
-                                    context, Routes.myRewardsScreen);
-                              } else if (index == 2) {
                                 /// NOTIFICATION
                                 Navigator.pop(context);
                                 Navigator.pushNamed(
                                     context, Routes.notificationRoute);
-                              } else if (index == 3) {
+                              } else if (index == 2) {
                                 /// FAVOURITES
                                 Navigator.pop(context);
                                 Navigator.pushNamed(
                                     context, Routes.favoriteRoute);
+                              } else if (index == 3) {
+                                /// MY REWARDS
+                                Navigator.pop(context);
+                                Navigator.pushNamed(
+                                    context, Routes.myRewardsScreen);
                               } else if (index == 4) {
                                 /// ABOUT HERO
                                 Navigator.pop(context);
@@ -212,7 +209,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                 ///EDIT PROFILE
                                 Navigator.pop(context);
                                 Navigator.pushNamed(
-                                    context, Routes.editProfileRoute, arguments: "user");
+                                    context, Routes.editProfileRoute,
+                                    arguments: "user");
                               } else if (index == 10) {
                                 /// DELETE ACCOUNT
                                 context.read<HomeCubit>().deleteUser(context);
@@ -221,20 +219,18 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                 context.read<HomeCubit>().logout(context);
                               }
                             },
-                            child:index==0?Container(
-
-                            ): DrawerListItem(
-                              drawerItemModel: drawerItems[index],
-                              textColor: index != drawerItems.length - 1
-                                  ? AppColors.black1
-                                  : AppColors.red,
-                            ),
+                            child: index == 0
+                                ? Container()
+                                : DrawerListItem(
+                                    drawerItemModel: drawerItems[index],
+                                    textColor: index != drawerItems.length - 1
+                                        ? AppColors.black1
+                                        : AppColors.red,
+                                  ),
                           );
                         },
                         separatorBuilder: (context, index) {
-                          return index==0?Container(
-
-                          ):Divider();
+                          return index == 0 ? Container() : Divider();
                         },
                         itemCount: drawerItems.length)),
               ],

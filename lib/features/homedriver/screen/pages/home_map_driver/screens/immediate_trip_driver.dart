@@ -20,6 +20,7 @@ class ImmediateTripDriver extends StatefulWidget {
   @override
   State<ImmediateTripDriver> createState() => _ImmediateTripDriverState();
 }
+
 class _ImmediateTripDriverState extends State<ImmediateTripDriver> {
   HomeDriverCubit? cubit;
   @override
@@ -75,19 +76,19 @@ class _ImmediateTripDriverState extends State<ImmediateTripDriver> {
                       },
                       onMapCreated: (GoogleMapController controller) {
                         cubit!.mapController =
-                            controller;// Store the GoogleMapController
+                            controller; // Store the GoogleMapController
                       },
                       onTap: (argument) {
-                        cubit!.getLocation(argument, "to");
+                        cubit!.getGeoData(argument, "to");
                         showMyBottomSheet(EnterClientInfo(), context);
                         // _customInfoWindowController.hideInfoWindow!();
                       },
                       onCameraMove: (position) {
-
-                        if (cubit!.strartlocation!=position.target){
+                        if (cubit!.strartlocation != position.target) {
                           print(cubit!.strartlocation);
-                          cubit!.strartlocation=position.target;
-                          cubit!.getCurrentLocation();}
+                          cubit!.strartlocation = position.target;
+                          cubit!.getCurrentLocation();
+                        }
                         // _customInfoWindowController.hideInfoWindow!();
                       },
                       polylines: {
@@ -123,7 +124,8 @@ class _ImmediateTripDriverState extends State<ImmediateTripDriver> {
                         validatorMessage: 'loaction_msg'.tr(),
                         horizontalPadding: 2,
                         textInputType: TextInputType.text,
-                        onFieldSubmitted: (p0) =>   showMyBottomSheet(EnterClientInfo(), context),
+                        onFieldSubmitted: (p0) =>
+                            showMyBottomSheet(EnterClientInfo(), context),
                         onchange: (p0) {
                           cubit!.search(p0);
                         },

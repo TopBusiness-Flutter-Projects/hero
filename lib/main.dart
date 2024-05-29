@@ -229,7 +229,7 @@ AndroidNotificationChannel channel = AndroidNotificationChannel(
       : 'high_notiLightTitle'
       : 'high_notiSoundTitle'
       : "high_importance_channel_elm3", // title
-  description: "this notification tarek tube",
+  description: "this notification hero",
   importance: Importance.high,
   enableVibration: Preferences.instance.notiVisbrate,
   playSound: Preferences.instance.notiSound,

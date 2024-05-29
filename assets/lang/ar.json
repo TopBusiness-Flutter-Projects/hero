@@ -33,7 +33,7 @@
   
  
   "loaction_msg": "",
-  "getInsurance": "احصل على تأمينك",
+  "getInsurance": "تواصل معنا للحصول على تأمينك",
 
   "startTrip": "بداية الرحلة",
   "endTrip": "نهاية الرحلة",
@@ -108,6 +108,7 @@
   "update": "تحديث",
   "wallet": "محفظتى",
   "orders": "طلباتى",
+  "orders_driver": "طلبات الرحلات",
   "profit": "الارباح",
   "birth_date": "تاريخ الميلاد",
   "out_service": "خارج الخدمة",

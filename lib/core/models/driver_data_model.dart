@@ -36,12 +36,14 @@ class Data {
   List<Slider>? sliders;
   int? driverStatus;
   int? cityId;
+  int? isVip;
   DriverDetails? driverDetails;
   DriverDocuments? driverDocuments;
 
   Data({ this.sliders,
     this.driverStatus,
     this.cityId,
+    this.isVip,
     this.driverDetails,
     this.driverDocuments,
   });
@@ -51,6 +53,7 @@ class Data {
 
     driverStatus: json["driver_status"],
     cityId: json["city_id"],
+    isVip: json["is_vip"],
     driverDetails: json["driver_details"] == null ? null : DriverDetails.fromJson(json["driver_details"]),
     driverDocuments: json["driver_documents"] == null ? null : DriverDocuments.fromJson(json["driver_documents"]),
   );
@@ -60,6 +63,7 @@ class Data {
 
     "driver_status": driverStatus,
     "city_id": cityId,
+    "is_vip": isVip,
     "driver_details": driverDetails?.toJson(),
     "driver_documents": driverDocuments?.toJson(),
   };

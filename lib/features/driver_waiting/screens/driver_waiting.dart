@@ -26,6 +26,9 @@ class DriverWaiting extends StatefulWidget {
 }
 
 class _DriverWaitingState extends State<DriverWaiting> {
+
+  
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<HomeCubit, HomeState>(
@@ -137,6 +140,7 @@ class _DriverWaitingState extends State<DriverWaiting> {
                             SizedBox(
                               height: getSize(context) / 8,
                             ),
+                            
                           ],
                         ),
                       )),

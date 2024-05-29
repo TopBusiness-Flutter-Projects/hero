@@ -50,11 +50,11 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    context.read<HomeCubit>().placesList =[];
+    context.read<HomeCubit>().placesList = [];
     context.read<HomeCubit>().destination = LatLng(0, 0);
     if (!widget.isInTrip) context.read<HomeCubit>().location_control.text = "";
-    if(context.read<HomeCubit>().location_control.text.isEmpty){
-      context.read<HomeCubit>().isSelected=false;
+    if (context.read<HomeCubit>().location_control.text.isEmpty) {
+      context.read<HomeCubit>().isSelected = false;
     }
     context.read<HomeCubit>().getCurrentLocation();
     // gifController = FlutterGifController(vsync: this);
@@ -143,13 +143,13 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
                             cubit.changeFavourite();
 
                             if (context.read<HomeCubit>().flag == 1) {
-                              cubit.placesList =[];
-                              cubit.getLocation(argument, "to");
+                              cubit.placesList = [];
+                              cubit.getGeoData(argument, "to");
                               double distance = cubit.calculateDistance(
                                   LatLng(cubit.currentLocation!.latitude!,
                                       cubit.currentLocation!.longitude!),
                                   argument);
-cubit.isSelected=true;
+                              cubit.isSelected = true;
                               cubit.paymentMoney =
                                   distance * cubit.settingsModel.data!.km!;
                             }
@@ -214,7 +214,6 @@ cubit.isSelected=true;
                               color: AppColors.grey3,
                               height: getSize(context) / 15,
                               width: getSize(context) / 15,
-
                             ),
                           ),
                           Spacer(),

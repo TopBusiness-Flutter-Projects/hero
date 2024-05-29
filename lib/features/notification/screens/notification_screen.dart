@@ -58,7 +58,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           children: [
                             //welcome user
                             Row(
-
                               children: [
                                 GestureDetector(
                                   onTap :(){

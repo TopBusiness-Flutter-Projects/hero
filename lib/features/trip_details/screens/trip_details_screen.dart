@@ -455,11 +455,10 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                             ), FinishTripColumn(
                               path: ImageAssets.finishTripMoney,
                               text: "${double.parse(
-                                  widget.trip.price.toStringAsFixed(2))} د.ع",
+                                  widget.trip.price.toStringAsFixed(2))}" +"currency".tr(),
 
                             ),
                           ],
-
                         ),
 
                         SizedBox(

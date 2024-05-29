@@ -26,6 +26,7 @@
   "from": "From",
   "update": "Update",
   "to": "To",
+  "orders_driver": "Trips orders",
   "Saturday"  : "Saturday",
   "Sunday"    : "Sunday",
   "Monday"    : "Monday",
@@ -46,7 +47,7 @@
   "enterPassword":  "Enter password",
   "code":  "The Code",
   "enterCode":  "Enter Code",
-  "getInsurance": "Get your insurance",
+  "getInsurance": "Contact us to get your insurance",
  
   "error": "Error ",
   "toktok_documents": "Bike documents",

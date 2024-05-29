@@ -57,10 +57,8 @@ class _OrdersScreenState extends State<OrdersScreen>
                   height: 10,
                 ),
                 //welcome mohammed
-                BlocConsumer<HomeCubit, HomeState>(
-                  listener: (context, state) {
-                    // TODO: implement listener
-                  },
+                BlocBuilder<HomeCubit, HomeState>(
+                 
                   builder: (context, state) => Row(
                     children: [
                       InkWell(
@@ -104,16 +102,21 @@ class _OrdersScreenState extends State<OrdersScreen>
                       size: 27,
                     ),
                     //address
-                    Flexible(
-                      child: Text(
-                        "${context.read<HomeCubit>().address}",
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            fontSize: getSize(context) / 24,
-                            fontWeight: FontWeight.normal,
-                            color: AppColors.gray),
-                      ),
+                 BlocBuilder<HomeCubit, HomeState>(
+                 
+                  builder: (context, state) {
+                        return Flexible(
+                          child: Text(
+                            "${context.read<HomeCubit>().address}",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontSize: getSize(context) / 24,
+                                fontWeight: FontWeight.normal,
+                                color: AppColors.gray),
+                          ),
+                        );
+                      }
                     ),
                   ],
                 ),

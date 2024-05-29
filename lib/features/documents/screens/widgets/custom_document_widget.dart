@@ -33,11 +33,8 @@ ManageNetworkImage(imageUrl: networkImg!,
     boxFit: BoxFit.contain,
 
 )
-
-
     :
           Image.asset(
-
             ImageAssets.uploadImage,
             height: getSize(context) / 2.5,
             width: getSize(context) / 2.5,

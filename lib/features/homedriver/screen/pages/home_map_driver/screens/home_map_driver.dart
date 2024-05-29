@@ -7,6 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hero/core/utils/app_colors.dart';
 import 'package:hero/core/utils/dialogs.dart';
 import 'package:hero/core/utils/getsize.dart';
+import 'package:hero/features/home/cubit/home_cubit.dart';
 import 'package:hero/features/homedriver/screen/widgets/enter_client_info_sheet.dart';
 import 'package:lite_rolling_switch/lite_rolling_switch.dart';
 
@@ -26,11 +27,13 @@ class HomeMapDriver extends StatefulWidget {
 class _HomeMapDriverState extends State<HomeMapDriver> {
   HomeDriverCubit? cubit;
   @override
+
+
+  @override
   Widget build(BuildContext context) {
     cubit = context.read<HomeDriverCubit>();
     return BlocConsumer<HomeDriverCubit, HomeDriverState>(
-      listener: (context, state) {
-      },
+      listener: (context, state) {},
       builder: (context, state) {
         return Scaffold(
           body: Stack(
@@ -38,50 +41,56 @@ class _HomeMapDriverState extends State<HomeMapDriver> {
             children: [
               Builder(
                 builder: (context) {
-                  return cubit!.currentLocation != null ? GoogleMap(
-                    mapType: MapType.normal,
-                    initialCameraPosition: CameraPosition(
-                      target: LatLng(
-                        cubit!.currentLocation != null ? cubit!.currentLocation!
-                            .latitude! : 0,
-                        cubit!.currentLocation != null ? cubit!.currentLocation!
-                            .longitude! : 0,
-                      ),
-                      zoom: 13.5,
-                    ),
-                    markers: {
-                      Marker(
-                        markerId: const MarkerId("currentLocation"),
-                        icon: cubit!.markerIcon != null
-                            ? BitmapDescriptor.fromBytes(cubit!.markerIcon!)
-                            : cubit!.currentLocationIcon,
-                        position: LatLng(
-                          cubit!.currentLocation != null ? cubit!
-                              .currentLocation!.latitude! : 0,
-                          cubit!.currentLocation != null ? cubit!
-                              .currentLocation!.longitude! : 0,
-                        ),
-                      ),
-                      // Rest of the markers...
-                    },
-                    onMapCreated: (GoogleMapController controller) {
-                      cubit!.mapController =
-                          controller; // Store the GoogleMapController
-                    },
-                    onTap: (argument) {
-                      // _customInfoWindowController.hideInfoWindow!();
-                    },
-                    onCameraMove: (position) {
-                      if (cubit!.strartlocation!=position.target){
-                        print(cubit!.strartlocation);
-                        cubit!.strartlocation=position.target;
-                        cubit!.getCurrentLocation();}
-                      // _customInfoWindowController.hideInfoWindow!();
-                    },
-                  ):const ShowLoadingIndicator();
+                  return cubit!.currentLocation != null
+                      ? GoogleMap(
+                          mapType: MapType.normal,
+                          initialCameraPosition: CameraPosition(
+                            target: LatLng(
+                              cubit!.currentLocation != null
+                                  ? cubit!.currentLocation!.latitude!
+                                  : 0,
+                              cubit!.currentLocation != null
+                                  ? cubit!.currentLocation!.longitude!
+                                  : 0,
+                            ),
+                            zoom: 13.5,
+                          ),
+                          markers: {
+                            Marker(
+                              markerId: const MarkerId("currentLocation"),
+                              icon: cubit!.markerIcon != null
+                                  ? BitmapDescriptor.fromBytes(
+                                      cubit!.markerIcon!)
+                                  : cubit!.currentLocationIcon,
+                              position: LatLng(
+                                cubit!.currentLocation != null
+                                    ? cubit!.currentLocation!.latitude!
+                                    : 0,
+                                cubit!.currentLocation != null
+                                    ? cubit!.currentLocation!.longitude!
+                                    : 0,
+                              ),
+                            ),
+                            // Rest of the markers...
+                          },
+                          onMapCreated: (GoogleMapController controller) {
+                            cubit!.mapController =
+                                controller; // Store the GoogleMapController
+                          },
+                          onTap: (argument) {
+                            // _customInfoWindowController.hideInfoWindow!();
+                          },
+                          onCameraMove: (position) {
+                            if (cubit!.strartlocation != position.target) {
+                              print(cubit!.strartlocation);
+                              cubit!.strartlocation = position.target;
+                              // cubit!.getCurrentLocation();
+                            }
+                            // _customInfoWindowController.hideInfoWindow!();
+                          },
+                        )
+                      : const ShowLoadingIndicator();
                 },
-
-
               ),
               Positioned(
                   top: 20,
@@ -122,9 +131,10 @@ class _HomeMapDriverState extends State<HomeMapDriver> {
                   )),
               ConditionalBuilder(
                 condition: cubit!.driverDataModel.data != null,
-                fallback: (context) => SizedBox(height: 10,),
-                builder: (context) =>
-                 Positioned(
+                fallback: (context) => SizedBox(
+                  height: 10,
+                ),
+                builder: (context) => Positioned(
                   bottom: 20,
                   child: Padding(
                     padding: const EdgeInsets.only(top: 20),
@@ -140,13 +150,11 @@ class _HomeMapDriverState extends State<HomeMapDriver> {
                       iconOff: Icons.power_settings_new,
                       animationDuration: const Duration(milliseconds: 300),
                       onChanged: (bool state) {
-                        cubit!.switchInService(state,context);
+                        cubit!.switchInService(state, context);
                       },
                       onDoubleTap: () {},
                       onSwipe: () {},
-                      onTap: () {
-
-                      },
+                      onTap: () {},
                     ),
                   ),
                 ),
@@ -156,30 +164,25 @@ class _HomeMapDriverState extends State<HomeMapDriver> {
           floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
           floatingActionButton: Padding(
             padding: EdgeInsets.only(bottom: getSize(context) / 5),
-            child:
-            cubit!.driverDataModel.data != null ?
-
-
-
-            CustomButton(
-              width: getSize(context) / 3,
-              text: 'immediate_trip'.tr(),
-              color: AppColors.primary,
-              onClick: () {
-                if (cubit!.driverDataModel.data!.driverStatus == 0)
-                  errorGetBar('أنت خارج الخدمة الآن');
-                else
-               Navigator.pushNamed(
-                   context, Routes.ImmediateTripDriver);
-              },
-            ):
-            Container(child: null,)
-            ,
+            child: cubit!.driverDataModel.data != null
+                ? CustomButton(
+                    width: getSize(context) / 3,
+                    text: 'immediate_trip'.tr(),
+                    color: AppColors.primary,
+                    onClick: () {
+                      if (cubit!.driverDataModel.data!.driverStatus == 0)
+                        errorGetBar('أنت خارج الخدمة الآن');
+                      else
+                        Navigator.pushNamed(
+                            context, Routes.ImmediateTripDriver);
+                    },
+                  )
+                : Container(
+                    child: null,
+                  ),
           ),
         );
       },
     );
   }
-
-
 }

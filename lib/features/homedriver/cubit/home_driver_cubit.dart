@@ -42,35 +42,32 @@ class HomeDriverCubit extends Cubit<HomeDriverState> {
   BitmapDescriptor? bitmapDescriptorfrom;
   String fields = "id,place_id,name,geometry,formatted_address";
   List<LatLng> latLngList = [];
-
   BitmapDescriptor currentLocationIcon = BitmapDescriptor.defaultMarker;
   TabController? tabsController;
-
   TextEditingController location_control = TextEditingController();
-
   HomeDriverCubit(this.api) : super(HomeDriverInitial()) {
     latLngList = [];
     getmarker();
     checkAndRequestLocationPermission();
     getDriverData();
   }
-  void switchInService(bool state,BuildContext context) {
-changeDriverStatus(context);
+  void switchInService(bool state, BuildContext context) {
+    changeDriverStatus(context);
 
     inService = state;
     emit(HomeDriverInService());
   }
   ////////
 
-  void setInitial(){
+  void setInitial() {
     destinaion = LatLng(0, 0);
     location_control = TextEditingController();
-   origin = "";
+    origin = "";
     dest = "";
     emit(SetInitialState());
   }
 
-  DriverDataModel driverDataModel=  DriverDataModel ();
+  DriverDataModel driverDataModel = DriverDataModel();
 
   getDriverData() async {
     emit(LoadingGEtDriverDataState());
@@ -79,26 +76,27 @@ changeDriverStatus(context);
       emit(FailureGEtDriverDataState());
     }, (r) {
       driverDataModel = r;
-      if( r.data!.driverStatus != null)
-      inService = r.data!.driverStatus ==1 ;
+      if (r.data!.driverStatus != null) inService = r.data!.driverStatus == 1;
       emit(SuccessGEtDriverDataState());
     });
   }
-  UpdateDriverLocationModel updateDriverLocationModel = UpdateDriverLocationModel();
- updateDriverLocation() async {
+
+  UpdateDriverLocationModel updateDriverLocationModel =
+      UpdateDriverLocationModel();
+  updateDriverLocation() async {
     emit(LoadingUpdateDriverLocationState());
 
-    if(currentLocation != null){
-      final response = await api.updateDriverLocation(long: currentLocation!.longitude.toString(), lat: currentLocation!.latitude.toString());
+    if (currentLocation != null) {
+      final response = await api.updateDriverLocation(
+          long: currentLocation!.longitude.toString(),
+          lat: currentLocation!.latitude.toString());
       response.fold((l) {
         emit(FailureUpdateDriverLocationState());
       }, (r) {
-        updateDriverLocationModel =r;
+        updateDriverLocationModel = r;
         emit(SuccessUpdateDriverLocationState());
       });
     }
-
-
   }
 
 // Change driver status
@@ -120,24 +118,23 @@ changeDriverStatus(context);
       getDriverData();
       Navigator.pop(context);
       emit(SuccessChangeDriverStatusState());
-
     });
   }
   // start quick trip
 
-  DateTime? startTime ;
-  String formattedTime = '${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}';
-
+  DateTime? startTime;
+  String formattedTime =
+      '${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}';
 
   StartQuickTripModel startQuickTripModel = StartQuickTripModel();
 
-  void startQuickTrip(String name,phone,BuildContext context) async {
+  void startQuickTrip(String name, phone, BuildContext context) async {
     emit(LoadingStartQuickTripState());
     AppWidget.createProgressDialog(context, "wait".tr());
-print(destinaion.latitude);
-print(destinaion.longitude);
-print(strartlocation.latitude);
-print(strartlocation.longitude);
+    print(destinaion.latitude);
+    print(destinaion.longitude);
+    print(strartlocation.latitude);
+    print(strartlocation.longitude);
     final response = await api.startQuickTrip(
         fromAddress: fromAddress,
         fromLong: strartlocation.longitude.toString(),
@@ -160,9 +157,9 @@ print(strartlocation.longitude);
       getEndStage();
 
       emit(SuccessStartQuickTripState());
-
     });
   }
+
   double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
     const double earthRadius = 6371; // Radius of the earth in kilometers
     double dLat = _degreesToRadians(lat2 - lat1);
@@ -182,36 +179,31 @@ print(strartlocation.longitude);
     return degrees * pi / 180;
   }
 
-
-
   EndQuickTripModel endQuickTripModel = EndQuickTripModel();
 
-  String tripDistance='';
+  String tripDistance = '';
 
-  String tripTime='';
-  DateTime?  arrivalTime;
+  String tripTime = '';
+  DateTime? arrivalTime;
   void endQuickTrip(BuildContext context) async {
-    arrivalTime= DateTime.now();
+    arrivalTime = DateTime.now();
 
+    //  print ('lllllllllllllllll ${startQuickTripModel.data!.phone!}');
+    double distance = calculateDistance(strartlocation.latitude,
+        strartlocation.longitude, destinaion.latitude, destinaion.longitude);
 
-
-  //  print ('lllllllllllllllll ${startQuickTripModel.data!.phone!}');
-    double distance =calculateDistance(strartlocation.latitude, strartlocation.longitude, destinaion.latitude, destinaion.longitude);
-
-   tripDistance=distance. toStringAsFixed(2).toString();
-   emit(LoadingEndQuickTripState());
+    tripDistance = distance.toStringAsFixed(2).toString();
+    emit(LoadingEndQuickTripState());
     AppWidget.createProgressDialog(context, "wait".tr());
-print(destinaion.latitude);
-print(destinaion.longitude);
-print(strartlocation.latitude);
-print(strartlocation.longitude);
+    print(destinaion.latitude);
+    print(destinaion.longitude);
+    print(strartlocation.latitude);
+    print(strartlocation.longitude);
     final response = await api.endQuickTrip(
-
-       phone: startQuickTripModel.data!.phone!,
-
+      phone: startQuickTripModel.data!.phone!,
       distance: distance.toString(),
       time: tripTime,
-        );
+    );
 
     response.fold((l) {
       Navigator.pop(context);
@@ -219,28 +211,25 @@ print(strartlocation.longitude);
       emit(FailureEndQuickTripState());
     }, (r) {
       endQuickTripModel = r;
-      startTime =r.data!.startTime!;
+      startTime = r.data!.startTime!;
       tripTime = arrivalTime!.difference(startTime!).inMinutes.toString();
       Navigator.pop(context);
       successGetBar(r.message);
 
       getSureStage();
       emit(SuccessEndQuickTripState());
-
     });
   }
-/// set destination
 
-  setDestination(
-      String lon,String lat
-      ){
-    destinaion= LatLng(double.parse(lat), double.parse(lon));
+  /// set destination
+
+  setDestination(String lon, String lat) {
+    destinaion = LatLng(double.parse(lat), double.parse(lon));
     emit(ChangeTripStageUIState());
   }
-  setStartLocation(
-      String lon,String lat
-      ){
-    strartlocation= LatLng(double.parse(lat), double.parse(lon));
+
+  setStartLocation(String lon, String lat) {
+    strartlocation = LatLng(double.parse(lat), double.parse(lon));
     emit(ChangeTripStageUIState());
   }
 
@@ -248,6 +237,7 @@ print(strartlocation.longitude);
   getmarker() async {
     markerIcon = await getBytesFromAsset(ImageAssets.marker, 100);
   }
+
   Future<Uint8List> getBytesFromAsset(String path, int width) async {
     ByteData data = await rootBundle.load(path);
     ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
@@ -260,46 +250,50 @@ print(strartlocation.longitude);
 
   //******************************************************************************//
 
-  void getCurrentLocation() async {
+  void getCurrentLocation({bool isFirst = false}) async {
     loc.Location location = loc.Location();
     // we can remove this future method because we listen on data in the onLocationChanged.listen
     location.getLocation().then(
       (location) {
         currentLocation = location;
-
-        if(strartlocation!=LatLng(currentLocation!.latitude!,currentLocation!.longitude!)){
-        strartlocation=  LatLng(
-          currentLocation!.latitude!,
-          currentLocation!.longitude!,
-        );
-       //get the address and draw route
-        getLocation(LatLng(currentLocation!.latitude!, currentLocation!.longitude!), "from");
-         // move the camera to the current location
-        updateLocation();
-
-        emit(UpdateCurrentLocationState());
-
+        if (strartlocation !=
+            LatLng(currentLocation!.latitude!, currentLocation!.longitude!)) {
+          strartlocation = LatLng(
+            currentLocation!.latitude!,
+            currentLocation!.longitude!,
+          );
+          //get the address and draw route
+          if (isFirst)
+            getGeoData(
+                LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
+                "from");
+          // move the camera to the current location
+          updateLocation();
+          emit(UpdateCurrentLocationState());
         }
       },
     );
+
     location.onLocationChanged.listen((newLoc) {
-    //  currentLocation = newLoc;
+      //  currentLocation = newLoc;
 
       double latDiff = (newLoc.latitude! - strartlocation!.latitude!);
       double lngDiff = (newLoc.longitude! - strartlocation!.longitude!);
 
-      if( latDiff > 0.01 || lngDiff > 0.01){
-        strartlocation =  LatLng(
+      if (latDiff > 0.01 || lngDiff > 0.01) {
+        strartlocation = LatLng(
           currentLocation!.latitude!,
           currentLocation!.longitude!,
         );
 
-        getLocation(LatLng(currentLocation!.latitude!, currentLocation!.longitude!), "from");
+        //  getGeoData(
+        //      LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
+        //      "from");
         updateLocation();
         emit(LocationChangedState());
         emit(UpdateCameraPosition());
       }
-     });
+    });
     // location.onLocationChanged.listen(
     //   (newLoc) {
     //     currentLocation = newLoc;
@@ -319,47 +313,49 @@ print(strartlocation.longitude);
     // );
   }
 
-  void getCurrentLocationTrip(BuildContext context,LatLng destination) async {
+  void getCurrentLocationTrip(BuildContext context, LatLng destination) async {
     loc.Location location = loc.Location();
     // we can remove this future method because we listen on data in the onLocationChanged.listen
     location.getLocation().then(
       (location) {
         currentLocation = location;
-        if(strartlocation!=LatLng(currentLocation!.latitude!,currentLocation!.longitude!)){
-        strartlocation=  LatLng(
-          currentLocation!.latitude!,
-          currentLocation!.longitude!,
-        );
-       //get the address and draw route
-      //  getLocation(LatLng(currentLocation!.latitude!, currentLocation!.longitude!), "from");
-      //   // move the camera to the current location
-      //  updateLocation();
-
-        emit(UpdateCurrentLocationState());
-
+        if (strartlocation !=
+            LatLng(currentLocation!.latitude!, currentLocation!.longitude!)) {
+          strartlocation = LatLng(
+            currentLocation!.latitude!,
+            currentLocation!.longitude!,
+          );
+          //get the address and draw route
+          //  getLocation(LatLng(currentLocation!.latitude!, currentLocation!.longitude!), "from");
+          //   // move the camera to the current location
+          //  updateLocation();
+          emit(UpdateCurrentLocationState());
         }
       },
     );
     location.onLocationChanged.listen((newLoc) {
       currentLocation = newLoc;
       double latDiff = (currentLocation!.latitude! - strartlocation!.latitude!);
-      double lngDiff = (currentLocation!.longitude! - strartlocation!.longitude!);
+      double lngDiff =
+          (currentLocation!.longitude! - strartlocation!.longitude!);
 
-      if( latDiff > 0.01 || lngDiff > 0.01){
-        strartlocation =  LatLng(
+      if (latDiff > 0.01 || lngDiff > 0.01) {
+        strartlocation = LatLng(
           currentLocation!.latitude!,
           currentLocation!.longitude!,
         );
 
-
-        context.read<DriverTripCubit>().getDirection(//widget.trip
-            LatLng( currentLocation != null ? currentLocation!.latitude! : 0,
-             currentLocation != null ? currentLocation!.longitude! : 0,),
+        context.read<DriverTripCubit>().getDirection(
+            //widget.trip
+            LatLng(
+              currentLocation != null ? currentLocation!.latitude! : 0,
+              currentLocation != null ? currentLocation!.longitude! : 0,
+            ),
             destination
-          //  LatLng(double.parse(widget.trip.fromLat??"31.98354"), double.parse(widget.trip.fromLong??"31.1234065"))
-        );
-       // getLocation(LatLng(currentLocation!.latitude!, currentLocation!.longitude!), "from");
-       // updateLocation();
+            //  LatLng(double.parse(widget.trip.fromLat??"31.98354"), double.parse(widget.trip.fromLong??"31.1234065"))
+            );
+        // getLocation(LatLng(currentLocation!.latitude!, currentLocation!.longitude!), "from");
+        // updateLocation();
         emit(UpdateCameraPosition());
       }
     });
@@ -387,7 +383,6 @@ print(strartlocation.longitude);
     response.fold(
       (l) => emit(ErrorLocationSearch()),
       (r) async {
-
         destinaion = LatLng(r.candidates.elementAt(0).geometry.location.lat,
             r.candidates.elementAt(0).geometry.location.lng);
 
@@ -404,35 +399,37 @@ print(strartlocation.longitude);
       },
     );
   }
-  String fromAddress ='';
-  String toAddress ='';
-  String cancelTripToAddress ='';
 
- cancelWithoutDestinationTrip(BuildContext context,String id)async{
-   final response = await api.getGeoData(
-       currentLocation!.latitude.toString() + "," + currentLocation!.longitude.toString());
-   response.fold(
-         (l) => emit(ErrorLocationSearch()),
-         (r) async {
-           cancelTripToAddress =r.results
-               .elementAt(0)
-               .formattedAddress
-               .replaceAll("Unnamed Road,", "");
-           context.read<DriverTripCubit>().cancelTrip(context: context, id: id,
-           toAddress: cancelTripToAddress,
-           toLong: currentLocation!.longitude.toString(),
-             toLat:  currentLocation!.latitude.toString()
-           );
+  String fromAddress = '';
+  String toAddress = '';
+  String cancelTripToAddress = '';
 
-       emit(UpdateDesitnationLocationState());
-        },
-   );
- }
+  cancelWithoutDestinationTrip(BuildContext context, String id) async {
+    final response = await api.getGeoData(currentLocation!.latitude.toString() +
+        "," +
+        currentLocation!.longitude.toString());
+    response.fold(
+      (l) => emit(ErrorLocationSearch()),
+      (r) async {
+        cancelTripToAddress = r.results
+            .elementAt(0)
+            .formattedAddress
+            .replaceAll("Unnamed Road,", "");
+        context.read<DriverTripCubit>().cancelTrip(
+            context: context,
+            id: id,
+            toAddress: cancelTripToAddress,
+            toLong: currentLocation!.longitude.toString(),
+            toLat: currentLocation!.latitude.toString());
 
+        emit(UpdateDesitnationLocationState());
+      },
+    );
+  }
 
 // handle the on tab on map ( set the destination marker and draw the route , get the address)
-  getLocation(LatLng argument, String title) async {
-     //get the address
+  getGeoData(LatLng argument, String title) async {
+    //get the address
     final response = await api.getGeoData(
         argument.latitude.toString() + "," + argument.longitude.toString());
 
@@ -445,10 +442,10 @@ print(strartlocation.longitude);
               .elementAt(0)
               .formattedAddress
               .replaceAll("Unnamed Road,", "");
-toAddress =r.results
-    .elementAt(0)
-    .formattedAddress
-    .replaceAll("Unnamed Road,", "");
+          toAddress = r.results
+              .elementAt(0)
+              .formattedAddress
+              .replaceAll("Unnamed Road,", "");
           bitmapDescriptorto = await CustomeMarker(
             title: title.tr(),
             location: r.results
@@ -456,23 +453,21 @@ toAddress =r.results
                 .formattedAddress
                 .replaceAll("Unnamed Road,", ""),
           ).toBitmapDescriptor();
-
-              }
-         else{
+        } else {
           bitmapDescriptorfrom = await CustomeMarker(
             title: title.tr(),
             location: r.results
-             .elementAt(0)
-            // .addressComponents[0].shortName
+                .elementAt(0)
+                // .addressComponents[0].shortName
                 .formattedAddress
                 .replaceAll("Unnamed Road,", ""),
           ).toBitmapDescriptor();
-          fromAddress =r.results
+          fromAddress = r.results
               .elementAt(0)
               .formattedAddress
               .replaceAll("Unnamed Road,", "");
         }
-       // draw the route
+        // draw the route
         getDirection(
             LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
             destinaion);
@@ -487,7 +482,6 @@ toAddress =r.results
   String origin = "", dest = "";
 // draw the route ant it called twice search & get location
   getDirection(LatLng startPosition, LatLng endPosition) async {
-
     origin = startPosition.latitude.toString() +
         "," +
         startPosition.longitude.toString();
@@ -529,7 +523,6 @@ toAddress =r.results
     }
   }
 
-
 //***********************************************************************//
 
   Future<void> checkAndRequestLocationPermission() async {
@@ -539,7 +532,7 @@ toAddress =r.results
     if (permissionStatus.isDenied) {
       // If the permission is denied, request it from the user
       PermissionStatus newPermissionStatus =
-      await Permission.location.request();
+          await Permission.location.request();
 
       if (newPermissionStatus.isGranted) {
         await enableLocationServices();
@@ -573,7 +566,8 @@ toAddress =r.results
 
     PermissionStatus permissionStatus = await Permission.location.status;
     if (permissionStatus.isGranted) {
-      getCurrentLocation();
+      getCurrentLocation(isFirst: true);
+      print('ddddddd');
       // Location permission is granted, continue with location-related tasks
       // ...
     } else {
@@ -582,17 +576,17 @@ toAddress =r.results
     }
   }
 
-
   //0 for end , 1 for sure
 
-  int tripStages =0;
+  int tripStages = 0;
 
-  getSureStage(){
-    tripStages =1;
+  getSureStage() {
+    tripStages = 1;
     emit(ChangeTripStageUIState());
   }
-  getEndStage(){
-    tripStages =0;
+
+  getEndStage() {
+    tripStages = 0;
     emit(ChangeTripStageUIState());
   }
 }

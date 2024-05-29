@@ -1,8 +1,8 @@
 class AppStrings {
-  static const String appName = 'app_name';
+  static const String appName = 'هيرو';
 
   // static const String googleApiKey = '';
- // static const String countryCode = '+964';
+  // static const String countryCode = '+964';
   static const String countryCode = '+964';
   static const String fontFamily = 'cairo';
   static const String noRouteFound = 'No Route Found';
@@ -47,7 +47,8 @@ class AppStrings {
   static const String registerText = 'register_text';
   static const String errorOccurredText = 'error_occurred_text';
   static const String deleteSuccessFullyText = 'delete_successfully_text';
-  static const String waringDeleteAccountMessage = 'waring_delete_account_message';
+  static const String waringDeleteAccountMessage =
+      'waring_delete_account_message';
   static const String cancelBtn = 'cancel_btn';
   static const String homeText = 'home';
   static const String menuText = 'menu';
@@ -58,6 +59,7 @@ class AppStrings {
   static const String balanceText = 'balance_text';
   static const String SARText = 'SAR';
   static const String noEmailError = 'There_is_no_email_with_this_phone';
-  static const String  mapKey = "AIzaSyCZjDPvxg9h3IUSfVPzIwnKli5Y17p-v9g";
+  // static const String  mapKey = "AIzaSyCZjDPvxg9h3IUSfVPzIwnKli5Y17p-v9g";
+  static const String mapKey = "AIzaSyDoCmLvBGaAdbv_Z_ULO1tpqJplKMvr8C0";
   
 }

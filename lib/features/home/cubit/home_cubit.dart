@@ -9,8 +9,10 @@ import 'package:easy_localization/easy_localization.dart' as oo;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get_utils/src/platform/platform.dart';
 import 'package:hero/core/models/create_trip_model.dart';
 import 'package:hero/core/models/delete_user_model.dart';
+import 'package:hero/core/models/get_places_model.dart';
 import 'package:hero/core/models/home_model.dart';
 import 'package:hero/core/models/notification_model.dart';
 import 'package:hero/core/models/settings_model.dart';
@@ -62,7 +64,6 @@ class HomeCubit extends Cubit<HomeState> {
   SignUpModel? signUpModel;
   Uint8List? markerIcon;
   List<LatLng> latLngListFromTo = [];
-
   List<mp.LatLng> pointFromTo = [];
   HomeCubit(this.api) : super(HomeInitial()) {
     getUserData();
@@ -75,6 +76,10 @@ class HomeCubit extends Cubit<HomeState> {
     getmarker();
     checkAndRequestLocationPermission();
     getNotification();
+    if (currentLocation == null) {
+      getCurrentLocation();
+    }
+
     //getNotification();
     //getHomeData();// it's better to call this method in initstate
   }
@@ -237,6 +242,7 @@ class HomeCubit extends Cubit<HomeState> {
     PermissionStatus permissionStatus = await Permission.location.status;
     if (permissionStatus.isGranted) {
       getCurrentLocation();
+      print('dddddd');
       // Location permission is granted, continue with location-related tasks
       // ...
     } else {
@@ -342,7 +348,7 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
-  getLocation(LatLng argument, String title) async {
+  getGeoData(LatLng argument, String title) async {
     //location_control.text  = "";
     final response = await api.getGeoData(
         argument.latitude.toString() + "," + argument.longitude.toString());
@@ -438,7 +444,7 @@ class HomeCubit extends Cubit<HomeState> {
             currentLocation!.longitude!,
           );
           //get the address and draw route
-          getLocation(
+          getGeoData(
               LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
               "from");
           // move the camera to the current location
@@ -460,10 +466,10 @@ class HomeCubit extends Cubit<HomeState> {
             currentLocation!.latitude!,
             currentLocation!.longitude!,
           );
-          getLocation(
-              LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
-              "from");
-
+          // getGeoData(
+          //     LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
+          //     "from");
+//
           // move the camera to the current location
           updateLocation();
           emit(UpdateCameraPosition());
@@ -486,7 +492,6 @@ class HomeCubit extends Cubit<HomeState> {
 //       double threshold = 0.001; // Example threshold value
 //       if (latitudeDifference > threshold || longitudeDifference > threshold) {
 //         previousLocation = newLoc;
-
 //         strartlocation = LatLng(newLoc.latitude!, newLoc.longitude!);
 //         getLocation(strartlocation, "from");
 
@@ -575,6 +580,32 @@ class HomeCubit extends Cubit<HomeState> {
     );
   }
 
+  List<Prediction> placesSearchedList = [];
+  getPlaces(String search) async {
+    placesSearchedList = [];
+    emit(LoadingSearchState());
+    final response = await api.getPlaces(search);
+    response.fold(
+      (l) => emit(FailureSearchState()),
+      (r) async {
+        placesSearchedList = r.predictions!;
+      },
+    );
+  }
+
+  getPlaceLatLong(String placeId) async {
+    placesSearchedList = [];
+    emit(LoadingSearchState());
+    final response = await api.getPlaceLatLong(placeId);
+    response.fold(
+      (l) => emit(FailureSearchState()),
+      (r) async {
+        setSearchResult(LatLng(r.result!.geometry!.location?.lat ?? 0.0,
+            r.result!.geometry!.location?.lng ?? 0.0));
+      },
+    );
+  }
+
   setSearchResult(LatLng latLong) async {
     destination = latLong;
     //todo => calculate the distance and price
@@ -592,7 +623,11 @@ class HomeCubit extends Cubit<HomeState> {
       setMarkers(
         Marker(
           markerId: const MarkerId("currentLocation"),
-          icon: bitmapDescriptorfrom!,
+          icon: bitmapDescriptorfrom != null
+              ? bitmapDescriptorfrom!
+              : markerIcon != null
+                  ? BitmapDescriptor.fromBytes(markerIcon!)
+                  : BitmapDescriptor.defaultMarker,
           position: LatLng(
               currentLocation?.latitude ?? 0, currentLocation?.longitude ?? 0),
         ),
@@ -943,6 +978,27 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
+  void launcheWhatsApp() {
+    var whatsappUrl = "whatsapp://send?phone=+964${settingsModel.data!.phone}";
+
+    var whatsappUrlIos =
+        "https://api.whatsapp.com/send?phone=+964${settingsModel.data!.phone}=";
+    final _url = Uri.parse(whatsappUrl);
+    final _urlIos = Uri.parse(whatsappUrlIos);
+
+    if (GetPlatform.isIOS) {
+      launchUrl(
+        _urlIos,
+        mode: LaunchMode.externalApplication,
+      );
+    } else {
+      launchUrl(
+        _url,
+        mode: LaunchMode.externalApplication,
+      );
+    }
+  }
+
   rateApp() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     String url = '';
@@ -1062,6 +1118,9 @@ class HomeCubit extends Cubit<HomeState> {
           fromAddress: address!,
           fromLng: currentLocation!.longitude!,
           fromLat: currentLocation!.latitude!,
+          price: tripType == "with" && paymentMoney != 0
+              ? paymentMoney.toString()
+              : null,
           toAddress: tripType == "with" ? location_control.text : null,
           toLat: tripType == "with" ? destination.latitude : null,
           toLng: tripType == "with" ? destination.longitude : null);
@@ -1135,6 +1194,9 @@ class HomeCubit extends Cubit<HomeState> {
             fromLng: currentLocation!.longitude!.toString(),
             fromLat: currentLocation!.latitude!.toString(),
             toAddress: tripType == "with" ? location_control.text : null,
+            price: tripType == "with" && paymentMoney != 0
+                ? paymentMoney.toString()
+                : null,
             toLat: tripType == "with" ? destination.latitude.toString() : null,
             toLng: tripType == "with" ? destination.longitude.toString() : null,
             date: formattedDate,
@@ -1329,8 +1391,6 @@ class HomeCubit extends Cubit<HomeState> {
       checkDocumentsModelHome = r;
 
       if (r.data!.status == 0) {
-        Preferences.instance.clearShared();
-
         Navigator.pushNamedAndRemoveUntil(
             context, Routes.initialRoute, (route) => false);
       }

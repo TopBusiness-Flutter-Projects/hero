@@ -33,7 +33,7 @@ if (keystorePropertiesFile.exists()) {
 }
 android {
     namespace "com.topbusiness.hero"
-    compileSdkVersion 33
+    compileSdkVersion 34
     ndkVersion flutter.ndkVersion
 
     compileOptions {
