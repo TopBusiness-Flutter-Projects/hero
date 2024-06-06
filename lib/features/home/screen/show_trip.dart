@@ -77,15 +77,15 @@ class _ShowTripScreenState extends State<ShowTripScreen>
                   cubit.currentLocation == null
                       ? const Center(child: Text("Loading"))
                       : GoogleMap(
+                          myLocationEnabled: true,
                           initialCameraPosition: CameraPosition(
                             target: LatLng(
                               double.parse(widget.trip.fromLat ?? '0'),
                               double.parse(widget.trip.fromLong ?? '0'),
                             ),
-                            zoom: 13.5,
+                            zoom: 17,
                           ),
                           markers: // cubit.tripMarkers,
-
                               widget.trip.toAddress != null
                                   ? {
                                       Marker(
@@ -153,7 +153,7 @@ class _ShowTripScreenState extends State<ShowTripScreen>
                           //       //  markers.first
                           //       },
                           onMapCreated: (GoogleMapController mapController) {
-                            cubit.mapController = mapController;
+                            // cubit.mapController = mapController;
                           },
                           onTap: (argument) {
                             //  cubit.getLocation(argument, "to");
@@ -192,7 +192,7 @@ class _ShowTripScreenState extends State<ShowTripScreen>
 
                   //back button
                   Positioned(
-                    top: getSize(context) * 0.01,
+                    top: getSize(context) * 0.1,
                     right: 0,
                     left: 0,
                     child: Padding(

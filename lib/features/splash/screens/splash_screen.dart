@@ -135,19 +135,22 @@ class _SplashScreenState extends State<SplashScreen>
                         ),
                       ],
                     ),
-                    GestureDetector(
-                      onTap: () async {
-                        final _url = Uri.parse('https://topbuziness.com/');
-                        await launchUrl(_url,
-                            mode: LaunchMode.externalApplication);
-                      },
-                      child: Image.asset(
-                        ImageAssets.topBusiness,
-                        //  color: AppColors.white,
-                        //  height: getSize(context) / 1.2,
-                        width: getSize(context) / 4,
-                      ),
+                    SizedBox(
+                      width: 1,
                     ),
+                    // GestureDetector(
+                    //   onTap: () async {
+                    //     final _url = Uri.parse('https://topbuziness.com/');
+                    //     await launchUrl(_url,
+                    //         mode: LaunchMode.externalApplication);
+                    //   },
+                    //   child: Image.asset(
+                    //     ImageAssets.topBusiness,
+                    //     //  color: AppColors.white,
+                    //     //  height: getSize(context) / 1.2,
+                    //     width: getSize(context) / 4,
+                    //   ),
+                    // ),
                   ],
                 ),
               ),

@@ -22,7 +22,6 @@ import 'package:maps_toolkit/maps_toolkit.dart' as mp;
 part 'driver_trip_state.dart';
 
 class DriverTripCubit extends Cubit<DriverTripState> {
-
   List<LatLng> latLngListTrip = [];
   List<LatLng> latLngListFromToTrip = [];
   List<mp.LatLng> point = [];
@@ -42,7 +41,6 @@ class DriverTripCubit extends Cubit<DriverTripState> {
 
   String origin = "", dest = "";
   getDirection(LatLng startPosition, LatLng endPosition) async {
-
     origin = startPosition.latitude.toString() +
         "," +
         startPosition.longitude.toString();
@@ -51,8 +49,8 @@ class DriverTripCubit extends Cubit<DriverTripState> {
         endPosition.longitude.toString();
     final response = await api.getDirection(origin, dest, "bus");
     response.fold(
-          (l) => emit(ErrorLocationSearch()),
-          (r) {
+      (l) => emit(ErrorLocationSearch()),
+      (r) {
         latLngListTrip.clear();
 
         if (r.routes.length > 0) {
@@ -72,7 +70,6 @@ class DriverTripCubit extends Cubit<DriverTripState> {
 
   String originFrom = "", destTo = "";
   getDirectionFromTo(LatLng startPosition, LatLng endPosition) async {
-
     originFrom = startPosition.latitude.toString() +
         "," +
         startPosition.longitude.toString();
@@ -81,8 +78,8 @@ class DriverTripCubit extends Cubit<DriverTripState> {
         endPosition.longitude.toString();
     final response = await api.getDirection(originFrom, destTo, "bus");
     response.fold(
-          (l) => emit(ErrorLocationSearch()),
-          (r) {
+      (l) => emit(ErrorLocationSearch()),
+      (r) {
         latLngListFromToTrip.clear();
 
         if (r.routes.length > 0) {
@@ -100,12 +97,6 @@ class DriverTripCubit extends Cubit<DriverTripState> {
     );
   }
 
-
-
-
-
-
-
   Set<Marker> markers = {};
 
   setMarkers({required Marker source, Marker? destination}) {
@@ -121,135 +112,109 @@ class DriverTripCubit extends Cubit<DriverTripState> {
   BitmapDescriptor? bitmapDescriptorto;
   BitmapDescriptor? bitmapDescriptorfrom;
 
-  setMarkerIcon(String? to, LatLng currentLocation, LatLng? destination,BuildContext context,String from) async {
-    bitmapDescriptorfrom= await CustomeMarker(
+  setMarkerIcon(String? to, LatLng currentLocation, LatLng? destination,
+      BuildContext context, String from) async {
+    bitmapDescriptorfrom = await CustomeMarker(
       title: 'from'.tr(),
       location: from!,
     ).toBitmapDescriptor().then((value) {
       bitmapDescriptorfrom = value;
-    //  strartlocation =currentLocation;
-    //  destinaion = destination!;
+      //  strartlocation =currentLocation;
+      //  destinaion = destination!;
       emit(RatingSuccessState());
-
-
-    }
-    );
-
-
+    });
 
     if (to != null)
-    bitmapDescriptorto = await CustomeMarker(
-      title: 'to'.tr(),
-      location: to,
-    ).toBitmapDescriptor().then((value) {
-      bitmapDescriptorto = value;
-      strartlocation =currentLocation;
-      destinaion = destination!;
-      emit(RatingSuccessState());
+      bitmapDescriptorto = await CustomeMarker(
+        title: 'to'.tr(),
+        location: to,
+      ).toBitmapDescriptor().then((value) {
+        bitmapDescriptorto = value;
+        strartlocation = currentLocation;
+        destinaion = destination!;
+        emit(RatingSuccessState());
 
-      setMarkers(
-        source:
-        Marker(
-          markerId: const MarkerId("currentLocation"),
-          icon: bitmapDescriptorfrom!,
-          position: LatLng(
-              currentLocation?.latitude ?? 0, currentLocation?.longitude ?? 0),
-        ),
-        destination:
-        Marker(
-          markerId: MarkerId("destination"),
-          icon: value,
-          position: destination,
-        ),
-      );
-    }
-    );
-    else{
-      bitmapDescriptorfrom = await  Image.asset(ImageAssets.marker2).toBitmapDescriptor().then((value) {
-        strartlocation =currentLocation;
+        setMarkers(
+          source: Marker(
+            markerId: const MarkerId("currentLocation"),
+            icon: bitmapDescriptorfrom!,
+            position: LatLng(currentLocation?.latitude ?? 0,
+                currentLocation?.longitude ?? 0),
+          ),
+          destination: Marker(
+            markerId: MarkerId("destination"),
+            icon: value,
+            position: destination,
+          ),
+        );
+      });
+    else {
+      bitmapDescriptorfrom = await Image.asset(ImageAssets.marker2)
+          .toBitmapDescriptor()
+          .then((value) {
+        strartlocation = currentLocation;
         emit(RatingSuccessState());
         setMarkers(
-          source:
-          Marker(
+          source: Marker(
             markerId: const MarkerId("currentLocation"),
             icon: context.read<HomeDriverCubit>().markerIcon != null
-                ? BitmapDescriptor.fromBytes(context.read<HomeDriverCubit>().markerIcon!)
+                ? BitmapDescriptor.fromBytes(
+                    context.read<HomeDriverCubit>().markerIcon!)
                 : context.read<HomeDriverCubit>().currentLocationIcon,
-            position: LatLng(
-                currentLocation?.latitude ?? 0, currentLocation?.longitude ?? 0),
+            position: LatLng(currentLocation?.latitude ?? 0,
+                currentLocation?.longitude ?? 0),
           ),
-
         );
-      }
-
-
-      );
-
-
-
-
-
+      });
     }
 
     ;
   }
- setMarkerIcons(String? to,
-     LatLng currentLocation,
-     LatLng? destination,
-     BuildContext context) async {
 
+  setMarkerIcons(String? to, LatLng currentLocation, LatLng? destination,
+      BuildContext context) async {
     if (to != null)
-    bitmapDescriptorto = await CustomeMarker(
-      title: 'to'.tr(),
-      location: to,
-    ).toBitmapDescriptor().then((value) {
-      bitmapDescriptorto = value;
-      strartlocation =currentLocation;
-      destinaion = destination!;
-      emit(RatingSuccessState());
+      bitmapDescriptorto = await CustomeMarker(
+        title: 'to'.tr(),
+        location: to,
+      ).toBitmapDescriptor().then((value) {
+        bitmapDescriptorto = value;
+        strartlocation = currentLocation;
+        destinaion = destination!;
+        emit(RatingSuccessState());
 
-      setMarkers(
-        source:
-        Marker(
-          markerId: const MarkerId("currentLocation"),
-          icon: bitmapDescriptorfrom!,
-          position: LatLng(
-              currentLocation?.latitude ?? 0, currentLocation?.longitude ?? 0),
-        ),
-        destination:
-        Marker(
-          markerId: MarkerId("destination"),
-          icon: value,
-          position: destination,
-        ),
-      );
-    }
-    );
-    else{
-      bitmapDescriptorfrom = await  Image.asset(ImageAssets.marker2).toBitmapDescriptor().then((value) {
-        strartlocation =currentLocation;
+        setMarkers(
+          source: Marker(
+            markerId: const MarkerId("currentLocation"),
+            icon: bitmapDescriptorfrom!,
+            position: LatLng(currentLocation?.latitude ?? 0,
+                currentLocation?.longitude ?? 0),
+          ),
+          destination: Marker(
+            markerId: MarkerId("destination"),
+            icon: value,
+            position: destination,
+          ),
+        );
+      });
+    else {
+      bitmapDescriptorfrom = await Image.asset(ImageAssets.marker2)
+          .toBitmapDescriptor()
+          .then((value) {
+        strartlocation = currentLocation;
         emit(RatingSuccessState());
         setMarkers(
-          source:
-          Marker(
+          source: Marker(
             markerId: const MarkerId("currentLocation"),
             icon: context.read<HomeDriverCubit>().markerIcon != null
-                ? BitmapDescriptor.fromBytes(context.read<HomeDriverCubit>().markerIcon!)
+                ? BitmapDescriptor.fromBytes(
+                    context.read<HomeDriverCubit>().markerIcon!)
                 : context.read<HomeDriverCubit>().currentLocationIcon,
-            position: LatLng(
-                currentLocation?.latitude ?? 0, currentLocation?.longitude ?? 0),
+            position: LatLng(currentLocation?.latitude ?? 0,
+                currentLocation?.longitude ?? 0),
           ),
-
         );
-      }
-
-
-      );
-
-
-
-
-
+      });
     }
 
     ;
@@ -289,10 +254,20 @@ class DriverTripCubit extends Cubit<DriverTripState> {
     emit(LoadingAcceptTripState());
     AppWidget.createProgressDialog(context, "wait".tr());
 
-    final response = await api.acceptTrip(tripId: id,
-        lat: context.read<HomeDriverCubit>().currentLocation!.latitude.toString()??"0",
-        long: context.read<HomeDriverCubit>().currentLocation!.longitude.toString()??"0"
-    );
+    final response = await api.acceptTrip(
+        tripId: id,
+        lat: context
+                .read<HomeDriverCubit>()
+                .currentLocation!
+                .latitude
+                .toString() ??
+            "0",
+        long: context
+                .read<HomeDriverCubit>()
+                .currentLocation!
+                .longitude
+                .toString() ??
+            "0");
     print('ssssssssssss ${response.toString()}');
 
     response.fold((l) {
@@ -300,33 +275,43 @@ class DriverTripCubit extends Cubit<DriverTripState> {
       errorGetBar("error".tr());
       emit(FailureAcceptTripState());
     }, (r) {
-      if (r.data != null){
+      if (r.data != null) {
         acceptTripModel = r;
-      successGetBar(r.message);
-      Navigator.pop(context);
-      getStartStage();
-      emit(SuccessAcceptTripState());}
-      else{
+        successGetBar(r.message);
+        Navigator.pop(context);
+        getStartStage();
+        emit(SuccessAcceptTripState());
+      } else {
         Navigator.pop(context);
         errorGetBar(r.message!);
         emit(SuccessAcceptTripState());
         Navigator.pop(context);
-        context.read<OrdersCubit>().getAllTrips("new",false);
+        context.read<OrdersCubit>().getAllTrips("new", false);
       }
     });
   }
+
   // start trip
   DriverTripsModel startTripModel = DriverTripsModel();
-  DateTime? startTime ;
+  DateTime? startTime;
   void startTrip(BuildContext context, String id) async {
     emit(LoadingStartTripState());
     AppWidget.createProgressDialog(context, "wait".tr());
 
-    final response = await api.startTrip(tripId: id,
-    lat: context.read<HomeDriverCubit>().currentLocation!.latitude.toString()??"0",
-      long: context.read<HomeDriverCubit>().currentLocation!.longitude.toString()??"0"
-
-    );
+    final response = await api.startTrip(
+        tripId: id,
+        lat: context
+                .read<HomeDriverCubit>()
+                .currentLocation!
+                .latitude
+                .toString() ??
+            "0",
+        long: context
+                .read<HomeDriverCubit>()
+                .currentLocation!
+                .longitude
+                .toString() ??
+            "0");
 
     response.fold((l) {
       Navigator.pop(context);
@@ -336,36 +321,32 @@ class DriverTripCubit extends Cubit<DriverTripState> {
       startTripModel = r;
       startTime = DateTime.now();
 
-
-      if (r.data != null){
+      if (r.data != null) {
         successGetBar(r.message);
         getEndStage();
         Navigator.pop(context);
         emit(SuccessStartTripState());
-      }
-      else{
+      } else {
         Navigator.pop(context);
         errorGetBar(r.message!);
       }
-
-
     });
   }
 
   DriverTripsModel cancelTripModel = DriverTripsModel();
 
-  void cancelTrip(
-  {required BuildContext context,required String id,
-  String? toAddress,
-  String? toLat,
-  String? toLong,}
-
-
-      ) async {
+  void cancelTrip({
+    required BuildContext context,
+    required String id,
+    String? toAddress,
+    String? toLat,
+    String? toLong,
+  }) async {
     emit(LoadingCancelTripState());
     AppWidget.createProgressDialog(context, "wait".tr());
 
-    final response = await api.cancelTrip(tripId: id,toAddress: toAddress,toLat: toLat,toLong: toLong);
+    final response = await api.cancelTrip(
+        tripId: id, toAddress: toAddress, toLat: toLat, toLong: toLong);
 
     response.fold((l) {
       Navigator.pop(context);
@@ -377,12 +358,8 @@ class DriverTripCubit extends Cubit<DriverTripState> {
 
       Navigator.pop(context);
 
-
-
-
       Navigator.pushNamedAndRemoveUntil(
           context, Routes.homedriverRoute, (route) => false);
-
 
       emit(SuccessCancelTripState());
     });
@@ -390,23 +367,29 @@ class DriverTripCubit extends Cubit<DriverTripState> {
 
   DriverTripsModel endTripModel = DriverTripsModel();
 
-  String tripDistance='';
+  String tripDistance = '';
 
-  String tripTime='';
-  DateTime?  arrivalTime;
-  void endTrip(BuildContext context, String id) async {
-    arrivalTime= DateTime.now();
+  String tripTime = '';
+  DateTime? arrivalTime;
+  void endTrip({
+    required BuildContext context,
+    required String id,
+    String? toAddress,
+    String? toLat,
+    String? toLong,
+  }) async {
+    arrivalTime = DateTime.now();
 
-
-   // tripTime = arrivalTime!.difference(startTime!).inMinutes.toString();
-    double distance =calculateDistance(strartlocation, destinaion,);
-    tripDistance=distance. toStringAsFixed(2).toString();
+    // tripTime = arrivalTime!.difference(startTime!).inMinutes.toString();
+    double distance = calculateDistance(
+      strartlocation,
+      destinaion,
+    );
+    tripDistance = distance.toStringAsFixed(2).toString();
     emit(LoadingEndTripState());
     AppWidget.createProgressDialog(context, "wait".tr());
     final response = await api.endTrip(
-       // time: tripTime,
-        distance: distance.toString(),
-        tripId: id);
+        tripId: id, toAddress: toAddress, toLat: toLat, toLong: toLong);
     response.fold((l) {
       Navigator.pop(context);
       errorGetBar("error".tr());
@@ -419,28 +402,57 @@ class DriverTripCubit extends Cubit<DriverTripState> {
       emit(SuccessEndTripState());
     });
   }
-  //0 for accept , 1 for start , 2  for end
-int tripStages =0;
+  // void endTrip(BuildContext context, String id) async {
+  //   arrivalTime= DateTime.now();
 
-  getStartStage(){
-    tripStages =1;
+  //  // tripTime = arrivalTime!.difference(startTime!).inMinutes.toString();
+  //   double distance =calculateDistance(strartlocation, destinaion,);
+  //   tripDistance=distance. toStringAsFixed(2).toString();
+  //   emit(LoadingEndTripState());
+  //   AppWidget.createProgressDialog(context, "wait".tr());
+  //   final response = await api.endTrip(
+  //      // time: tripTime,
+  //       distance: distance.toString(),
+  //       tripId: id);
+  //   response.fold((l) {
+  //     Navigator.pop(context);
+  //     errorGetBar("error".tr());
+  //     emit(FailureEndTripState());
+  //   }, (r) {
+  //     endTripModel = r;
+  //     successGetBar(r.message);
+
+  //     Navigator.pop(context);
+  //     emit(SuccessEndTripState());
+  //   });
+  // }
+  //0 for accept , 1 for start , 2  for end
+  int tripStages = 0;
+
+  getStartStage() {
+    tripStages = 1;
     emit(ChangeTripStageUIState());
   }
-  getEndStage(){
-    tripStages =2;
-    emit(ChangeTripStageUIState());
-  } getAcceptStage(){
-    tripStages =0;
+
+  getEndStage() {
+    tripStages = 2;
     emit(ChangeTripStageUIState());
   }
+
+  getAcceptStage() {
+    tripStages = 0;
+    emit(ChangeTripStageUIState());
+  }
+
 //// rate trip
   RateModel rateModel = RateModel();
-  void rateUser(BuildContext context,String tripId,String rate,String to,String description) async {
+  void rateUser(BuildContext context, String tripId, String rate, String to,
+      String description) async {
     emit(LoadingRateTripState());
     AppWidget.createProgressDialog(context, "wait".tr());
 
-    final response = await api.rateUser(to: to, rate: rate, description: description, tripId:tripId
-    );
+    final response = await api.rateUser(
+        to: to, rate: rate, description: description, tripId: tripId);
 
     response.fold((l) {
       Navigator.pop(context);

@@ -403,6 +403,7 @@ class HomeDriverCubit extends Cubit<HomeDriverState> {
   String fromAddress = '';
   String toAddress = '';
   String cancelTripToAddress = '';
+  String endTripToAddress = '';
 
   cancelWithoutDestinationTrip(BuildContext context, String id) async {
     final response = await api.getGeoData(currentLocation!.latitude.toString() +
@@ -419,6 +420,28 @@ class HomeDriverCubit extends Cubit<HomeDriverState> {
             context: context,
             id: id,
             toAddress: cancelTripToAddress,
+            toLong: currentLocation!.longitude.toString(),
+            toLat: currentLocation!.latitude.toString());
+
+        emit(UpdateDesitnationLocationState());
+      },
+    );
+  }
+  endWithoutDestinationTrip(BuildContext context, String id) async {
+    final response = await api.getGeoData(currentLocation!.latitude.toString() +
+        "," +
+        currentLocation!.longitude.toString());
+    response.fold(
+      (l) => emit(ErrorLocationSearch()),
+      (r) async {
+        cancelTripToAddress = r.results
+            .elementAt(0)
+            .formattedAddress
+            .replaceAll("Unnamed Road,", "");
+        context.read<DriverTripCubit>().cancelTrip(
+            context: context,
+            id: id,
+            toAddress: endTripToAddress,
             toLong: currentLocation!.longitude.toString(),
             toLat: currentLocation!.latitude.toString());
 

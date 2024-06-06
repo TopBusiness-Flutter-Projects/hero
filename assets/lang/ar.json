@@ -47,6 +47,8 @@
   "enterDate": "ادخل التاريخ",
   "errorDate": "تاريخ البدء يجب أن يكون قبل الانتهاء",
   "error": "حدث خطأ",
+  "enterAddress": "ادخل عنوانك بالتفصيل",
+
 
   "toktok_documents": "بيانات التوكتوك",
   "book_toktok_app": "تطبيق حجز التوكتوك الاكثر ثقة",
@@ -55,7 +57,7 @@
   "continuation": "إستمرار",
   "agreeto": "أوافق على ",
   "ask_trip": "اطلب رحلتك",
-  "trip_insurance_service": "خدمة تأمين الرحلات",
+  "trip_insurance_service": "خدمة الضمان",
   "my_rewards": "مكافأتى",
   "notifications": "الاشعارات",
   "favourite_titles": "العناوين المفضلة",
@@ -87,7 +89,6 @@
   "current_governate": "المحافظة الحالية",
   "current_state": "المنطقة الحالية",
   "acceptTrip": "تأكيد الرحلة",
-
   "toktok_type": "نوع التوكتوك",
   "toktok_model": "موديل التوكتوك",
   "toktok_color": "لون التوكتوك",
@@ -100,9 +101,9 @@
   "residence_card": "بطاقة السكن",
   "tuktuk_photo": "صورة التوكتوك",
   "request_pending": "طلبك معلق الان",
-  "request_still_pending": "لا يزال طلبك معلق. بمجرد التحقق من كل شىء  ",
-  "can_use": "يمكنك استخدام التطبيق ! ",
-  "appreciate": "ونحن نقدر انتظارك ! ",
+  "request_still_pending": "لا يزال طلبك معلق. بمجرد التحقق من كل معلوماتك  ",
+  "can_use": "يمكنك استخدام تطبيق هيرو !",
+  "appreciate": "ونحن نقدر صبرك ! ومحبتنا لك ",
   "update_tiktok_data": "تحديث بيانات التوكتوك ",
   "update_documents": "تحديث المستندات ",
   "update": "تحديث",

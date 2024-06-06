@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hero/core/utils/app_fonts.dart';
 import 'package:hero/features/home/cubit/home_cubit.dart';
+import 'package:hero/features/homedriver/cubit/home_driver_cubit.dart';
 import 'package:hero/features/my_wallet/cubit/my_wallet_cubit.dart';
 import 'package:hero/features/my_wallet/screens/widget/custom_wallet_container.dart';
 import 'package:hero/features/profits/screens/widgets/custom_profits_details.dart';
@@ -44,15 +45,13 @@ class _ProfitsScreenState extends State<ProfitsScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ProfitsCubit, ProfitsState>(
-      listener: (context, state) {
-
-      },
+      listener: (context, state) {},
       builder: (context, state) {
         ProfitsCubit cubit = context.read<ProfitsCubit>();
         HomeCubit homeCubit = context.read<HomeCubit>();
         return Scaffold(
           body: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 18),
+            padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 18),
             child: ListView(
               children: [
                 SizedBox(
@@ -117,7 +116,7 @@ class _ProfitsScreenState extends State<ProfitsScreen> {
                               //address
                               Expanded(
                                 child: Text(
-                                  "${homeCubit.address}",
+                                  "${homeCubit.address ?? context.read<HomeDriverCubit>().fromAddress}",
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
@@ -138,52 +137,48 @@ class _ProfitsScreenState extends State<ProfitsScreen> {
                                   color: AppColors.primary,
                                 ),
                               )
-                            :  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: getSize(context) / 12),
-                                        child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              CustomChoiceText(
-                                                text: "today".tr(),
-                                                isSelected: cubit.selected == 0,
-                                                onTap: () {
-                                                  cubit.todaySelect();
-                                                  cubit.getProfits('day');
-                                                },
-                                              ),
-                                              CustomChoiceText(
-                                                text: "week".tr(),
-                                                isSelected: cubit.selected == 1,
-                                                onTap: () {
-                                                  cubit.weekSelect();
-                                                  cubit.getProfits('week');
-                                                },
-                                              ),
-                                              CustomChoiceText(
-                                                text: "report".tr(),
-                                                isSelected: cubit.selected == 2,
-                                                onTap: () {
-                                                  cubit.reportSelect();
-
-                                                },
-                                              ),
-                                            ]),
-                                      ),
-                                      if (cubit.selected == 2)
-                                        CustomReportWidget(),
-                                      CustomDateText(
-                                        isToday: cubit.selected == 0,
-                                        ),
-                                      CustomTripsPriceContainer(
-                                      ),
-                                      if (cubit.selected == 1)
-                                        CustomWeekDetails(
+                            : Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: getSize(context) / 12),
+                                    child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          CustomChoiceText(
+                                            text: "today".tr(),
+                                            isSelected: cubit.selected == 0,
+                                            onTap: () {
+                                              cubit.todaySelect();
+                                              cubit.getProfits('day');
+                                            },
+                                          ),
+                                          CustomChoiceText(
+                                            text: "week".tr(),
+                                            isSelected: cubit.selected == 1,
+                                            onTap: () {
+                                              cubit.weekSelect();
+                                              cubit.getProfits('week');
+                                            },
+                                          ),
+                                          CustomChoiceText(
+                                            text: "report".tr(),
+                                            isSelected: cubit.selected == 2,
+                                            onTap: () {
+                                              cubit.reportSelect();
+                                            },
+                                          ),
+                                        ]),
+                                  ),
+                                  if (cubit.selected == 2) CustomReportWidget(),
+                                  CustomDateText(
+                                    isToday: cubit.selected == 0,
+                                  ),
+                                  CustomTripsPriceContainer(),
+                                  if (cubit.selected == 1)
+                                    CustomWeekDetails(
                                         // saturdayValue: '7',
                                         // sundayValue: '5',
                                         // mondayValue: '4',
@@ -192,16 +187,15 @@ class _ProfitsScreenState extends State<ProfitsScreen> {
                                         // thursdayValue: '8',
                                         // fridayValue: '9',
                                         ),
-
-                                      CustomProfitsDetails(
-                                        tripsDistance: '5',
-                                        kiloPrice: '5',
-                                        cashPay: '20',
-                                        theWallet: '30',
-                                        totalProfits: '40',
-                                      ),
-                                    ],
-                                  )
+                                  CustomProfitsDetails(
+                                    tripsDistance: '5',
+                                    kiloPrice: '5',
+                                    cashPay: '20',
+                                    theWallet: '30',
+                                    totalProfits: '40',
+                                  ),
+                                ],
+                              )
                       ],
                     )),
                   ],

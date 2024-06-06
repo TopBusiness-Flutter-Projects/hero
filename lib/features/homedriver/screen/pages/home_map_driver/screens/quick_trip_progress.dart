@@ -62,75 +62,110 @@ class _QuickTripScreenState extends State<QuickTripScreen> {
                             borderRadius: BorderRadius.only(
                                 bottomLeft: Radius.circular(20),
                                 bottomRight: Radius.circular(20))),
-                        child: GoogleMap(
-                          initialCameraPosition: CameraPosition(
-                            target: LatLng(
-                              cubit.currentLocation != null
-                                  ? cubit.currentLocation!.latitude!
-                                  : 0,
-                              cubit.currentLocation != null
-                                  ? cubit.currentLocation!.longitude!
-                                  : 0,
-                            ),
-                            zoom: 13.5,
-                          ),
-                          markers: {
-                            Marker(
-                              markerId: const MarkerId("currentLocation"),
-                              icon: cubit!.markerIcon != null
-                                  ? BitmapDescriptor.fromBytes(
-                                      cubit!.markerIcon!)
-                                  : cubit!.currentLocationIcon,
-                              // icon: cubit.bitmapDescriptorfrom != null
-                              //     ? cubit.bitmapDescriptorfrom!
-                              //     : cubit.currentLocationIcon,
-                              position: LatLng(
-                                cubit.currentLocation != null
-                                    ? cubit.currentLocation!.latitude!
-                                    : 0,
-                                cubit.currentLocation != null
-                                    ? cubit.currentLocation!.longitude!
-                                    : 0,
+                        child: Stack(
+                          children: [
+                            GoogleMap(
+                              initialCameraPosition: CameraPosition(
+                                target: LatLng(
+                                  cubit.currentLocation != null
+                                      ? cubit.currentLocation!.latitude!
+                                      : 0,
+                                  cubit.currentLocation != null
+                                      ? cubit.currentLocation!.longitude!
+                                      : 0,
+                                ),
+                                zoom: 17,
                               ),
+                              markers: {
+                                Marker(
+                                  markerId: const MarkerId("currentLocation"),
+                                  icon: cubit!.markerIcon != null
+                                      ? BitmapDescriptor.fromBytes(
+                                          cubit!.markerIcon!)
+                                      : cubit!.currentLocationIcon,
+                                  // icon: cubit.bitmapDescriptorfrom != null
+                                  //     ? cubit.bitmapDescriptorfrom!
+                                  //     : cubit.currentLocationIcon,
+                                  position: LatLng(
+                                    cubit.currentLocation != null
+                                        ? cubit.currentLocation!.latitude!
+                                        : 0,
+                                    cubit.currentLocation != null
+                                        ? cubit.currentLocation!.longitude!
+                                        : 0,
+                                  ),
+                                ),
+                                Marker(
+                                  markerId:
+                                      const MarkerId("destinationLocation"),
+                                  // icon: cubit.bitmapDescriptorto != null
+                                  //     ? cubit.bitmapDescriptorto!
+                                  //     : cubit.currentLocationIcon,
+                                  position: LatLng(cubit.destinaion.latitude,
+                                      cubit.destinaion.longitude),
+                                ),
+                                // Marker(
+                                //   markerId: const MarkerId("destinationLocation"),
+                                //   icon: cubit.bitmapDescriptorto != null
+                                //       ? cubit.bitmapDescriptorto!
+                                //       : cubit.currentLocationIcon,
+                                //   position: LatLng(cubit.destinaion.latitude,
+                                //       cubit.destinaion.longitude),
+                                // ),
+                                // Rest of the markers...
+                              },
+                              onMapCreated: (GoogleMapController controller) {
+                                cubit.mapController =
+                                    controller; // Store the GoogleMapController
+                              },
+                              onCameraMove: (position) {
+                                if (cubit.strartlocation != position.target) {
+                                  print(cubit.strartlocation);
+                                  cubit.strartlocation = position.target;
+                                  cubit.getCurrentLocation();
+                                }
+                                // _customInfoWindowController.hideInfoWindow!();
+                              },
+                              polylines: {
+                                Polyline(
+                                    polylineId: const PolylineId("route"),
+                                    points: cubit.latLngList,
+                                    color: AppColors.black,
+                                    width: 5,
+                                    visible: true),
+                              },
                             ),
-                            Marker(
-                              markerId: const MarkerId("destinationLocation"),
-                              // icon: cubit.bitmapDescriptorto != null
-                              //     ? cubit.bitmapDescriptorto!
-                              //     : cubit.currentLocationIcon,
-                              position: LatLng(cubit.destinaion.latitude,
-                                  cubit.destinaion.longitude),
-                            ),
-                            // Marker(
-                            //   markerId: const MarkerId("destinationLocation"),
-                            //   icon: cubit.bitmapDescriptorto != null
-                            //       ? cubit.bitmapDescriptorto!
-                            //       : cubit.currentLocationIcon,
-                            //   position: LatLng(cubit.destinaion.latitude,
-                            //       cubit.destinaion.longitude),
-                            // ),
-                            // Rest of the markers...
-                          },
-                          onMapCreated: (GoogleMapController controller) {
-                            cubit.mapController =
-                                controller; // Store the GoogleMapController
-                          },
-                          onCameraMove: (position) {
-                            if (cubit.strartlocation != position.target) {
-                              print(cubit.strartlocation);
-                              cubit.strartlocation = position.target;
-                              cubit.getCurrentLocation();
-                            }
-                            // _customInfoWindowController.hideInfoWindow!();
-                          },
-                          polylines: {
-                            Polyline(
-                                polylineId: const PolylineId("route"),
-                                points: cubit.latLngList,
-                                color: AppColors.black,
-                                width: 5,
-                                visible: true),
-                          },
+                            Positioned(
+                              bottom: 80,
+                              left: 40,
+                              child: GestureDetector(
+                                onTap: () {
+                                  cubit.mapController!.animateCamera(
+                                      CameraUpdate.newCameraPosition(
+                                          CameraPosition(
+                                    target: LatLng(
+                                      cubit.currentLocation != null
+                                          ? cubit.currentLocation!.latitude!
+                                          : 0,
+                                      cubit.currentLocation != null
+                                          ? cubit.currentLocation!.longitude!
+                                          : 0,
+                                    ),
+                                    zoom: 17,
+                                  )));
+                                },
+                                child: Container(
+                                    color: AppColors.white,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: const Icon(
+                                        Icons.my_location,
+                                        size: 30,
+                                      ),
+                                    )),
+                              ),
+                            )
+                          ],
                         ),
                       ),
                       // GoogleMap(

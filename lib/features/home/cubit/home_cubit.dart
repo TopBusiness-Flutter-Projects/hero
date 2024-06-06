@@ -9,12 +9,14 @@ import 'package:easy_localization/easy_localization.dart' as oo;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:get/get_utils/src/platform/platform.dart';
 import 'package:hero/core/models/create_trip_model.dart';
 import 'package:hero/core/models/delete_user_model.dart';
 import 'package:hero/core/models/get_places_model.dart';
 import 'package:hero/core/models/home_model.dart';
 import 'package:hero/core/models/notification_model.dart';
+import 'package:hero/core/models/search_place_model.dart';
 import 'package:hero/core/models/settings_model.dart';
 import 'package:hero/core/preferences/preferences.dart';
 import 'package:hero/core/utils/dialogs.dart';
@@ -355,10 +357,6 @@ class HomeCubit extends Cubit<HomeState> {
     response.fold(
       (l) => emit(ErrorLocationSearchStat()),
       (r) async {
-        address = r.results
-            .elementAt(0)
-            .formattedAddress
-            .replaceAll("Unnamed Road,", "");
         if (title == "to") {
           destination = argument;
           location_control.text = r.results
@@ -388,6 +386,10 @@ class HomeCubit extends Cubit<HomeState> {
             );
           });
         } else {
+          address = r.results
+              .elementAt(0)
+              .formattedAddress
+              .replaceAll("Unnamed Road,", "");
           bitmapDescriptorfrom = await CustomeMarker(
             title: title.tr(),
             location: r.results
@@ -444,6 +446,7 @@ class HomeCubit extends Cubit<HomeState> {
             currentLocation!.longitude!,
           );
           //get the address and draw route
+
           getGeoData(
               LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
               "from");
@@ -564,6 +567,32 @@ class HomeCubit extends Cubit<HomeState> {
             LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
             destination);
         emit(SuccessSearchState());
+      },
+    );
+  }
+
+  List<SearchTextResults> searchedText = [];
+  List<SearchTextResults> currentAddressText = [];
+  searchText(String search) async {
+    searchedText = [];
+    emit(LoadingSearchState());
+    final response = await api.searchText(search);
+    response.fold(
+      (l) => emit(FailureSearchState()),
+      (r) async {
+        searchedText = r.results!;
+      },
+    );
+  }
+
+  searchCurrentText(String search) async {
+    currentAddressText = [];
+    emit(LoadingSearchState());
+    final response = await api.searchText(search);
+    response.fold(
+      (l) => emit(FailureSearchState()),
+      (r) async {
+        currentAddressText = r.results!;
       },
     );
   }
@@ -691,7 +720,7 @@ class HomeCubit extends Cubit<HomeState> {
     //    }
   }
 
-  confirmPopUp(BuildContext context) {
+  confirmPopUp(BuildContext context, String? fromAddress) {
     showDialog(
       context: context,
       builder: (context) {
@@ -716,6 +745,7 @@ class HomeCubit extends Cubit<HomeState> {
                           Navigator.pop(context);
 
                           createScheduleTrip(
+                              fromAddress: fromAddress,
                               tripType: flag == 1 ? "with" : "without",
                               context: context);
                         },
@@ -736,12 +766,13 @@ class HomeCubit extends Cubit<HomeState> {
     );
   }
 
-  Future<Null> selectDateAndTime(BuildContext context) async {
+  Future<Null> selectDateAndTime(
+      BuildContext context, String? fromAddress) async {
     await _selectDate(context);
     if (datePicked != null) {
       await _selectTime(context);
       if (timePicked != null) {
-        confirmPopUp(context);
+        confirmPopUp(context, fromAddress);
       }
     }
   }
@@ -1105,9 +1136,23 @@ class HomeCubit extends Cubit<HomeState> {
     });
   }
 
+  getAddress({required double lat, required double lang}) async {
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(30.564689, 31.0078018);
+    String addresss =
+        "${placemarks[0].street!} ${placemarks[0].locality!} ${placemarks[0].country!}";
+    print("ADDRESSS :$addresss");
+    // for (int i = 0; i < placemarks.length; i++) {
+    //   print("INDEX $i ${placemarks[i]}");
+    // }
+  }
+
   CreateTripModel? createTripModel;
 
-  createTrip({required String tripType, required BuildContext context}) async {
+  createTrip(
+      {required String tripType,
+      required BuildContext context,
+      String? fromAddress}) async {
     print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     if (address != null && currentLocation != null) {
       emit(LoadingCreateTripState());
@@ -1115,7 +1160,7 @@ class HomeCubit extends Cubit<HomeState> {
 
       final response = await api.createTrip(
           tripType: tripType,
-          fromAddress: address!,
+          fromAddress: fromAddress ?? address!,
           fromLng: currentLocation!.longitude!,
           fromLat: currentLocation!.latitude!,
           price: tripType == "with" && paymentMoney != 0
@@ -1174,7 +1219,9 @@ class HomeCubit extends Cubit<HomeState> {
 
   CreateScedualTripModel? createScedualTripModel;
   createScheduleTrip(
-      {required String tripType, required BuildContext context}) async {
+      {required String tripType,
+      required BuildContext context,
+      String? fromAddress}) async {
     if (address != null &&
         currentLocation != null &&
         date != null &&
@@ -1190,7 +1237,7 @@ class HomeCubit extends Cubit<HomeState> {
       try {
         final response = await api.createScheduleTrip(
             tripType: tripType,
-            fromAddress: address!,
+            fromAddress: fromAddress ?? address!,
             fromLng: currentLocation!.longitude!.toString(),
             fromLat: currentLocation!.latitude!.toString(),
             toAddress: tripType == "with" ? location_control.text : null,

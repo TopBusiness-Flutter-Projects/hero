@@ -10,6 +10,7 @@ import 'package:hero/core/models/notification_model.dart';
 import 'package:hero/core/models/payment_transaction_model.dart';
 import 'package:hero/core/models/place_lat_long.dart';
 import 'package:hero/core/models/profit_model.dart';
+import 'package:hero/core/models/search_place_model.dart';
 import 'package:hero/core/models/settings_model.dart';
 import 'package:hero/core/models/zain_cash_model.dart';
 import 'package:hero/features/signup/models/register_model.dart';
@@ -291,10 +292,12 @@ class ServiceApi {
 
   //// End trip
   Future<Either<Failure, DriverTripsModel>> endTrip({
-    required String distance,
-    //required String time,
     required String tripId,
-  }) async {
+    String? toAddress,
+    String? toLat,
+    String? toLong,
+  }
+  ) async {
     SignUpModel signUpModel = await Preferences.instance.getUserModel();
     try {
       final response = await dio.post(EndPoints.endTrip,
@@ -302,15 +305,37 @@ class ServiceApi {
             headers: {'Authorization': signUpModel.data?.token},
           ),
           body: {
-            "distance": distance,
-            // "time": time,
             "trip_id": tripId,
+            "to_address": toAddress,
+            "to_lat": toLat,
+            "to_long": toLong,
           });
       return Right(DriverTripsModel.fromJson(response));
     } on ServerException {
       return Left(ServerFailure());
     }
   }
+  // Future<Either<Failure, DriverTripsModel>> endTrip({
+  //   required String distance,
+  //   //required String time,
+  //   required String tripId,
+  // }) async {
+  //   SignUpModel signUpModel = await Preferences.instance.getUserModel();
+  //   try {
+  //     final response = await dio.post(EndPoints.endTrip,
+  //         options: Options(
+  //           headers: {'Authorization': signUpModel.data?.token},
+  //         ),
+  //         body: {
+  //           "distance": distance,
+  //           // "time": time,
+  //           "trip_id": tripId,
+  //         });
+  //     return Right(DriverTripsModel.fromJson(response));
+  //   } on ServerException {
+  //     return Left(ServerFailure());
+  //   }
+  // }
 
 ////////////////////////////////////////////////
 
@@ -1192,6 +1217,20 @@ class ServiceApi {
     }
   }
 
+  Future<Either<Failure, SearchTextModel>> searchText(
+    String searchKey,
+  ) async {
+    try {
+      final response = await dio.get(EndPoints.searchTextUrl, queryParameters: {
+        "input": searchKey,
+        "language": "ar",
+        "key": AppStrings.mapKey
+      });
+      return Right(SearchTextModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
   Future<Either<Failure, GetPlacesModel>> getPlaces(
     String searchKey,
   ) async {

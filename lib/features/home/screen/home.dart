@@ -122,11 +122,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                             fontWeight: FontWeight.w400,
                             color: AppColors.black2),
                       ),
-                      CloseWidget(
-                        onTap: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
+                      // CloseWidget(
+                      //   onTap: () {
+                      //     Navigator.of(context).pop();
+                      //   },
+                      // ),
                     ],
                   ),
                   leading:

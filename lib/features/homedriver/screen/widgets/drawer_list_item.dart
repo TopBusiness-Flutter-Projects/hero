@@ -43,7 +43,8 @@ class DriverDrawerItemModel {
 List<DriverDrawerItemModel> driverDrawerItems = [
   DriverDrawerItemModel(imagePath: ImageAssets.wallet, title: "wallet"),
   DriverDrawerItemModel(imagePath: ImageAssets.order, title: "orders_driver"),
-  DriverDrawerItemModel(imagePath: ImageAssets.benfit, title: "profit"),
+  DriverDrawerItemModel(
+      imagePath: ImageAssets.finishTripMoney, title: "profit"),
   DriverDrawerItemModel(
       imagePath: ImageAssets.notifications, title: "notifications"),
   DriverDrawerItemModel(

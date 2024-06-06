@@ -41,18 +41,16 @@ class _UserTripScreenState extends State<UserTripScreen> {
     context.read<HomeCubit>().progressValue = 0.0;
     context.read<HomeCubit>().startTimer(context);
     //context.read<UserTripCubit>().getDirectionFromTo(widget.trip., endPosition);
-    if(widget.trip.toAddress != null){
-
+    if (widget.trip.toAddress != null) {
       context.read<UserTripCubit>().getDirectionFromTo(
-        //widget.trip
+          //widget.trip
           LatLng(double.parse(widget.trip.fromLat ?? "31.98354"),
               double.parse(widget.trip.fromLong ?? "31.1234065")),
           LatLng(double.parse(widget.trip.toLat ?? "31.98354"),
               double.parse(widget.trip.toLong ?? "31.1234065")));
 
-
       context.read<UserTripCubit>().getDirection(
-        //widget.trip
+          //widget.trip
           LatLng(
             context.read<HomeCubit>().currentLocation != null
                 ? context.read<HomeCubit>().currentLocation!.latitude!
@@ -64,9 +62,6 @@ class _UserTripScreenState extends State<UserTripScreen> {
           LatLng(double.parse(widget.trip.toLat ?? "31.98354"),
               double.parse(widget.trip.toLong ?? "31.1234065")));
     }
-
-
-
 
     Timer.periodic(Duration(seconds: 10), (timer) {
       //  context.read<UserTripCubit>().getDirectionFromTo(//widget.trip
@@ -86,14 +81,14 @@ class _UserTripScreenState extends State<UserTripScreen> {
     HomeCubit homeCubit = context.read<HomeCubit>();
     return WillPopScope(
       onWillPop: () async {
-
         return false;
       },
       child: Scaffold(
         body: SafeArea(
           child: BlocConsumer<UserTripCubit, UserTripState>(
             listener: (context, state) {
-              if (context.read<HomeCubit>().checkTripStatusModel.data != null) {}
+              if (context.read<HomeCubit>().checkTripStatusModel.data !=
+                  null) {}
             },
             builder: (context, state) => Column(
               children: [
@@ -115,6 +110,7 @@ class _UserTripScreenState extends State<UserTripScreen> {
                             // }
                           },
                           builder: (context, state) => GoogleMap(
+                              myLocationEnabled: true,
                               initialCameraPosition: CameraPosition(
                                 target: LatLng(
                                   context.read<HomeCubit>().currentLocation !=
@@ -132,13 +128,14 @@ class _UserTripScreenState extends State<UserTripScreen> {
                                           .longitude!
                                       : 0,
                                 ),
-                                zoom: 13.5,
+                                zoom: 17,
                               ),
                               //0 for waitingDriver , 1 for driverAcceptTheTrip , 2  for driverStart the trip ,
                               //3 for completed
                               markers: cubit.tripStages == 0 ||
                                       cubit.tripStages == 1 ||
-                                      cubit.tripStages == 3 || cubit.tripStages == 4
+                                      cubit.tripStages == 3 ||
+                                      cubit.tripStages == 4
                                   ?
                                   //with
                                   widget.trip.toAddress != null
@@ -162,7 +159,8 @@ class _UserTripScreenState extends State<UserTripScreen> {
                                             ),
                                             // icon: cubit.destinationIcon,
                                             position: LatLng(
-                                                double.parse(widget.trip.toLat!),
+                                                double.parse(
+                                                    widget.trip.toLat!),
                                                 double.parse(
                                                     widget.trip.toLong!)),
                                           ),
@@ -190,8 +188,8 @@ class _UserTripScreenState extends State<UserTripScreen> {
                                       // with
                                       {
                                           Marker(
-                                            markerId:
-                                                const MarkerId("currentLocation"),
+                                            markerId: const MarkerId(
+                                                "currentLocation"),
                                             icon: homeCubit.markerIcon != null
                                                 ? BitmapDescriptor.fromBytes(
                                                     homeCubit.markerIcon!)
@@ -199,8 +197,8 @@ class _UserTripScreenState extends State<UserTripScreen> {
                                             position: LatLng(
                                                 homeCubit
                                                     .currentLocation!.latitude!,
-                                                homeCubit
-                                                    .currentLocation!.longitude!),
+                                                homeCubit.currentLocation!
+                                                    .longitude!),
                                           ),
 
                                           Marker(
@@ -210,7 +208,8 @@ class _UserTripScreenState extends State<UserTripScreen> {
                                             ),
                                             // icon: cubit.destinationIcon,
                                             position: LatLng(
-                                                double.parse(widget.trip.toLat!),
+                                                double.parse(
+                                                    widget.trip.toLat!),
                                                 double.parse(
                                                     widget.trip.toLong!)),
                                           ),
@@ -219,8 +218,8 @@ class _UserTripScreenState extends State<UserTripScreen> {
                                       // without
                                       : {
                                           Marker(
-                                            markerId:
-                                                const MarkerId("currentLocation"),
+                                            markerId: const MarkerId(
+                                                "currentLocation"),
                                             icon: homeCubit.markerIcon != null
                                                 ? BitmapDescriptor.fromBytes(
                                                     homeCubit.markerIcon!)
@@ -228,33 +227,71 @@ class _UserTripScreenState extends State<UserTripScreen> {
                                             position: LatLng(
                                                 homeCubit
                                                     .currentLocation!.latitude!,
-                                                homeCubit
-                                                    .currentLocation!.longitude!),
+                                                homeCubit.currentLocation!
+                                                    .longitude!),
                                           ),
                                         },
-                              onMapCreated: (GoogleMapController mapController) {
+                              onMapCreated:
+                                  (GoogleMapController mapController) {
                                 context.read<HomeCubit>().mapController =
                                     mapController;
                               },
                               onCameraMove: (position) {
-                                if (homeCubit.strartlocation != position.target) {
-                                  // print(cubit.strartlocation);
-                                  context.read<HomeCubit>().strartlocation =
-                                      position.target;
-                                  context.read<HomeCubit>().getCurrentLocation();
+                                if (homeCubit.strartlocation !=
+                                    position.target) {
+                                  final newLocation = position.target;
+                                  final distance = cubit.calculateDistance(
+                                      LatLng(
+                                        homeCubit.strartlocation.latitude,
+                                        homeCubit.strartlocation.longitude,
+                                      ),
+                                      LatLng(newLocation.latitude,
+                                          newLocation.longitude));
 
-                                  if (widget.trip.toAddress != null)
-                                    cubit.getDirection(
-                                        LatLng(
-                                            homeCubit.currentLocation!.latitude!,
-                                            homeCubit
-                                                .currentLocation!.longitude!),
-                                        LatLng(
-                                            double.parse(
-                                                widget.trip.toLat ?? "0"),
-                                            double.parse(
-                                                widget.trip.toLong ?? "0")));
+                                  // Check if the distance is greater than or equal to 200 meters
+                                  if (distance >= 0.005) {
+                                    // 0.2 is 200 meters in kilometers
+                                    homeCubit.strartlocation = newLocation;
+                                    homeCubit.getCurrentLocation();
+
+                                    if (widget.trip.toAddress != null)
+                                      homeCubit.getDirection(
+                                          LatLng(
+                                              homeCubit
+                                                  .currentLocation!.latitude!,
+                                              homeCubit
+                                                  .currentLocation!.longitude!),
+                                          LatLng(
+                                              double.parse(
+                                                  widget.trip.toLat ?? "0"),
+                                              double.parse(
+                                                  widget.trip.toLong ?? "0")));
+                                  }
                                 }
+
+                                // if (homeCubit.strartlocation !=
+                                //     position.target) {
+                                //   // print(cubit.strartlocation);
+                                //   context.read<HomeCubit>().strartlocation =
+                                //       position.target;
+                                //   context
+                                //       .read<HomeCubit>()
+                                //       .getCurrentLocation();
+
+                                //   if (widget.trip.toAddress != null)
+
+                                //     cubit.getDirection(
+                                //         LatLng(
+                                //             homeCubit
+                                //                 .currentLocation!.latitude!,
+                                //             homeCubit
+                                //                 .currentLocation!.longitude!),
+                                //         LatLng(
+                                //             double.parse(
+                                //                 widget.trip.toLat ?? "0"),
+                                //             double.parse(
+                                //                 widget.trip.toLong ?? "0")));
+                                // }
                                 // _customInfoWindowController.hideInfoWindow!();
 
                                 //  _customInfoWindowController.hideInfoWindow!();
@@ -334,7 +371,6 @@ class _UserTripScreenState extends State<UserTripScreen> {
                         // ),
                       ),
                       //  SizedBox(height: 10,),
-
                     ],
                   ),
                 ),

@@ -36,7 +36,7 @@ class _ImmediateTripDriverState extends State<ImmediateTripDriver> {
               children: [
                 Builder(
                   builder: (context) {
-                    return GoogleMap(
+                    return GoogleMap(myLocationEnabled: true,
                       mapType: MapType.normal,
                       initialCameraPosition: CameraPosition(
                         target: LatLng(
@@ -47,7 +47,7 @@ class _ImmediateTripDriverState extends State<ImmediateTripDriver> {
                               ? cubit!.currentLocation!.longitude!
                               : 0,
                         ),
-                        zoom: 13.5,
+                            zoom: 17,
                       ),
                       markers: {
                         Marker(
@@ -103,7 +103,7 @@ class _ImmediateTripDriverState extends State<ImmediateTripDriver> {
                   },
                 ),
                 Positioned(
-                    top: 10,
+                    top: getSize(context) * 0.1,
                     right: 10,
                     left: 60,
                     child: Material(

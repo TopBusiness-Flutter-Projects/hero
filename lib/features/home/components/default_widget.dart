@@ -13,7 +13,7 @@ import '../../../core/widgets/custom_textfield.dart';
 import '../cubit/home_cubit.dart';
 import 'dart:async';
 import 'package:easy_autocomplete/easy_autocomplete.dart';
-
+import 'package:easy_debounce/easy_debounce.dart';
 import '../screen/home.dart';
 
 class DefaultWidget extends StatefulWidget {
@@ -24,6 +24,7 @@ class DefaultWidget extends StatefulWidget {
 }
 
 class _DefaultWidgetState extends State<DefaultWidget> {
+  TextEditingController currentAddressConroller = TextEditingController();
   bool isFavourite = false;
   @override
   void initState() {
@@ -74,6 +75,95 @@ class _DefaultWidgetState extends State<DefaultWidget> {
                 children: [
                   SizedBox(
                     height: getSize(context) * 0.07,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: CustomTextField(
+                      // suffixIcon: IconButton(
+                      //   // icon:Icon(Icons.favorite_border),
+                      //   icon: isFavourite
+                      //       ? Icon(
+                      //           Icons.favorite_outlined,
+                      //           color: Colors.red,
+                      //         )
+                      //       : Icon(Icons.favorite_border),
+
+                      //   onPressed: () {
+                      //     if (cubit.location_control.text != "" &&
+                      //         cubit.destination != LatLng(0, 0)) {
+                      //       setState(() {
+                      //         isFavourite = true;
+                      //       });
+                      //       cubit.addFavourite(
+                      //           address: cubit.location_control.text!,
+                      //           lat: cubit.destination.latitude
+                      //               .toString(),
+                      //           long: cubit.destination.longitude
+                      //               .toString(),
+                      //           context: context);
+                      //     } else {
+                      //       errorGetBar("the location is empty ");
+                      //     }
+                      //   },
+                      // ),
+                      title: 'enterAddress'.tr(),
+                      backgroundColor: AppColors.white,
+                      prefixWidget: SizedBox(
+                          height: 10,
+                          width: 10,
+                          child: Icon(
+                            Icons.pin_drop_outlined,
+                            size: 25,
+                          )
+                          // MySvgWidget(
+                          //   path: ImageAssets.mapIcon,
+                          //   imageColor: AppColors.black,
+                          //   size: 5,
+                          // ),
+                          ),
+                      validatorMessage: 'loaction_msg'.tr(),
+                      horizontalPadding: 2,
+                      textInputType: TextInputType.text,
+                      onchange: (p0) {
+                        EasyDebounce.debounce('debouncer', Duration(seconds: 1),
+                            () {
+                          cubit.searchCurrentText(p0);
+                        });
+                      },
+                      controller: currentAddressConroller,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  if (cubit.currentAddressText.isNotEmpty)
+                    SizedBox(
+                      height: getSize(context) / 4,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                        child: ListView.separated(
+                            itemBuilder: (context, index) => InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    currentAddressConroller.text =
+                                        cubit.currentAddressText[index].name ??
+                                            '';
+                                  });
+
+                                  cubit.currentAddressText = [];
+                                },
+                                child: Text(
+                                  cubit.currentAddressText[index].name ?? '',
+                                  style: getMediumStyle(color: AppColors.blue),
+                                )),
+                            separatorBuilder: (context, index) => SizedBox(
+                                  height: 2,
+                                ),
+                            itemCount: cubit.currentAddressText.length),
+                      ),
+                    ),
+                  SizedBox(
+                    height: 5,
                   ),
                   //search field
                   Visibility(
@@ -133,7 +223,15 @@ class _DefaultWidgetState extends State<DefaultWidget> {
                               horizontalPadding: 2,
                               textInputType: TextInputType.text,
                               onchange: (p0) {
-                                cubit.getPlaces(p0);
+                                EasyDebounce.debounce(
+                                    'debouncer', Duration(seconds: 1), () {
+                                  cubit.searchText(p0);
+                                });
+                                if (cubit.location_control.text.isEmpty) {
+                                  cubit.searchedText = [];
+                                }
+
+                                // cubit.getPlaces(p0);
                                 // cubit.search(p0);
                                 setState(() {
                                   isFavourite = false;
@@ -203,7 +301,7 @@ class _DefaultWidgetState extends State<DefaultWidget> {
                   //   )
                   // ),
 
-                  if (cubit.placesSearchedList.isNotEmpty)
+                  if (cubit.searchedText.isNotEmpty)
                     SizedBox(
                       height: getSize(context) / 4,
                       child: Padding(
@@ -211,31 +309,32 @@ class _DefaultWidgetState extends State<DefaultWidget> {
                         child: ListView.separated(
                             itemBuilder: (context, index) => InkWell(
                                 onTap: () {
-                                  cubit.location_control.text = cubit
-                                          .placesSearchedList[index]
-                                          .description ??
-                                      '';
+                                  cubit.location_control.text =
+                                      cubit.searchedText[index].name ?? '';
 
-                                  cubit.getPlaceLatLong(
-                                      cubit.placesSearchedList[index].placeId ??
-                                          '');
+                                  cubit.setSearchResult(LatLng(
+                                      cubit.searchedText[index].geometry!
+                                              .location!.lat ??
+                                          0.0,
+                                      cubit.searchedText[index].geometry!
+                                              .location!.lng ??
+                                          0.0));
                                   //  cubit.setSearchResult(LatLng(
                                   //      cubit.placesList[index].geometry.location
                                   //          .lat,
                                   //      cubit.placesList[index].geometry.location
                                   //          .lng));
-                                  cubit.placesSearchedList = [];
+                                  cubit.searchedText = [];
                                   cubit.isSelected = true;
                                 },
                                 child: Text(
-                                  cubit.placesSearchedList[index].description ??
-                                      '',
+                                  cubit.searchedText[index].name ?? '',
                                   style: getMediumStyle(color: AppColors.blue),
                                 )),
                             separatorBuilder: (context, index) => SizedBox(
                                   height: 2,
                                 ),
-                            itemCount: cubit.placesSearchedList.length),
+                            itemCount: cubit.searchedText.length),
                       ),
                     ),
                   Row(
@@ -292,7 +391,12 @@ class _DefaultWidgetState extends State<DefaultWidget> {
                               borderRadius: 16,
                               onClick: () async {
                                 print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-                                await cubit.selectDateAndTime(context);
+                                await cubit.selectDateAndTime(
+                                  context,
+                                  currentAddressConroller.text.isEmpty
+                                      ? null
+                                      : currentAddressConroller.text,
+                                );
                               },
                               width: getSize(context) / 2,
                             ),
@@ -317,6 +421,10 @@ class _DefaultWidgetState extends State<DefaultWidget> {
                                       .read<UserTripCubit>()
                                       .getWaitingDriverStage();
                                   await cubit.createTrip(
+                                      fromAddress:
+                                          currentAddressConroller.text.isEmpty
+                                              ? null
+                                              : currentAddressConroller.text,
                                       tripType:
                                           cubit.flag == 1 ? "with" : "without",
                                       context: context);
@@ -345,7 +453,12 @@ class _DefaultWidgetState extends State<DefaultWidget> {
                                   borderRadius: 16,
                                   onClick: () async {
                                     print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-                                    await cubit.selectDateAndTime(context);
+                                    await cubit.selectDateAndTime(
+                                      context,
+                                      currentAddressConroller.text.isEmpty
+                                          ? null
+                                          : currentAddressConroller.text,
+                                    );
                                   },
                                   width: getSize(context) / 2,
                                 ),
@@ -364,6 +477,10 @@ class _DefaultWidgetState extends State<DefaultWidget> {
                                       .read<UserTripCubit>()
                                       .getWaitingDriverStage();
                                   await cubit.createTrip(
+                                      fromAddress:
+                                          currentAddressConroller.text.isEmpty
+                                              ? null
+                                              : currentAddressConroller.text,
                                       tripType:
                                           cubit.flag == 1 ? "with" : "without",
                                       context: context);

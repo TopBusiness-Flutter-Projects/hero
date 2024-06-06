@@ -56,6 +56,8 @@ class SignupCubit extends Cubit<SignupState> {
       errorGetBar("فشل تسجيل الدخول");  emit(SignUpFailed());
     }, (r) async {
     if (r.code == 200) {
+
+
         emit(SignUpSuccess());
         signUpModel = r;
         Preferences.instance.setUser(r);
@@ -66,14 +68,10 @@ class SignupCubit extends Cubit<SignupState> {
               context, Routes.requestlocationScreenRoute, (route) => false,
               arguments: "client");
         } else {
-
-
           Navigator.pushNamedAndRemoveUntil(
               context, Routes.requestlocationScreenRoute, (route) => false,
               arguments: "driver");
         }
-        // Navigator.of(context).pushNamedAndRemoveUntil(
-        //     Routes.homeRoute, (route) => false);
         nameController.clear();
         phoneController.clear();
         emailController.clear();

@@ -209,11 +209,11 @@ class _HomeDriverState extends State<HomeDriver> with TickerProviderStateMixin {
                         ],
                       ),
                     ),
-                    CloseWidget(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
+                    //  CloseWidget(
+                    //    onTap: () {
+                    //      Navigator.of(context).pop();
+                    //    },
+                    //  ),
                   ],
                 ),
                 leading:

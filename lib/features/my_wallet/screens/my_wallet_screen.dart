@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hero/core/utils/app_fonts.dart';
 import 'package:hero/features/home/cubit/home_cubit.dart';
+import 'package:hero/features/homedriver/cubit/home_driver_cubit.dart';
 import 'package:hero/features/my_wallet/cubit/my_wallet_cubit.dart';
 import 'package:hero/features/my_wallet/screens/widget/custom_wallet_container.dart';
 
@@ -105,7 +106,7 @@ class _MyWalletScreenState extends State<MyWalletScreen> {
                     //address
                     Flexible(
                       child: Text(
-                        "${context.read<HomeCubit>().address}",
+                        "${context.read<HomeCubit>().address??context.read<HomeDriverCubit>().fromAddress}",
                         maxLines: 1,
                          overflow: TextOverflow.ellipsis,
                         style: TextStyle(

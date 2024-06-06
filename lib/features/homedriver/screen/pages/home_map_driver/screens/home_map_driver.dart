@@ -24,11 +24,13 @@ class HomeMapDriver extends StatefulWidget {
   State<HomeMapDriver> createState() => _HomeMapDriverState();
 }
 
+//  Future<void> _goToTheLake() async {
+//     final GoogleMapController controller = await _controller.future;
+//     await controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
+//   }
 class _HomeMapDriverState extends State<HomeMapDriver> {
   HomeDriverCubit? cubit;
   @override
-
-
   @override
   Widget build(BuildContext context) {
     cubit = context.read<HomeDriverCubit>();
@@ -42,52 +44,85 @@ class _HomeMapDriverState extends State<HomeMapDriver> {
               Builder(
                 builder: (context) {
                   return cubit!.currentLocation != null
-                      ? GoogleMap(
-                          mapType: MapType.normal,
-                          initialCameraPosition: CameraPosition(
-                            target: LatLng(
-                              cubit!.currentLocation != null
-                                  ? cubit!.currentLocation!.latitude!
-                                  : 0,
-                              cubit!.currentLocation != null
-                                  ? cubit!.currentLocation!.longitude!
-                                  : 0,
-                            ),
-                            zoom: 13.5,
-                          ),
-                          markers: {
-                            Marker(
-                              markerId: const MarkerId("currentLocation"),
-                              icon: cubit!.markerIcon != null
-                                  ? BitmapDescriptor.fromBytes(
-                                      cubit!.markerIcon!)
-                                  : cubit!.currentLocationIcon,
-                              position: LatLng(
-                                cubit!.currentLocation != null
-                                    ? cubit!.currentLocation!.latitude!
-                                    : 0,
-                                cubit!.currentLocation != null
-                                    ? cubit!.currentLocation!.longitude!
-                                    : 0,
+                      ? Stack(
+                          children: [
+                            GoogleMap(
+                              initialCameraPosition: CameraPosition(
+                                target: LatLng(
+                                  cubit!.currentLocation != null
+                                      ? cubit!.currentLocation!.latitude!
+                                      : 0,
+                                  cubit!.currentLocation != null
+                                      ? cubit!.currentLocation!.longitude!
+                                      : 0,
+                                ),
+                                zoom: 17,
                               ),
+                              markers: {
+                                Marker(
+                                  markerId: const MarkerId("currentLocation"),
+                                  icon: cubit!.markerIcon != null
+                                      ? BitmapDescriptor.fromBytes(
+                                          cubit!.markerIcon!)
+                                      : cubit!.currentLocationIcon,
+                                  position: LatLng(
+                                    cubit!.currentLocation != null
+                                        ? cubit!.currentLocation!.latitude!
+                                        : 0,
+                                    cubit!.currentLocation != null
+                                        ? cubit!.currentLocation!.longitude!
+                                        : 0,
+                                  ),
+                                ),
+                                // Rest of the markers...
+                              },
+                              onMapCreated: (GoogleMapController controller) {
+                                cubit!.mapController =
+                                    controller; // Store the GoogleMapController
+                              },
+                              onTap: (argument) {
+                                // _customInfoWindowController.hideInfoWindow!();
+                              },
+                              onCameraMove: (position) {
+                                // if (cubit!.strartlocation != position.target) {
+                                //   print(cubit!.strartlocation);
+                                //   cubit!.strartlocation = position.target;
+                                //   // cubit!.getCurrentLocation();
+                                // }
+                                // _customInfoWindowController.hideInfoWindow!();
+                              },
                             ),
-                            // Rest of the markers...
-                          },
-                          onMapCreated: (GoogleMapController controller) {
-                            cubit!.mapController =
-                                controller; // Store the GoogleMapController
-                          },
-                          onTap: (argument) {
-                            // _customInfoWindowController.hideInfoWindow!();
-                          },
-                          onCameraMove: (position) {
-                            if (cubit!.strartlocation != position.target) {
-                              print(cubit!.strartlocation);
-                              cubit!.strartlocation = position.target;
-                              // cubit!.getCurrentLocation();
-                            }
-                            // _customInfoWindowController.hideInfoWindow!();
-                          },
+                            Positioned(
+                              bottom: 80,
+                              left: 40,
+                              child: GestureDetector(
+                                onTap: () {
+                                  cubit!.mapController!.animateCamera(
+                                      CameraUpdate.newCameraPosition(
+                                          CameraPosition(
+                                    target: LatLng(
+                                      cubit!.currentLocation != null
+                                          ? cubit!.currentLocation!.latitude!
+                                          : 0,
+                                      cubit!.currentLocation != null
+                                          ? cubit!.currentLocation!.longitude!
+                                          : 0,
+                                    ),
+                                    zoom: 17,
+                                  )));
+                                },
+                                child: Container(
+                                    color: AppColors.white,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: const Icon(
+                                        Icons.my_location,
+                                        size: 30,
+                                      ),
+                                    )),
+                              ),
+                            )
+                          ],
                         )
                       : const ShowLoadingIndicator();
                 },

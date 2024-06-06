@@ -97,6 +97,7 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
                   cubit.currentLocation == null
                       ? const Center(child: Text("Loading"))
                       : GoogleMap(
+                          myLocationEnabled: true,
                           initialCameraPosition: CameraPosition(
                             target: LatLng(
                               cubit.currentLocation != null
@@ -106,9 +107,9 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
                                   ? cubit.currentLocation!.longitude!
                                   : 0,
                             ),
-                            zoom: 13.5,
+                            zoom: 17,
                           ),
-                          markers: cubit.markers,
+                          markers: cubit.markers,                          
                           //       {
                           //         Marker(
                           //           markerId: const MarkerId("currentLocation"),
@@ -141,7 +142,6 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
                           },
                           onTap: (argument) {
                             cubit.changeFavourite();
-
                             if (context.read<HomeCubit>().flag == 1) {
                               cubit.placesList = [];
                               cubit.getGeoData(argument, "to");
@@ -153,7 +153,6 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
                               cubit.paymentMoney =
                                   distance * cubit.settingsModel.data!.km!;
                             }
-
                             //  if(cubit.currentEnumStatus == MyEnum.defaultState){
                             // if (context.read<HomeCubit>().flag == 1) {
                             //   //   cubit.getLocation(argument);
@@ -196,7 +195,7 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
 
                   //back button
                   Positioned(
-                    top: getSize(context) * 0.01,
+                    top: getSize(context) * 0.1,
                     right: 0,
                     left: 0,
                     child: Padding(
