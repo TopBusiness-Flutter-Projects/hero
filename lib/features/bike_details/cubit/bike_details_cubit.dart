@@ -14,8 +14,7 @@ part 'bike_details_states.dart';
 class BikeDetailsCubit extends Cubit<BikeDetailsStates> {
   BikeDetailsCubit(this.api) : super(DriverSignUpInitial());
   ServiceApi api;
-  CitiesModel citiesModel=  CitiesModel ();
-
+  CitiesModel citiesModel = CitiesModel();
 
   getCities() async {
     emit(LoadingGEtCitiesState());
@@ -28,17 +27,23 @@ class BikeDetailsCubit extends Cubit<BikeDetailsStates> {
     });
   }
 
-  StoreDriverDetailsModel storeDriverDetailsModel=  StoreDriverDetailsModel ();
+  StoreDriverDetailsModel storeDriverDetailsModel = StoreDriverDetailsModel();
 
-  storeDriverDetails({
-    required String bikeModel,
-    required String bikeColor,
-    required String bikeType,required BuildContext context}) async {
+  storeDriverDetails(
+      {required String bikeModel,
+      required String bikeColor,
+      required String bikeType,
+      required BuildContext context}) async {
     AppWidget.createProgressDialog(context, "wait".tr());
     emit(LoadingStoreDriverDataState());
-    final response = await api.addDriverDetails(bikeType: bikeType, bikeModel: bikeModel, bikeColor: bikeColor, areaId: currentArea);
-    response.fold((l) {Navigator.pop(context);
-    errorGetBar("error".tr());
+    final response = await api.addDriverDetails(
+        bikeType: bikeType,
+        bikeModel: bikeModel,
+        bikeColor: bikeColor,
+        areaId: currentArea);
+    response.fold((l) {
+      Navigator.pop(context);
+      errorGetBar("error".tr());
       emit(FailureStoreDriverDataState());
     }, (r) {
       storeDriverDetailsModel = r;
@@ -48,15 +53,23 @@ class BikeDetailsCubit extends Cubit<BikeDetailsStates> {
       emit(SuccessStoreDriverDataState());
     });
   }
- StoreDriverDetailsModel storeDriverDetailsModelUpdate=  StoreDriverDetailsModel ();
 
-  updateDriverDetails({
-    required String bikeModel,
-    required String bikeColor,required BuildContext context,
-    required String bikeType}) async {
+  StoreDriverDetailsModel storeDriverDetailsModelUpdate =
+      StoreDriverDetailsModel();
+
+  updateDriverDetails(
+      {required String bikeModel,
+      required String bikeColor,
+      required BuildContext context,
+      required String bikeType}) async {
     emit(LoadingUpdateDriverDataState());
     AppWidget.createProgressDialog(context, "wait".tr());
-    final response = await api.addDriverDetails(bikeType: bikeType, bikeModel: bikeModel, bikeColor: bikeColor, areaId: currentArea,isUpdate: true);
+    final response = await api.addDriverDetails(
+        bikeType: bikeType,
+        bikeModel: bikeModel,
+        bikeColor: bikeColor,
+        areaId: currentArea,
+        isUpdate: true);
     response.fold((l) {
       Navigator.pop(context);
       errorGetBar("error".tr());
@@ -70,7 +83,7 @@ class BikeDetailsCubit extends Cubit<BikeDetailsStates> {
     });
   }
 
-  DriverDataModel driverDataModel=  DriverDataModel ();
+  DriverDataModel driverDataModel = DriverDataModel();
 
   getDriverData() async {
     emit(LoadingGEtDriverDataState());
@@ -83,13 +96,13 @@ class BikeDetailsCubit extends Cubit<BikeDetailsStates> {
     });
   }
 
-
   String currentCity = '0';
 
   void changeCity(String value) {
     currentCity = value;
     emit(ChangeCityState());
   }
+
   String currentArea = '0';
 
   void changeArea(String value) {
@@ -97,20 +110,18 @@ class BikeDetailsCubit extends Cubit<BikeDetailsStates> {
     print(currentArea);
     emit(ChangeAreaState());
   }
+
   int? cityIndex;
- void changeCurrentCityId({ required int cityId}) {
-   cityIndex = cityId-1;
-  emit(ChangeCurrentCityIdState());
+  void changeCurrentCityId({required int cityId}) {
+    cityIndex = cityId;
+    print("city index:" + cityIndex.toString());
+    emit(ChangeCurrentCityIdState());
+  }
 
-
- }
- void setCityIndex() {
-   cityIndex = null;
-  emit(ChangeCurrentCityIdState());
-
-
- }
+  void setCityIndex() {
+    cityIndex = null;
+    emit(ChangeCurrentCityIdState());
+  }
 
   String? dropdownAreaValue;
-
 }

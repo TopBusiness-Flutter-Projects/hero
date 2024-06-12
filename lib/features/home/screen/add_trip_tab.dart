@@ -109,7 +109,7 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
                             ),
                             zoom: 17,
                           ),
-                          markers: cubit.markers,                          
+                          markers: cubit.markers,
                           //       {
                           //         Marker(
                           //           markerId: const MarkerId("currentLocation"),
@@ -145,11 +145,16 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
                             if (context.read<HomeCubit>().flag == 1) {
                               cubit.placesList = [];
                               cubit.getGeoData(argument, "to");
+
                               double distance = cubit.calculateDistance(
                                   LatLng(cubit.currentLocation!.latitude!,
                                       cubit.currentLocation!.longitude!),
                                   argument);
                               cubit.isSelected = true;
+                              cubit.getDirection(
+                                  LatLng(cubit.currentLocation!.latitude!,
+                                      cubit.currentLocation!.longitude!),
+                                  argument);
                               cubit.paymentMoney =
                                   distance * cubit.settingsModel.data!.km!;
                             }
@@ -183,7 +188,6 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
                         ),
                   DefaultWidget(isATrip: widget.isInTrip),
                   // cubit.chooseWidget(cubit.currentEnumStatus),
-
                   //   // default case
                   // DefaultWidget(),
                   // // loading state

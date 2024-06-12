@@ -8,9 +8,7 @@ class CustomSlider extends StatefulWidget {
   const CustomSlider({
     super.key,
     this.items,
-
   });
-
 
   final List<Widget>? items;
 
@@ -26,7 +24,7 @@ class _CustomSliderState extends State<CustomSlider> {
     return Column(
       children: [
         SizedBox(
-          height: MediaQuery.of(context).size.width/4,
+          height: MediaQuery.of(context).size.width / 4,
           //height: 180,
           width: MediaQuery.of(context).size.width,
           child: CarouselSlider(
@@ -37,18 +35,17 @@ class _CustomSliderState extends State<CustomSlider> {
                     _current = index;
                   });
                 },
-               // height: 200 ,
-              //  height: MediaQuery.of(context).size.width/2 ,
+                // height: 200 ,
+                //  height: MediaQuery.of(context).size.width/2 ,
                 clipBehavior: Clip.none,
                 autoPlay: true,
-
                 initialPage: 0,
                 viewportFraction: 1,
-                enableInfiniteScroll: false,
+                enableInfiniteScroll: true,
                 reverse: false,
-                autoPlayAnimationDuration: const Duration(seconds: 1),
-                autoPlayCurve: Curves.linear,
-                autoPlayInterval: const Duration(seconds: 3),
+                autoPlayAnimationDuration: const Duration(milliseconds: 500),
+                autoPlayCurve: Curves.easeInOutSine,
+                autoPlayInterval: const Duration(seconds: 2),
                 scrollDirection: Axis.horizontal),
           ),
         ),

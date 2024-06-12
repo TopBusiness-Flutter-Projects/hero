@@ -580,50 +580,49 @@ class _DriverTripScreenState extends State<DriverTripScreen> {
                                     homeDriverCubit.strartlocation =
                                         position.target;
                                     homeDriverCubit.getCurrentLocation();
-
-                                    if (widget.trip.toAddress != null) {
-                                      if (cubit.tripStages == 2)
-                                        cubit.getDirection(
-                                            LatLng(
-                                                homeDriverCubit
-                                                    .currentLocation!.latitude!,
-                                                homeDriverCubit.currentLocation!
-                                                    .longitude!),
-                                            LatLng(
-                                                double.parse(
-                                                    widget.trip.toLat ?? "0"),
-                                                double.parse(
-                                                    widget.trip.toLong ??
-                                                        "0")));
-                                      else
-                                        cubit.getDirection(
-                                            LatLng(
-                                                homeDriverCubit
-                                                    .currentLocation!.latitude!,
-                                                homeDriverCubit.currentLocation!
-                                                    .longitude!),
-                                            LatLng(
-                                                double.parse(
-                                                    widget.trip.fromLat ?? "0"),
-                                                double.parse(
-                                                    widget.trip.fromLong ??
-                                                        "0")));
-                                    } else {
-                                      if (cubit.tripStages == 0) {
-                                        cubit.getDirection(
-                                            LatLng(
-                                                homeDriverCubit
-                                                    .currentLocation!.latitude!,
-                                                homeDriverCubit.currentLocation!
-                                                    .longitude!),
-                                            LatLng(
-                                                double.parse(
-                                                    widget.trip.fromLat ?? "0"),
-                                                double.parse(
-                                                    widget.trip.fromLong ??
-                                                        "0")));
-                                      }
-                                    }
+                                    // if (widget.trip.toAddress != null) {
+                                    //   if (cubit.tripStages == 2)
+                                    //     cubit.getDirection(
+                                    //         LatLng(
+                                    //             homeDriverCubit
+                                    //                 .currentLocation!.latitude!,
+                                    //             homeDriverCubit.currentLocation!
+                                    //                 .longitude!),
+                                    //         LatLng(
+                                    //             double.parse(
+                                    //                 widget.trip.toLat ?? "0"),
+                                    //             double.parse(
+                                    //                 widget.trip.toLong ??
+                                    //                     "0")));
+                                    //   else
+                                    //     cubit.getDirection(
+                                    //         LatLng(
+                                    //             homeDriverCubit
+                                    //                 .currentLocation!.latitude!,
+                                    //             homeDriverCubit.currentLocation!
+                                    //                 .longitude!),
+                                    //         LatLng(
+                                    //             double.parse(
+                                    //                 widget.trip.fromLat ?? "0"),
+                                    //             double.parse(
+                                    //                 widget.trip.fromLong ??
+                                    //                     "0")));
+                                    // } else {
+                                    //   if (cubit.tripStages == 0) {
+                                    //     cubit.getDirection(
+                                    //         LatLng(
+                                    //             homeDriverCubit
+                                    //                 .currentLocation!.latitude!,
+                                    //             homeDriverCubit.currentLocation!
+                                    //                 .longitude!),
+                                    //         LatLng(
+                                    //             double.parse(
+                                    //                 widget.trip.fromLat ?? "0"),
+                                    //             double.parse(
+                                    //                 widget.trip.fromLong ??
+                                    //                     "0")));
+                                    //   }
+                                    // }
                                   }
 
                                   //  if (homeDriverCubit.strartlocation!=position.target){

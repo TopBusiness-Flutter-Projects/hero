@@ -30,11 +30,10 @@ class _CustomAreasMenuState extends State<CustomAreasMenu> {
       listener: (context, state) {
         if (state is SuccessGEtDriverDataState){
           cubit.dropdownAreaValue =cubit.driverDataModel.data!.driverDetails!.areaId.toString();
-
         }
       },
       builder: (context, state) {
-        return cubit.citiesModel.data != null && cubit.cityIndex != null
+        return cubit.citiesModel.data != null && cubit.cityIndex != null 
             ? CustomDropDownMenu(
           text: 'AppStrings.subscribesCount',
           items: cubit.citiesModel.data![cubit.cityIndex!].areas!

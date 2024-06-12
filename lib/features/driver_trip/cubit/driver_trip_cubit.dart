@@ -101,7 +101,7 @@ class DriverTripCubit extends Cubit<DriverTripState> {
 
   setMarkers({required Marker source, Marker? destination}) {
     markers.clear();
-    markers.add(source);
+ //   markers.add(source);
     if (destination != null) {
       markers.add(destination);
     }

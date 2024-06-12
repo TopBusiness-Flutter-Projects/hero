@@ -5,6 +5,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hero/core/models/login_model.dart';
 import 'package:hero/core/models/signup_response_model.dart';
@@ -48,8 +49,7 @@ class LoginCubit extends Cubit<LoginState> {
     }
 
     //todo=> country code may be change to be iraq code
-    final response =
-        await api.checkPhone(phoneController.text );
+    final response = await api.checkPhone(phoneController.text);
 
     response.fold((l) {
       emit(FailureCheckPhoneState());
@@ -131,8 +131,7 @@ class LoginCubit extends Cubit<LoginState> {
     String? token = await _getId();
     AppWidget.createProgressDialog(context, 'wait'.tr());
     //todo=> country code may be change to be iraq code
-    final response = await api.login(
-        phoneController.text, deviceType, token!);
+    final response = await api.login(phoneController.text, deviceType, token!);
 
     response.fold((l) {
       Navigator.pop(context);
@@ -152,19 +151,14 @@ class LoginCubit extends Cubit<LoginState> {
         Navigator.pop(context);
         Preferences.instance.setUser(r);
 
-        if (r.data!.type == 'driver'){
-
+        if (r.data!.type == 'driver') {
           /// Check documents
           checkDocuments(context);
-        }
-        else{
+        } else {
           Navigator.pushNamedAndRemoveUntil(
               context, Routes.homeRoute, (route) => false);
         }
-
-
-
-      }  else  if (r.code == 422) {
+      } else if (r.code == 422) {
         //new user=> go to register
         isNewUser = true;
         Navigator.pop(context);
@@ -172,14 +166,15 @@ class LoginCubit extends Cubit<LoginState> {
         // ErrorWidget(r.message.toString());
         Navigator.pushNamedAndRemoveUntil(
             context, Routes.registerScreenRoute, (route) => false);
-      }  else {
+      } else {
         errorGetBar(r.message.toString());
         Navigator.pop(context);
       }
     });
   }
+
   // checkDocuments
-  CheckDocumentsModel checkDocumentsModel=  CheckDocumentsModel ();
+  CheckDocumentsModel checkDocumentsModel = CheckDocumentsModel();
 
   checkDocuments(BuildContext context) async {
     emit(LoadingCheckDocumentsStatus());
@@ -188,24 +183,36 @@ class LoginCubit extends Cubit<LoginState> {
       emit(FailureCheckDocumentsState());
     }, (r) {
       checkDocumentsModel = r;
-      if( r.data!.driverDetails == 1 && r.data!.driverDocuments ==1){
-        if ( r.data!.status ==0)
+      if (r.data!.driverDetails == 1 && r.data!.driverDocuments == 1) {
+        if (r.data!.status == 0)
           Navigator.of(context).pushNamedAndRemoveUntil(
               Routes.driverwaitScreenRoute, (route) => false);
         else
           Navigator.pushNamedAndRemoveUntil(
               context, Routes.homedriverRoute, (route) => false);
-
-
-      }
-      else if(r.data!.driverDetails == 0){
-
-        Navigator.pushNamedAndRemoveUntil(
-            context, Routes.bikeDetailsRoute,arguments: false ,(route) => false );
-      }
-      else if(r.data!.driverDocuments == 0){
-        Navigator.pushNamedAndRemoveUntil(
-            context, Routes.uploadDocumentsScreenRoute,arguments: false, (route) => false );
+      } else if (r.data!.driverDetails == 0) {
+        Navigator.pushReplacementNamed(
+          context,
+          Routes.bikeDetailsRoute,
+          arguments: false,
+        ).then((_) {
+          SystemNavigator.pop();
+        });
+        ;
+        // Navigator.pushNamedAndRemoveUntil(
+        //     context,
+        //     Routes.bikeDetailsRoute,
+        //     arguments: false,
+        //     (route) => false);
+      } else if (r.data!.driverDocuments == 0) {
+        Navigator.pushReplacementNamed(
+          context,
+          Routes.uploadDocumentsScreenRoute,
+          arguments: false,
+        ).then((_) {
+          SystemNavigator.pop();
+        });
+        ;
       }
       emit(SuccessCheckDocumentsState());
     });

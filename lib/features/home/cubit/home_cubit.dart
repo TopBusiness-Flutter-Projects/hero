@@ -158,7 +158,7 @@ class HomeCubit extends Cubit<HomeState> {
 
   setMarkers(Marker source, Marker? destination) {
     markers.clear();
-    markers.add(source);
+  //  markers.add(source);
     if (destination != null) {
       markers.add(destination);
     }
@@ -168,11 +168,10 @@ class HomeCubit extends Cubit<HomeState> {
 
   setTripMarkers(Marker source, Marker? destination) {
     tripMarkers.clear();
-    tripMarkers.add(source);
+   // tripMarkers.add(source);
     if (destination != null) {
       tripMarkers.add(destination);
     }
-
     emit(AddMarkersState());
   }
 
@@ -423,11 +422,11 @@ class HomeCubit extends Cubit<HomeState> {
               destination);
           // paymentMoney = distance * settingsModel!.data!.km!;
         }
-
-        getDirection(
-            LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
-            destination);
-
+//
+        //  getDirection(
+        //      LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
+        //      destination);
+//
         emit(UpdateDesitnationLocationStat());
       },
     );
@@ -563,10 +562,10 @@ class HomeCubit extends Cubit<HomeState> {
           );
         });
 
-        getDirection(
-            LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
-            destination);
-        emit(SuccessSearchState());
+        //   getDirection(
+        //       LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
+        //       destination);
+        //   emit(SuccessSearchState());
       },
     );
   }
@@ -642,7 +641,7 @@ class HomeCubit extends Cubit<HomeState> {
       distance = calculateDistance(
           LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
           destination);
-      paymentMoney = distance * settingsModel!.data!.km!;
+      paymentMoney = distance * settingsModel.data!.km!;
     }
     bitmapDescriptorto = await CustomeMarker(
       title: 'to'.tr(),

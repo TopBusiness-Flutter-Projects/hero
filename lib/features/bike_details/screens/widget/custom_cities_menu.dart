@@ -18,7 +18,7 @@ class _CustomCitiesMenuState extends State<CustomCitiesMenu> {
 
   @override
   void initState() {
-   // context.read<AddSubscribeCubit>().getSubsCount();
+    // context.read<AddSubscribeCubit>().getSubsCount();
     super.initState();
   }
 
@@ -28,27 +28,37 @@ class _CustomCitiesMenuState extends State<CustomCitiesMenu> {
 
     return BlocConsumer<BikeDetailsCubit, BikeDetailsStates>(
       listener: (context, state) {
-        if (state is SuccessGEtDriverDataState){
-          dropdownValue =cubit.driverDataModel.data!.cityId.toString();
-          cubit.changeCurrentCityId(cityId: cubit.driverDataModel.data!.cityId!);
+        if (state is SuccessGEtDriverDataState) {
+          dropdownValue = cubit.driverDataModel.data!.cityId.toString();
+          cubit.changeCurrentCityId(
+              cityId: cubit.driverDataModel.data!.cityId!);
         }
       },
       builder: (context, state) {
         return cubit.citiesModel.data != null
-            ?
-        CustomDropDownMenu(
+            ? CustomDropDownMenu(
                 text: 'AppStrings.subscribesCount',
                 items: cubit.citiesModel.data!
-                    .map(
-                      (e) => DropdownMenuItem<String>(
-                        onTap: () async{
-                          cubit.dropdownAreaValue = null;
-                           cubit.changeCurrentCityId(cityId: e.id!);
-                        },
-                        value: e.id.toString(),
-                        child: Text(e.name.toString()),
-                      ),
-                    )
+                    .asMap()
+                    .map((index, e) => MapEntry(
+                          index,
+                          DropdownMenuItem<String>(
+                            onTap: () async {
+                              print('Tapped on item at index $index');
+                              cubit.dropdownAreaValue = null;
+                              cubit.changeArea('0');
+                              cubit.changeCurrentCityId(cityId: index);
+                              if (e.areas!.isNotEmpty) {
+                                cubit.dropdownAreaValue =
+                                    e.areas!.first.id.toString();
+                                cubit.changeArea(e.id.toString());
+                              }
+                            },
+                            value: e.id.toString(),
+                            child: Text(e.name.toString()),
+                          ),
+                        ))
+                    .values
                     .toList(),
                 dropdownValue: dropdownValue,
                 onChanged: (String? value) {
@@ -59,9 +69,40 @@ class _CustomCitiesMenuState extends State<CustomCitiesMenu> {
                   cubit.changeCity(value!);
                 },
               )
-            :  SizedBox(
-          height: getSize(context) / 22,
-        );
+
+            //  CustomDropDownMenu(
+            //     text: 'AppStrings.subscribesCount',
+            //     items: cubit.citiesModel.data!
+            //         .map(
+            //           (e) => DropdownMenuItem<String>(
+            //             onTap: () async {
+            //               print(
+
+            //                   cubit.citiesModel.data![cubit.cityIndex!].areas!);
+            //               // if (e.areas!.isNotEmpty) {
+            //               //   cubit.dropdownAreaValue =
+            //               //       e.areas!.first.id.toString();
+            //               // }
+            //               cubit.dropdownAreaValue = null;
+            //               cubit.changeCurrentCityId(cityId: );
+            //             },
+            //             value: e.id.toString(),
+            //             child: Text(e.name.toString()),
+            //           ),
+            //         )
+            //         .toList(),
+            //     dropdownValue: dropdownValue,
+            //     onChanged: (String? value) {
+            //       setState(() {
+            //         dropdownValue = value!;
+            //       });
+
+            //       cubit.changeCity(value!);
+            //     },
+            //   )
+            : SizedBox(
+                height: getSize(context) / 22,
+              );
       },
     );
   }

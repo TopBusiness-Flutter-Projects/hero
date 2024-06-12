@@ -111,6 +111,7 @@ class _UserTripScreenState extends State<UserTripScreen> {
                           },
                           builder: (context, state) => GoogleMap(
                               myLocationEnabled: true,
+                              compassEnabled: true,
                               initialCameraPosition: CameraPosition(
                                 target: LatLng(
                                   context.read<HomeCubit>().currentLocation !=
@@ -140,18 +141,18 @@ class _UserTripScreenState extends State<UserTripScreen> {
                                   //with
                                   widget.trip.toAddress != null
                                       ? {
-                                          Marker(
-                                            markerId: const MarkerId("from"),
-                                            icon: homeCubit.markerIcon != null
-                                                ? BitmapDescriptor.fromBytes(
-                                                    homeCubit.markerIcon!)
-                                                : homeCubit.currentLocationIcon,
-                                            position: LatLng(
-                                                double.parse(
-                                                    widget.trip.fromLat!),
-                                                double.parse(
-                                                    widget.trip.fromLong!)),
-                                          ),
+                                        // Marker(
+                                        //   markerId: const MarkerId("from"),
+                                        //   icon: homeCubit.markerIcon != null
+                                        //       ? BitmapDescriptor.fromBytes(
+                                        //           homeCubit.markerIcon!)
+                                        //       : homeCubit.currentLocationIcon,
+                                        //   position: LatLng(
+                                        //       double.parse(
+                                        //           widget.trip.fromLat!),
+                                        //       double.parse(
+                                        //           widget.trip.fromLong!)),
+                                        // ),
                                           Marker(
                                             markerId: MarkerId("to"),
                                             infoWindow: InfoWindow(
@@ -168,18 +169,18 @@ class _UserTripScreenState extends State<UserTripScreen> {
                                         }
                                       // without
                                       : {
-                                          Marker(
-                                            markerId: const MarkerId("from"),
-                                            icon: homeCubit.markerIcon != null
-                                                ? BitmapDescriptor.fromBytes(
-                                                    homeCubit.markerIcon!)
-                                                : homeCubit.currentLocationIcon,
-                                            position: LatLng(
-                                                double.parse(
-                                                    widget.trip.fromLat!),
-                                                double.parse(
-                                                    widget.trip.fromLong!)),
-                                          )
+                                         // Marker(
+                                         //   markerId: const MarkerId("from"),
+                                         //   icon: homeCubit.markerIcon != null
+                                         //       ? BitmapDescriptor.fromBytes(
+                                         //           homeCubit.markerIcon!)
+                                         //       : homeCubit.currentLocationIcon,
+                                         //   position: LatLng(
+                                         //       double.parse(
+                                         //           widget.trip.fromLat!),
+                                         //       double.parse(
+                                         //           widget.trip.fromLong!)),
+                                         // )
                                         }
                                   : // driver start
 
@@ -187,19 +188,19 @@ class _UserTripScreenState extends State<UserTripScreen> {
                                       ?
                                       // with
                                       {
-                                          Marker(
-                                            markerId: const MarkerId(
-                                                "currentLocation"),
-                                            icon: homeCubit.markerIcon != null
-                                                ? BitmapDescriptor.fromBytes(
-                                                    homeCubit.markerIcon!)
-                                                : homeCubit.currentLocationIcon,
-                                            position: LatLng(
-                                                homeCubit
-                                                    .currentLocation!.latitude!,
-                                                homeCubit.currentLocation!
-                                                    .longitude!),
-                                          ),
+                                        //  Marker(
+                                        //    markerId: const MarkerId(
+                                        //        "currentLocation"),
+                                        //    icon: homeCubit.markerIcon != null
+                                        //        ? BitmapDescriptor.fromBytes(
+                                        //            homeCubit.markerIcon!)
+                                        //        : homeCubit.currentLocationIcon,
+                                        //    position: LatLng(
+                                        //        homeCubit
+                                        //            .currentLocation!.latitude!,
+                                        //        homeCubit.currentLocation!
+                                        //            .longitude!),
+                                        //  ),
 
                                           Marker(
                                             markerId: MarkerId("to"),
@@ -217,19 +218,19 @@ class _UserTripScreenState extends State<UserTripScreen> {
                                         }
                                       // without
                                       : {
-                                          Marker(
-                                            markerId: const MarkerId(
-                                                "currentLocation"),
-                                            icon: homeCubit.markerIcon != null
-                                                ? BitmapDescriptor.fromBytes(
-                                                    homeCubit.markerIcon!)
-                                                : homeCubit.currentLocationIcon,
-                                            position: LatLng(
-                                                homeCubit
-                                                    .currentLocation!.latitude!,
-                                                homeCubit.currentLocation!
-                                                    .longitude!),
-                                          ),
+                                         // Marker(
+                                         //   markerId: const MarkerId(
+                                         //       "currentLocation"),
+                                         //   icon: homeCubit.markerIcon != null
+                                         //       ? BitmapDescriptor.fromBytes(
+                                         //           homeCubit.markerIcon!)
+                                         //       : homeCubit.currentLocationIcon,
+                                         //   position: LatLng(
+                                         //       homeCubit
+                                         //           .currentLocation!.latitude!,
+                                         //       homeCubit.currentLocation!
+                                         //           .longitude!),
+                                         // ),
                                         },
                               onMapCreated:
                                   (GoogleMapController mapController) {
@@ -254,18 +255,18 @@ class _UserTripScreenState extends State<UserTripScreen> {
                                     homeCubit.strartlocation = newLocation;
                                     homeCubit.getCurrentLocation();
 
-                                    if (widget.trip.toAddress != null)
-                                      homeCubit.getDirection(
-                                          LatLng(
-                                              homeCubit
-                                                  .currentLocation!.latitude!,
-                                              homeCubit
-                                                  .currentLocation!.longitude!),
-                                          LatLng(
-                                              double.parse(
-                                                  widget.trip.toLat ?? "0"),
-                                              double.parse(
-                                                  widget.trip.toLong ?? "0")));
+                                    // if (widget.trip.toAddress != null)
+                                    // homeCubit.getDirection(
+                                    // LatLng(
+                                    // homeCubit
+                                    // .currentLocation!.latitude!,
+                                    // homeCubit
+                                    // .currentLocation!.longitude!),
+                                    // LatLng(
+                                    // double.parse(
+                                    // widget.trip.toLat ?? "0"),
+                                    // double.parse(
+                                    // widget.trip.toLong ?? "0")));
                                   }
                                 }
 

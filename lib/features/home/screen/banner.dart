@@ -6,7 +6,6 @@ import '../../../core/models/home_model.dart';
 import '../../../core/widgets/network_image.dart';
 import 'dots.dart';
 
-
 class BannerWidget extends StatefulWidget {
   const BannerWidget({Key? key, this.isDotes = true, required this.sliderData})
       : super(key: key);
@@ -36,24 +35,31 @@ class _BannerWidgetState extends State<BannerWidget> {
                   });
                 },
                 enlargeCenterPage: true,
-                enableInfiniteScroll: false,
                 autoPlay: true,
                 height: MediaQuery.of(context).size.width * 0.5,
+                enableInfiniteScroll: true,
                 reverse: false,
+                autoPlayAnimationDuration: const Duration(milliseconds: 500),
+                autoPlayCurve: Curves.easeInOutSine,
+                autoPlayInterval: const Duration(seconds: 2),
                 viewportFraction: 1.0),
             items: widget.sliderData.map((i) {
               return Builder(
                 builder: (BuildContext context) {
                   return InkWell(
                     onTap: () async {
-                      await launchUrl(Uri.parse(i.link.toString()), mode: LaunchMode.externalApplication);
+                      await launchUrl(Uri.parse(i.link.toString()),
+                          mode: LaunchMode.externalApplication);
                     },
-                    child: ManageNetworkImage(
-                      imageUrl: i.image!,
-                      borderRadius: 10,
-                      //boxFit: BoxFit.contain,
-                      width: MediaQuery.of(context).size.width ,
-                      height: MediaQuery.of(context).size.width /1.2,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: ManageNetworkImage(
+                        imageUrl: i.image!,
+                        borderRadius: 10,
+                        //boxFit: BoxFit.contain,
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.width / 1.2,
+                      ),
                     ),
                   );
                 },
@@ -65,12 +71,12 @@ class _BannerWidgetState extends State<BannerWidget> {
               : const SizedBox(height: 0),
           widget.isDotes == true
               ? Padding(
-                padding: const EdgeInsets.only(bottom: 4),
-                child: DotesWidget(
-                            page: page,
-                            length: widget.sliderData.length,
-                          ),
-              )
+                  padding: const EdgeInsets.only(bottom: 4),
+                  child: DotesWidget(
+                    page: page,
+                    length: widget.sliderData.length,
+                  ),
+                )
               : Container(),
         ],
       );

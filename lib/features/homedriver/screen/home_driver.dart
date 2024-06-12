@@ -114,6 +114,7 @@ class _HomeDriverState extends State<HomeDriver> with TickerProviderStateMixin {
                   ),
                   builder: (context) => CustomSlider(
                     items:
+                    
                         // [
                         //   CustomNetworkImage(
                         //                boxFit: BoxFit.fill,
@@ -133,7 +134,7 @@ class _HomeDriverState extends State<HomeDriver> with TickerProviderStateMixin {
                         //                ),
                         //                width: double.maxFinite),
                         // ]
-
+                       
                         cubit.driverDataModel.data!.sliders!
                             .map((e) => GestureDetector(
                                   onTap: () async {

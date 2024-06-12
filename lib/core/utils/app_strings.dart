@@ -46,6 +46,8 @@ class AppStrings {
   static const String editProfileText = 'edit_profile_text';
   static const String registerText = 'register_text';
   static const String errorOccurredText = 'error_occurred_text';
+  static const String enterFeilds = 'املأ جميع الحقول';
+
   static const String deleteSuccessFullyText = 'delete_successfully_text';
   static const String waringDeleteAccountMessage =
       'waring_delete_account_message';

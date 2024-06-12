@@ -85,7 +85,7 @@ class UserTripCubit extends Cubit<UserTripState> {
 
   setMarkers(Marker source, Marker? destination) {
     markers.clear();
-    markers.add(source);
+  //  markers.add(source);
     if (destination != null) {
       markers.add(destination);
     }
@@ -148,7 +148,7 @@ class UserTripCubit extends Cubit<UserTripState> {
 
   String origin = "", dest = "";
   getDirection(LatLng startPosition, LatLng endPosition) async {
-
+    
     origin = startPosition.latitude.toString() +
         "," +
         startPosition.longitude.toString();
@@ -160,7 +160,6 @@ class UserTripCubit extends Cubit<UserTripState> {
           (l) => emit(ErrorLocationSearch()),
           (r) {
         latLngList.clear();
-
         if (r.routes.length > 0) {
           point = mp.PolygonUtil.decode(
               r.routes.elementAt(0).overviewPolyline.points);
