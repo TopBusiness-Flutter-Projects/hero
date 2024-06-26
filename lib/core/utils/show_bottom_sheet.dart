@@ -8,6 +8,7 @@ void showMyBottomSheet(Widget widget,BuildContext context){
       builder: (context) => widget,
       isDismissible: false,
       isScrollControlled: true,
+      
       backgroundColor: AppColors.white,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(

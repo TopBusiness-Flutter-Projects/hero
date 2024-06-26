@@ -27,7 +27,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
     super.initState();
     context.read<HomeCubit>().getNotification();
     print("address = " + "${context.read<HomeDriverCubit>().fromAddress}");
-    context.read<HomeCubit>().getNotification();
+   // context.read<HomeCubit>().getNotification();
   }
 
   @override

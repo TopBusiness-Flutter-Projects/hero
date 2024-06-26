@@ -157,10 +157,10 @@ class DriverTripCubit extends Cubit<DriverTripState> {
         setMarkers(
           source: Marker(
             markerId: const MarkerId("currentLocation"),
-            icon: context.read<HomeDriverCubit>().markerIcon != null
-                ? BitmapDescriptor.fromBytes(
-                    context.read<HomeDriverCubit>().markerIcon!)
-                : context.read<HomeDriverCubit>().currentLocationIcon,
+           // icon: context.read<HomeDriverCubit>().markerIcon != null
+           //     ? BitmapDescriptor.fromBytes(
+           //         context.read<HomeDriverCubit>().markerIcon!)
+           //     : context.read<HomeDriverCubit>().currentLocationIcon,
             position: LatLng(currentLocation?.latitude ?? 0,
                 currentLocation?.longitude ?? 0),
           ),
@@ -206,10 +206,10 @@ class DriverTripCubit extends Cubit<DriverTripState> {
         setMarkers(
           source: Marker(
             markerId: const MarkerId("currentLocation"),
-            icon: context.read<HomeDriverCubit>().markerIcon != null
-                ? BitmapDescriptor.fromBytes(
-                    context.read<HomeDriverCubit>().markerIcon!)
-                : context.read<HomeDriverCubit>().currentLocationIcon,
+          //  icon: context.read<HomeDriverCubit>().markerIcon != null
+          //      ? BitmapDescriptor.fromBytes(
+          //          context.read<HomeDriverCubit>().markerIcon!)
+          //      : context.read<HomeDriverCubit>().currentLocationIcon,
             position: LatLng(currentLocation?.latitude ?? 0,
                 currentLocation?.longitude ?? 0),
           ),

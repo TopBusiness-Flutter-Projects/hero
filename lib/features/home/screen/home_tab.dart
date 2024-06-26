@@ -40,10 +40,8 @@ class _HomeTabState extends State<HomeTab> {
     super.initState();
     context.read<HomeCubit>().getHomeData(context);
     context.read<HomeCubit>().getUserTripStatus(context);
-
     //context.read<HomeCubit>().carouselController = CarouselController();
   }
-
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<HomeCubit, HomeState>(

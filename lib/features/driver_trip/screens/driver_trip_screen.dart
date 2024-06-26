@@ -67,7 +67,7 @@ class _DriverTripScreenState extends State<DriverTripScreen> {
             ),
             LatLng(double.parse(widget.trip.toLat ?? "31.98354"),
                 double.parse(widget.trip.toLong ?? "31.1234065")));
-      }
+      } else {}
     } else {
       context.read<DriverTripCubit>().setMarkerIcon(
           null,
@@ -267,6 +267,9 @@ class _DriverTripScreenState extends State<DriverTripScreen> {
                           return Stack(
                             children: [
                               GoogleMap(
+                                compassEnabled: true,
+                                myLocationButtonEnabled: true,
+                                myLocationEnabled: true,
                                 initialCameraPosition: CameraPosition(
                                   target: LatLng(
                                     homeDriverCubit.currentLocation != null
@@ -283,37 +286,45 @@ class _DriverTripScreenState extends State<DriverTripScreen> {
                                 markers: widget.trip.tripType != 'without'
                                     ? cubit.tripStages == 1
                                         ? {
-                                            Marker(
-                                              markerId: const MarkerId(
-                                                  "currentLocation"),
-                                              icon: homeDriverCubit
-                                                          .markerIcon !=
-                                                      null
-                                                  ? BitmapDescriptor.fromBytes(
-                                                      homeDriverCubit
-                                                          .markerIcon!)
-                                                  : homeDriverCubit
-                                                      .currentLocationIcon,
-                                              position: LatLng(
-                                                homeDriverCubit
-                                                            .currentLocation !=
-                                                        null
-                                                    ? homeDriverCubit
-                                                        .currentLocation!
-                                                        .latitude!
-                                                    : 0,
-                                                homeDriverCubit
-                                                            .currentLocation !=
-                                                        null
-                                                    ? homeDriverCubit
-                                                        .currentLocation!
-                                                        .longitude!
-                                                    : 0,
-                                              ),
-                                            ),
+                                            // Marker(
+                                            //   markerId: const MarkerId(
+                                            //       "currentLocation"),
+                                            //   icon: homeDriverCubit
+                                            //               .markerIcon !=
+                                            //           null
+                                            //       ? BitmapDescriptor.fromBytes(
+                                            //           homeDriverCubit
+                                            //               .markerIcon!)
+                                            //       : homeDriverCubit
+                                            //           .currentLocationIcon,
+                                            //   position: LatLng(
+                                            //     homeDriverCubit
+                                            //                 .currentLocation !=
+                                            //             null
+                                            //         ? homeDriverCubit
+                                            //             .currentLocation!
+                                            //             .latitude!
+                                            //         : 0,
+                                            //     homeDriverCubit
+                                            //                 .currentLocation !=
+                                            //             null
+                                            //         ? homeDriverCubit
+                                            //             .currentLocation!
+                                            //             .longitude!
+                                            //         : 0,
+                                            //   ),
+                                            // ),
 
                                             Marker(
                                               markerId: MarkerId("from"),
+                                              //icon: homeDriverCubit
+                                              //            .markerIcon !=
+                                              //        null
+                                              //    ? BitmapDescriptor.fromBytes(
+                                              //        homeDriverCubit
+                                              //            .markerIcon!)
+                                              //    : homeDriverCubit
+                                              //        .currentLocationIcon,
                                               position: LatLng(
                                                   double.parse(
                                                       widget.trip.fromLat!),
@@ -325,35 +336,35 @@ class _DriverTripScreenState extends State<DriverTripScreen> {
                                           }
                                         : cubit.tripStages == 2
                                             ? {
-                                                Marker(
-                                                  markerId: const MarkerId(
-                                                      "currentLocation"),
-                                                  icon: homeDriverCubit!
-                                                              .markerIcon !=
-                                                          null
-                                                      ? BitmapDescriptor
-                                                          .fromBytes(
-                                                              homeDriverCubit
-                                                                  .markerIcon!)
-                                                      : homeDriverCubit!
-                                                          .currentLocationIcon,
-                                                  position: LatLng(
-                                                    homeDriverCubit!
-                                                                .currentLocation !=
-                                                            null
-                                                        ? homeDriverCubit!
-                                                            .currentLocation!
-                                                            .latitude!
-                                                        : 0,
-                                                    homeDriverCubit!
-                                                                .currentLocation !=
-                                                            null
-                                                        ? homeDriverCubit!
-                                                            .currentLocation!
-                                                            .longitude!
-                                                        : 0,
-                                                  ),
-                                                ),
+                                                // Marker(
+                                                //   markerId: const MarkerId(
+                                                //       "currentLocation"),
+                                                //   icon: homeDriverCubit!
+                                                //               .markerIcon !=
+                                                //           null
+                                                //       ? BitmapDescriptor
+                                                //           .fromBytes(
+                                                //               homeDriverCubit
+                                                //                   .markerIcon!)
+                                                //       : homeDriverCubit!
+                                                //           .currentLocationIcon,
+                                                //   position: LatLng(
+                                                //     homeDriverCubit!
+                                                //                 .currentLocation !=
+                                                //             null
+                                                //         ? homeDriverCubit!
+                                                //             .currentLocation!
+                                                //             .latitude!
+                                                //         : 0,
+                                                //     homeDriverCubit!
+                                                //                 .currentLocation !=
+                                                //             null
+                                                //         ? homeDriverCubit!
+                                                //             .currentLocation!
+                                                //             .longitude!
+                                                //         : 0,
+                                                //   ),
+                                                // ),
 
                                                 Marker(
                                                   markerId: MarkerId("to"),
@@ -369,44 +380,47 @@ class _DriverTripScreenState extends State<DriverTripScreen> {
                                             :
                                             // on start screen
                                             {
-                                                Marker(
-                                                  markerId: const MarkerId(
-                                                      "currentLocation"),
-                                                  icon: homeDriverCubit!
-                                                              .markerIcon !=
-                                                          null
-                                                      ? BitmapDescriptor
-                                                          .fromBytes(
-                                                              homeDriverCubit
-                                                                  .markerIcon!)
-                                                      : homeDriverCubit!
-                                                          .currentLocationIcon,
-                                                  position: LatLng(
-                                                    homeDriverCubit!
-                                                                .currentLocation !=
-                                                            null
-                                                        ? homeDriverCubit!
-                                                            .currentLocation!
-                                                            .latitude!
-                                                        : 0,
-                                                    homeDriverCubit!
-                                                                .currentLocation !=
-                                                            null
-                                                        ? homeDriverCubit!
-                                                            .currentLocation!
-                                                            .longitude!
-                                                        : 0,
-                                                  ),
-                                                ),
-                                                // cubit.bitmapDescriptorfrom != null ?Marker(
-                                                //   markerId: MarkerId("from"),
-                                                //   icon:cubit.bitmapDescriptorfrom!,
-                                                //   position: LatLng(double.parse(widget.trip.fromLat!),
-                                                //       double.parse(widget.trip.fromLong!)),
-                                                // ):
+                                                // Marker(
+                                                //   markerId: const MarkerId(
+                                                //       "currentLocation"),
+                                                //   icon: homeDriverCubit!
+                                                //               .markerIcon !=
+                                                //           null
+                                                //       ? BitmapDescriptor
+                                                //           .fromBytes(
+                                                //               homeDriverCubit
+                                                //                   .markerIcon!)
+                                                //       : homeDriverCubit!
+                                                //           .currentLocationIcon,
+                                                //   position: LatLng(
+                                                //     homeDriverCubit!
+                                                //                 .currentLocation !=
+                                                //             null
+                                                //         ? homeDriverCubit!
+                                                //             .currentLocation!
+                                                //             .latitude!
+                                                //         : 0,
+                                                //     homeDriverCubit!
+                                                //                 .currentLocation !=
+                                                //             null
+                                                //         ? homeDriverCubit!
+                                                //             .currentLocation!
+                                                //             .longitude!
+                                                //         : 0,
+                                                //   ),
+                                                // ),
+
                                                 Marker(
                                                   markerId: MarkerId("from"),
-                                                  // icon:cubit.bitmapDescriptorfrom!,
+                                                  // icon: homeDriverCubit
+                                                  //             .markerIcon !=
+                                                  //         null
+                                                  //     ? BitmapDescriptor
+                                                  //         .fromBytes(
+                                                  //             homeDriverCubit
+                                                  //                 .markerIcon!)
+                                                  //     : homeDriverCubit
+                                                  //         .currentLocationIcon,
                                                   position: LatLng(
                                                       double.parse(
                                                           widget.trip.fromLat!),
@@ -429,59 +443,65 @@ class _DriverTripScreenState extends State<DriverTripScreen> {
                                     :
 
                                     /// without trip
-                                    //                             cubit.tripStages ==1 ?
-                                    //                             {
-                                    //                               Marker(
-                                    //                                 markerId: const MarkerId("currentLocation"),
-                                    //                                 icon: homeDriverCubit.markerIcon != null
-                                    //                                     ? BitmapDescriptor.fromBytes(homeDriverCubit.markerIcon!)
-                                    //                                     : homeDriverCubit.currentLocationIcon,
-                                    //                                 position: LatLng(
-                                    //                                   homeDriverCubit.currentLocation != null ? homeDriverCubit
-                                    //                                       .currentLocation!.latitude! : 0,
-                                    //                                   homeDriverCubit.currentLocation != null ? homeDriverCubit
-                                    //                                       .currentLocation!.longitude! : 0,
-                                    //                                 ),
-                                    //                               ),
-                                    //                               // Rest of the markers...
-                                    //                             }
-                                    //                                 :
+                                    cubit.tripStages == 0 ||
+                                            cubit.tripStages == 1
+                                        ? {
+                                            Marker(
+                                              markerId: MarkerId("from"),
+                                              // icon: homeDriverCubit
+                                              //             .markerIcon !=
+                                              //         null
+                                              //     ? BitmapDescriptor.fromBytes(
+                                              //         homeDriverCubit
+                                              //             .markerIcon!)
+                                              //     : homeDriverCubit
+                                              //         .currentLocationIcon,
+                                              position: LatLng(
+                                                  double.parse(
+                                                      widget.trip.fromLat!),
+                                                  double.parse(
+                                                      widget.trip.fromLong!)),
+                                            ),
+                                            // Marker(
+                                            //   markerId: const MarkerId("currentLocation"),
+                                            //   icon: homeDriverCubit.markerIcon != null
+                                            //       ? BitmapDescriptor.fromBytes(homeDriverCubit.markerIcon!)
+                                            //       : homeDriverCubit.currentLocationIcon,
+                                            //   position: LatLng(
+                                            //     homeDriverCubit.currentLocation != null ? homeDriverCubit
+                                            //         .currentLocation!.latitude! : 0,
+                                            //     homeDriverCubit.currentLocation != null ? homeDriverCubit
+                                            //         .currentLocation!.longitude! : 0,
+                                            //   ),
+                                            // ),
+                                            // Rest of the markers...
+                                          }
+                                        : {
+                                            // Marker(
+                                            //   markerId:
+                                            //       const MarkerId("currentLocation"),
+                                            //   icon: homeDriverCubit.markerIcon !=
+                                            //           null
+                                            //       ? BitmapDescriptor.fromBytes(
+                                            //           homeDriverCubit.markerIcon!)
+                                            //       : homeDriverCubit
+                                            //           .currentLocationIcon,
+                                            //   position: LatLng(
+                                            //     homeDriverCubit.currentLocation !=
+                                            //             null
+                                            //         ? homeDriverCubit
+                                            //             .currentLocation!.latitude!
+                                            //         : 0,
+                                            //     homeDriverCubit.currentLocation !=
+                                            //             null
+                                            //         ? homeDriverCubit
+                                            //             .currentLocation!.longitude!
+                                            //         : 0,
+                                            //   ),
+                                            // ),
 
-                                    {
-                                        Marker(
-                                          markerId:
-                                              const MarkerId("currentLocation"),
-                                          icon: homeDriverCubit.markerIcon !=
-                                                  null
-                                              ? BitmapDescriptor.fromBytes(
-                                                  homeDriverCubit.markerIcon!)
-                                              : homeDriverCubit
-                                                  .currentLocationIcon,
-                                          position: LatLng(
-                                            homeDriverCubit.currentLocation !=
-                                                    null
-                                                ? homeDriverCubit
-                                                    .currentLocation!.latitude!
-                                                : 0,
-                                            homeDriverCubit.currentLocation !=
-                                                    null
-                                                ? homeDriverCubit
-                                                    .currentLocation!.longitude!
-                                                : 0,
-                                          ),
-                                        ),
-
-                                        Marker(
-                                          markerId: MarkerId("from"),
-                                          position: LatLng(
-                                              double.parse(
-                                                  widget.trip.fromLat!),
-                                              double.parse(
-                                                  widget.trip.fromLong!)),
-                                        ),
-
-                                        // Rest of the markers...
-                                      },
+                                            // Rest of the markers...
+                                          },
                                 onMapCreated: (GoogleMapController controller) {
                                   homeDriverCubit.mapController =
                                       controller; // Store the GoogleMapController
@@ -507,7 +527,7 @@ class _DriverTripScreenState extends State<DriverTripScreen> {
                                               //       double.parse(widget.trip.fromLong!)),
                                               // ]
                                               ,
-                                              color: const Color(0xFF7B61FF),
+                                              color: AppColors.primary,
                                               width: 6,
                                             ),
                                           }
@@ -528,8 +548,7 @@ class _DriverTripScreenState extends State<DriverTripScreen> {
                                                   //       double.parse(widget.trip.toLong!)),
                                                   // ]
                                                   ,
-                                                  color:
-                                                      const Color(0xFF7B61FF),
+                                                  color: AppColors.primary,
                                                   width: 6,
                                                 ),
                                               }
@@ -546,8 +565,7 @@ class _DriverTripScreenState extends State<DriverTripScreen> {
                                                   //       double.parse(widget.trip.toLong!)),
                                                   // ]
                                                   ,
-                                                  color:
-                                                      const Color(0xFF7B61FF),
+                                                  color: AppColors.primary,
                                                   width: 6,
                                                 ),
                                               }
@@ -569,7 +587,7 @@ class _DriverTripScreenState extends State<DriverTripScreen> {
                                           //       double.parse(widget.trip.fromLong!)),
                                           // ]
                                           ,
-                                          color: const Color(0xFF7B61FF),
+                                          color: AppColors.primary,
                                           width: 6,
                                         ),
                                       },
@@ -913,6 +931,33 @@ class _DriverTripScreenState extends State<DriverTripScreen> {
                         color: AppColors.primary,
                         onClick: () {
                           cubit.acceptTrip(context, widget.trip.id.toString());
+                          context.read<DriverTripCubit>().getDirection(
+                              //widget.trip
+                              LatLng(
+                                context
+                                            .read<HomeDriverCubit>()
+                                            .currentLocation !=
+                                        null
+                                    ? context
+                                        .read<HomeDriverCubit>()
+                                        .currentLocation!
+                                        .latitude!
+                                    : 0,
+                                context
+                                            .read<HomeDriverCubit>()
+                                            .currentLocation !=
+                                        null
+                                    ? context
+                                        .read<HomeDriverCubit>()
+                                        .currentLocation!
+                                        .longitude!
+                                    : 0,
+                              ),
+                              LatLng(
+                                  double.parse(
+                                      widget.trip.fromLat ?? "31.98354"),
+                                  double.parse(
+                                      widget.trip.fromLong ?? "31.1234065")));
                         },
                         width: getSize(context) * 0.9,
                         height: getSize(context) * 0.14,
@@ -924,6 +969,35 @@ class _DriverTripScreenState extends State<DriverTripScreen> {
                         color: AppColors.primary,
                         onClick: () {
                           cubit.startTrip(context, widget.trip.id.toString());
+                          if (widget.trip.tripType != 'without') {
+                            context.read<DriverTripCubit>().getDirection(
+                                //widget.trip
+                                LatLng(
+                                  context
+                                              .read<HomeDriverCubit>()
+                                              .currentLocation !=
+                                          null
+                                      ? context
+                                          .read<HomeDriverCubit>()
+                                          .currentLocation!
+                                          .latitude!
+                                      : 0,
+                                  context
+                                              .read<HomeDriverCubit>()
+                                              .currentLocation !=
+                                          null
+                                      ? context
+                                          .read<HomeDriverCubit>()
+                                          .currentLocation!
+                                          .longitude!
+                                      : 0,
+                                ),
+                                LatLng(
+                                    double.parse(
+                                        widget.trip.toLat ?? "31.98354"),
+                                    double.parse(
+                                        widget.trip.toLong ?? "31.1234065")));
+                          }
                         },
                         width: getSize(context) * 0.9,
                         height: getSize(context) * 0.14,

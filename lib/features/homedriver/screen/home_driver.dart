@@ -31,6 +31,7 @@ class _HomeDriverState extends State<HomeDriver> with TickerProviderStateMixin {
     // TODO: implement initState
     super.initState();
     context.read<HomeCubit>().getUserData();
+
     context.read<BikeDetailsCubit>().getCities();
     context.read<HomeDriverCubit>().getCurrentLocation(isFirst: true);
     context.read<HomeCubit>().getCurrentLocation();
@@ -76,6 +77,7 @@ class _HomeDriverState extends State<HomeDriver> with TickerProviderStateMixin {
                           InkWell(
                         onTap: () {
                           _scaffoldKey.currentState?.openDrawer();
+                          context.read<HomeCubit>().getNotificationCount();
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -114,7 +116,7 @@ class _HomeDriverState extends State<HomeDriver> with TickerProviderStateMixin {
                   ),
                   builder: (context) => CustomSlider(
                     items:
-                    
+
                         // [
                         //   CustomNetworkImage(
                         //                boxFit: BoxFit.fill,
@@ -134,7 +136,7 @@ class _HomeDriverState extends State<HomeDriver> with TickerProviderStateMixin {
                         //                ),
                         //                width: double.maxFinite),
                         // ]
-                       
+
                         cubit.driverDataModel.data!.sliders!
                             .map((e) => GestureDetector(
                                   onTap: () async {

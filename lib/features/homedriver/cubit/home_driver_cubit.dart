@@ -275,24 +275,24 @@ class HomeDriverCubit extends Cubit<HomeDriverState> {
     );
 
     location.onLocationChanged.listen((newLoc) {
-      //  currentLocation = newLoc;
+      currentLocation = newLoc;
 
       double latDiff = (newLoc.latitude! - strartlocation!.latitude!);
       double lngDiff = (newLoc.longitude! - strartlocation!.longitude!);
 
-      if (latDiff > 0.01 || lngDiff > 0.01) {
-        strartlocation = LatLng(
-          currentLocation!.latitude!,
-          currentLocation!.longitude!,
-        );
+      //  if (latDiff > 0.01 || lngDiff > 0.01) {
+      strartlocation = LatLng(
+        currentLocation!.latitude!,
+        currentLocation!.longitude!,
+      );
 
-        //  getGeoData(
-        //      LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
-        //      "from");
-        updateLocation();
-        emit(LocationChangedState());
-        emit(UpdateCameraPosition());
-      }
+      //  getGeoData(
+      //      LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
+      //      "from");
+      updateLocation();
+      emit(LocationChangedState());
+
+      //}
     });
     // location.onLocationChanged.listen(
     //   (newLoc) {
@@ -339,25 +339,25 @@ class HomeDriverCubit extends Cubit<HomeDriverState> {
       double lngDiff =
           (currentLocation!.longitude! - strartlocation!.longitude!);
 
-      if (latDiff > 0.01 || lngDiff > 0.01) {
-        strartlocation = LatLng(
-          currentLocation!.latitude!,
-          currentLocation!.longitude!,
-        );
+      //  if (latDiff > 0.01 || lngDiff > 0.01) {
+      strartlocation = LatLng(
+        currentLocation!.latitude!,
+        currentLocation!.longitude!,
+      );
 
-        context.read<DriverTripCubit>().getDirection(
-            //widget.trip
-            LatLng(
-              currentLocation != null ? currentLocation!.latitude! : 0,
-              currentLocation != null ? currentLocation!.longitude! : 0,
-            ),
-            destination
-            //  LatLng(double.parse(widget.trip.fromLat??"31.98354"), double.parse(widget.trip.fromLong??"31.1234065"))
-            );
-        // getLocation(LatLng(currentLocation!.latitude!, currentLocation!.longitude!), "from");
-        // updateLocation();
-        emit(UpdateCameraPosition());
-      }
+      context.read<DriverTripCubit>().getDirection(
+          //widget.trip
+          LatLng(
+            currentLocation != null ? currentLocation!.latitude! : 0,
+            currentLocation != null ? currentLocation!.longitude! : 0,
+          ),
+          destination
+          //  LatLng(double.parse(widget.trip.fromLat??"31.98354"), double.parse(widget.trip.fromLong??"31.1234065"))
+          );
+      // getLocation(LatLng(currentLocation!.latitude!, currentLocation!.longitude!), "from");
+      // updateLocation();
+      emit(UpdateCameraPosition());
+      // }
     });
     // location.onLocationChanged.listen(
     //   (newLoc) {
@@ -427,6 +427,7 @@ class HomeDriverCubit extends Cubit<HomeDriverState> {
       },
     );
   }
+
   endWithoutDestinationTrip(BuildContext context, String id) async {
     final response = await api.getGeoData(currentLocation!.latitude.toString() +
         "," +
@@ -434,11 +435,11 @@ class HomeDriverCubit extends Cubit<HomeDriverState> {
     response.fold(
       (l) => emit(ErrorLocationSearch()),
       (r) async {
-        cancelTripToAddress = r.results
+        endTripToAddress = r.results
             .elementAt(0)
             .formattedAddress
             .replaceAll("Unnamed Road,", "");
-        context.read<DriverTripCubit>().cancelTrip(
+        context.read<DriverTripCubit>().endTrip(
             context: context,
             id: id,
             toAddress: endTripToAddress,

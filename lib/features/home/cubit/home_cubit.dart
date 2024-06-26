@@ -16,6 +16,7 @@ import 'package:hero/core/models/delete_user_model.dart';
 import 'package:hero/core/models/get_places_model.dart';
 import 'package:hero/core/models/home_model.dart';
 import 'package:hero/core/models/notification_model.dart';
+import 'package:hero/core/models/notifications_count_model.dart';
 import 'package:hero/core/models/search_place_model.dart';
 import 'package:hero/core/models/settings_model.dart';
 import 'package:hero/core/preferences/preferences.dart';
@@ -69,7 +70,7 @@ class HomeCubit extends Cubit<HomeState> {
   List<mp.LatLng> pointFromTo = [];
   HomeCubit(this.api) : super(HomeInitial()) {
     getUserData();
-
+    getNotificationCount();
     getSettings();
     isSelected = false;
     getTripStatus();
@@ -77,7 +78,7 @@ class HomeCubit extends Cubit<HomeState> {
     latLngListFromTo = [];
     getmarker();
     checkAndRequestLocationPermission();
-    getNotification();
+    // getNotification();
     if (currentLocation == null) {
       getCurrentLocation();
     }
@@ -155,10 +156,9 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   TextEditingController location_control = TextEditingController();
-
   setMarkers(Marker source, Marker? destination) {
     markers.clear();
-  //  markers.add(source);
+    //  markers.add(source);
     if (destination != null) {
       markers.add(destination);
     }
@@ -168,13 +168,12 @@ class HomeCubit extends Cubit<HomeState> {
 
   setTripMarkers(Marker source, Marker? destination) {
     tripMarkers.clear();
-   // tripMarkers.add(source);
+    // tripMarkers.add(source);
     if (destination != null) {
       tripMarkers.add(destination);
     }
     emit(AddMarkersState());
   }
-
   // void getPolyPoints() async {
   //   PolylinePoints polylinePoints = PolylinePoints();
   //   PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
@@ -879,6 +878,22 @@ class HomeCubit extends Cubit<HomeState> {
     });
   }
 
+  OrderAndNotificationCountModel orderAndNotificationCountModel =
+      OrderAndNotificationCountModel();
+
+  getNotificationCount() async {
+    emit(LoadingNotificationsCountState());
+
+    final response = await api.getNotificationCount();
+    response.fold((l) {
+      emit(FailureNotificationsCountState());
+    }, (r) {
+      orderAndNotificationCountModel = r;
+      print("FFFFFFFFFFFF ${r.data!.notificationsCount}");
+      emit(SuccessNotificationsCountState());
+    });
+  }
+
   CheckTripStatusModel checkTripStatusModel = CheckTripStatusModel();
 
   getTripStatus() async {
@@ -988,6 +1003,7 @@ class HomeCubit extends Cubit<HomeState> {
               arguments: r.data);
         }
         print("llllllllllllll${r.data!.type}");
+        print("llllllllllllll${r.data!.type}");
 
 // }
 // else{
@@ -1053,6 +1069,7 @@ class HomeCubit extends Cubit<HomeState> {
       emit(FailureNotificationState());
     }, (r) {
       notificationModel = r;
+      getNotificationCount();
       // Calculate the time difference
       emit(SuccessNotificationState());
     });
@@ -1355,29 +1372,29 @@ class HomeCubit extends Cubit<HomeState> {
     emit(LoadingIndicatorState());
   }
 
-  Widget chooseWidget(MyEnum state) {
-    switch (state) {
-      case MyEnum.defaultState:
-        emit(changingStatus());
-        return DefaultWidget(
-          isATrip: false,
-        );
-      case MyEnum.load:
-        emit(changingStatus());
-        return LoadingWidget();
-      case MyEnum.success:
-        emit(changingStatus());
-        return SuccessWidget();
-      case MyEnum.failure:
-        emit(changingStatus());
-        return FailureWidget();
-      default:
-        emit(changingStatus());
-        return DefaultWidget(
-          isATrip: false,
-        );
-    }
-  }
+  // Widget chooseWidget(MyEnum state) {
+  //   switch (state) {
+  //     case MyEnum.defaultState:
+  //       emit(changingStatus());
+  //       return DefaultWidget(
+  //         isATrip: false,
+  //       );
+  //     case MyEnum.load:
+  //       emit(changingStatus());
+  //       return LoadingWidget();
+  //     case MyEnum.success:
+  //       emit(changingStatus());
+  //       return SuccessWidget();
+  //     case MyEnum.failure:
+  //       emit(changingStatus());
+  //       return FailureWidget();
+  //     default:
+  //       emit(changingStatus());
+  //       return DefaultWidget(
+  //         isATrip: false,
+  //       );
+  //   }
+  // }
 
   double calculateDistance(LatLng point1, LatLng point2) {
     const double earthRadius = 6371.0; // Earth radius in kilometers

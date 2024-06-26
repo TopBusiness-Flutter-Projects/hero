@@ -7,6 +7,7 @@ import 'package:hero/core/models/end_quick_trip_model.dart';
 import 'package:hero/core/models/get_places_model.dart';
 import 'package:hero/core/models/home_model.dart';
 import 'package:hero/core/models/notification_model.dart';
+import 'package:hero/core/models/notifications_count_model.dart';
 import 'package:hero/core/models/payment_transaction_model.dart';
 import 'package:hero/core/models/place_lat_long.dart';
 import 'package:hero/core/models/profit_model.dart';
@@ -640,6 +641,21 @@ class ServiceApi {
         ),
       );
       return Right(MyWalletModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
+  Future<Either<Failure, OrderAndNotificationCountModel>> getNotificationCount() async {
+    SignUpModel signUpModel = await Preferences.instance.getUserModel();
+    try {
+      final response = await dio.get(
+        EndPoints.countTripsAndNotifications,
+        options: Options(
+          headers: {'Authorization': signUpModel.data?.token},
+        ),
+      );
+      return Right(OrderAndNotificationCountModel.fromJson(response));
     } on ServerException {
       return Left(ServerFailure());
     }

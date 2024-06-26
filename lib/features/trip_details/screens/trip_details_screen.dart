@@ -179,8 +179,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                                           polylineId:
                                               const PolylineId("routes"),
                                           points: cubit.latLngListFromTo,
-                                          color: const Color(0xFF7B61FF),
-                                          width: 6,
+ color: AppColors.primary,                                          width: 6,
                                         ),
                                       },
                               ),

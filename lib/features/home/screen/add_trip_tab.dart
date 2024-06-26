@@ -98,6 +98,7 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
                       ? const Center(child: Text("Loading"))
                       : GoogleMap(
                           myLocationEnabled: true,
+
                           initialCameraPosition: CameraPosition(
                             target: LatLng(
                               cubit.currentLocation != null
@@ -181,12 +182,15 @@ class _AddTripTabState extends State<AddTripTab> with TickerProviderStateMixin {
                             Polyline(
                               polylineId: const PolylineId("route"),
                               points: cubit.latLngList,
-                              color: const Color(0xFF7B61FF),
+                              color: AppColors.primary,
                               width: 6,
                             ),
                           },
                         ),
-                  DefaultWidget(isATrip: widget.isInTrip),
+                  DefaultWidget(
+                    isATrip: widget.isInTrip,
+                    myContext: context,
+                  ),
                   // cubit.chooseWidget(cubit.currentEnumStatus),
                   //   // default case
                   // DefaultWidget(),

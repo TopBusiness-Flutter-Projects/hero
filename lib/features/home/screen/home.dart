@@ -76,6 +76,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                       InkWell(
                     onTap: () {
                       _scaffoldKey.currentState?.openDrawer();
+                      context.read<HomeCubit>().getNotificationCount();
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,

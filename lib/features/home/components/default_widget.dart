@@ -1,8 +1,11 @@
 import 'package:easy_localization/easy_localization.dart ' as easy;
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hero/core/utils/app_fonts.dart';
+import 'package:hero/core/utils/show_bottom_sheet.dart';
+import 'package:hero/core/widgets/custom_text_form_field.dart';
 import 'package:hero/features/user_trip/cubit/user_trip_cubit.dart';
 import '../../../config/routes/app_routes.dart';
 import '../../../core/utils/app_colors.dart';
@@ -17,14 +20,18 @@ import 'package:easy_debounce/easy_debounce.dart';
 import '../screen/home.dart';
 
 class DefaultWidget extends StatefulWidget {
-  const DefaultWidget({super.key, required this.isATrip});
+  const DefaultWidget(
+      {super.key, required this.isATrip, required this.myContext});
   final bool isATrip;
+  final BuildContext myContext;
   @override
   State<DefaultWidget> createState() => _DefaultWidgetState();
 }
 
 class _DefaultWidgetState extends State<DefaultWidget> {
   TextEditingController currentAddressConroller = TextEditingController();
+  TextEditingController priceConroller = TextEditingController();
+
   bool isFavourite = false;
   @override
   void initState() {
@@ -375,7 +382,137 @@ class _DefaultWidgetState extends State<DefaultWidget> {
                       Spacer(),
                       Padding(
                         padding: const EdgeInsets.only(left: 10.0),
-                        child: Text("${cubit.paymentMoney.toStringAsFixed(1)}"),
+                        child: GestureDetector(
+                          onTap: () {
+                            showDialog(
+                              barrierDismissible: true,
+                              context: context,
+                              builder: (context) {
+                                return Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20)),
+                                  child: Dialog(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(13.0),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          SizedBox(height: 18),
+                                          CustomTextFormField(
+                                            controller: priceConroller,
+                                            keyboardType: TextInputType.number,
+                                            labelText: "ادخل السعر المناسب",
+                                          ),
+                                          SizedBox(height: 18),
+                                          CustomButton(
+                                              text: "تأكيد",
+                                              color: AppColors.primary,
+                                              onClick: () {
+                                                if (priceConroller
+                                                    .text.isNotEmpty) {
+                                                  setState(() {
+                                                    cubit.paymentMoney =
+                                                        double.parse(
+                                                            priceConroller
+                                                                .text);
+
+                                                    priceConroller.clear();
+                                                  });
+                                                }
+                                                Navigator.pop(context);
+                                              }),
+                                          // CustomButton(
+                                          //     text: "إالغاء",
+                                          //     color: AppColors.white,
+                                          //     textcolor: AppColors.primary,
+                                          //     onClick: () {
+                                          //       if (priceConroller
+                                          //           .text.isNotEmpty) {
+                                          //         setState(() {
+                                          //           cubit.paymentMoney =
+                                          //               double.parse(
+                                          //                   priceConroller
+                                          //                       .text);
+
+                                          //           priceConroller.clear();
+                                          //         });
+                                          //       }
+
+                                          //       Navigator.pop(context);
+                                          //     })
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+
+                            // showMyBottomSheet(
+                            //     Padding(
+                            //       padding: const EdgeInsets.all(13),
+                            //       child: Column(
+                            //         //  mainAxisSize: MainAxisSize.min,
+                            //         children: [
+                            //           SizedBox(height: 18),
+                            //           CustomTextFormField(
+                            //             controller: priceConroller,
+                            //             keyboardType: TextInputType.number,
+                            //             labelText: "ادخل السعر المناسب",
+                            //           ),
+                            //           SizedBox(height: 18),
+                            //           CustomButton(
+                            //               text: "تأكيد",
+                            //               color: AppColors.primary,
+                            //               onClick: () {
+                            //                 if (priceConroller
+                            //                     .text.isNotEmpty) {
+                            //                   setState(() {
+                            //                     cubit.paymentMoney =
+                            //                         double.parse(
+                            //                             priceConroller
+                            //                                 .text);
+
+                            //                     priceConroller.clear();
+                            //                   });
+                            //                 }
+
+                            //                 Navigator.pop(context);
+                            //               })
+                            //         ],
+                            //       ),
+                            //     ),
+                            //     context);
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                border: Border.all(
+                                    color: AppColors.primary, width: 2)),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10.0, vertical: 8),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.edit,
+                                    size: 30,
+                                    color: AppColors.primary,
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                      "${cubit.paymentMoney.toStringAsFixed(1)}"),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),

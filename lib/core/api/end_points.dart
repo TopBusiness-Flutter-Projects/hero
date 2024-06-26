@@ -34,6 +34,7 @@ class EndPoints {
   static const String storeDriverDocument = '${baseUrl}storeDriverDocument';
   static const String checkDocument = '${baseUrl}checkDocument';
   static const String driverWallet = '${baseUrl}driverWallet';
+  static const String countTripsAndNotifications = '${baseUrl}countTripsAndNotifications';
   static const String driverProfit = '${baseUrl}driverProfit';
   static const String getInfoDriver = '${baseUrl}getInfoDriver';
   static const String updateDriverDocument = '${baseUrl}updateDriverDocument';

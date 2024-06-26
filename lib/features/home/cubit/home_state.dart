@@ -39,6 +39,9 @@ class SuccessCheckTripStatusState extends HomeState {}
 class LoadingSettings extends HomeState {}
 class FailureSettings extends HomeState {}
 class SuccessSettings extends HomeState {}
+class LoadingNotificationsCountState extends HomeState {}
+class FailureNotificationsCountState extends HomeState {}
+class SuccessNotificationsCountState extends HomeState {}
 class LoadingNotificationState extends HomeState {}
 class FailureNotificationState extends HomeState {}
 class SuccessNotificationState extends HomeState {}
