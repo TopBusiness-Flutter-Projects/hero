@@ -23,3 +23,9 @@ class OldUserAuthinticatedState extends LoginState {}
 class SuccessCheckPhoneState extends LoginState {}
 class FailureCheckPhoneState extends LoginState {}
 class LoadingCheckPhoneStatus extends LoginState {}
+class SuccessSendWhatsMsgState extends LoginState {}
+class FailureSendWhatsMsgState extends LoginState {}
+class LoadingSendWhatsMsgStatus extends LoginState {}
+class SuccessCheckOTPState extends LoginState {}
+class FailureCheckOTPState extends LoginState {}
+class LoadingCheckOTPStatus extends LoginState {}

@@ -2,6 +2,8 @@ class EndPoints {
   //static const String baseUrl = 'http://192.168.1.14:8000/api/';
   static const String baseUrl = 'https://hero.topbusiness.io/api/';
   static const String checkPhoneUrl = '${baseUrl}checkPhone';
+  static const String sendWhatsappUrl = '${baseUrl}send-whatsapp-msg';
+  static const String checkOTPUrl = '${baseUrl}check-phone-OTP?';
   static const String loginUrl = '${baseUrl}auth/login';
   static const String homeUrl = '${baseUrl}userHome';
   static const String editProfileUrl = '${baseUrl}editProfile';

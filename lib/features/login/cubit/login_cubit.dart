@@ -8,6 +8,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hero/core/models/login_model.dart';
+import 'package:hero/core/models/rate_trip_model.dart';
+import 'package:hero/core/models/send_whats_msg_response.dart';
 import 'package:hero/core/models/signup_response_model.dart';
 import 'package:hero/core/preferences/preferences.dart';
 import 'package:hero/core/remote/service.dart';
@@ -24,7 +26,7 @@ class LoginCubit extends Cubit<LoginState> {
   LoginCubit(this.api) : super(LoginInitial());
   ServiceApi api;
   TextEditingController phoneController = TextEditingController();
-  TextEditingController codecontrol = TextEditingController();
+  TextEditingController codecontroller = TextEditingController();
   late LoginModel loginModel;
   bool isNewUser = true;
   bool checked = true;
@@ -34,12 +36,68 @@ class LoginCubit extends Cubit<LoginState> {
     emit(CheckBoxState());
   }
 
+  SendWhatsAppMsgResponseModel sendWhatsAppMsgResponseModel =
+      SendWhatsAppMsgResponseModel();
+  void sendWhatsAppMsg(BuildContext context) async {
+    emit(LoadingSendWhatsMsgStatus());
+    AppWidget.createProgressDialog(context, "wait".tr());
+
+    final response = await api.sendWhatsCode(phoneController.text);
+
+    response.fold((l) {
+      Navigator.pop(context);
+      errorGetBar("error".tr());
+      emit(FailureSendWhatsMsgState());
+    }, (r) {
+      if (r.status == true) {
+        Navigator.pop(context);
+        successGetBar(r.message);
+        Navigator.pushNamed(
+          context,
+          Routes.verificationScreenRoute,
+        );
+        emit(SuccessSendWhatsMsgState());
+      }
+    });
+  }
+
+  void checkWhatsOTP(BuildContext context) async {
+    emit(LoadingCheckOTPStatus());
+    AppWidget.createProgressDialog(context, "wait".tr());
+
+    final response =
+        await api.checkWhatsAppOTP(phoneController.text, codecontroller.text);
+
+    response.fold((l) {
+      Navigator.pop(context);
+      errorGetBar("error".tr());
+      emit(FailureCheckOTPState());
+    }, (r) {
+      Navigator.pop(context);
+      if (r.code == 200 || r.code == 201) {
+        //Navigator.pop(context);
+
+        //successGetBar(r.message);
+        //  Navigator.pushNamed(
+        //    context,
+        //    Routes.verificationScreenRoute,
+        //  );
+        login(context);
+        emit(SuccessCheckOTPState());
+      } else if (r.code == 422) {
+        errorGetBar(r.message!);
+        print("fffffffff " + r.message!);
+
+        Navigator.pop(context);
+      }
+    });
+  }
+
   checkPhone(BuildContext context) async {
     // if (phoneController.text.startsWith('0')) {
     //   phoneController.text = phoneController.text.substring(1);
     //
     // }else
-
     emit(LoadingCheckPhoneStatus());
     AppWidget.createProgressDialog(context, 'wait'.tr());
     if (phoneController.text.startsWith("964")) {
@@ -132,7 +190,6 @@ class LoginCubit extends Cubit<LoginState> {
     AppWidget.createProgressDialog(context, 'wait'.tr());
     //todo=> country code may be change to be iraq code
     final response = await api.login(phoneController.text, deviceType, token!);
-
     response.fold((l) {
       Navigator.pop(context);
       errorGetBar("login failed");
@@ -233,8 +290,8 @@ class LoginCubit extends Cubit<LoginState> {
         //Automatic handling of the SMS code on Android devices.
         smsCode = credential.smsCode!;
         verification_Id = credential.verificationId;
-        if (codecontrol.hasListeners) {
-          codecontrol.text = smsCode.toString();
+        if (codecontroller.hasListeners) {
+          codecontroller.text = smsCode.toString();
         }
 
         //verifySmsCode(smsCode);

@@ -34,6 +34,7 @@ import '../models/my_wallet_model.dart';
 import '../models/place_details.dart';
 import '../models/place_geocode.dart';
 import '../models/rate_trip_model.dart';
+import '../models/send_whats_msg_response.dart';
 import '../models/signup_response_model.dart';
 import '../models/start_new_trip_model.dart';
 import '../models/status_model.dart';
@@ -64,7 +65,95 @@ class ServiceApi {
     }
   }
 
-//
+  Future<Either<Failure, LoginModel>> checkPhone(String phone) async {
+    try {
+      final RegExp regExp = RegExp(r'^964');
+      if (regExp.hasMatch(phone)) {
+        phone = phone.replaceFirst(regExp, '');
+      }
+
+      final response = await dio.post(
+        EndPoints.checkPhoneUrl,
+      );
+      return Right(LoginModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
+  Future<Either<Failure, SendWhatsAppMsgResponseModel>> sendWhatsCode(
+      String phone) async {
+    try {
+      //final RegExp regExp = RegExp(r'^964');
+      //if (regExp.hasMatch(phone)) {
+      //  phone = phone.replaceFirst(regExp, '');
+      //}
+
+      final response = await dio.post(
+        EndPoints.sendWhatsappUrl,
+        body: {
+          'phone':AppStrings.countryCode+ phone,
+        },
+      );
+
+      return Right(SendWhatsAppMsgResponseModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+  Future<Either<Failure, LoginModel>> checkWhatsAppOTP(
+      String phone,String code) async {
+    try {
+      final response = await dio.get(
+        EndPoints.checkOTPUrl+"phone=${AppStrings.countryCode}$phone&code=$code"        
+      );
+      return Right(LoginModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
+
+
+
+
+
+
+//fUHZXVLrTaCOa7HwKv2vMX:APA91bHyS1pj1qbxjyWdUGm0gnu2YxYVZNQVAj6NSvAAJW5Rl7aVwHTlITm2H7xettAtHOpyHCdQpmlacXUYKk26tZCsWKoYO4F2FAb8yHoAZFC6vBac5Em5qiUwBvtwhK3WGUZ2VLz2
+  Future<Either<Failure, SignUpModel>> login(
+      String phone, String deviceType, String token) async {
+    String? notificationToken =
+        await Preferences.instance.getNotificationToken() ?? '';
+    print('ggggggggggg$notificationToken');
+    try {
+    // if (phone.startsWith("964")) {
+    //   print("Before: ${phone}");
+    //   phone = phone.substring(3);
+    //   print("After: ${phone}");
+    // }
+
+      // print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+      print(AppStrings.countryCode + phone);
+      final response = await dio.post(
+        EndPoints.loginUrl,
+        body: {
+
+         // 'phone':  phone,
+         'phone': AppStrings.countryCode + phone,
+        },
+        queryParameters: {
+          "device_type": deviceType,
+          "token": notificationToken
+        },
+      );
+      print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+      print(response);
+      return Right(SignUpModel.fromJson(response));
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
   Future<Either<Failure, SignUpModel>> postRegister(
       RegisterModel registerModel, bool isSignUp) async {
     String? notificationToken =
@@ -297,8 +386,7 @@ class ServiceApi {
     String? toAddress,
     String? toLat,
     String? toLong,
-  }
-  ) async {
+  }) async {
     SignUpModel signUpModel = await Preferences.instance.getUserModel();
     try {
       final response = await dio.post(EndPoints.endTrip,
@@ -646,7 +734,8 @@ class ServiceApi {
     }
   }
 
-  Future<Either<Failure, OrderAndNotificationCountModel>> getNotificationCount() async {
+  Future<Either<Failure, OrderAndNotificationCountModel>>
+      getNotificationCount() async {
     SignUpModel signUpModel = await Preferences.instance.getUserModel();
     try {
       final response = await dio.get(
@@ -767,21 +856,6 @@ class ServiceApi {
 //   }
 //
 //
-  Future<Either<Failure, LoginModel>> checkPhone(String phone) async {
-    try {
-      final RegExp regExp = RegExp(r'^964');
-      if (regExp.hasMatch(phone)) {
-        phone = phone.replaceFirst(regExp, '');
-      }
-
-      final response = await dio.post(
-        EndPoints.checkPhoneUrl,
-      );
-      return Right(LoginModel.fromJson(response));
-    } on ServerException {
-      return Left(ServerFailure());
-    }
-  }
 
   Future<Either<Failure, RateModel>> rateUser({
     required String to,
@@ -854,39 +928,6 @@ class ServiceApi {
         },
       );
       return Right(UpdateDriverLocationModel.fromJson(response));
-    } on ServerException {
-      return Left(ServerFailure());
-    }
-  }
-
-//fUHZXVLrTaCOa7HwKv2vMX:APA91bHyS1pj1qbxjyWdUGm0gnu2YxYVZNQVAj6NSvAAJW5Rl7aVwHTlITm2H7xettAtHOpyHCdQpmlacXUYKk26tZCsWKoYO4F2FAb8yHoAZFC6vBac5Em5qiUwBvtwhK3WGUZ2VLz2
-  Future<Either<Failure, SignUpModel>> login(
-      String phone, String deviceType, String token) async {
-    String? notificationToken =
-        await Preferences.instance.getNotificationToken() ?? '';
-    print('ggggggggggg$notificationToken');
-    try {
-      if (phone.startsWith("964")) {
-        print("Before: ${phone}");
-        phone = phone.substring(3);
-        print("After: ${phone}");
-      }
-
-      // print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-      print(AppStrings.countryCode + phone);
-      final response = await dio.post(
-        EndPoints.loginUrl,
-        body: {
-          'phone': AppStrings.countryCode + phone,
-        },
-        queryParameters: {
-          "device_type": deviceType,
-          "token": notificationToken
-        },
-      );
-      print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-      print(response);
-      return Right(SignUpModel.fromJson(response));
     } on ServerException {
       return Left(ServerFailure());
     }
@@ -1247,6 +1288,7 @@ class ServiceApi {
       return Left(ServerFailure());
     }
   }
+
   Future<Either<Failure, GetPlacesModel>> getPlaces(
     String searchKey,
   ) async {

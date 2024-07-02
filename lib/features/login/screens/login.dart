@@ -46,7 +46,6 @@ class _LoginState extends State<Login> {
                         ImageAssets.loginImage,
                         height: getSize(context) / 2.5,
                         width: getSize(context) / 2,
-
                       ),
                     ),
                   ),
@@ -65,21 +64,19 @@ class _LoginState extends State<Login> {
                   ),
                   CustomTextField(
                     title: 'phone'.tr(),
-                    controller:cubit.phoneController,
+                    controller: cubit.phoneController,
                     textInputType: TextInputType.phone,
                     backgroundColor: AppColors.white,
                     validatorMessage: 'phone_msg'.tr(),
                     horizontalPadding: 0,
-                    prefixWidget:
-                    Container(
-                     // width: getSize(context)/6,
+                    prefixWidget: Container(
+                      // width: getSize(context)/6,
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal:
-                                8.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
                             child: Text(AppStrings.countryCode,
                                 style: TextStyle(
                                   color: AppColors.black,
@@ -87,8 +84,8 @@ class _LoginState extends State<Login> {
                                 )),
                           ),
                           Padding(
-                            padding:
-                            EdgeInsets.symmetric(horizontal: getSize(context) / 66),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: getSize(context) / 66),
                             child: Container(
                               color: AppColors.primary,
                               // height: getSize(context)/10-2,
@@ -102,9 +99,7 @@ class _LoginState extends State<Login> {
 
                     // controller: controller.phoneNumberController,
                   ),
-                  SizedBox(
-                    height: getSize(context) / 20
-                  ),
+                  SizedBox(height: getSize(context) / 20),
                   Row(
                     children: [
                       Checkbox(
@@ -126,7 +121,8 @@ class _LoginState extends State<Login> {
                       InkWell(
                         onTap: () {
                           //navigate to terms and conditions screen
-                          Navigator.pushNamed(context, Routes.termsConditionsRoute);
+                          Navigator.pushNamed(
+                              context, Routes.termsConditionsRoute);
                         },
                         child: Text(
                           "terms".tr(),
@@ -151,16 +147,17 @@ class _LoginState extends State<Login> {
                     text: "follow".tr(),
                     color: AppColors.primary,
                     onClick: () async {
-                      if(cubit.checked==false){
+                      if (cubit.checked == false) {
                         errorGetBar("agree_terms".tr());
                       }
-                   // else  if (cubit.phoneController.text.length<9||cubit.phoneController.text.length>10){
-                   //  else  if (cubit.phoneController.text.length!=11){
-                   //      errorGetBar("الرقم غير صالح");
-                   //    }
-                    else{
-                    //   await cubit.checkPhone(context);
-                        await cubit.login(context);
+                      // else  if (cubit.phoneController.text.length<9||cubit.phoneController.text.length>10){
+                      //  else  if (cubit.phoneController.text.length!=11){
+                      //      errorGetBar("الرقم غير صالح");
+                      //    }
+                      else {
+                      
+                     //   await cubit.login(context);
+                           cubit.sendWhatsAppMsg(context);
                       }
                     },
                   )
@@ -173,4 +170,3 @@ class _LoginState extends State<Login> {
     );
   }
 }
-

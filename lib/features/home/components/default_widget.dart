@@ -404,7 +404,7 @@ class _DefaultWidgetState extends State<DefaultWidget> {
                                           CustomTextFormField(
                                             controller: priceConroller,
                                             keyboardType: TextInputType.number,
-                                            labelText: "ادخل السعر المناسب",
+                                            labelText: "ادخل السعر اللي يناسبك",
                                           ),
                                           SizedBox(height: 18),
                                           CustomButton(

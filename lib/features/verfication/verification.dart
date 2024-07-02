@@ -1,4 +1,4 @@
-import 'package:easy_localization/easy_localization.dart'as easy;
+import 'package:easy_localization/easy_localization.dart' as easy;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,7 +10,6 @@ import 'package:hero/features/login/cubit/login_cubit.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import '../../../core/utils/app_colors.dart';
 import '../../config/routes/app_routes.dart';
-
 
 class Verification extends StatefulWidget {
   const Verification({super.key});
@@ -24,8 +23,9 @@ class _VerificationState extends State<Verification> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    context.read<LoginCubit>().codecontrol = TextEditingController();
+    context.read<LoginCubit>().codecontroller = TextEditingController();
   }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<LoginCubit, LoginState>(
@@ -46,25 +46,48 @@ class _VerificationState extends State<Verification> {
                   SizedBox(
                     height: getSize(context) / 16,
                   ),
-                  SizedBox(
-
-                    /// height: getSize(context) / 24,
-                    ///width: getSize(context),
-                    child: Text("enter_code".tr(),
-                        style: TextStyle(
-                          color: AppColors.black,
-                          fontSize: getSize(context) / 24,
-                        )),
-                  ),
-                  SizedBox(
-
-                    /// height: getSize(context) / 24,
-                    ///width: getSize(context),
-                    child: Text("plaase_enter_code".tr(),
-                        style: TextStyle(
-                          color: AppColors.gray3,
-                          fontSize: getSize(context) / 24,
-                        )),
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Image.asset(
+                          ImageAssets.backImage,
+                          color: AppColors.grey3,
+                          height: getSize(context) / 15,
+                          width: getSize(context) / 15,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 15,
+                      ),
+                      Flexible(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              /// height: getSize(context) / 24,
+                              ///width: getSize(context),
+                              child: Text("enter_code".tr(),
+                                  style: TextStyle(
+                                    color: AppColors.black,
+                                    fontSize: getSize(context) / 24,
+                                  )),
+                            ),
+                            SizedBox(
+                              /// height: getSize(context) / 24,
+                              ///width: getSize(context),
+                              child: Text("plaase_enter_code".tr(),
+                                  style: TextStyle(
+                                    color: AppColors.gray3,
+                                    fontSize: getSize(context) / 24,
+                                  )),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(
                     height: getSize(context) / 8,
@@ -84,16 +107,15 @@ class _VerificationState extends State<Verification> {
                     height: getSize(context) / 16,
                   ),
                   Container(
-
                     padding:
-                    EdgeInsets.symmetric(horizontal: getSize(context) / 16),
+                        EdgeInsets.symmetric(horizontal: getSize(context) / 16),
                     child: Directionality(
                       textDirection: TextDirection.ltr,
                       child: PinCodeTextField(
-                //      mainAxisAlignment: MainAxisAlignment.end,
+                        //      mainAxisAlignment: MainAxisAlignment.end,
 
                         backgroundColor: AppColors.white,
-                        controller: cubit.codecontrol,
+                        controller: cubit.codecontroller,
                         textStyle: TextStyle(color: AppColors.black),
                         hintStyle: TextStyle(color: AppColors.black),
                         pastedTextStyle: TextStyle(
@@ -102,22 +124,20 @@ class _VerificationState extends State<Verification> {
                         ),
 
                         appContext: context,
-                        length: 6,
+                        length: 5,
                         animationType: AnimationType.fade,
                         validator: (v) {
-                          if (v!.length < 5) {
+                          if (v!.length < 4) {
                             return "";
                           } else {
                             return null;
                           }
                         },
                         pinTheme: PinTheme(
-
                           inactiveColor: AppColors.gray4,
                           activeColor: AppColors.gray4,
                           shape: PinCodeFieldShape.underline,
                           selectedColor: AppColors.gray4,
-
                         ),
                         cursorColor: AppColors.black,
                         animationDuration: const Duration(milliseconds: 300),
@@ -132,24 +152,27 @@ class _VerificationState extends State<Verification> {
                       ),
                     ),
                   ),
-
                   SizedBox(
                     height: getSize(context) / 8,
                   ),
                   CustomButton(
                     width: getSize(context),
-                    text: "follow".tr(), color: AppColors.primary,
+                    text: "follow".tr(),
+                    color: AppColors.primary,
                     onClick: () async {
-                 if(cubit.codecontrol.text.length==6){
-                   //todo => stopped firebase for test
-                   await  cubit.verifySmsCode(cubit.codecontrol.text,context);
-                   // Navigator.pushNamedAndRemoveUntil(
-                   //     context, Routes.registerScreenRoute, (route) => false);
-                 }
-                 else{
-                   errorGetBar("invalid code");
-                 }
-                  },
+                      if (cubit.codecontroller.text.length == 5) {
+                        //todo => stopped firebase for test
+
+                        cubit.checkWhatsOTP(context);
+                        // await cubit.verifySmsCode(
+
+                        //     cubit.codecontroller.text, context);
+                        // Navigator.pushNamedAndRemoveUntil(
+                        //     context, Routes.registerScreenRoute, (route) => false);
+                      } else {
+                        errorGetBar("invalid code");
+                      }
+                    },
                   )
                 ],
               ),
