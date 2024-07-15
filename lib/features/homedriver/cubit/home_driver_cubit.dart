@@ -585,6 +585,8 @@ class HomeDriverCubit extends Cubit<HomeDriverState> {
         // Location services are still not enabled, handle accordingly (show a message, disable functionality, etc.)
         // ...
         return;
+      }else {
+        getCurrentLocation();
       }
     }
 
